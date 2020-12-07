@@ -4,9 +4,7 @@
 <%@ page import="java.net.InetAddress"%>
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
-<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
+
 
 
 
@@ -33,72 +31,77 @@
    //System.out.println("serverName : " + serverName);
    //serverName : http://192.168.50.65:9090 
 %>
-<div align="center">
-   <ul class="nav nav-tabs mynav">
-      <li class="dropdown"><a class="dropdown-toggle"
-         data-toggle="dropdown" href="#">Home <span class="caret"></span></a>
-         <ul class="dropdown-menu">
-            <li><a href="<%=ctxPath%>/index.action">Home</a></li>
-            <li><a href="<%=ctxPath%>/deliciousStore.action">전국맛집</a></li>
-            <li><a href="<%= serverName%><%=ctxPath%>/chatting/multichat.action">웹채팅</a></li>
-         </ul></li>
-      <li class="dropdown"><a class="dropdown-toggle"
-         data-toggle="dropdown" href="#">게시판 <span class="caret"></span></a>
-         <ul class="dropdown-menu">
-            <li><a href="<%=ctxPath%>/list.action">목록보기</a></li>
-            
-         <%-- <c:if test="${not empty sessionScope.loginuser}"> --%>
-            <li><a href="<%=ctxPath%>/add.action">글쓰기</a></li>
-         <%--   </c:if>  --%>
-            
-            <li><a href="#">Submenu 1-3</a></li>
-         </ul></li>
-      <li class="dropdown"><a class="dropdown-toggle"
-         data-toggle="dropdown" href="#">로그인 <span class="caret"></span></a>
-         <ul class="dropdown-menu">
-            <c:if test="${sessionScope.loginuser == null}">
-            <li><a href="#">회원가입</a></li>
-            <li><a href="<%=ctxPath%>/login.action">로그인</a></li>
-            </c:if>
-            
-            <c:if test="${sessionScope.loginuser != null}">
-            <li><a href="<%=ctxPath%>/myinfo.action">나의정보</a></li>
-            <li><a href="<%=ctxPath%>/logout.action">로그아웃</a></li>
-            </c:if>
-         </ul></li>
-      
-      <!-- === #169. 제품등록(다중파일첨부)및 제품정보 메뉴 추가하기 === -->      
-     <%--  <c:if test="${sessionScope.loginuser.gradelevel == 10 }">
-      <li class="dropdown"><a class="dropdown-toggle"
-         data-toggle="dropdown" href="#">제품등록(다중파일첨부) <span class="caret"></span></a>
-         <ul class="dropdown-menu">
-             <li><a href="<%=ctxPath%>/product/addProduct.action">제품등록</a></li>
-            <li><a href="<%=ctxPath%>/product/storeProduct.action">제품입고</a></li>
-         </ul></li>
-      </c:if>
-       --%>
-      <li class="dropdown"><a class="dropdown-toggle"
-         data-toggle="dropdown" href="#">인사관리 <span class="caret"></span></a>
-         <ul class="dropdown-menu">
-            <li><a href="<%=ctxPath%>/emp/empList.action">직원목록</a></li>
-            <li><a href="<%=ctxPath%>/emp/chart.action">통계차트</a></li>
-         </ul>
-      </li>
-      
-      <li class="dropdown"><a class="dropdown-toggle"
-         data-toggle="dropdown" href="#">제품정보 <span class="caret"></span></a>
-         <ul class="dropdown-menu">
-            <li><a href="<%=ctxPath%>/product/listProduct.action">제품목록</a></li>
-         </ul>
-      </li>
-   
-   
-   <!-- === #49. 로그인이 성공되어지면 로그인되어진 사용자의 이메일 주소를 출력하기 === -->
-   <c:if test="${sessionScope.loginuser != null}">
-      <div style="float: right; margin-top: 0.5%; border: solid 0px red;">
-        <span style="color: navy; font-weight: bold; font-size: 10pt;">${sessionScope.loginuser.email}</span> 님 로그인중.. 
-      </div>
-   </c:if>
-   
-   </ul>
-</div>    
+
+
+<div id="header-content" align="center">
+	<div id="logo-div" class="header-content-detail" >
+		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="cursor: pointer; width:90%; height: 90%;" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">
+	</div>
+
+	<div id="menu-div" class="header-content-detail">
+		<div class="menu-list-div">
+			<label>학교</label>
+			<ul>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">공지사항</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학생회 게시판</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">전공 게시판</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">동아리 게시판</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">졸업생 게시판</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학교 비판 게시판</li>
+			</ul>
+		</div>
+		<div class="menu-list-div">
+			<label>커뮤니티</label>
+			<ul>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">익명 게시판</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자유 게시판(반말)</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자유 게시판(존대)</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">유머 게시판</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">정치 사회 이슈</li>
+			</ul>
+		</div>
+		<div class="menu-list-div">
+			<label>관심사</label>
+			<ul>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">mbti</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">맛집</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">연애</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">취미</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">헬스</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">다이어트</li>
+			</ul>
+		</div>
+		<div class="menu-list-div">
+			<label>정보</label>
+			<ul> 
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">스터디 게시판</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자격증 정보</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">취업 게시판</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">구인/구직</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">분실물 게시판</li>
+			</ul>
+		</div>
+		<div class="menu-list-div">
+			<label>장터</label>
+			<ul>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">복덕복덕방</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고서점</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고거래</li>
+				
+			</ul>
+		</div>
+	
+	</div>
+
+	<div id="mypage-div" class="header-content-detail" >
+		<ul style="margin-top: 45%;">
+			<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">로그인</li>
+			<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학사행정</li>
+			
+		</ul>
+	</div>
+	<div id="search-div">
+		<input type="text" name="search" placeholder="Search.." autocomplete="off">	
+	</div>
+	
+</div>

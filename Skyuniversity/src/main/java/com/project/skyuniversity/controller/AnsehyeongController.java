@@ -19,9 +19,7 @@ Service(서비스)단 객체가 하는 일은 Model단에서 작성된 데이터
 실행되어진 결과값을 @Controller 단으로 넘겨준다.
 */
 
-import java.util.List;
 
-import javax.servlet.http.HttpServletRequest;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
