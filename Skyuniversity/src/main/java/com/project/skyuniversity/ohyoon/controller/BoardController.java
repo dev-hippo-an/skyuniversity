@@ -1,4 +1,4 @@
-package com.project.skyuniversity.koy.controller;
+package com.project.skyuniversity.ohyoon.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
