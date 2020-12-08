@@ -27,8 +27,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.project.skyuniversity.model.TestVO;
-import com.project.skyuniversity.service.InterAnsehyeongService;
+import com.project.skyuniversity.ash.model.TestVO;
+import com.project.skyuniversity.ash.service.InterAnsehyeongService;
 
 
 //=== #30. 컨트롤러 선언 === 

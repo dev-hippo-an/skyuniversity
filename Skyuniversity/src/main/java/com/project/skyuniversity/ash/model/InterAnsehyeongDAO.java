@@ -1,4 +1,4 @@
-package com.project.skyuniversity.model;
+package com.project.skyuniversity.ash.model;
 
 public interface InterAnsehyeongDAO {
 

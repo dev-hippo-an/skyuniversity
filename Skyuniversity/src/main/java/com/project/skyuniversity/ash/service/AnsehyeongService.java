@@ -1,11 +1,11 @@
-package com.project.skyuniversity.service;
+package com.project.skyuniversity.ash.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.skyuniversity.ash.model.InterAnsehyeongDAO;
+import com.project.skyuniversity.ash.model.TestVO;
 import com.project.skyuniversity.common.AES256;
-import com.project.skyuniversity.model.InterAnsehyeongDAO;
-import com.project.skyuniversity.model.TestVO;
 
 
 
