@@ -1,4 +1,4 @@
-package com.project.skyuniversity.controller;
+package com.project.skyuniversity.ash.controller;
 /*
 사용자 웹브라우저 요청(View)  ==> DispatcherServlet ==> @Controller 클래스 <==>> Service단(핵심업무로직단, business logic단) <==>> Model단[Repository](DAO, DTO) <==>> myBatis <==>> DB(오라클)           
 (http://...  *.action)                                  |                                                                                                                              

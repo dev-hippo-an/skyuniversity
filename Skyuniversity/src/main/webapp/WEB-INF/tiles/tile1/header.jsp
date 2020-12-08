@@ -89,6 +89,11 @@
 				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고거래</li>
 				
 			</ul>
+			<ul style="margin-top: 60px;">
+				<li><input type="text" name="search" placeholder="Search.." autocomplete="off" /></li>	
+			</ul>
+			
+			
 		</div>
 	
 	</div>
@@ -100,8 +105,6 @@
 			
 		</ul>
 	</div>
-	<div id="search-div">
-		<input type="text" name="search" placeholder="Search.." autocomplete="off">	
-	</div>
+	
 	
 </div>

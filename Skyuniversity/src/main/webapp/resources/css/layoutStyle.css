@@ -25,7 +25,7 @@ body {
 }
 
 #myheader {
-	background-color: #b9eaed;
+/* 	background-color: #b9eaed; */
 	height: 255px;
 	padding: 10px;
 	border-bottom: 2px solid #0843ad;
@@ -65,7 +65,7 @@ body {
 #menu-div li {
 	cursor: pointer;
 	margin: 3px;
-	border: solid 1px #0843ad; 
+	border: solid 2px #0843ad; 
 	background-color: white;
 	border-radius: 10px;
 }
@@ -129,7 +129,7 @@ div#search-div {
 	text-align: left;
 }
 
-#search-div input[type=text] {
+input[type=text] {
 	width: 110px;
 	height: 25px;
   border: 1px solid #0843ad;
@@ -149,7 +149,7 @@ div#search-div {
 }
 
 /* When the input field gets focus, change its width to 100% */
-#search-div input[type=text]:focus {
-  width: 90%;
+input[type=text]:focus {
+  width: 270px;
 }
 

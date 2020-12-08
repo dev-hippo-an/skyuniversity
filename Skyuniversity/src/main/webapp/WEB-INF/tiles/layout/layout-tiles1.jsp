@@ -30,7 +30,7 @@
 	
 
 </head>
-<body>
+<body class="hanna">
    <div id="mycontainer">
       <div id="myheader">
          <tiles:insertAttribute name="header" />
