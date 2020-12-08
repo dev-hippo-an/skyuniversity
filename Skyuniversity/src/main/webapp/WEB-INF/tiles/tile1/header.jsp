@@ -89,7 +89,7 @@
 				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고거래</li>
 				
 			</ul>
-			<ul style="margin-top: 60px;">
+			<ul style="margin-top: 60px; text-align: left;">
 				<li style="border: none; cursor: none;"><input type="text" name="search" placeholder="Search.." autocomplete="off" /></li>	
 			</ul>
 			

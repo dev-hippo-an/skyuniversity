@@ -19,7 +19,7 @@ Service(서비스)단 객체가 하는 일은 Model단에서 작성된 데이터
 실행되어진 결과값을 @Controller 단으로 넘겨준다.
 */
 
-
+import java.util.*;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -27,7 +27,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.project.skyuniversity.ash.model.TestVO;
+import com.project.skyuniversity.ash.model.BannerVO;
 import com.project.skyuniversity.ash.service.InterAnsehyeongService;
 
 
@@ -78,9 +78,13 @@ public class AnsehyeongController {
 	// === #36. 메인 페이지 요청 === // 
 		@RequestMapping(value="/index.sky")
 		public ModelAndView index(ModelAndView mav) {
+			
+			// 인덱스의 캐러셀에 들어갈 배너 광고를 가져오기
+			List<BannerVO> bannerList = service.getBannerList();
 		
 			
-		
+			
+			mav.addObject("bannerList", bannerList);
 			mav.setViewName("main/index.tiles1");
 			//   /WEB-INF/views/tiles1/main/index.jsp 파일을 생성한다.
 			
