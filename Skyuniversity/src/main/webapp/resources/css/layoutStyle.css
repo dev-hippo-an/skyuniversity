@@ -70,7 +70,7 @@ body {
 	border-radius: 10px;
 }
 
-#menu-div li:hover {
+#menu-div li.boardList:hover {
 	background-color: #0843ad;
 	color: white;
 }
@@ -129,7 +129,7 @@ div#search-div {
 	text-align: left;
 }
 
-input[type=text] {
+#menu-div input[type=text] {
 	width: 110px;
 	height: 25px;
   border: 1px solid #0843ad;
@@ -149,7 +149,7 @@ input[type=text] {
 }
 
 /* When the input field gets focus, change its width to 100% */
-input[type=text]:focus {
+#menu-div input[type=text]:focus {
   width: 270px;
 }
 

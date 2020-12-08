@@ -33,7 +33,7 @@
 %>
 
 
-<div id="header-content" align="center">
+<div id="header-content" align="center" class="hanna">
 	<div id="logo-div" class="header-content-detail" >
 		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="cursor: pointer; width:90%; height: 90%;" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">
 	</div>
@@ -42,55 +42,55 @@
 		<div class="menu-list-div">
 			<label>학교</label>
 			<ul>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">공지사항</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학생회 게시판</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">전공 게시판</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">동아리 게시판</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">졸업생 게시판</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학교 비판 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">공지사항</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학생회 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">전공 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">동아리 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">졸업생 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학교 비판 게시판</li>
 			</ul>
 		</div>
 		<div class="menu-list-div">
 			<label>커뮤니티</label>
 			<ul>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">익명 게시판</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자유 게시판(반말)</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자유 게시판(존대)</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">유머 게시판</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">정치 사회 이슈</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">익명 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자유 게시판(반말)</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자유 게시판(존대)</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">유머 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">정치 사회 이슈</li>
 			</ul>
 		</div>
 		<div class="menu-list-div">
 			<label>관심사</label>
 			<ul>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">mbti</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">맛집</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">연애</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">취미</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">헬스</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">다이어트</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">mbti</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">맛집</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">연애</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">취미</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">헬스</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">다이어트</li>
 			</ul>
 		</div>
 		<div class="menu-list-div">
 			<label>정보</label>
 			<ul> 
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">스터디 게시판</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자격증 정보</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">취업 게시판</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">구인/구직</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">분실물 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">스터디 게시판</li>
+				<li class="boardList" class="boardList"onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자격증 정보</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">취업 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">구인/구직</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">분실물 게시판</li>
 			</ul>
 		</div>
 		<div class="menu-list-div">
 			<label>장터</label>
 			<ul>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">복덕복덕방</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고서점</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고거래</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">복덕복덕방</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고서점</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고거래</li>
 				
 			</ul>
 			<ul style="margin-top: 60px;">
-				<li><input type="text" name="search" placeholder="Search.." autocomplete="off" /></li>	
+				<li style="border: none; cursor: none;"><input type="text" name="search" placeholder="Search.." autocomplete="off" /></li>	
 			</ul>
 			
 			

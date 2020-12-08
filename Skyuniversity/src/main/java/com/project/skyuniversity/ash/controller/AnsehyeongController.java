@@ -78,9 +78,9 @@ public class AnsehyeongController {
 	// === #36. 메인 페이지 요청 === // 
 		@RequestMapping(value="/index.sky")
 		public ModelAndView index(ModelAndView mav) {
-			TestVO testvo = service.getTestData();
+		
 			
-			mav.addObject("testvo", testvo);
+		
 			mav.setViewName("main/index.tiles1");
 			//   /WEB-INF/views/tiles1/main/index.jsp 파일을 생성한다.
 			

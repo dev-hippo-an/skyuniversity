@@ -36,10 +36,5 @@ private InterAnsehyeongDAO dao;
 private AES256 aes;
 
 
-@Override
-public TestVO getTestData() {
-	TestVO testvo = dao.getTestData();
-	
-	return testvo;
-}
+
 }
