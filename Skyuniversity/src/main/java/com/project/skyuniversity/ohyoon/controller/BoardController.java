@@ -6,8 +6,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
-import com.project.skyuniversity.ash.model.TestVO;
-import com.project.skyuniversity.ash.service.InterAnsehyeongService;
+import com.project.skyuniversity.ohyoon.service.InterOhyoonService;
 
 //=== #30. 컨트롤러 선언 === 
 @Component
@@ -51,19 +50,22 @@ public class BoardController {
 		// ===> BoardController 객체가 메모리에서 삭제 되어지면  BoardService service 객체는 멤버변수(필드)이므로 메모리에서 자동적으로 삭제되어진다.	
 		
 		@Autowired     // Type에 따라 알아서 Bean 을 주입해준다.
-		private InterAnsehyeongService service;
+		private InterOhyoonService service;
 		
 		// === 게시판 리스트 페이지 요청 === // 
 		@RequestMapping(value="/boardList.sky")
 		public ModelAndView boardList(ModelAndView mav) {
-				
 			mav.setViewName("/board/boardList.tiles1");
-			//   /WEB-INF/views/tiles1/main/index.jsp 파일을 생성한다.
-				
 			return mav;
 		}
 		
 		
+		// === 게시판 등록 페이지 요청 === // 
+		@RequestMapping(value="/boardRegister.sky")
+		public ModelAndView boardRegister(ModelAndView mav) {
+			mav.setViewName("/board/boardRegister.tiles1");
+			return mav;
+		}
 		
 		
 		
