@@ -269,7 +269,7 @@
 	
 	
 	<div id="include">
-		<jsp:include page="boardList.jsp" />
+		<jsp:include page="minsungBoardList.jsp" />
 	</div>
 
 
