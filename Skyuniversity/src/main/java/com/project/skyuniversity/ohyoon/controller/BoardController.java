@@ -6,6 +6,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.project.skyuniversity.ohyoon.service.InterOhyoonService;
+
 //=== #30. 컨트롤러 선언 === 
 @Component
 /* XML에서 빈을 만드는 대신에 클래스명 앞에 @Component 어노테이션을 적어주면 해당 클래스는 bean으로 자동 등록된다. 
@@ -48,7 +50,7 @@ public class BoardController {
 		// ===> BoardController 객체가 메모리에서 삭제 되어지면  BoardService service 객체는 멤버변수(필드)이므로 메모리에서 자동적으로 삭제되어진다.	
 		
 		@Autowired     // Type에 따라 알아서 Bean 을 주입해준다.
-//		private InterAnsehyeongService service;
+		private InterOhyoonService service;
 		
 		// === 게시판 리스트 페이지 요청 === // 
 		@RequestMapping(value="/boardList.sky")
