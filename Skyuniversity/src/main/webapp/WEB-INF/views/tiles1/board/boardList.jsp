@@ -17,8 +17,9 @@ th, td {
 }
 
 thead {
-	background-color: white;
+	background-color: #0841ad;
 	font-size: 10pt;
+	color: white;
 }
 
 tbody {
@@ -65,6 +66,20 @@ ul.pager {
 
 tbody > tr > td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7) {
 	width: 70px;
+}
+
+button#register {
+	width: 80px;
+	height: 30px;
+	border-radius: 5%;
+	border: none;
+	background-color: #0841ad;
+	color: white;
+	margin-top: 20px;
+} 
+
+button:hover {
+	font-weight: bold;
 }
 
 </style>
@@ -122,18 +137,21 @@ tbody > tr > td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7) 
             <tbody>
             	<c:forEach var="i" begin="1" end="30" varStatus="status">
 	            	<tr>
-	                	<td>Adam</td>
+	                	<td>1029</td>
 	                	<td>운동</td>
 	                	<td>${i}번째 제목입니다아아아아라</td>
-	                	<td>67</td>
-	                	<td>67</td>
-	                	<td>67</td>
-	                	<td>67</td>
+	                	<td>가나다</td>
+	                	<td>2020-12-08</td>
+	                	<td>203</td>
+	                	<td>10292</td>
 	            	</tr>
             	</c:forEach>
             </tbody>
 		</table>
 	</div>
+
+	<div align="right"><button id="register">글쓰기</button></div>
+
 	<ul class="pager">
 		<li class=""><a href="#">맨처음</a></li>
         <li class=""><a href="#">Previous</a></li>
