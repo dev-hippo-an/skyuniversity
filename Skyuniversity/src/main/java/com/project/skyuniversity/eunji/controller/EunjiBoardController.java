@@ -13,9 +13,9 @@ import com.project.skyuniversity.eunji.service.InterEunjiService;
 public class EunjiBoardController {
 
 	
-	@RequestMapping(value="registerSubject.sky")
-	public ModelAndView registerSubject(ModelAndView mav) {
-		mav.setViewName("tiles2/eunji/class/registerSubject");
+	@RequestMapping(value="registerSubjects.sky")
+	public ModelAndView registerSubjects(ModelAndView mav) {
+		mav.setViewName("tiles2/eunji/class/registerSubjects");
 		return mav;
 	}
 	
