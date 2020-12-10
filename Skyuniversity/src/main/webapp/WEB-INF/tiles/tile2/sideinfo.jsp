@@ -5,6 +5,10 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+<%
+   String ctxPath = request.getContextPath();
+%>
+
 <style>
 /*   .sidenav {
   height: 100%;
@@ -42,6 +46,10 @@
  
  div#search {
  	margin: 50px auto;
+ }
+ 
+ input#searchInput {
+ 	border: 0px;
  }
  
  .choice {
@@ -98,7 +106,7 @@
 
 	<div id="search">
 		<input id="searchInput"/>
-		<button>검색</button>
+		<span><img src="<%= ctxPath %>/resources/images/searchicon_jh.png" style="width: 20px; height: 20px;"/></span>
 	</div>
 	
 	<div id="menu">

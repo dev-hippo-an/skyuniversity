@@ -10,34 +10,49 @@
 
 <style>
 
- span.sname {
- 	font-family: "Open Sans", sans-serif;
- 	font-size: 20pt;
- 	position: absolute;
- 	left: 750px;
- 	top:70px;
+ div#header {
+ 	font-family: "Open Sans", sans-serif, 돋움;
  }
- 
- span.sinfo {
- 	font-family: "Open Sans", sans-serif;
-	font-size: 15pt;
-	position: absolute;
-	left: 850px;
-	top: 80px;	
- }
- 
- div#test {
- 	vertical-align: middle;
- }
- 
- span#logo {
- 	position: absolute;
- 	left: 50px;
- 	top: 10px;
- }
- 
+
  div#header {
  	height: 150px;
+ 	display: flex;
+ 	justify-content: space-between;
+ }
+ 
+ ul {
+ 	list-style-type: none;
+ }
+
+ div#loginStudent {
+ 	align-self: flex-end;
+ 	padding-bottom: 30px;
+ 
+ }
+
+ span.sname {
+ 	font-size: 25pt;
+ 	font-weight: 600;
+ }
+  
+  span.sinfo {
+ 	font-family: "Open Sans", sans-serif;
+	font-size: 18pt;
+	font-weight: 500;
+ }
+
+ div#logo {
+ 	padding-left: 30px;
+ }
+ 
+ span.btn {
+ 	cursor: pointer;
+    margin: 3px;
+    border: solid 2px #0843ad;
+    background-color: white;
+    border-radius: 20px;
+    font-weight: bold;
+    font-size: 12pt;
  }
  
 </style>
@@ -48,26 +63,19 @@
 
 </style>
 
-<div id="header" align="center">
+<div id="header">
 
-	
-		<span id="logo">
-			<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 130px;">
-		</span>
-		
-	   <c:if test="${sessionScope.loginuser == null}">
+	<div id="logo">
+		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 130px;">
+	</div>
+	<div id="loginStudent">
 	      <span class="sname">${sessionScope.loginuser.name}김뫄뫄</span>
 	      <span class="sinfo">롸롸롸롸롸과 솨학년</span>
-	   </c:if>
-	   
-	   <c:if test="${sessionScope.loginuser != null}">
-	      <span class="sname">${sessionScope.loginuser.name}</span>
-	      <span class="sinfo">롸롸롸롸롸과 솨학년</span>
-	   </c:if>
-	   
-	   <span>커뮤니티</span>
-	   <span>로그아웃</span>
-	   
+	 </div>
+	 <div>
+	   <span class="btn">커뮤니티</span>
+	   <span class="btn">로그아웃</span>
+	 </div>
 </div>
    
    
