@@ -12,10 +12,6 @@
 
  div#header {
  	font-family: "Open Sans", sans-serif, 돋움;
- }
-
- div#header {
- 	height: 150px;
  	display: flex;
  	justify-content: space-between;
  }
@@ -48,25 +44,25 @@
  span.btn {
  	cursor: pointer;
     margin: 3px;
-    border: solid 2px #0843ad;
-    background-color: white;
     border-radius: 20px;
     font-weight: bold;
     font-size: 12pt;
+    background-color: #0843ad;
+    color: white;
  }
+ 
+ 
  
 </style>
 
-<style>
-	
-	
 
-</style>
+
+
 
 <div id="header">
 
 	<div id="logo">
-		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 130px;">
+		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 100px;">
 	</div>
 	<div id="loginStudent">
 	      <span class="sname">${sessionScope.loginuser.name}김뫄뫄</span>

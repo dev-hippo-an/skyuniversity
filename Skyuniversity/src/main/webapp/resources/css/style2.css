@@ -4,24 +4,24 @@ body {font-family: "Open Sans", sans-serif, 돋움; }
 
 /* #mycontainer   { width:85%; margin:0 auto; padding:20px; } */
 #myheader {
-	border: solid 1px gray;
-	height: 150px;
+	border-bottom: solid 2px #0843ad;
+	height: 130px;
 	padding: 10px;
 	
     }
     
 #mysideinfo      {
-	border: solid 1px gray;
-	width:20%;
+	border-right: solid 2px #0843ad;
+	width:17%;
 	float: left;
 	min-height:800px;
 	padding-top: 20px;
 	}
 	
 #mycontent      {
-	border: solid 1px gray;
+	/* border: solid 1px #0843ad; */
 	float:left;
-	width:80%;
+	width:83%;
 	min-height:800px;
 	padding-top: 40px;
 	}

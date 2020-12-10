@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
- 왜 안뜨나요오
+은지야 안뇽
 </body>
 </html>
