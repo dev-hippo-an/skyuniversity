@@ -6,19 +6,43 @@
 %>
 <script type="text/javascript">
 	$(document).ready(function(){
-		var slideIndex = 0;
+		autoSlide();
 		
-		showSlides(slideIndex);
 	});
 	
-	function currentSlide(n) {
-		showSlides(slideIndex = n);
-	}
+	var index = 0;
+	
+	function autoSlide() {
+		var slides = $(".caro");
+		var dots = $(".dot");
+		
+		
+		slides.each(function(index, item) {
+			item.style.display = "none";
+		});
+		
+		index++;
+		
+		if (index > slides.length) {
+			index = 1
+		}
+		
+		for (var i = 0; i < dots.length; i++) {
+	        dots[i].className = dots[i].className.replace(" active", "");
+	    }
+		
+		slides[index-1].style.display = "block";
+		dots[index-1].className += " active";
+		setTimeout("autoSlide()", 5000); // Change image every 2 seconds
+	} 
+	
 	
 	function showSlides(n) {
 	    var slides = $(".caro");
 	    var dots = $(".dot");
 	  
+	    index = n;
+	    
 	    if (n > slides.length) {
 			slideIndex = 0;
 		}
@@ -35,9 +59,9 @@
 	        dots[i].className = dots[i].className.replace(" active", "");
 	    }
 	    
-	    
 	    slides[n].style.display = "block";
 	    dots[n].className += " active";
+
 	}
 	
 	
@@ -130,7 +154,7 @@
 					</a>
 					<div style="text-align:center">
 						<c:forEach items="${bannerList}" varStatus="status">
-							<span class="dot" onclick="currentSlide(${status.index})"></span>
+							<span class="dot" onclick="showSlides(${status.index})"></span>
 						</c:forEach>
 					</div>
 				</div>
