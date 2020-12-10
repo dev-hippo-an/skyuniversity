@@ -1,7 +1,8 @@
 @charset "UTF-8";
 
-body {font-family: Arial, Helvetica, sans-serif, 돋움; }
+body {font-family: "Open Sans", sans-serif, 돋움; }
 
+<<<<<<< HEAD
 <<<<<<< HEAD
 #mycontainer   { width:85%; margin:0 auto; padding:20px; }
 #myheader      { background-color:#EBEBE0; height:56px; padding: 10px; }
@@ -13,22 +14,39 @@ body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 #myheader {
 	border: solid 1px gray;
 	height: 150px;
+=======
+/* #mycontainer   { width:85%; margin:0 auto; padding:20px; } */
+#myheader {
+	border-bottom: solid 2px #0843ad;
+	height: 130px;
+>>>>>>> wlgusdl10
 	padding: 10px;
 	
     }
     
 #mysideinfo      {
+<<<<<<< HEAD
 	border: solid 1px gray;
 	width:20%;
+=======
+	border-right: solid 2px #0843ad;
+	width:17%;
+>>>>>>> wlgusdl10
 	float: left;
 	min-height:800px;
 	padding-top: 20px;
 	}
 	
 #mycontent      {
+<<<<<<< HEAD
 	border: solid 1px gray;
 	float:left;
 	width:80%;
+=======
+	/* border: solid 1px #0843ad; */
+	float:left;
+	width:83%;
+>>>>>>> wlgusdl10
 	min-height:800px;
 	padding-top: 40px;
 	}
@@ -38,7 +56,10 @@ body {font-family: Arial, Helvetica, sans-serif, 돋움; }
 	clear:both;
 	height:100px; 
 	} */
+<<<<<<< HEAD
 >>>>>>> parent of cca8490 (학사행정 tiles(header, side) 변경)
+=======
+>>>>>>> wlgusdl10
    
 #myheader a {text-decoration:none;}
 

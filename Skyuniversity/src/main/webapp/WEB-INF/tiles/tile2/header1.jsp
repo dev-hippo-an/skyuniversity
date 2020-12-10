@@ -8,8 +8,6 @@
    String ctxPath = request.getContextPath();
 %>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
 <div align="center">
    <ul class="nav nav-tabs mynav">
       <li class="dropdown"><a class="dropdown-toggle"
@@ -48,105 +46,6 @@
    </c:if>
    
    </ul>
-=======
-=======
->>>>>>> wlgusdl10
-<style>
-
- div#header {
- 	font-family: "Open Sans", sans-serif, 돋움;
-<<<<<<< HEAD
- }
-
- div#header {
- 	height: 150px;
-=======
->>>>>>> wlgusdl10
- 	display: flex;
- 	justify-content: space-between;
- }
- 
- ul {
- 	list-style-type: none;
- }
-
- div#loginStudent {
- 	align-self: flex-end;
- 	padding-bottom: 30px;
- 
- }
-
- span.sname {
- 	font-size: 25pt;
- 	font-weight: 600;
- }
-  
-  span.sinfo {
- 	font-family: "Open Sans", sans-serif;
-	font-size: 18pt;
-	font-weight: 500;
- }
-
- div#logo {
- 	padding-left: 30px;
- }
- 
- span.btn {
- 	cursor: pointer;
-    margin: 3px;
-<<<<<<< HEAD
-    border: solid 2px #0843ad;
-    background-color: white;
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 12pt;
- }
- 
-</style>
-
-<style>
-	
-	
-
-</style>
-=======
-    border-radius: 20px;
-    font-weight: bold;
-    font-size: 12pt;
-    background-color: #0843ad;
-    color: white;
- }
- 
- 
- 
-</style>
-
-
-
-
->>>>>>> wlgusdl10
-
-<div id="header">
-
-	<div id="logo">
-<<<<<<< HEAD
-		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 130px;">
-=======
-		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 100px;">
->>>>>>> wlgusdl10
-	</div>
-	<div id="loginStudent">
-	      <span class="sname">${sessionScope.loginuser.name}김뫄뫄</span>
-	      <span class="sinfo">롸롸롸롸롸과 솨학년</span>
-	 </div>
-	 <div>
-	   <span class="btn">커뮤니티</span>
-	   <span class="btn">로그아웃</span>
-	 </div>
-<<<<<<< HEAD
->>>>>>> parent of cca8490 (학사행정 tiles(header, side) 변경)
-=======
->>>>>>> wlgusdl10
 </div>
    
    
