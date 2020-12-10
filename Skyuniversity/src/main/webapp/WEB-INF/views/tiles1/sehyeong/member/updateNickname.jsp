@@ -73,7 +73,7 @@
 	function checkReg() {  // 정규표현식 확인하는 메서드
 		var nickname = $("input#nickname").val().trim();
 		
-		var regExp = /^[가-힣a-zA-Z0-9]{4,12}$/g;
+		var regExp = /^[가-힣a-zA-Z0-9]{4,8}$/g;
 		
 		var bool = regExp.test(nickname);	
 		
@@ -110,7 +110,7 @@
 	    <form name="updateNicknameFrm" id="updateNicknameFrm" method="POST">
 	        
 			<label for="nickname"  >&nbsp;닉네임&nbsp;:&nbsp;</label>
-			<input type="text" name="nickname" id="nickname" autocomplete="off" maxlength="30pt" placeholder="한글/영어/숫자조합/ 4-12자리"" />
+			<input type="text" name="nickname" id="nickname" autocomplete="off" maxlength="30pt" placeholder="한글/영어/숫자조합/ 4-8자리" />
 			<input type="hidden" name="commuMemberNo" value="${sessionScope.loginuser.commuMemberNo}">
 			<input type="text" style="display: none;" />
 			<br>
