@@ -1,4 +1,4 @@
-package com.project.skyuniversity.common;
+package com.project.skyuniversity.ash.common;
 
 import javax.servlet.http.HttpServletRequest;
 

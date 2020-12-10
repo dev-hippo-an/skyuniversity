@@ -35,7 +35,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.project.skyuniversity.ash.model.BannerVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.service.InterAnsehyeongService;
-import com.project.skyuniversity.common.Sha256;
+import com.project.skyuniversity.ash.common.Sha256;
 
 //=== #30. 컨트롤러 선언 === 
 @Component
