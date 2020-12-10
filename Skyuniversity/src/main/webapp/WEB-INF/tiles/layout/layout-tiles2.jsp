@@ -33,9 +33,9 @@
       <div id="mycontent">
          <tiles:insertAttribute name="content" />
       </div>
-      <div id="myfooter">
+     <%--  <div id="myfooter">
          <tiles:insertAttribute name="footer" />
-      </div>
+      </div> --%>
    </div>
 </body>
 </html>    
