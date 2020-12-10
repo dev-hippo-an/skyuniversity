@@ -7,6 +7,10 @@
 <title>Insert title here</title>
 </head>
 <body>
+<<<<<<< HEAD:Skyuniversity/src/main/webapp/WEB-INF/views/tiles2/jihyun/jihyun.jsp
 
+=======
+ 왜 안뜨나요오
+>>>>>>> parent of cca8490 (학사행정 tiles(header, side) 변경):Skyuniversity/src/main/webapp/WEB-INF/views/tiles2/jihyun/index.jsp
 </body>
 </html>
