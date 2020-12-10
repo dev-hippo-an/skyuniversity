@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.skyuniversity.ash.model.BannerVO;
+import com.project.skyuniversity.ash.model.CommuMemberLevelVO;
+import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.InterAnsehyeongDAO;
 import com.project.skyuniversity.common.AES256;
 
@@ -13,16 +15,7 @@ import com.project.skyuniversity.common.AES256;
 //트랜잭션 처리를 담당하는곳 , 업무를 처리하는 곳, 비지니스(Business)단
 @Service
 public class AnsehyeongService implements InterAnsehyeongService {
-	/*
-	 * 주문 ==> 주문테이블 insert (DAO 에 있는 주문테이블에 insert 관련 method 호출) ==> 제품테이블에 주문받은 제품의
-	 * 개수는 주문량 만큼 감소해야 한다 (DAO 에 있는 제품테이블에 update 관련 method 호출) ==> 장바구니에서 주문을 한
-	 * 경우이라면 장바구니 비우기를 해야 한다 (DAO 에 있는 장바구니테이블에 delete 관련 method 호출) ==> 회원테이블에
-	 * 포인트(마일리지)를 증가시켜주어야 한다 (DAO 에 있는 회원테이블에 update 관련 method 호출)
-	 * 
-	 * 위에서 호출된 4가지의 메소드가 모두 성공되었다면 commit 해주고 1개라도 실패하면 rollback 해준다. 이러한 트랜잭션처리를
-	 * 해주는 곳이 Service 단이다.
-	 */
-
+	
 	// === #34. 의존객체 주입하기(DI: Dependency Injection) ===
 	@Autowired
 	private InterAnsehyeongDAO dao;
@@ -33,11 +26,33 @@ public class AnsehyeongService implements InterAnsehyeongService {
 	@Autowired
 	private AES256 aes;
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+	// 메인 화면에 뜨는 배너 광고를 올려준다.
 	@Override
 	public List<BannerVO> getBannerList() {
 		List<BannerVO> bannerList = dao.getBannerList();
 		return bannerList;
+	}
+	
+	// 로그인 요청하기 입니다!!
+	@Override
+	public CommuMemberVO getLoginUser(Map<String, String> paraMap) {
+		
+		CommuMemberVO loginuser = dao.getLoginUser(paraMap);
+		
+		if (loginuser != null) {
+			CommuMemberLevelVO levelvo = dao.getLoginUserLevel(loginuser);
+			loginuser.setLevelvo(levelvo);
+		}
+		
+		return loginuser;
+	}
+	
+	
+	// === 닉네임 업데이트 요청 끝 !=== //
+	@Override
+	public int updateNicknameEnd(Map<String, String> paraMap) {
+		int result = dao.updateNicknameEnd(paraMap);
+		return result;
 	}
 
 }
