@@ -19,6 +19,7 @@ Service(서비스)단 객체가 하는 일은 Model단에서 작성된 데이터
 실행되어진 결과값을 @Controller 단으로 넘겨준다.
 */
 
+import java.io.File;
 import java.util.*;
 
 import javax.servlet.http.HttpServletRequest;
@@ -31,6 +32,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.ash.model.BannerVO;
@@ -93,8 +96,6 @@ public class AnsehyeongController {
 
 		// 인덱스의 캐러셀에 들어갈 배너 광고를 가져오기
 		List<BannerVO> bannerList = service.getBannerList();
-
-		// List<Map<String, String>> categoryList = sevice.getCategortList();
 		
 		mav.addObject("bannerList", bannerList);
 		mav.setViewName("main/index.tiles1");
@@ -256,6 +257,15 @@ public class AnsehyeongController {
 	// === 장터 게시판 리스트 페이지 요청 === //
 	@RequestMapping(value = "/marketboardList.sky")
 	public ModelAndView boardList(HttpServletRequest request, ModelAndView mav) {
+		
+		String boardKindNo = request.getParameter("boardKindNo");
+		
+		//Map<String, String> tableInfo = service.getTableInfo(boardKindNo);
+		
+		// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
+		List<Map<String, String>> categoryList = service.getCategoryList(boardKindNo);
+		
+		
 		/*
 		 * List<BoardVO> boardList = null;
 		 * 
@@ -457,12 +467,136 @@ public class AnsehyeongController {
 	
 	// === 게시판 글쓰기 폼페이지 요청 === //
 		@RequestMapping(value = "/marketAdd.sky")
-		public ModelAndView nicknameCheck_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		public ModelAndView nicknameCheck_marketAdd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+			
+		
+		mav.setViewName("sehyeong/board/marketBoardRegister.tiles1");
+		// /WEB-INF/views/tiles1/sehyeong/board/marketBoardRegister.jsp 파일을 불러온다.
 
-			mav.setViewName("sehyeong/board/marketBoardRegister.tiles1");
-			// /WEB-INF/views/tiles1/sehyeong/board/marketBoardRegister.jsp 파일을 불러온다.
+		return mav;
+	}
+		
+	// === 게시판 글쓰기 완료 요청 === //
+		/*
+	@RequestMapping(value = "/marketAddEnd.action", method = { RequestMethod.POST })
+	public String marketAddEnd(Map<String, String> paraMap, BoardVO boardvo, MultipartHttpServletRequest mrequest) {
 
-			return mav;
-		}
+		// form태그의 name명과 BoardVO의 필드명이 같으면
+		// request.getParameter();를 사용하지 않더라도
+		// BoardVO boardvo에 set 되어진다.
+
+		// 사용자가 쓴 글에 파일이 첨부되어 있는 것인지, 아니면 파일 첨부가 안된 것인지 구분을 지어 주어야 한다.
+		// === #153. !! 첨부파일이 있는경우 작업 시작 !!! === //
+		MultipartFile attach = boardvo.getAttach();
+
+		if (!attach.isEmpty()) {
+			// attach가 비어있지 않으면! (즉, 첨부 파일이 있는 경우라면~)
+
+			/*
+			 * 1. 사용자가 보낸 첨부파일을 WAS의 특정 폴더에 저장해주어야 한다. >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기 우리는
+			 * WAS의 webapp/resources/files라는 폴더로 지정해 준다. 조심할 것은 Package Explorer에서 files라는
+			 * 폴더를 직접 만드는 것이 아니다.
+			 */
+
+			// WAS의 webapp의 절대 경로를 알아와야 한다.
+//			HttpSession session = mrequest.getSession();
+//			String root = session.getServletContext().getRealPath("/");
+
+//			System.out.println("this is root : " + root);
+			// this is root :
+			// C:\eclipse\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\
+
+			/*
+			 * File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다. 운영체제가 Windows 이라면 File.separator
+			 * 는 "\" 이고, 운영체제가 UNIX, Linux 이라면 File.separator 는 "/" 이다.
+			 */
+//			String path = root + "resources" + File.separator + "files";
+			// path 가 첨부파일이 저장될 WAS의 폴더가 된다.
+//			System.out.println("this is path : " + path);
+			// this is path :
+			// C:\eclipse\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\resources\files
+
+			/*
+			 * 2. 파일 첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+			 */
+
+///			String newFileName = "";
+			// WAS의 디스크에 저장될 파일명입니다.
+
+//			byte[] bytes = null;
+			// 첨부 파일의 내용물
+
+//			long fileSize = 0;
+			// 첨부파일의 크기
+//			try {
+//				bytes = attach.getBytes();
+				// 첨부 파일의 내용물을 읽어 오는것
+
+				// 첨부 되어진 파일을 업로드 되도록 하는 것이다!
+				// attach.getOriginalFilename()은 첨부 파일의 파일명 (예: 강아지.png)을 얻어 오는 것 입니다!
+//				newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+
+//				System.out.println("확인용인디! ===>>>>>> " + newFileName);
+				// 확인용인디! ===>>>>>> 202012091037071013008888107800.png
+
+				/*
+				 * 3. BoardVO boardvo에 fileName 값과 orgFilename값과 fileSize 값을 넣어주기
+				 * 
+				 */
+
+//				boardvo.setFileName(newFileName);
+				// WAS에 저장될 파일명 => 202012091037071013008888107800.png
+
+//				boardvo.setOrgFilename(attach.getOriginalFilename());
+				// 게시판 페이지에 청부된 파일을 보여줄때 사용
+				// 또한 사용자가 파일을 다운로드 할때 사용!
+
+//				fileSize = attach.getSize(); // 첨부 파일의 크기 (단뒤는 byte임)
+
+//				boardvo.setFileSize(String.valueOf(fileSize));
+
+//			} catch (Exception e) {
+//				e.printStackTrace();
+//			}
+
+//		}
+
+		// ==== 첨부파일이 있는경우 작업 끝!!! === //
+
+		// == #96. <== After Advice 를 사용하기
+
+		// == After Advice 를 사용하기 위해 파라미터를 생성하는 것임 ==
+		// (글쓰기를 한 이후에 회원의 포인트를 100점 증가)
+//		paraMap.put("fk_userid", boardvo.getFk_userid());
+//		paraMap.put("point", "100");
+		///////////////////////////////////////////////////
+
+		// int n = service.add(boardvo); // 파일 첨부가 없는 글쓰기
+
+		// === #156. 파일 첨부가 있는 글쓰기 또는 파일 첨부가 없는 글쓰기로 나누어서 service 호출하기 === //
+		// 먼저 위의 int n = service.add(boardvo);부분을 주석처리 해주고 아래와 같이 작업한다.
+
+///		int n = 0;
+
+		// 첨부 파일이 없는 경우라면~
+//		if (attach.isEmpty()) {
+//			n = service.add(boardvo);
+//		}
+
+		// 첨부 파일이 있는 경우라면 ~
+//		if (!attach.isEmpty()) {
+//			n = service.add_withFile(boardvo);
+//		}
+
+//		if (n == 1) {
+//			return "redirect:/list.action";
+			// list.action 페이지로 redirect(페이지이동)해라는 말이다.
+//		} else {
+//			return "redirect:/add.action";
+			// add.action 페이지로 redirect(페이지이동)해라는 말이다.
+//		}
+//	}
+	
 
 }

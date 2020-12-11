@@ -73,10 +73,7 @@
 				<textarea class="form-control" rows="30" style="width: 95.4%; resize: none;">내용을 입력해 주세요.</textarea>
 			</li>
 			<li>
-				<input class="form-control" type="file" name="attach1" style="width: 31.5%;" />
-				<input class="form-control" type="file" name="attach2" style="width: 31.5%;" />
-				<input class="form-control" type="file" name="attach3" style="width: 31.5%;" /><br>
-				<span>&nbsp;&nbsp;&nbsp;파일은 최대 3개까지 첨부 가능합니다.</span>
+				<input class="form-control" type="file" name="attach" style="width: 31.5%;" />
 			</li>
 		</ul>
 		<div align="center">

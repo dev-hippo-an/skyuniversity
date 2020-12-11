@@ -16,6 +16,9 @@ public interface InterAnsehyeongService {
 	
 	// 닉넴 업데이트 해주는거쥬~~~
 	int updateNicknameEnd(Map<String, String> paraMap);
+	
+	// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
+	List<Map<String, String>> getCategoryList(String boardKindNo);
 
 
 
