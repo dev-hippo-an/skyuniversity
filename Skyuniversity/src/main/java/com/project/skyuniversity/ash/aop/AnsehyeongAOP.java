@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.service.InterAnsehyeongService;
-import com.project.skyuniversity.common.MyUtil;
+import com.project.skyuniversity.ash.common.MyUtil;
 
 @Aspect     // 공통관심사 클래스(Aspect 클래스)로 등록된다.
 @Component

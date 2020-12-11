@@ -1,6 +1,7 @@
-package com.project.skyuniversity.common;
+package com.project.skyuniversity.ash.common;
 
 import javax.servlet.http.HttpServletRequest;
+
 
 public class MyUtil {
 	// *** ? 다음의 데이터까지 포함한 현재 url주소를 알려주는 메소드 생성
