@@ -99,31 +99,45 @@
 			$("li.graduate").toggle();
 		});
 		
+		// 검색기능
 		$("input#searchInput").keyup(function(){
 			 var input, filter, ul, li, a, i;
 			  input = $(this).val();
+			  //console.log(input);
 			  /* filter = input.value.toUpperCase(); */
 			  ul = $("ul#myMenu");
 			  //console.log(li);
-
-			  li = $("li.menu2");
+			  
+			  var arrMenuList = [];
+			  
 			  len = $("li.menu2").length;
 			  
-			  for(i=0; i<len; i++) {
-				  
-			  }
+			  $("li.menu2").each(function(){
+				  arrMenuList.push($(this).text());
+			  });
 			  
-			  console.log("len==>"+len);
-			  console.log(li);
-			  for (i = 0; i < len; i++) {
-		/* 	    a = li[i]; */
-			   /*  console.log(li[i].text()); */
-			    /* if (a.innerHTML.indexOf(input) > -1) {
-			      li[i].style.display = "";
-			    } else {
-			      li[i].style.display = "none";
-			    } */
-			  }
+			 //console.log(arrMenuList);
+			 
+			 // arrMenuList => menu2 이름값의 배열
+			 // 배열 for문 돌려서 input이랑 같은 값이 있는지 봐야지
+			 
+			
+			 
+			 $.each(arrMenuList, function(index, item){
+				  if(item.indexOf(input) > -1) {
+					 console.log(item);
+				 }
+			 });
+		/* 	 
+			for (i = 0; i < liarrMenuList; i++) {
+		    a = li[i].getElementsByTagName("a")[0];
+		    if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
+		      li[i].style.display = "";
+		    } else {
+		      li[i].style.display = "none";
+		    }
+		  } */
+			
 		});
 		
 	});
