@@ -99,10 +99,16 @@
 			$("li.graduate").toggle();
 		});
 		
+		
+		var con = $("li.menu2").text();
+		console.log(con);
+		
 		// 검색기능
 		$("input#searchInput").keyup(function(){
 			 var input, filter, ul, li, a, i;
 			  input = $(this).val();
+			  
+			  if(input != ""){
 			  //console.log(input);
 			  /* filter = input.value.toUpperCase(); */
 			  ul = $("ul#myMenu");
@@ -124,8 +130,11 @@
 			
 			 
 			 $.each(arrMenuList, function(index, item){
-				  if(item.indexOf(input) > -1) {
-					 console.log(item);
+				
+				 //console.log(item.indexOf(input));
+				 
+				 if(item.indexOf(input) > -1) {
+					 item.show();
 				 }
 			 });
 		/* 	 
@@ -137,7 +146,7 @@
 		      li[i].style.display = "none";
 		    }
 		  } */
-			
+			  }
 		});
 		
 	});
