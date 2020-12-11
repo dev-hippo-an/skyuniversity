@@ -24,7 +24,7 @@ import org.springframework.stereotype.Component;
  */
 
 @Component
-public class FileManager {
+public class AnFileManager {
 	// === 파일 업로드 하기 첫번째 방법
 	public String doFileUpload(byte[] bytes, String originalFilename, String path) throws Exception {
 		String newFilename = null;

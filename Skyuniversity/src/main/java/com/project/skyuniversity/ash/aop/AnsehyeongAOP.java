@@ -119,12 +119,11 @@ public class AnsehyeongAOP {
 		// 로그인 유무를 확인하기 위해서는 request를 통해 session을 얻어와야 한다.
 		HttpServletRequest request = (HttpServletRequest) joinPoint.getArgs()[0];  // 주업무 메소드의 첫번째 파라미터를 얻어오는 것이다. 
 		HttpServletResponse response = (HttpServletResponse) joinPoint.getArgs()[1];  // 주업무 메소드의 두번째 파라미터를 얻어오는 것이다.
-				
-		HttpSession session = request.getSession();
-		CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
 		
-		if( loginuser.getNickname() == null || loginuser.getNickname().isEmpty()) {
-			String message = "닉네임 설정을 먼저 해주세요~~";
+		HttpSession session = request.getSession();
+		
+		if( session.getAttribute("loginuser") == null ) {
+			String message = "먼저 로그인 하세요~~~";
 			String loc = request.getContextPath()+"/index.sky";
 			
 			request.setAttribute("message", message);
@@ -135,6 +134,7 @@ public class AnsehyeongAOP {
 			String url = MyUtil.getCurrentURL(request);
 			session.setAttribute("goBackURL", url); // 세션에 url 정보를 저장시켜둔다. 
 			
+			System.out.println(url);
 			RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/msg.jsp");
 			
 			try {
@@ -142,9 +142,30 @@ public class AnsehyeongAOP {
 			} catch (ServletException | IOException e) {
 				e.printStackTrace();
 			}
+		} else {
+			CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
+			
+			if( loginuser.getNickname() == null || loginuser.getNickname().isEmpty()) {
+				String message = "닉네임 설정을 먼저 해주세요~~";
+				String loc = request.getContextPath()+"/updateNicknameStart.sky";
+				
+				request.setAttribute("message", message);
+				request.setAttribute("loc", loc);
+				
+				// >>> 로그인 성공 후 로그인 하기전 페이지로 돌아가는 작업 만들기 <<< // 
+				// === 현재 페이지의 주소(URL) 알아오기 === 
+				String url = MyUtil.getCurrentURL(request);
+				session.setAttribute("goBackURL", url); // 세션에 url 정보를 저장시켜둔다. 
+				
+				RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/msg.jsp");
+				
+				try {
+					dispatcher.forward(request, response);
+				} catch (ServletException | IOException e) {
+					e.printStackTrace();
+				}
+			}
 		}
-		
-		
 		
 	}
 	

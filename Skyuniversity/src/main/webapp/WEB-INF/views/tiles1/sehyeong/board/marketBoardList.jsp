@@ -2,6 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%
+	String ctxPath = request.getContextPath();
+%>
+
 <style type="text/css">
 table {
    border-collapse: collapse;
@@ -97,7 +101,7 @@ button:hover {
    });// end of $(document).ready(function() {});-------------------------------------
 
    function marketBoardWrite () {
-	   
+	   location.href="<%= ctxPath%>/marketAdd.sky";
    }
    
 </script>

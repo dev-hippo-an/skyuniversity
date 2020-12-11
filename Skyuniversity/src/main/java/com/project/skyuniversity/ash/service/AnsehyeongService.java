@@ -56,5 +56,14 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		int result = dao.updateNicknameEnd(paraMap);
 		return result;
 	}
+	
+	// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
+	@Override
+	public List<Map<String, String>> getCategoryList(String boardKindNo) {
+		
+		List<Map<String, String>> categoryList = dao.getCategoryList(boardKindNo);
+		
+		return categoryList;
+	}
 
 }
