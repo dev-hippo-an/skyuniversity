@@ -5,9 +5,6 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
 <%
    String ctxPath = request.getContextPath();
 %>
@@ -28,7 +25,7 @@
  	height: 30px;
  	margin: 2px;
  	border-radius: 20px;
- 	cursor: pointer;
+ 	font-weight: bold;
  }
  
  li.menu2 {
@@ -44,7 +41,7 @@
  	width: 225px;
  	margin: 0;
  	padding: 0;
-	line-height: 28px; 	
+	line-height: 27px; 	
  }
  
  div#search {
@@ -54,19 +51,18 @@
  input#searchInput {
  	border: 0px;
  	border-bottom: solid 2px #0843ad;
+ 	outline: none;
  }
  
  .choice {
  	font-weight: bold;
+ 	background-color: #0843ad;
+ 	color: white;
+ 	cursor: pointer;
  }
- 
- a:link { color: black; text-decoration: none;}
- a:visited { color: black; text-decoration: none;}
- a:hover { color: black; text-decoration: none; font-weight: bold;}
 
 </style>
 
->>>>>>> wlgusdl10
 <script type="text/javascript">
 
 	$(document).ready(function(){
@@ -136,111 +132,7 @@
 		 
 		}
 </script>
-
-
-<<<<<<< HEAD
-<div style="margin: 0 auto;" align="center">
-   현재시각 :&nbsp; 
-   <div id="clock" style="display:inline;"></div>
-=======
-<%
-   String ctxPath = request.getContextPath();
-%>
-
-<style>
-/*   .sidenav {
-  height: 100%;
-  width: 250px;
-  position: fixed;
-  top: 100px;
-  left: 0;
-  background-color: #ffff;
-  padding-top: 60px;
-} */
-
- li.menu1 {
- 	border: 1px solid lightgray;
- 	height: 30px;
- 	margin: 2px;
- 	border-radius: 5px;
- 	cursor: pointer;
- }
  
- li.menu2 {
-  	height: 30px;
- 	margin: 2px;
- 	cursor: pointer;
- 	background-color: rgb(234,234,234, 0.8);
- 	margin:0;
- }
- 
- ul {
- 	list-style-type: none;
- 	width: 225px;
- 	margin: 0;
- 	padding: 0;
- 	
- }
- 
- div#search {
- 	margin: 50px auto;
- }
- 
- input#searchInput {
- 	border: 0px;
- }
- 
- .choice {
- 	font-weight: bold;
- }
-</style>
-
-<script type="text/javascript">
-
-	$(document).ready(function(){
-		
-		$("li.menu2").hide();
-		
-		$("li").hover(function(){
-			$(this).addClass("choice");
-		}, function(){
-			$(this).removeClass("choice");
-		});
-		
-		$("li#stuentInfo").click(function(){
-			$("li.stuentInfo").toggle();
-		});
-		
-		
-		$("li#clases").click(function(){
-			$("li.clases").toggle();
-		});
-		
-		
-		$("li#resister").click(function(){
-			$("li.resister").toggle();
-		});
-		
-		
-		$("li#grade").click(function(){
-			$("li.grade").toggle();
-		});
-		
-		
-		$("li#graduate").click(function(){
-			$("li.graduate").toggle();
-		});
-		
-		
-		
-	});
- 
-
-
-=======
->>>>>>> wlgusdl10
- 
-</script>
 
 <div align="center">
 
@@ -250,68 +142,35 @@
 	</div>
 	
 	<div id="menu">
-<<<<<<< HEAD
-		<ul>
-			<li id="stuentInfo" class="menu1">학생정보</li>
-				<li class="stuentInfo menu2">학생정보조회</li>
-				<li class="stuentInfo menu2" >비밀번호변경</li>
-				<li class="stuentInfo menu2">학사일정</li>
-				<li class="stuentInfo menu2">증명서발급</li>
-			<li id="clases" class="menu1">수업</li>
-				<li class="clases menu2">수강신청</li>
-				<li class="clases menu2">수강과목</li>
-				<li class="clases menu2">강의평가</li>
-				<li class="clases menu2">공결신청 및 공결신청내역 조회</li>
-			<li id="resister" class="menu1">학적관리</li>
-				<li class="resister menu2">학적변동</li>
-				<li class="resister menu2">전과신청</li>
-				<li class="resister menu2">복수정공,부전공신청</li>
-				<li class="resister menu2">학적변동내역조회</li>
-			<li id="grade" class="menu1">성적</li>
-				<li class="grade menu2">기이수성적조회</li>
-				<li class="grade menu2">당학기성적조회</li>
-				<li class="grade menu2">성적표출력</li>
-				<li class="grade menu2">교양 및 전공필수 이수현황</li>
-			<li id="graduate" class="menu1">졸업</li>
-				<li class="graduate menu2">졸업연기</li>
-				<li class="graduate menu2">졸업적부심사</li>
-				<li class="graduate menu2">조기졸업신청 및 결과조회</li>
-		</ul>
-	</div>
-
->>>>>>> parent of cca8490 (학사행정 tiles(header, side) 변경)
-=======
 		<ul id="myMenu">
 			<li id="stuentInfo" class="menu1">학생정보</li>
-				<li class="stuentInfo menu2"><a href="<%=ctxPath%>/lookupStudentInfo.sky">학생정보조회</a></li>
-            <li class="stuentInfo menu2" ><a href="<%=ctxPath%>/changepwd.sky">비밀번호변경</a></li>
-            <li class="stuentInfo menu2"><a href="<%=ctxPath%>/schedule.sky">학사일정</a></li>
-            <li class="stuentInfo menu2"><a href="<%=ctxPath%>/certificate.sky">증명서발급</a></li>
+				<li class="stuentInfo menu2" onclick="javascript:location.href='<%=ctxPath%>/lookupStudentInfo.sky'">학생정보조회</li>
+	            <li class="stuentInfo menu2" onclick="javascript:location.href='<%=ctxPath%>/changepwd.sky'">비밀번호변경</li>
+	            <li class="stuentInfo menu2" onclick="javascript:location.href='<%=ctxPath%>/schedule.sky'">학사일정</li>
+	            <li class="stuentInfo menu2" onclick="javascript:location.href='<%=ctxPath%>/certificate.sky'">증명서발급</li>
 			<li id="clases" class="menu1">수업</li>
-            <li class="clases menu2"><a href="<%=ctxPath%>/registerClass.sky">수강신청</a></li>
-            <li class="clases menu2"><a href="<%=ctxPath%>/registerSubject.sky">수강과목</a></li>
-            <li class="clases menu2"><a href="<%=ctxPath%>/classCheck.sky">강의평가</a></li>
-            <li class="clases menu2"><a href="<%=ctxPath%>/officalLeave.sky">공결신청</a></li>
-            <li class="clases menu2"><a href="<%=ctxPath%>/girlOfficalLeave.sky">여학생공결신청</a></li>
-            <li class="clases menu2"><a href="<%=ctxPath%>/officalLeaveInfo.sky">공결신청조회</a></li>
-            
+	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/registerClass.sky'">수강신청</li>
+	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/registerSubject.sky'">수강과목</li>
+	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/classCheck.sky'">강의평가</li>
+	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/officalLeave.sky'">공결신청</li>
+	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/girlOfficalLeave.sky'">여학생공결신청</li>
+	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/officalLeaveInfo.sky'">공결신청조회</li>
 			<li id="resister" class="menu1">학적관리</li>
-            <li class="resister menu2"><a href="<%=ctxPath%>/armyLeaveSchool .sky">군휴학</a></li>
-            <li class="resister menu2"><a href="<%=ctxPath%>/leaveSchool .sky">일반휴학</a></li>
-            <li class="resister menu2"><a href="<%=ctxPath%>/leaveSchoolInfo.sky">휴학결과조회</a></li>
-            <li class="resister menu2"><a href="<%=ctxPath%>/comeSchool.sky">복학신청 및 결과조회</a></li>
+	            <li class="resister menu2" onclick="javascript:location.href='<%=ctxPath%>/armyLeaveSchool.sky'">군휴학</li>
+	            <li class="resister menu2" onclick="javascript:location.href='<%=ctxPath%>/leaveSchool.sky'">일반휴학</li>
+	            <li class="resister menu2" onclick="javascript:location.href='<%=ctxPath%>/leaveSchoolInfo.sky'">휴학결과조회</li>
+	            <li class="resister menu2" onclick="javascript:location.href='<%=ctxPath%>/comeSchool.sky'">복학신청 및 결과조회</li>
 			<li id="grade" class="menu1">성적</li>
-            <li class="grade menu2"><a href="<%=ctxPath%>/totalGrade.sky">기이수성적조회</a></li>
-            <li class="grade menu2"><a href="<%=ctxPath%>/thisSemesterGrade.sky">당학기성적조회</a></li>
-            <li class="grade menu2"><a href="<%=ctxPath%>/printReportCard.sky">성적표출력</a></li>
-            <li class="grade menu2"><a href="<%=ctxPath%>/statusOfComplete.sky">교양 및 전공필수 이수현황</a></li>
+	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/totalGrade.sky'">기이수성적조회</li>
+	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/thisSemesterGrade.sky'">당학기성적조회</li>
+	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/printReportCard.sky'">성적표출력</li>
+	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/statusOfComplete.sky'">교양 및 전공필수 이수현황</li>
 			<li id="graduate" class="menu1">졸업</li>
-            <li class="graduate menu2"><a href="<%=ctxPath%>/graduateDelay.sky">졸업연기</a></li>
-            <li class="graduate menu2"><a href="<%=ctxPath%>/graduateTest.sky">졸업적부심사</a></li>
-            <li class="graduate menu2"><a href="<%=ctxPath%>/earlyGraduate.sky">조기졸업신청 및 결과조회</a></li>
+	            <li class="graduate menu2" onclick="javascript:location.href='<%=ctxPath%>/graduateDelay.sky'">졸업연기</li>
+	            <li class="graduate menu2" onclick="javascript:location.href='<%=ctxPath%>/graduateTest.sky'">졸업적부심사</li>
+	            <li class="graduate menu2" onclick="javascript:location.href='<%=ctxPath%>/earlyGraduate.sky'">조기졸업신청 및 결과조회</li>
 		</ul>
 	</div>
 
->>>>>>> wlgusdl10
 </div>
 

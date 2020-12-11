@@ -9,7 +9,7 @@ import com.project.skyuniversity.ash.model.BannerVO;
 import com.project.skyuniversity.ash.model.CommuMemberLevelVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.InterAnsehyeongDAO;
-import com.project.skyuniversity.common.AES256;
+import com.project.skyuniversity.ash.common.AES256;
 
 //=== #31. Service 선언 === 
 //트랜잭션 처리를 담당하는곳 , 업무를 처리하는 곳, 비지니스(Business)단
@@ -23,8 +23,10 @@ public class AnsehyeongService implements InterAnsehyeongService {
 	// 그러므로 dao 는 null 이 아니다.
 
 	// === #45. 양방향 암호화 알고리즘인 AES256 를 사용하여 복호화 하기 위한 클래스 의존객체 주입하기(DI: Dependency Injection) ===
-	@Autowired
-	private AES256 aes;
+	
+	 // @Autowired 
+	 private AES256 aes;
+	
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	// 메인 화면에 뜨는 배너 광고를 올려준다.
 	@Override

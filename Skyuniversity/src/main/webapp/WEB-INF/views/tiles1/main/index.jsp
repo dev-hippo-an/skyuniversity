@@ -28,11 +28,11 @@
 		}
 		
 		for (var i = 0; i < dots.length; i++) {
-	        dots[i].className = dots[i].className.replace(" active", "");
+	        dots[i].className = dots[i].className.replace(" sehyeong", "");
 	    }
 		
 		slides[index-1].style.display = "block";
-		dots[index-1].className += " active";
+		dots[index-1].className += " sehyeong";
 		setTimeout("autoSlide()", 5000); // Change image every 2 seconds
 	} 
 	
@@ -56,14 +56,18 @@
 	    });
 	    
 	    for (i = 0; i < dots.length; i++) {
-	        dots[i].className = dots[i].className.replace(" active", "");
+	        dots[i].className = dots[i].className.replace(" sehyeong", "");
 	    }
 	    
 	    slides[n].style.display = "block";
-	    dots[n].className += " active";
+	    dots[n].className += " sehyeong";
 
 	}
 	
+	function openWin(url){  
+	    window.open(url, "_blank");  
+	}  
+
 	
 	
 </script>
@@ -148,7 +152,7 @@
 				<div id="index-show-carousel" class="column">
 					<a>
 					<c:forEach items="${bannerList}" var="banner">
-						<img class="caro" src="/skyuniversity/resources/images/${banner.iname}" onclick="javascript:location.href='${banner.ilink}'">
+						<img class="caro" src="/skyuniversity/resources/images/${banner.iname}" onclick="openWin('${banner.ilink}')" />
 					</c:forEach>
 						
 					</a>
