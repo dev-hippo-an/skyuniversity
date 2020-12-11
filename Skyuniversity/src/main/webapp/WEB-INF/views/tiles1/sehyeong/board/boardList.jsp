@@ -96,7 +96,10 @@ button:hover {
       
    });// end of $(document).ready(function() {});-------------------------------------
 
-
+   function marketBoardWrite () {
+	   
+   }
+   
 </script>
 </head>
 
@@ -150,7 +153,9 @@ button:hover {
 		</table>
 	</div>
 
-	<div align="right"><button id="register">글쓰기</button></div>
+	<div align="right">
+		<button id="marketBoardWrite" onclick="marketBoardWrite();">글쓰기</button>
+	</div>
 
 	<ul class="pager">
 		<li class=""><a href="#">맨처음</a></li>
