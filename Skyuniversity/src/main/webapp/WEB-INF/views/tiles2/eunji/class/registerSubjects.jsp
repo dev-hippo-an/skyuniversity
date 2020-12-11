@@ -30,7 +30,7 @@ body, html {
   cursor: pointer;
   padding: 14px 16px;
   font-size: 17px;
-  width: 630px;
+  width: 500px;
   
 }
 
@@ -52,11 +52,9 @@ body, html {
 #About {background-color: orange;}
 
 #trth > th{
-   border: solid 1px gray;
 }
 
 .trtd > td{
-   border: solid 1px gray;
 } 
 #trth, .trtd {
    text-align: center;
@@ -71,16 +69,15 @@ body, html {
 }
 #plan, #worknotice {
    text-align: center;
+   color:black;
 }
 #tbldiv {
    margin: 0 auto;
-   border: solid 1px red;
    width: 1500px;
 }
 #include {
    margin: 0 auto;
    width: 1600px;
-   display: inline-block;
 }
 #includenext {
    border: solid 1px #f2f2f2;
@@ -91,23 +88,19 @@ body, html {
    font-size: 18pt;
 }
 #container {
-   border: solid 1px red;
    height: 1000px;
 }
 #classli {
-   border: solid 1px red;
    font-size: 15pt;
 
 }
 #classul {
-   border:solid 1px gray;
    width: 300px;
 }
 #title {
    font-size: 18pt;
 }
 #div1 {
-   border: solid 1px gray;
    width:500px;
 }
 .ulstyle {
@@ -124,12 +117,20 @@ body, html {
    border: none;
 }
 #contain {
-   border: solid 1px red;
    width: 1000px;
    margin: 0 auto;
 }
 #full {
    text-align: center;
+}
+#includes {
+	width: 1200px;
+	margin-left: 180px;
+	padding-top: 20px;
+	height: 400px;
+}
+#subtitle{
+	display: block;
 }
 </style>
 
@@ -242,13 +243,12 @@ body, html {
 </tr>
 </table>
 </div>
-</div>
-<div>
+
+<div id="includes">
 <jsp:include page="a.jsp"/>
 </div>
-<div>
-	<h2>과목명 : 데이터베이스</h2>
 </div>
+
 <div id="container">
 <button class="tablink" onclick="openPage('subnotice', this, 'red');">과목공지</button>
 <button class="tablink" onclick="openPage('worknotice', this, 'green')" id="defaultOpen">과제공지</button>
@@ -259,28 +259,7 @@ body, html {
 </div>
 
 <div id="worknotice" class="tabcontent">
-   <div id="include">   
-   <table>
-      <th>
-         <td>
-            
-         </td>
-         <td>
-            <div id="includenext">
-               <ol id="nextol">
-                  <li><a>데이터베이스 모델링</a></li>
-               
-                  
-                  
-                  <br>
-                  <li>운영체제 복습해오기</li>
-               </ol>
-            </div>
-         </td>
-      </th>
-   </table>
-   
-   </div>
+
    
 </div>
 
