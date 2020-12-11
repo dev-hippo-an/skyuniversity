@@ -54,6 +54,10 @@
  	outline: none;
  }
  
+ span#searchbtn {
+	cursor: pointer;
+ }
+ 
  .choice {
  	font-weight: bold;
  	background-color: #0843ad;
@@ -99,61 +103,48 @@
 			$("li.graduate").toggle();
 		});
 		
-		
-		var con = $("li.menu2").text();
-		console.log(con);
-		
 		// 검색기능
 		$("input#searchInput").keyup(function(){
-			 var input, filter, ul, li, a, i;
-			  input = $(this).val();
-			  
-			  if(input != ""){
-			  //console.log(input);
-			  /* filter = input.value.toUpperCase(); */
-			  ul = $("ul#myMenu");
-			  //console.log(li);
-			  
-			  var arrMenuList = [];
-			  
-			  len = $("li.menu2").length;
-			  
-			  $("li.menu2").each(function(){
-				  arrMenuList.push($(this).text());
-			  });
-			  
-			 //console.log(arrMenuList);
-			 
-			 // arrMenuList => menu2 이름값의 배열
-			 // 배열 for문 돌려서 input이랑 같은 값이 있는지 봐야지
-			 
-			
-			 
-			 $.each(arrMenuList, function(index, item){
-				
-				 //console.log(item.indexOf(input));
-				 
-				 if(item.indexOf(input) > -1) {
-					 item.show();
-				 }
-			 });
-		/* 	 
-			for (i = 0; i < liarrMenuList; i++) {
-		    a = li[i].getElementsByTagName("a")[0];
-		    if (a.innerHTML.toUpperCase().indexOf(filter) > -1) {
-		      li[i].style.display = "";
-		    } else {
-		      li[i].style.display = "none";
-		    }
-		  } */
-			  }
+			if(event.keyCode == 13){
+				goSearchMenu();
+			}
 		});
 		
-	});
+	}); // end of $(document).ready(function(){})-------------------------
 
-	 	function myFunction() {
-		 
-		}
+ 	function goSearchMenu() {
+ 		
+ 		var input = $("input#searchInput").val();
+		  
+		  if(input != ""){
+			  
+			var arrMenuList = [];
+			  
+			// arrMenuList => menu2 텍스트값의 배열 
+			$("li.menu2").each(function(){
+			  arrMenuList.push($(this).text());
+			});
+			
+			$("li.menu2").hide();
+			// arrMenuList 반복문 돌리기
+			$.each(arrMenuList, function(index, item){
+			  // 해당요소에 input 텍스트 값이 있다면
+			  if(item.indexOf(input) > -1) {
+				$("li.menu2").each(function(){ // li.menu2 반복문
+					if($(this).text() == item){ // li.menu2의 텍스트 값이 item과 일치할경우
+						 $(this).show(); //해당 li태그를 보여줌
+					}
+				});
+		 	}
+				 
+			 });
+		  }
+		  else {
+			  $("li.menu2").each(function(){ // li.menu2 반복문
+					$(this).hide();
+			  });
+		  }// end of if()  
+	}// end of goSearchMenu() ------------------------
 </script>
  
 
@@ -161,7 +152,7 @@
 
 	<div id="search">
 		<input id="searchInput"/>
-		<span><img src="<%= ctxPath %>/resources/images/searchicon_jh.png" style="width: 20px; height: 20px;"/></span>
+		<span id="searchbtn" onclick="goSearchMenu();"><img src="<%= ctxPath %>/resources/images/searchicon_jh.png" style="width: 20px; height: 20px;"/></span>
 	</div>
 	
 	<div id="menu">
