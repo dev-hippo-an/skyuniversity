@@ -61,7 +61,7 @@
 	<form class="form-inline" name="registerForm" enctype="multipart/form-data">		
 		<ul>
 			<li><h2>oo게시판</h2></li>
-			<li><h3>작성자&nbsp;:&nbsp;유저1</h3></li>
+			<li><h3>작성자&nbsp;:&nbsp;${sessionScope.loginuser.nickname }</h3></li>
 			<li>
 				<select class="form-control" id="category" name="category" style="width: 10%;">
 					<option>분류1</option>

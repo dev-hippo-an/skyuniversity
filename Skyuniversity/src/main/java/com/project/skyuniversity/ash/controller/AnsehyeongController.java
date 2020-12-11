@@ -94,6 +94,8 @@ public class AnsehyeongController {
 		// 인덱스의 캐러셀에 들어갈 배너 광고를 가져오기
 		List<BannerVO> bannerList = service.getBannerList();
 
+		// List<Map<String, String>> categoryList = sevice.getCategortList();
+		
 		mav.addObject("bannerList", bannerList);
 		mav.setViewName("main/index.tiles1");
 		// /WEB-INF/views/tiles1/main/index.jsp 파일을 생성한다.
