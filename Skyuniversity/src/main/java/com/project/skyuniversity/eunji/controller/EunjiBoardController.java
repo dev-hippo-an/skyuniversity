@@ -12,16 +12,18 @@ import com.project.skyuniversity.eunji.service.InterEunjiService;
 @Controller
 public class EunjiBoardController {
 
+	@Autowired
+	private InterEunjiService service;
 	
 	@RequestMapping(value="registerSubjects.sky")
 	public ModelAndView registerSubjects(ModelAndView mav) {
-		mav.setViewName("tiles2/eunji/class/registerSubjects");
+		mav.setViewName("eunji/class/registerSubjects.tiles2");
 		return mav;
 	}
 	
 	@RequestMapping(value="a.sky")
 	public ModelAndView a(ModelAndView mav) {
-		mav.setViewName("tiles2/eunji/class/a");
+		mav.setViewName("eunji/class/a.tiles2");
 		return mav;
 	}
 }
