@@ -9,7 +9,7 @@ public class MyUtil {
 		
 		
 		String currentURL = request.getRequestURL().toString();
-		// http://localhost:9090/MyMVC/member/memberList.up
+		// http://localhost:9090/skyuniversity/index.sky
 		
 		// ? 뒤에 오는 URL주소를 얻어오는 메소드
 		String queryString = request.getQueryString();

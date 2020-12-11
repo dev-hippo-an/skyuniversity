@@ -32,6 +32,53 @@
    //serverName : http://192.168.50.65:9090 
 %>
 
+<style type="text/css">
+
+label#update-nickname:hover {
+	cursor: pointer;
+	font-weight: bold;
+}
+
+</style>
+
+<script type="text/javascript">
+	$(document).ready(function() {
+		$("input#pwd").keydown(function(event){
+           if(event.keyCode == 13) { 
+              goLogin();
+           }
+        });
+	});
+	
+	function goLogin() {
+		var id = $("input#id").val().trim();
+		var pwd = $("input#pwd").val().trim();
+		
+		
+		if(id == "") {
+        	alert("아이디를 입력하세요!!");
+        	$("#id").val(""); 
+        	$("#id").focus();
+        	return;
+       }
+      
+       if(pwd == "") {
+          alert("비밀번호를 입력하세요!!");
+          $("#pwd").val(""); 
+          $("#pwd").focus();
+          return;
+       }
+		
+		
+		var frm = document.loginFrm;
+		frm.action = "<%=ctxPath%>/login.sky";
+		frm.method = "POST";
+		frm.submit();
+		
+		
+	}
+
+</script>
 
 <div id="header-content" align="center" class="hanna">
 	<div id="logo-div" class="header-content-detail" >
@@ -89,9 +136,6 @@
 				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고거래</li>
 				
 			</ul>
-			<ul style="margin-top: 60px; text-align: left;">
-				<li style="border: none; cursor: none;"><input type="text" name="search" placeholder="Search.." autocomplete="off" /></li>	
-			</ul>
 			
 			
 		</div>
@@ -99,11 +143,48 @@
 	</div>
 
 	<div id="mypage-div" class="header-content-detail" >
-		<ul style="margin-top: 45%;">
-			<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">로그인</li>
+	
+		<div style="height: 70px;">
+			<c:if test="${sessionScope.loginuser == null}">
+				<form name="loginFrm" style="margin-top: 30px; text-align: left; line">
+					<label style="width: 30px; margin-bottom: 5px;" >ID</label><input type="text" name="id" id="id" maxlength="20" placeholder="아이디" style="width: 70%; margin-bottom: 5px;" />
+					<label style="width: 30px;" >PW</label><input type="password" name="pwd" id="pwd" maxlength="20" placeholder="비밀번호" style="width: 70%;" />	
+				</form>
+			</c:if>
+			 
+			<c:if test="${sessionScope.loginuser != null}">
+	          	
+	          	<div style="margin-top: 30px;">
+	          	
+		          	<c:if test="${empty loginuser.nickname}">
+		          		<span>설정된 닉네임이 없어요!</span>
+		          		<br>
+		          		<label id="update-nickname" onclick="javascript:location.href='<%=ctxPath%>/updateNicknameStart.sky'">닉네임 설정하러 가기</label>
+		          	</c:if>
+		          	
+		          	<c:if test="${not empty loginuser.nickname}">
+		        		<span id="nickname">${loginuser.nickname}</span>&nbsp;<span>님 로그인중..</span>
+		        		<br>
+		          		<label id="update-nickname" onclick="javascript:location.href='<%=ctxPath%>/updateNicknameStart.sky'">닉네임 재설정</label>
+		          	</c:if>
+		        	<br>
+		        	<span id=""><img src="<%= ctxPath %>/resources/images/levelimg/${loginuser.levelvo.levelImg}" style="width: 20px; height: 20px;" />&nbsp;${loginuser.levelvo.levelName}</span>
+	          	</div>
+			</c:if>
+		</div>
+		
+		
+		<ul style="margin-top: 10px;">
+			<c:if test="${sessionScope.loginuser == null}">
+				<li onclick="goLogin();">로그인</li>
+			</c:if>
+			<c:if test="${sessionScope.loginuser != null}">
+				<li onclick="javascript:location.href='<%=ctxPath%>/logout.sky'">로그아웃</li>
+			</c:if>
 			<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학사행정</li>
-			
 		</ul>
+		<input type="text" name="search" id="search" placeholder="Search.." autocomplete="off" />
+		
 	</div>
 	
 	
