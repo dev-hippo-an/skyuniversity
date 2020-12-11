@@ -132,9 +132,10 @@ select * from tab;
 select * from TBL_DEPT;
 select * from TBL_MEMBER;
 select * from TBL_SCHOOL_REG;
-select * from TBL_BOARDKIND;
+
 select * from TBL_BOARD_INFORMAL;
 select * from TBL_BOARD_NOTICE;
+select * from TBL_BOARDKIND;
 select * from TBL_CATEGORY;
 
 ----- 장터 게시판의 boardTypeNo = 5

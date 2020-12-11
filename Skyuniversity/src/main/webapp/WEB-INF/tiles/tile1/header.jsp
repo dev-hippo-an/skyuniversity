@@ -133,7 +133,7 @@ label#update-nickname:hover {
 			<ul>
 				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">복덕복덕방</li>
 				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고서점</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고거래</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky'">중고거래</li>
 				
 			</ul>
 			
@@ -181,7 +181,7 @@ label#update-nickname:hover {
 			<c:if test="${sessionScope.loginuser != null}">
 				<li onclick="javascript:location.href='<%=ctxPath%>/logout.sky'">로그아웃</li>
 			</c:if>
-			<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학사행정</li>
+			<li onclick="javascript:location.href='<%= ctxPath%>/hsindex.sky'">학사행정</li>
 		</ul>
 		<input type="text" name="search" id="search" placeholder="Search.." autocomplete="off" />
 		

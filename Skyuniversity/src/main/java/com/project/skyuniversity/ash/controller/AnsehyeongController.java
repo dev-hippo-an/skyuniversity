@@ -253,7 +253,6 @@ public class AnsehyeongController {
 
 	// === 장터 게시판 리스트 페이지 요청 === //
 	@RequestMapping(value = "/marketboardList.sky")
-
 	public ModelAndView boardList(HttpServletRequest request, ModelAndView mav) {
 		/*
 		 * List<BoardVO> boardList = null;
@@ -450,8 +449,18 @@ public class AnsehyeongController {
 		 * 
 		 * if ("".equals(searchWord)) { mav.addObject("paraMap",paraMap); }
 		 */
-		mav.setViewName("sehyeong/board/boardList.tiles1");
+		mav.setViewName("sehyeong/board/marketBoardList.tiles1");
 		return mav;
 	}
+	
+	// === 게시판 글쓰기 폼페이지 요청 === //
+		@RequestMapping(value = "/marketAdd.sky")
+		public ModelAndView nicknameCheck_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+
+			mav.setViewName("sehyeong/board/marketBoardRegister.tiles1");
+			// /WEB-INF/views/tiles1/sehyeong/board/marketBoardRegister.jsp 파일을 불러온다.
+
+			return mav;
+		}
 
 }
