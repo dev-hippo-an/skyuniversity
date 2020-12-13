@@ -24,4 +24,10 @@ private InterEunjiService service;
 		mav.setViewName("eunji/class/a.tiles2");
 		return mav;
 	}
+	
+	@RequestMapping(value="registerClass.sky")
+	public ModelAndView registerClass(ModelAndView mav) {
+		mav.setViewName("eunji/class/registerClass.tiles2");
+		return mav;
+	}
 }
