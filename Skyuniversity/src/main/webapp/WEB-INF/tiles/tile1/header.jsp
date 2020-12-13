@@ -89,51 +89,51 @@ label#update-nickname:hover {
 		<div class="menu-list-div">
 			<label>학교</label>
 			<ul>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">공지사항</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학생회 게시판</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">전공 게시판</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">동아리 게시판</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">졸업생 게시판</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학교 비판 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=1'">공지사항</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=2'">학생회 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=3'">전공 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=4'">동아리 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=5'">졸업생 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=6'">학교 비판 게시판</li>
 			</ul>
 		</div>
 		<div class="menu-list-div">
 			<label>커뮤니티</label>
 			<ul>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">익명 게시판</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자유 게시판(반말)</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자유 게시판(존대)</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">유머 게시판</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">정치 사회 이슈</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=7'">익명 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=8'">자유 게시판(반말)</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=9'">자유 게시판(존대)</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=10'">유머 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=11'">정치 사회 이슈</li>
 			</ul>
 		</div>
 		<div class="menu-list-div">
 			<label>관심사</label>
 			<ul>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">mbti</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">맛집</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">연애</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">취미</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">헬스</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">다이어트</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=12'">mbti</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=13'">맛집</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=14'">연애</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=15'">취미</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=16'">헬스</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=17'">다이어트</li>
 			</ul>
 		</div>
 		<div class="menu-list-div">
 			<label>정보</label>
 			<ul> 
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">스터디 게시판</li>
-				<li class="boardList" class="boardList"onclick="javascript:location.href='<%= ctxPath%>/index.sky'">자격증 정보</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">취업 게시판</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">구인/구직</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">분실물 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=18'">스터디 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=19'">자격증 정보</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=20'">취업 게시판</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=21'">구인/구직</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=22'">분실물 게시판</li>
 			</ul>
 		</div>
 		<div class="menu-list-div">
 			<label>장터</label>
 			<ul>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">복덕복덕방</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고서점</li>
-				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">중고거래</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky?boardKindNo=23'">복덕복덕방</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky?boardKindNo=24'">중고서점</li>
+				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky?boardKindNo=25'">중고거래</li>
 				
 			</ul>
 			
@@ -181,7 +181,7 @@ label#update-nickname:hover {
 			<c:if test="${sessionScope.loginuser != null}">
 				<li onclick="javascript:location.href='<%=ctxPath%>/logout.sky'">로그아웃</li>
 			</c:if>
-			<li onclick="javascript:location.href='<%= ctxPath%>/index.sky'">학사행정</li>
+			<li onclick="javascript:location.href='<%= ctxPath%>/hsindex.sky'">학사행정</li>
 		</ul>
 		<input type="text" name="search" id="search" placeholder="Search.." autocomplete="off" />
 		

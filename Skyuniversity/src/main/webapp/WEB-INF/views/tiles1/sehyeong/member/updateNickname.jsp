@@ -117,7 +117,7 @@
 			<span id="nickname-error"></span>
             <div id="buttons" style="text-align: center;">
                 <button type="button" class="nickname-button" onclick="goRegNickname()">등록</button>
-                <button type="button" class="nickname-button" onclick="">취소</button>
+                
             </div>	        
 	    </form>
 	</div>
