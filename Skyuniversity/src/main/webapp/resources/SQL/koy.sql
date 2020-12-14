@@ -1,1 +1,433 @@
 show user;
+
+select * from tab;
+
+------------------------------- 2020-12-09 start -----------------------------------------
+-------------------------- 게시판 종류 테이블 생성 ------------------------------
+DROP TABLE tbl_boardKind;
+CREATE TABLE tbl_boardKind (
+    boardKindNo     NUMBER  NOT NULL,               -- 게시판 번호
+    boardTypeNo     NUMBER(1) NOT NULL,             -- 게시판 타입번호 (학교 - 1, 커뮤니티 - 2, 관심사 - 3, 정보 - 4, 장터 - 5)
+    boardName       VARCHAR2(50) NOT NULL,          -- 게시판 이름
+    CONSTRAINT PK_tbl_boardKindNo PRIMARY KEY(boardKindNo)
+);
+
+drop sequence tbl_boardKind_seq;
+create sequence tbl_boardKind_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '공지사항');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '학생회게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '전공게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '동아리게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '졸업생게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '학교비판게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '익명게시판', 'tbl_board_anonymous');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '자유게시판(반말)', 'tbl_board_informal');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '자유게시판(존대)', 'tbl_board_polite');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '유머게시판', 'tbl_board_humor');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '정치·사회·이슈', 'tbl_board_issue');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, 'MBTI');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '맛집');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '연애');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '취미');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '헬스');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '다이어트');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '스터디');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '자격증');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '취업');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '구인/구직');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '분실물');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 5, '복덕복덕방');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 5, '중고서점');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 5, '중고거래');
+
+COMMIT;
+
+select * 
+from tbl_boardKind;
+
+delete from tbl_boardKind;
+
+select * 
+from tbl_commu_member;
+
+select tableName, boardName
+from tbl_boardKind
+where boardkindno = 2;
+
+-------------------------- 반말 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_informal(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(4000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    fileExist         NUMBER(1)         NOT NULL,       -- 첨부파일 유무
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    CONSTRAINT PK_tbl_board_informal PRIMARY KEY(boardNo)
+);
+drop sequence tbl_board_informal_seq;
+create sequence tbl_board_informal_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+select *
+from tbl_board_informal
+order by boardNo desc;
+
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 100, 1, '첫번째 게시물입니다.', '이히히 내가 첫번째다.', 0, '120.0.0.1');
+
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '두번째 게시물입니다.', '이히히 내가 두번째다.', 0, '120.0.0.1');
+
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '세번째 게시물입니다.', '이히히 내가 세번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '네번째 게시물입니다.', '이히히 내가 네번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '5번째 게시물입니다.', '이히히 내가 다섯번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '6번째 게시물입니다.', '이히히 내가 여섯번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '7번째 게시물입니다.', '이히히 내가 일곱번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '8번째 게시물입니다.', '이히히 내가 여덟번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '9번째 게시물입니다.', '이히히 내가 아홉번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '10번째 게시물입니다.', '이히히 내가 열번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '11번째 게시물입니다.', '이히히 내가 열한번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '12번째 게시물입니다.', '이히히 내가열두번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '13번째 게시물입니다.', '이히히 내가 열세번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '14번째 게시물입니다.', '이히히 내가 열네번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '15번째 게시물입니다.', '이히히 내가 열다섯번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '16번째 게시물입니다.', '이히히 내가 열여섯번째다.', 0, '120.0.0.1');
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, fileExist, writerIp) 
+values(tbl_board_informal_seq.nextval, 2, 101, 1, '17번째 게시물입니다.', '이히히 내가 열일곱번째다.', 0, '120.0.0.1');
+
+
+commit;
+
+-------------------------- 카테고리 테이블 생성 ------------------------------
+drop table tbl_category purge;
+CREATE TABLE tbl_category(
+    categoryNo          NUMBER          NOT NULL,   -- 카테고리 번호
+    fk_boardkindno      NUMBER          NOT NULL,   -- 게시판 번호
+    categoryName        VARCHAR2(50)    NOT NULL,   -- 카테고리 이름
+    CONSTRAINT PK_tbl_category PRIMARY KEY (categoryNo)
+);
+drop sequence tbl_category_seq;
+create sequence tbl_category_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+insert into tbl_category values(tbl_category_seq.nextval, 2, '자유');
+
+select categoryNo, fk_boardkindno, categoryName 
+from tbl_category
+where fk_boardkindno = 2;
+------------------------------- 2020-12-09 end -----------------------------------------
+------------------------------- 2020-12-10 start ---------------------------------------
+select *
+from tbl_commu_member;
+
+select *
+from tbl_commu_member_level;
+
+select boardNo, V.fk_boardKindNo, fk_memberNo, categoryName,  subject, regDate, editDate
+         , content, readCount, status, fileExist, writerIp
+from
+(
+    select boardNo, fk_boardKindNo, fk_memberNo, categoryNo, subject, regDate, editDate
+         , content, readCount, status, fileExist, writerIp
+    from tbl_board_informal
+    order by boardNo desc
+)V join tbl_category C 
+on V.categoryNo = C.categoryNo;
+
+
+
+select boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject, regDate, editDate
+         , content, readCount, status, fileExist, writerIp
+from tbl_category C join tbl_board_informal V 
+on C.categoryNo = V.categoryNo
+join tbl_commu_member M 
+on V.fk_memberNo = M.fk_memberNo; 
+
+select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
+         , content, readCount, status, fileExist, writerIp
+from 
+(
+    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+         , content, readCount, status, fileExist, writerIp
+    from tbl_category C join tbl_board_informal V 
+    on C.categoryNo = V.categoryNo
+    join tbl_commu_member M 
+    on V.fk_memberNo = M.fk_memberNo
+)T
+where rno between 1 and 5
+order by rno desc;
+
+alter table tbl_board_informal rename column categoryNo to fk_categoryNo;
+
+commit;
+
+
+-------------------------- 존댓말 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_polite(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(4000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    fileExist         NUMBER(1)         NOT NULL,       -- 첨부파일 유무
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    CONSTRAINT PK_tbl_board_polite PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_polite_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+-------------------------- 유머 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_humor(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(4000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    fileExist         NUMBER(1)         NOT NULL,       -- 첨부파일 유무
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    CONSTRAINT PK_tbl_board_humor PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_humor_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 정치·사회·이슈 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_issue(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(4000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    fileExist         NUMBER(1)         NOT NULL,       -- 첨부파일 유무
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    CONSTRAINT PK_tbl_board_issue PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_issue_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+select *
+from tbl_boardKind;
+
+insert into tbl_category values(tbl_category_seq.nextval, 3, '자유');
+insert into tbl_category values(tbl_category_seq.nextval, 4, '일반');
+insert into tbl_category values(tbl_category_seq.nextval, 4, '밈');
+insert into tbl_category values(tbl_category_seq.nextval, 4, '개그');
+insert into tbl_category values(tbl_category_seq.nextval, 5, '정치');
+insert into tbl_category values(tbl_category_seq.nextval, 5, '사회');
+insert into tbl_category values(tbl_category_seq.nextval, 5, '이슈');
+insert into tbl_category values(tbl_category_seq.nextval, 5, '경제');
+
+select categoryNo, fk_boardkindno, categoryName 
+from tbl_category;
+
+commit;
+
+
+select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
+     , content, readCount, status, fileExist, writerIp
+from 
+(
+    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+         , content, readCount, status, fileExist, writerIp
+    from tbl_category C join tbl_board_informal V 
+    on C.categoryNo = V.fk_categoryNo
+    join tbl_commu_member M 
+    on V.fk_memberNo = M.fk_memberNo
+    where V.status = 1 and lower(nickname) like '%' || lower('오') || '%'
+)T
+where rno between 1 and 5
+order by rno desc;
+
+select *
+from tbl_board_informal;
+
+select *
+from tbl_commu_member;
+------------------------------- 2020-12-10 end -----------------------------------------
+------------------------------- 2020-12-11 start ---------------------------------------
+select *
+from tbl_category;
+
+insert into tbl_category values(0, 0, '공지사항');
+
+commit;
+
+delete from tbl_boardKind;
+delete from tbl_category;
+delete from tbl_board_notice;
+delete from tbl_board_informal;
+
+select * from tbl_boardKind;
+select * from tbl_category;
+select * from tbl_board_notice;
+select * from tbl_board_informal;
+
+alter table tbl_boardKind drop column tableName;
+
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '공지사항');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '학생회게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '전공게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '동아리게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '졸업생게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 1, '학교비판게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '익명게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '자유게시판(반말)');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '자유게시판(존대)');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '유머게시판');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 2, '정치·사회·이슈');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, 'MBTI');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '맛집');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '연애');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '취미');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '헬스');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 3, '다이어트');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '스터디');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '자격증');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '취업');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '구인/구직');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 4, '분실물');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 5, '복덕복덕방');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 5, '중고서점');
+insert into tbl_boardKind values(tbl_boardKind_seq.nextval, 5, '중고거래');
+
+commit;
+
+insert into tbl_category values(tbl_category_seq.nextval, 0, '공지사항');
+
+insert into tbl_category values(tbl_category_seq.nextval, 2, '홍보');
+insert into tbl_category values(tbl_category_seq.nextval, 2, '문의');
+insert into tbl_category values(tbl_category_seq.nextval, 2, '일반');
+insert into tbl_category values(tbl_category_seq.nextval, 3, '정경대');
+insert into tbl_category values(tbl_category_seq.nextval, 3, '인문대');
+insert into tbl_category values(tbl_category_seq.nextval, 3, '공대');
+insert into tbl_category values(tbl_category_seq.nextval, 3, '예체능');
+insert into tbl_category values(tbl_category_seq.nextval, 4, '홍보');
+insert into tbl_category values(tbl_category_seq.nextval, 4, '문의');
+insert into tbl_category values(tbl_category_seq.nextval, 4, '일반');
+insert into tbl_category values(tbl_category_seq.nextval, 5, '취업');
+insert into tbl_category values(tbl_category_seq.nextval, 5, '졸업');
+insert into tbl_category values(tbl_category_seq.nextval, 5, '일반');
+insert into tbl_category values(tbl_category_seq.nextval, 6, '자유');
+insert into tbl_category values(tbl_category_seq.nextval, 6, '신고');
+insert into tbl_category values(tbl_category_seq.nextval, 10, '일반');
+insert into tbl_category values(tbl_category_seq.nextval, 10, '밈');
+insert into tbl_category values(tbl_category_seq.nextval, 10, '개그');
+insert into tbl_category values(tbl_category_seq.nextval, 11, '정치');
+insert into tbl_category values(tbl_category_seq.nextval, 11, '사회');
+insert into tbl_category values(tbl_category_seq.nextval, 11, '이슈');
+insert into tbl_category values(tbl_category_seq.nextval, 11, '경제');
+insert into tbl_category values(tbl_category_seq.nextval, 13, '정보');
+insert into tbl_category values(tbl_category_seq.nextval, 13, '번개');
+insert into tbl_category values(tbl_category_seq.nextval, 14, '일반');
+insert into tbl_category values(tbl_category_seq.nextval, 14, '질문');
+insert into tbl_category values(tbl_category_seq.nextval, 14, '고민');
+insert into tbl_category values(tbl_category_seq.nextval, 15, '등산');
+insert into tbl_category values(tbl_category_seq.nextval, 15, '게임');
+insert into tbl_category values(tbl_category_seq.nextval, 15, '운동');
+insert into tbl_category values(tbl_category_seq.nextval, 15, '독서');
+insert into tbl_category values(tbl_category_seq.nextval, 16, '일반');
+insert into tbl_category values(tbl_category_seq.nextval, 16, '질문');
+insert into tbl_category values(tbl_category_seq.nextval, 16, '헬린이');
+insert into tbl_category values(tbl_category_seq.nextval, 16, '홈트');
+insert into tbl_category values(tbl_category_seq.nextval, 16, '요가');
+insert into tbl_category values(tbl_category_seq.nextval, 17, '일반');
+insert into tbl_category values(tbl_category_seq.nextval, 17, '질문');
+insert into tbl_category values(tbl_category_seq.nextval, 18, '취업');
+insert into tbl_category values(tbl_category_seq.nextval, 18, '고시');
+insert into tbl_category values(tbl_category_seq.nextval, 18, '공무원');
+insert into tbl_category values(tbl_category_seq.nextval, 18, '영어');
+insert into tbl_category values(tbl_category_seq.nextval, 19, '토익');
+insert into tbl_category values(tbl_category_seq.nextval, 19, '기사');
+insert into tbl_category values(tbl_category_seq.nextval, 19, '한국사');
+insert into tbl_category values(tbl_category_seq.nextval, 20, '정보');
+insert into tbl_category values(tbl_category_seq.nextval, 20, '자유');
+insert into tbl_category values(tbl_category_seq.nextval, 21, '구인공고');
+insert into tbl_category values(tbl_category_seq.nextval, 21, '인턴십');
+insert into tbl_category values(tbl_category_seq.nextval, 22, '습득');
+insert into tbl_category values(tbl_category_seq.nextval, 22, '분실');
+insert into tbl_category values(tbl_category_seq.nextval, 23, '삽니다');
+insert into tbl_category values(tbl_category_seq.nextval, 23, '팝니다');
+insert into tbl_category values(tbl_category_seq.nextval, 24, '삽니다');
+insert into tbl_category values(tbl_category_seq.nextval, 24, '팝니다');
+insert into tbl_category values(tbl_category_seq.nextval, 24, '무료나눔');
+insert into tbl_category values(tbl_category_seq.nextval, 25, '삽니다');
+insert into tbl_category values(tbl_category_seq.nextval, 25, '팝니다');
+insert into tbl_category values(tbl_category_seq.nextval, 25, '무료나눔');
+
+
+
+

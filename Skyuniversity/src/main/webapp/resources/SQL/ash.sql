@@ -131,10 +131,11 @@ commit;
 select * from tab;
 select * from TBL_DEPT;
 select * from TBL_MEMBER;
-select * from TBL_SCHOOL_REG;
-select * from TBL_BOARDKIND;
+select * from TBL_BOARD_HUMOR;
+
 select * from TBL_BOARD_INFORMAL;
 select * from TBL_BOARD_NOTICE;
+select * from TBL_BOARDKIND;
 select * from TBL_CATEGORY;
 
 ----- 장터 게시판의 boardTypeNo = 5
@@ -157,5 +158,31 @@ boardNo               number                                not null         -- 
 , check (status in (0, 1))
 , check (fileExist in (0, 1))
 );
+
+create sequence tbl_board_etcmarket_seq
+start with 1         -- 첫번째 출발은 1부터 한다.
+increment by 1        -- 증가치 값
+nomaxvalue          -- 최대값이 없이 무제한으로 증가시키겠다는 뜻. 최대값을 주고 싶다면 maxvalue 100이런 식으로 주면 된다.
+nominvalue          -- 최소값이 없다.
+nocycle             -- 반복이 없는 직진
+nocache;
+
+create table tbl_file (
+fileNo              number          not null
+, fk_boardKindNo    number          not null
+, fk_boardNo        number          not null
+, fileName          varchar2(50)    not null
+, orgFileName       varchar2(200)   not null
+, fileSize          varchar2(50)    not null
+, primary key (fileNo)
+);
+
+create sequence tbl_file_seq
+start with 1         -- 첫번째 출발은 1부터 한다.
+increment by 1        -- 증가치 값
+nomaxvalue          -- 최대값이 없이 무제한으로 증가시키겠다는 뜻. 최대값을 주고 싶다면 maxvalue 100이런 식으로 주면 된다.
+nominvalue          -- 최소값이 없다.
+nocycle             -- 반복이 없는 직진
+nocache;
 
 

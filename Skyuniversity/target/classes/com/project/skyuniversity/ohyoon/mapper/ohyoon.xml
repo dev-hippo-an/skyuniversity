@@ -5,6 +5,165 @@
 
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="ohyoon">
+
+	<!-- 게시판 번호를 입력하여 해당 게시판 번호에 해당하는 테이블명 가져오기 -->
+	<select id="getBoardName" parameterType="int" resultType="String">
+		select boardName
+      	from tbl_boardKind
+      	where boardkindno = #{boardKindNo}
+	</select>
+	
+	<!-- 게시판 번호를 입력하여 해당 게시판번호에 해당하는 카테고리들을 불러오기 -->
+	<select id="getCategoryList" parameterType="int" resultType="com.project.skyuniversity.ohyoon.model.CategoryVO">
+		select categoryNo, fk_boardkindno, categoryName 
+		from tbl_category
+		where fk_boardkindno = #{boardKindNo}
+	</select>
+	
+	<!-- 테이블명을 입력하여 해당 게시판에 해당하는 게시물들을 불러오기 -->
+	<!-- 
+	<select id="getBoardList" parameterType="int" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
+		         , content, readCount, status, fileExist, writerIp
+		from 
+		(
+		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status, fileExist, writerIp
+		    from tbl_category C join ${value} V 
+		    on C.categoryNo = V.categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		)T
+		where rno between 1 and 5
+		order by rno desc
+	</select>
+	-->
+	
+	<!-- 각 테이블마다 게시글들을 받아오기 -->
+	<select id="getInformalBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
+		         , content, readCount, status, fileExist, writerIp
+		from 
+		(
+		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status, fileExist, writerIp
+		    from tbl_category C join tbl_board_informal V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+	        </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno desc
+	</select>
+	<select id="getPoliteBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
+		         , content, readCount, status, fileExist, writerIp
+		from 
+		(
+		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status, fileExist, writerIp
+		    from tbl_category C join tbl_board_polite V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+            </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno desc
+	</select>
+	<select id="getHumorBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
+		         , content, readCount, status, fileExist, writerIp
+		from 
+		(
+		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status, fileExist, writerIp
+		    from tbl_category C join tbl_board_humor V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+            </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno desc
+	</select>
+	<select id="getIssueBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
+		         , content, readCount, status, fileExist, writerIp
+		from 
+		(
+		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status, fileExist, writerIp
+		    from tbl_category C join tbl_board_issue V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+            </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno desc
+	</select>
+	
+	
+	<!-- 총 게시물 건수 알아오기 -->
+	<select id="getInformalTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_informal V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != "" '>
+        and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+        </if>
+	</select>
+	<select id="getPoliteTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_polite V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+	</select>
+	<select id="getHumorTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_humor V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+	</select>
+	<select id="getIssueTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_issue V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+	</select>
+	
+	
+	
+	
 	
 	
 	

@@ -61,7 +61,7 @@
 	<form class="form-inline" name="registerForm" enctype="multipart/form-data">		
 		<ul>
 			<li><h2>oo게시판</h2></li>
-			<li><h3>작성자&nbsp;:&nbsp;유저1</h3></li>
+			<li><h3>작성자&nbsp;:&nbsp;${sessionScope.loginuser.nickname }</h3></li>
 			<li>
 				<select class="form-control" id="category" name="category" style="width: 10%;">
 					<option>분류1</option>
@@ -73,10 +73,7 @@
 				<textarea class="form-control" rows="30" style="width: 95.4%; resize: none;">내용을 입력해 주세요.</textarea>
 			</li>
 			<li>
-				<input class="form-control" type="file" name="attach1" style="width: 31.5%;" />
-				<input class="form-control" type="file" name="attach2" style="width: 31.5%;" />
-				<input class="form-control" type="file" name="attach3" style="width: 31.5%;" /><br>
-				<span>&nbsp;&nbsp;&nbsp;파일은 최대 3개까지 첨부 가능합니다.</span>
+				<input class="form-control" type="file" name="attach" style="width: 31.5%;" />
 			</li>
 		</ul>
 		<div align="center">

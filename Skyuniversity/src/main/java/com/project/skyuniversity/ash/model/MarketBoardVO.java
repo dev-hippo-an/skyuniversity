@@ -1,0 +1,229 @@
+package com.project.skyuniversity.ash.model;
+
+import org.springframework.web.multipart.MultipartFile;
+
+public class MarketBoardVO {
+	private int boardNo;         	// 시퀀스 고유넘버
+	private int fk_boardKindNo;  	// tbl_boardkind 참조!
+	private int fk_memberNo;  	 	// 유저넘버 (현재는 101, 102)
+	private int categoryNo;  	 	// 삽니다: 1 , 팝니다: 2,  무료나눔: 3,  거래완료: 4
+	private String subject;  	 	// 글제목
+	private String regDate;  	 	// 등록일자
+	private String editDate;  	 	// 글 수정 일자
+	private String content;  	 	// 글 내용(null이 가능한 이유는 사진만 올리는 경우가 있기 때문에!)
+	private String readCount;    	// 조회수 디폴트는 0
+	private int status;  		 	// 글상태 0 - 비활성화,  1 - 활성화
+	private int fileExist;  	 	// 첨부 파일 존재 여부 0 - 없음 1 - 있음
+	private String writerIp;  	 	// 작성자 아이피주소
+	private String price;  		 	// 다른게시판과 다르게 가격정보 무료나눔이 있으므로 0도 가능
+	private String fileName; 		// WAS(톰캣)에 저장될 파일명(20201208092715353243254235235234.png)
+	private String orgFileName; 	// 진짜 파일명(강아지.png) 사용자가 파일을 업로드 하거나 파일을 다운로드 할때 사용되어지는 파일명
+	private String fileSize; 		// 파일크기
+	
+	
+	///////////////////////////////////////////////////////////////
+	private MultipartFile attach; // 첨부파일입니당~
+	
+	
+	private String previousseq;  	// 이전글번호
+	private String previoussubject; // 이전글제목
+	private String nextseq; 		// 다음글번호
+	private String nextsubject; 	// 다음글제목
+	
+	public MarketBoardVO() {}
+
+	public MarketBoardVO(int boardNo, int fk_boardKindNo, int fk_memberNo, int categoryNo, String subject,
+			String regDate, String editDate, String content, String readCount, int status, int fileExist,
+			String writerIp, String price, String fileName, String orgFileName, String fileSize) {
+		super();
+		this.boardNo = boardNo;
+		this.fk_boardKindNo = fk_boardKindNo;
+		this.fk_memberNo = fk_memberNo;
+		this.categoryNo = categoryNo;
+		this.subject = subject;
+		this.regDate = regDate;
+		this.editDate = editDate;
+		this.content = content;
+		this.readCount = readCount;
+		this.status = status;
+		this.fileExist = fileExist;
+		this.writerIp = writerIp;
+		this.price = price;
+		this.fileName = fileName;
+		this.orgFileName = orgFileName;
+		this.fileSize = fileSize;
+	}
+
+	
+	public int getBoardNo() {
+		return boardNo;
+	}
+
+	public void setBoardNo(int boardNo) {
+		this.boardNo = boardNo;
+	}
+
+	public int getFk_boardKindNo() {
+		return fk_boardKindNo;
+	}
+
+	public void setFk_boardKindNo(int fk_boardKindNo) {
+		this.fk_boardKindNo = fk_boardKindNo;
+	}
+
+	public int getFk_memberNo() {
+		return fk_memberNo;
+	}
+
+	public void setFk_memberNo(int fk_memberNo) {
+		this.fk_memberNo = fk_memberNo;
+	}
+
+	public int getCategoryNo() {
+		return categoryNo;
+	}
+
+	public void setCategoryNo(int categoryNo) {
+		this.categoryNo = categoryNo;
+	}
+
+	public String getSubject() {
+		return subject;
+	}
+
+	public void setSubject(String subject) {
+		this.subject = subject;
+	}
+
+	public String getRegDate() {
+		return regDate;
+	}
+
+	public void setRegDate(String regDate) {
+		this.regDate = regDate;
+	}
+
+	public String getEditDate() {
+		return editDate;
+	}
+
+	public void setEditDate(String editDate) {
+		this.editDate = editDate;
+	}
+
+	public String getContent() {
+		return content;
+	}
+
+	public void setContent(String content) {
+		this.content = content;
+	}
+
+	public String getReadCount() {
+		return readCount;
+	}
+
+	public void setReadCount(String readCount) {
+		this.readCount = readCount;
+	}
+
+	public int getStatus() {
+		return status;
+	}
+
+	public void setStatus(int status) {
+		this.status = status;
+	}
+
+	public int getFileExist() {
+		return fileExist;
+	}
+
+	public void setFileExist(int fileExist) {
+		this.fileExist = fileExist;
+	}
+
+	public String getWriterIp() {
+		return writerIp;
+	}
+
+	public void setWriterIp(String writerIp) {
+		this.writerIp = writerIp;
+	}
+
+	public String getPrice() {
+		return price;
+	}
+
+	public void setPrice(String price) {
+		this.price = price;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
+
+	public String getOrgFileName() {
+		return orgFileName;
+	}
+
+	public void setOrgFileName(String orgFileName) {
+		this.orgFileName = orgFileName;
+	}
+
+	public String getFileSize() {
+		return fileSize;
+	}
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
+	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
+
+	public String getPreviousseq() {
+		return previousseq;
+	}
+
+	public void setPreviousseq(String previousseq) {
+		this.previousseq = previousseq;
+	}
+
+	public String getPrevioussubject() {
+		return previoussubject;
+	}
+
+	public void setPrevioussubject(String previoussubject) {
+		this.previoussubject = previoussubject;
+	}
+
+	public String getNextseq() {
+		return nextseq;
+	}
+
+	public void setNextseq(String nextseq) {
+		this.nextseq = nextseq;
+	}
+
+	public String getNextsubject() {
+		return nextsubject;
+	}
+
+	public void setNextsubject(String nextsubject) {
+		this.nextsubject = nextsubject;
+	}
+	
+	
+	
+	
+}

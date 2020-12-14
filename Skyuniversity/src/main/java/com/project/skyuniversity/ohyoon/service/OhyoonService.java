@@ -1,9 +1,13 @@
 package com.project.skyuniversity.ohyoon.service;
 
+import java.util.*;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.skyuniversity.common.AES256;
+import com.project.skyuniversity.ohyoon.model.BoardVO;
+import com.project.skyuniversity.ohyoon.model.CategoryVO;
 import com.project.skyuniversity.ohyoon.model.InterOhyoonDAO;
 
 @Service
@@ -27,6 +31,39 @@ public class OhyoonService implements InterOhyoonService{
 	// === #45. 양방향 암호화 알고리즘인 AES256 를 사용하여 복호화 하기 위한 클래스 의존객체 주입하기(DI: Dependency Injection) ===
 	@Autowired
 	private AES256 aes;
+
+	
+	
+	// 게시판 번호를 입력하여 해당 게시판번호에 해당하는 게시판 이름 불러오기
+	@Override
+	public String getBoardName(int boardKindNo) {
+		String boardname = dao.getBoardName(boardKindNo); 
+		return boardname;
+	}
+	
+	
+	// 게시판 번호를 입력하여 해당 게시판번호에 해당하는 카테고리들을 불러오기
+	@Override
+	public List<CategoryVO> getCategoryList(int boardKindNo) {
+		List<CategoryVO> cateList = dao.getCategoryList(boardKindNo);
+		return cateList;
+	}
+	
+	
+	// 게시판 번호를 입력하여 해당 게시판 번호에 해당하는 게시물들을 불러오기
+	@Override
+	public List<BoardVO> getBoardList(Map<String, String> paraMap) {
+		List<BoardVO> boardList = dao.getBoardList(paraMap); 
+		return boardList;
+	}
+
+	
+	// 총 게시물 건수 알아오기
+	@Override
+	public int getTotalCount(Map<String, String> paraMap) {
+		int totalCount = dao.getTotalCount(paraMap);
+		return totalCount;
+	}
 	
 	
 }
