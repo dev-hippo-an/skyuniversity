@@ -1,0 +1,77 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="eunji">
+
+	<select id="selectMemberInfo" parameterType="HashMap" resultType="com.project.skyuniversity.eunji.model.MemberVO">
+		select currentSemester, name, memberNo, deptName
+		from tbl_member M
+		inner join tbl_dept D
+		on M.fk_deptseq = D.deptseq
+		where memberno = #{memberNo}
+	</select>
+	
+	<select id="selectAllDept" resultType="String" >
+		select deptname
+		from tbl_dept
+	</select>
+	
+	<select id="selectAllSubject" resultType="String" >
+		select subjectname
+		from tbl_subject
+	</select>
+	
+	<select id="selectDeptClass" resultType="String" parameterType="HashMap">
+		select subjectname
+		from tbl_subject S
+		inner join tbl_dept D
+		on S.fk_deptseq = D.deptseq
+		where 1=1
+		<if test="dept != null">
+			and deptname = #{dept}
+		</if>
+		<if test="grade != null">
+			and grade = #{grade}
+		</if>
+	</select>
+	
+	<resultMap type="HashMap" id="subjectsMap">
+		<result property="deptname" column="deptname" javaType="String"/>
+		<result property="subjectname" column="subjectname" javaType="String"/>
+		<result property="subjectno" column="subjectno" javaType="String"/>
+		<result property="name" column="name" javaType="String"/>
+		<result property="credits" column="credits" javaType="String"/>
+		<result property="day" column="day" javaType="String"/>
+		<result property="period" column="period" javaType="String"/>
+		<result property="peoplecnt" column="peoplecnt" javaType="String"/>
+		<result property="grade" column="grade" javaType="String"/>
+		<result property="curpeoplecnt" column="curpeoplecnt" javaType="String"/>
+	</resultMap>
+	<select id="getSubjectList" resultMap="subjectsMap">
+		select deptname, subjectname, subjectno, name, credits, day, period, peoplecnt, grade, curpeoplecnt
+		from
+		(
+		select p.name, subjectno, subjectname, credits, day, period, peoplecnt, fk_deptseq, grade, curpeoplecnt
+		from tbl_subject S
+		inner join tbl_professor P
+		on S.fk_professorno = p.professorno
+		) V
+		inner join tbl_dept D
+		on V.fk_deptseq = D.deptseq
+		where 1=1 
+		<if test="dept != null">
+			and deptname = #{dept}
+		</if>
+		<if test="grade != null">
+			and grade = #{grade}
+		</if>
+		<if test="firstsub != null">
+			and subjectname = #{firstsub}
+		</if>
+		<if test="subject != null">
+			and subjectname = #{subject}
+		</if>
+	</select>
+</mapper>

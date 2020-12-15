@@ -44,7 +44,31 @@ insert into tbl_dept(deptSeq, deptName)
 values(tbl_dept_seq.nextval, '경영학과');
 insert into tbl_dept(deptSeq, deptName)
 values(tbl_dept_seq.nextval, '컴퓨터공학부');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '국어국문학과');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '영어영문학과');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '심리아동학부');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '경제학과');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '수리금융학과');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '응용통계학과');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '정보통신학부');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '특수체육학과');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '사회복지학과');
+insert into tbl_dept(deptSeq, deptName)
+values(tbl_dept_seq.nextval, '교양');
 
+select deptname
+from tbl_dept;
+
+commit
 ------------------------------------------------------
 
 ------------------------------------------------------
@@ -95,10 +119,25 @@ insert into tbl_member(memberNo, pwd, name, mobile, email, birth, jubun, fk_regS
 values(tbl_member_seq.nextval, 'qwer1234$', '홍길동', '010-1234-5678', 'hongkd@naver.com', '1997-01-27', '970127112 5678', '1', '1');
 insert into tbl_member(memberNo, pwd, name, mobile, email, birth, jubun, fk_regSeq, fk_deptSeq)
 values(tbl_member_seq.nextval, 'qwer1234$', '이순신', '010-9898-0101', 'leess@naver.com', '1995-03-11', '9503111324148', '1', '2');
+insert into tbl_member(memberNo, pwd, name, mobile, email, birth, jubun, fk_regSeq, fk_deptSeq)
+values(tbl_member_seq.nextval, 'qwer1234$', '안세형', '010-1122-9988', 'anpopo@naver.com', '1990-09-24', '9009241152119', '1', '11');
 
 -- 학생 테이블 전체 select
 select *
 from tbl_member
+
+update tbl_member set grade = 1 where memberno='101'
+update tbl_member set CURRENTSEMESTER = 1 where memberno='101'
+commit
+
+ALTER TABLE TBL_MEMBER DROP COLUMN totalsemester;
+ALTER TABLE TBL_MEMBER ADD CURRENTSEMESTER NUMBER(2);
+
+select currentSemester, name, memberNo, deptName
+from tbl_member M
+inner join tbl_dept D
+on M.fk_deptseq = D.deptseq
+where memberno = '101'
 ------------------------------------------------------
 
 ------------------------------------------------------ 
@@ -142,6 +181,7 @@ courseno        number          not null
 ,constraint FK_tbl_course_subjectNo foreign key(fk_subjectNo) 
                                    references tbl_subject(subjectNo)                                   
 );
+
 -- 수강 테이블 시퀀스 생성
 create sequence tbl_course_seq
 start with 10
@@ -172,6 +212,11 @@ nominvalue
 nocycle
 nocache;
 
+insert into tbl_building(buildno, buildname)
+values(tbl_building_seq.nextval, '60주년기념관');
+insert into tbl_building(buildno, buildname)
+values(tbl_building_seq.nextval, '만우관');
+commit
 ------------------------------------------------------ 
 
 ------------------------------------------------------ 
@@ -184,19 +229,42 @@ classno         number not null
 ,constraint FK_tbl_classroom_buildno foreign key(fk_buildno) 
                                    references tbl_building(buildno)
 );
+
+insert into tbl_classroom(classno, fk_buildno)
+values('18101', '1')
+insert into tbl_classroom(classno, fk_buildno)
+values('18102', '1')
+insert into tbl_classroom(classno, fk_buildno)
+values('18103', '1')
+insert into tbl_classroom(classno, fk_buildno)
+values('18104', '1')
+insert into tbl_classroom(classno, fk_buildno)
+values('18105', '1')
+insert into tbl_classroom(classno, fk_buildno)
+values('18201', '1')
+insert into tbl_classroom(classno, fk_buildno)
+values('18202', '1')
+insert into tbl_classroom(classno, fk_buildno)
+values('18203', '1')
+insert into tbl_classroom(classno, fk_buildno)
+values('18204', '1')
+insert into tbl_classroom(classno, fk_buildno)
+values('18205', '1')
+commit
 ------------------------------------------------------
 
 ------------------------------------------------------
 -- 교수 테이블 생성
 create table tbl_professor
 (
-professorno      number
-,phonenum        varchar2(20)
-,name            varchar2(20)
-,roomno          number(5)
-,email           varchar2(20)
+professorno      number         -- 교수번호
+,phonenum        varchar2(20)   -- 전화번호
+,name            varchar2(20)   -- 이름
+,roomno          number(5)      -- 교수실번호
+,email           varchar2(20)   -- 이메일
 ,constraint PK_tbl_professor_professorno primary key(professorno)
 )
+
 -- 교수 테이블 시퀀스 생성
 create sequence tbl_professor_seq
 start with 10
@@ -205,23 +273,96 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0574', '염건', '8414', 'fish@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0575', '오창호', '8415', 'compino@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0576', '이건범', '8413', 'kblee@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0639', '강영경', '18415', 'ykang@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0635', '김성기', '18404', 'skkim@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0644', '류승택', '18407', 'stryoo@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0636', '장재건', '18405', 'jchang@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0403', '김동식', '8203', 'nolme@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0405', '한재영', '8204', 'hanjjyy@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0404', '유문선', '8228', 'msyouu@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0417', '박미선', '8216', 'mspark@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0416', '서강목', '8307', 'jjyoung@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0419', '이향미', '8212', 'hyangmilee@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0392', '강순원', '8329', 'kangsw@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0671', '오현숙', '8224', 'hyunsookoh@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0673', '박은희', '3420', 'psypeh@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0502', '강남훈', '8409', 'nkang@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0506', '성낙선', '8331', 'nssung@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0504', '정건화', '8408', 'gunna@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0604', '박기현', '7204', 'ghpark@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0606', '윤성식', '7310', 'ssyun@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0605', '양춘우', '7314', 'chyang@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0615', '박동련', '7205', 'drpark@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0614', '이승천', '7206', 'seung@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0616', '변종석', '7208', 'jsbyun@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0654', '김현경', '18514', 'hkim@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0659', '손승일', '18504', 'saisonh@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0657', '이경옥', '18512', 'golee@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0625', '민경훈', '8829', 'minkh@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0626', '조규청', '8222', 'kcc@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0624', '서연태', '8202', 'syt@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0518', '김예랑', '8312', 'yrkim@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0516', '주경희', '8315', 'macoj2@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0517', '장익현', '8314', 'skking@hs.ac.kr')
+commit
+
+select *
+from tbl_professor
 ------------------------------------------------------
 
 ------------------------------------------------------
 -- 과목 테이블 생성
 create table tbl_subject
 (
-subjectNo           varchar2(20)    not null
-,subjectName        varchar2(20)    not null
-,credits            number(2)       not null
-,grade              number(5)       not null
-,mustStatus         number(2)       default 1 not null
-,day                varchar2(20)    not null
-,period             varchar2(40)    not null
-,peopleCnt          number(5)       
-,fk_classNo         number          not null
-,fk_professorNo     number          not null
-,fk_deptSeq         number          not null
+subjectNo           varchar2(20)    not null    -- 과목코드
+,subjectName        varchar2(20)    not null    -- 과목명
+,credits            number(2)       not null    -- 학점
+,grade              number(5)       not null    -- 이수학년
+,mustStatus         number(2)       default 1 not null  -- 필수여부
+,day                varchar2(20)    not null    -- 요일
+,period             varchar2(40)    not null    -- 교시
+,peopleCnt          number(5)                   -- 수강인원
+,fk_classNo         number          not null    -- 강의실번호
+,fk_professorNo     number          not null    -- 교수번호
+,fk_deptSeq         number          not null    -- 학과코드
 ,constraint PK_tbl_subject_subjectNo primary key(subjectNo)
 ,constraint FK_tbl_subject_classNo foreign key(fk_classNo) 
                                    references tbl_classroom(classno)
@@ -230,6 +371,20 @@ subjectNo           varchar2(20)    not null
 ,constraint FK_tbl_subject_deptSeq foreign key(fk_deptSeq) 
                                    references tbl_dept(deptSeq) 
 );
+
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE104', '컴퓨터개론', '3', '1', '월,수', '01,02,03,04','30','18101','14', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE113', '프로그래밍입문', '3', '1', '월,수', '01,02,03,04','35','18102','13', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('EB103', '경영수학', '3', '1', '화,목', '01,02,03,04','35','18202','11', '1')
+ALTER TABLE TBL_SUBJECT DROP COLUMN SUBJECTNAME;
+ALTER TABLE TBL_SUBJECT ADD SUBJECTNAME VARCHAR2(100);
+COMMIT
+
+select *
+from tbl_subject
+update tbl_subject set subjectname = '컴퓨터공학개론'
 ------------------------------------------------------
 
 ------------------------------------------------------
