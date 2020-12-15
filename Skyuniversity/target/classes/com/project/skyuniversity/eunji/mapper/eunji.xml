@@ -74,4 +74,71 @@
 			and subjectname = #{subject}
 		</if>
 	</select>
+	
+	<select id="selectDeptOneSub" parameterType="String" resultType="String">
+		select deptname
+		from tbl_dept D
+		inner join tbl_subject S
+		on D.deptseq = S.fk_deptseq
+		where subjectno = #{subjectno}
+	</select>
+	
+	<insert id="insertCourse" parameterType="HashMap">
+		insert into tbl_course(courseno,semester,courseyear, fk_memberno, fk_subjectNo)
+		values(tbl_course_seq.nextval, #{currentsemester}, #{year}, #{memberNo}, #{subjectno})
+	</insert>
+	
+	<select id="recourseInfo" parameterType="HashMap" resultType="int">
+		select count(fk_subjectno)
+		from tbl_course
+		where fk_memberno = #{memberNo} and fk_subjectno=#{subjectno} and recourse ='1'
+	</select>
+	
+	<insert id="insertReCourse" parameterType="HashMap">
+		insert into tbl_course(courseno,semester,courseyear, fk_memberno, fk_subjectNo)
+		values(tbl_course_seq.nextval, #{cursemester}, #{year}, #{memberno}, #{subjectno})
+	</insert>
+	
+	<select id="recourseInfo2" parameterType="HashMap" resultType="int">
+		select count(fk_subjectno)
+		from tbl_course
+		where fk_memberno = #{memberNo} and fk_subjectno=#{subjectno} and recourse ='0'
+	</select>
+	
+	<update id="updatePlusCnt" parameterType="String">
+		update Tbl_Subject set Curpeoplecnt = Curpeoplecnt+1 where Subjectno = #{string}
+	</update>
+	
+	<resultMap type="HashMap" id="regMap">
+		<result property="subjectname" column="subjectname" javaType="String"/>
+		<result property="subjectno" column="subjectno" javaType="String"/>
+		<result property="name" column="name" javaType="String"/>
+		<result property="credits" column="credits" javaType="String"/>
+		<result property="day" column="day" javaType="String"/>
+		<result property="period" column="period" javaType="String"/>
+		<result property="peoplecnt" column="peoplecnt" javaType="String"/>
+		<result property="curpeoplecnt" column="curpeoplecnt" javaType="String"/>
+		<result property="courseno" column="courseno" javaType="String"/>
+	</resultMap>
+	<select id="selectRegList" parameterType="HashMap" resultMap="regMap">
+		select name, subjectname, credits, subjectno, day, period, peoplecnt, curpeoplecnt, courseno
+		from
+		(
+		select name, subjectno, subjectname, credits, day, period, peoplecnt, curpeoplecnt
+		from tbl_subject S
+		inner join tbl_professor P
+		on S.fk_professorno = P.professorno
+		) V
+		inner join tbl_course C
+		on V.subjectno = C.fk_subjectno
+		where fk_memberno = #{memberno} and courseyear = #{year} and semester = #{semester}
+	</select>
+	
+	<delete id="deleteCourse" parameterType="String">
+		delete from tbl_course where courseno=#{no}
+	</delete>
+	
+	<update id="updateDelCnt" parameterType="String">
+		update Tbl_Subject set Curpeoplecnt = Curpeoplecnt-1 where Subjectno = #{subno}
+	</update>
 </mapper>

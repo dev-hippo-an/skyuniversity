@@ -15,4 +15,22 @@ public interface InterEunjiBoardDAO {
 
 	List<Map<String, String>> getSubjectList(Map<String, String> paraMap);
 
+	String selectDeptOneSub(String subjectno);
+
+	int insertCourse(Map<String, String> paraMap);
+
+	int recourseInfo(Map<String, String> paraMap);
+
+	int insertReCourse(Map<String, String> paraMap);
+
+	int recourseInfo2(Map<String, String> paraMap);
+
+	int updatePlusCnt(String string);
+
+	List<Map<String, String>> selectRegList(Map<String, String> paraMap2);
+
+	int deleteCourse(String no);
+
+	int updateDelCnt(String subno);
+
 }

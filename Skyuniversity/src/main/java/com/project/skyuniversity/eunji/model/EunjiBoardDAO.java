@@ -45,5 +45,59 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return subjectlist;
 	}
 
+	@Override
+	public String selectDeptOneSub(String subjectno) {
+		String dept = sqlSession.selectOne("eunji.selectDeptOneSub",subjectno);
+		return dept;
+	}
+
+	@Override
+	public int insertCourse(Map<String, String> paraMap) {
+		int n = sqlSession.insert("eunji.insertCourse", paraMap);
+		return n;
+	}
+
+	@Override
+	public int recourseInfo(Map<String, String> paraMap) {
+		int info = sqlSession.selectOne("eunji.recourseInfo", paraMap);
+		return info;
+	}
+
+	@Override
+	public int insertReCourse(Map<String, String> paraMap) {
+		int n = sqlSession.insert("eunji.insertReCourse",paraMap);
+		return n;
+	}
+
+	@Override
+	public int recourseInfo2(Map<String, String> paraMap) {
+		int info = sqlSession.selectOne("eunji.recourseInfo2", paraMap);
+		return info;
+	}
+
+	@Override
+	public int updatePlusCnt(String string) {
+		int n = sqlSession.update("eunji.updatePlusCnt", string);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> selectRegList(Map<String, String> paraMap2) {
+		List<Map<String, String>> reglist = sqlSession.selectList("eunji.selectRegList", paraMap2);
+		return reglist;
+	}
+
+	@Override
+	public int deleteCourse(String no) {
+		int n = sqlSession.delete("eunji.deleteCourse", no);
+		return n;
+	}
+
+	@Override
+	public int updateDelCnt(String subno) {
+		int n = sqlSession.update("eunji.updateDelCnt", subno);
+		return n;
+	}
+
 
 }

@@ -46,6 +46,60 @@ public class EunjiService implements InterEunjiService {
 		return subjectlist;
 	}
 
+	@Override
+	public String selectDeptOneSub(String subjectno) {
+		String dept = dao.selectDeptOneSub(subjectno);
+		return dept;
+	}
+
+	@Override
+	public int insertCourse(Map<String, String> paraMap) {
+		int n = dao.insertCourse(paraMap);
+		return n;
+	}
+
+	@Override
+	public int recourseInfo(Map<String, String> paraMap) {
+		int info = dao.recourseInfo(paraMap);
+		return info;
+	}
+
+	@Override
+	public int insertReCourse(Map<String, String> paraMap) {
+		int n = dao.insertReCourse(paraMap);
+		return n;
+	}
+
+	@Override
+	public int recourseInfo2(Map<String, String> paraMap) {
+		int info = dao.recourseInfo2(paraMap);
+		return info;
+	}
+
+	@Override
+	public int updatePlusCnt(String string) {
+		int n = dao.updatePlusCnt(string);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> selectRegList(Map<String, String> paraMap2) {
+		List<Map<String, String>> reglist = dao.selectRegList(paraMap2);
+		return reglist;
+	}
+
+	@Override
+	public int deleteCourse(String no) {
+		int n = dao.deleteCourse(no);
+		return n;
+	}
+
+	@Override
+	public int updateDelCnt(String subno) {
+		int n = dao.updateDelCnt(subno);
+		return n;
+	}
+
 
 
 }

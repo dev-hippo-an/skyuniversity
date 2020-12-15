@@ -10,7 +10,7 @@
 
 <style type="text/css">
 #infodiv {
-	font-size: 15pt;
+	font-size: 12pt;
 	background-color: #e6eeff;
 	height: 70px;
 	text-align: center;	
@@ -58,9 +58,12 @@ table#scroltbl {
 #subli {
 	display: table; width: 1550px;
 }
-
-
-
+#boottr > td {
+	text-align: center;
+}
+.forboottr > td {
+	text-align: center;
+}
 
 </style>
 <script type="text/javascript">
@@ -149,13 +152,13 @@ table#scroltbl {
 					var html="";
 					$.each(json, function(index, item){						
 						html += "<tr class='sublicl'>";
-						html += "<td>"+item.subjectno+"</td>"
-							   +"<td>"+item.subjectname+"</td>"
-							   +"<td>"+item.credits+"</td>"
-							   +"<td>"+item.name+"</td>"
-							   +"<td>"+item.day+" / " + item.period+"</td>"
-							   +"<td>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
-							   +"<td><button>신청</button></td>";
+						html += "<td id='td1"+index+"'>"+item.subjectno+"</td>"
+							   +"<td id='td2"+index+"'>"+item.subjectname+"</td>"
+							   +"<td id='td3"+index+"'>"+item.credits+"</td>"
+							   +"<td id='td4"+index+"'>"+item.name+"</td>"
+							   +"<td id='td5"+index+"'>"+item.day+" / " + item.period+"</td>"
+							   +"<td id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
+							   +"<td><button onclick='funcClassReg("+index+");'>신청</button></td>";
 						html += "</tr>";
 					});
 					$("#tb").html(html);
@@ -170,6 +173,67 @@ table#scroltbl {
 		});	// ---------------- end of button click func
 		
 	});	//-------------------------------- end of document.ready()
+	
+	function funcClassReg(index){
+		
+		var subjectno = $("#td1"+index).text();
+		var year = ${year};
+		var cursemester = ${mvo.currentSemester};
+		var memberno = ${mvo.memberNo};
+		
+		$.ajax({
+			url: "<%= request.getContextPath() %>/insertSub.sky",
+			data: {"subjectno":subjectno,
+				   "year":year,
+				   "cursemester":cursemester,
+				   "memberno":memberno},
+			type: "POST",
+			dataType: "json",
+			success: function(json) {
+				if(!json.bool){
+					alert("자신의 학과의 과목을 수강신청해주세요.");
+				}
+				if(!json.unique){
+					alert("이미 수강신청한 과목입니다.");
+				}
+				if(json.recourse){
+					var result = confirm("재수강 하시겠습니까?");
+					if(result){
+						location.href="<%=ctxPath%>/insertSub.sky?bool="+result+"&subjectno="+subjectno+"&cursemester="+cursemester;
+					}
+				}
+				if(json.end){
+					alert("수강신청 되었습니다.");
+					location.reload();
+				}
+			},
+			error: function(request, status, error){
+	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+			
+		});	//------------------end of ajax
+	}
+	
+	function funcdelbtn(index) {
+		var no = $("#no"+index).val();
+		var subno = $("#subno"+index).text();
+		$.ajax({
+			url: "<%= request.getContextPath() %>/delCourse.sky",
+			data: {"no":no,
+				   "subno":subno},
+			type: "POST",
+			dataType: "json",
+			success: function(json) {
+				if(json.result){
+					alert("해당 과목이 삭제되었습니다.");
+				}
+			},
+			error: function(request, status, error){
+	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+			
+		});	//------------------end of ajax
+	}
 </script>
 
 <div id="container">
@@ -242,5 +306,40 @@ table#scroltbl {
 			</tbody>
 			</table>
 		</div>
+	</div>
+	<br><br>
+	<br>
+	<div><span style="font-size: 12pt; font-weight: bold; padding: 10px;">[수강신청 내역]</span></div>
+	<br>
+	<div>
+		<table class="table table-bordered">
+			<thead>
+				<tr id="boottr">
+					<td>과목코드</td>
+					<td>과목명</td>
+					<td>학점</td>
+					<td>교수님</td>
+					<td>요일 / 교시</td>
+					<td>수강가능인원</td>
+					<td>취소</td>
+				</tr>
+			</thead>
+			<tbody>
+				<form name="regform">
+				<c:forEach items="${reglist}" var ="reg" varStatus="status">
+					<tr class="forboottr">
+						<td id="subno${status.index}">${reg.subjectno}</td>
+						<td>${reg.subjectname}</td>
+						<td>${reg.credits}</td>
+						<td>${reg.name}</td>
+						<td>${reg.day}/${reg.period}</td>
+						<td>${reg.curpeoplecnt}/${reg.peoplecnt}</td>
+						<td><button onclick="funcdelbtn(${status.index});">취소</button></td>
+					</tr>
+					<input id="no${status.index}" value="${reg.courseno}" hidden="true"/>
+				</c:forEach>
+				</form>
+			</tbody>
+		</table>
 	</div>
 </div>

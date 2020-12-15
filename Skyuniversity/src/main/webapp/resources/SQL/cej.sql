@@ -121,7 +121,10 @@ insert into tbl_member(memberNo, pwd, name, mobile, email, birth, jubun, fk_regS
 values(tbl_member_seq.nextval, 'qwer1234$', '이순신', '010-9898-0101', 'leess@naver.com', '1995-03-11', '9503111324148', '1', '2');
 insert into tbl_member(memberNo, pwd, name, mobile, email, birth, jubun, fk_regSeq, fk_deptSeq)
 values(tbl_member_seq.nextval, 'qwer1234$', '안세형', '010-1122-9988', 'anpopo@naver.com', '1990-09-24', '9009241152119', '1', '11');
-
+insert into tbl_member(memberNo, pwd, name, mobile, email, birth, jubun, fk_regSeq, fk_deptSeq)
+values(tbl_member_seq.nextval, 'qwer1234$', '최은지', '010-2246-6435', 'ejejc@naver.com', '1997-01-24', '9701241455161', '1', '2');
+insert into tbl_member(memberNo, pwd, name, mobile, email, birth, jubun, fk_regSeq, fk_deptSeq)
+values(tbl_member_seq.nextval, 'qwer1234$', '권오윤', '010-2156-6331', 'ky@naver.com', '1998-04-14', '9804141445351', '1', '2');
 -- 학생 테이블 전체 select
 select *
 from tbl_member
@@ -193,6 +196,20 @@ nocache;
 
 select *
 from tbl_course
+
+insert into tbl_course(courseno,semester,courseyear, fk_memberno, fk_subjectNo)
+values(tbl_course_seq.nextval, '1', '2021', '105','NE104')
+insert into tbl_course(courseno,semester,courseyear, fk_memberno, fk_subjectNo)
+values(tbl_course_seq.nextval, '1', '2021', '106','NE104')
+insert into tbl_course(courseno,semester,courseyear, fk_memberno, fk_subjectNo)
+values(tbl_course_seq.nextval, '1', '2021', '106','NE104')
+insert into tbl_course(courseno,semester,courseyear, fk_memberno, fk_subjectNo)
+values(tbl_course_seq.nextval, '1', '2021', '101','EB103')
+
+ALTER TABLE tbl_course ADD CONSTRAINT UQ_tbl_course UNIQUE(semester, courseyear, fk_memberno,fk_subjectNo );
+
+select *
+from tbl_subject
 ------------------------------------------------------ 
 
 ------------------------------------------------------ 
@@ -377,14 +394,33 @@ values('NE104', '컴퓨터개론', '3', '1', '월,수', '01,02,03,04','30','1810
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
 values('NE113', '프로그래밍입문', '3', '1', '월,수', '01,02,03,04','35','18102','13', '2')
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE106', '수리과학기초', '3', '1', '화,목', '05,06,07,08','32','18205','13', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE114', '미적분학', '3', '1', '화,목', '01,02,03,04','40','18105','42', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE115', '확률과통계', '3', '1', '화,목', '01,02,03,04','40','18203','14', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
 values('EB103', '경영수학', '3', '1', '화,목', '01,02,03,04','35','18202','11', '1')
 ALTER TABLE TBL_SUBJECT DROP COLUMN SUBJECTNAME;
 ALTER TABLE TBL_SUBJECT ADD SUBJECTNAME VARCHAR2(100);
+ALTER TABLE TBL_SUBJECT ADD curPeopleCnt number(5) default 0;
 COMMIT
+
+select subjectname
+from tbl_subject S
+inner join tbl_dept D
+on S.fk_deptseq = D.deptseq
+where deptname = '경영학과'
+
+
+
+select subjectname
+from tbl_subject
+update tbl_subject set subjectname = '컴퓨터공학개론'
+update tbl_subject set curpeoplecnt = 2 where subjectname = '컴퓨터공학개론'
 
 select *
 from tbl_subject
-update tbl_subject set subjectname = '컴퓨터공학개론'
 ------------------------------------------------------
 
 ------------------------------------------------------
@@ -433,3 +469,24 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
+------------- 수강신청 join -------------
+
+select deptname, subjectname, subjectno, name, credits, day, period, peoplecnt, grade, curpeoplecnt
+from
+(
+select p.name, subjectno, subjectname, credits, day, period, peoplecnt, fk_deptseq, grade, curpeoplecnt
+from tbl_subject S
+inner join tbl_professor P
+on S.fk_professorno = p.professorno
+) V
+inner join tbl_dept D
+on V.fk_deptseq = D.deptseq
+where deptname = '경영학과' and subjectname = '컴퓨터공학개론' and grade = '1'
+
+
+select *
+from tbl_subject
+
+update tbl_subject set curpeoplecnt = 1 where subjectname='경영수학'
+commit
