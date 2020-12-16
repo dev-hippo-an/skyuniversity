@@ -16,6 +16,7 @@ import org.aspectj.lang.annotation.Before;
 import org.aspectj.lang.annotation.Pointcut;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.ohyoon.common.MyUtil;
 import com.project.skyuniversity.ohyoon.service.InterOhyoonService;
@@ -36,7 +37,7 @@ public class OhyoonAOP {
    
    // === Pointcut(주업무)을 설정해야 한다. === // 
    //     Pointcut 이란 공통관심사를 필요로 하는 메소드를 말한다. 
-   @Pointcut("execution(public * com.project..*Controller.requiredLogin_*(..))")
+   @Pointcut("execution(public * com.project..*Controller.requiredLoginOY_*(..))")
    public void requiredLogin() {}
    
    // === Before Advice(공통관심사, 보조업무)를 구현한다. === //
@@ -82,13 +83,12 @@ public class OhyoonAOP {
 	      관심 클래스(Aspect 클래스)를 생성하여 포인트컷(주업무)과 어드바이스(보조업무)를 생성하여
 	      동작하도록 만들겠다.
    */
-/*   
    // === Pointcut(주업무)을 설정해야 한다. === // 
    //     Pointcut 이란 공통관심사를 필요로 하는 메소드를 말한다. 
    @Autowired
    InterOhyoonService service;
    
-   @Pointcut("execution(public * com.spring..*Controller.pointPlus_*(..))")
+   @Pointcut("execution(public * com.project..*Controller.pointPlusOY_*(..))")
    public void pointPlus() {}
    
    // === After Advice(공통관심사, 보조업무)를 구현한다. === //
@@ -98,13 +98,46 @@ public class OhyoonAOP {
        // 회원의 포인트를 특정점수(예: 100점, 200점, 300점)만큼 증가시키는 메소드 작성하기
 	   // JoinPoint joinPoint 는 포인트컷 되어진 주업무의 메소드이다. 
        
+	   HttpServletRequest request = (HttpServletRequest)joinPoint.getArgs()[2];
+	   HttpServletResponse response = (HttpServletResponse)joinPoint.getArgs()[3];
+	   
 	   Map<String, String> paraMap = (Map<String, String>) joinPoint.getArgs()[0]; 
 	   // 주업무 메소드의 첫번쨰 파라미터를 얻어오는 것이다. 
 	   
-	   service.pointPlus(paraMap);
+	   String fk_boardKindNo = paraMap.get("fk_boardKindNo");
+	   String boardName = paraMap.get("boardName");
+
+	   
+	   
+	   String message = "";
+	   String loc = "";
+	   
+	   if (paraMap.get("fk_memberNo") != null) { // 글쓰기에 성공해서 회원번호가 넘어오면 
+		   service.pointPlus(paraMap);
+		   
+		   message = "글쓰기가 완료되었습니다.";
+		   loc = request.getContextPath()+"/boardList.sky?boardKindNo="+fk_boardKindNo;
+		   
+		  // return "redirect:/boardList.sky?boardKindNo="+fk_boardKindNo;
+	   }else { // 글쓰기에 실패해서 회원번호가 넘어오지 않으면
+		   message = "글쓰기에 실패했습니다.";
+		   loc = request.getContextPath()+"/boardRegister.sky?boardKindNo="+fk_boardKindNo+"&boardName="+boardName;
+
+		   // return "redirect:/boardRegister.sky?boardKindNo="+fk_boardKindNo+"&boardName="+boardName;
+	   }
+	   
+	   request.setAttribute("message", message);
+	   request.setAttribute("loc", loc);
+	   
+	   RequestDispatcher dispatcher = request.getRequestDispatcher("/WEB-INF/views/msg.jsp");
+	   
+	   try {
+		   dispatcher.forward(request, response);
+	   } catch (ServletException | IOException e) {
+		   e.printStackTrace();
+	   }
 	   
    }
-*/   
    
    
    

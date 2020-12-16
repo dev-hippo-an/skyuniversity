@@ -1,47 +1,62 @@
 package com.project.skyuniversity.ohyoon.model;
 
+import org.springframework.web.multipart.MultipartFile;
+
 public class BoardVO {
 
 	private String boardNo;			// 게시글 번호
 	private String fk_boardKindNo;  // 게시판 번호
 	private String fk_memberNo;		// 작성회원번호
-	private String nickname;		// 작성회원닉네임
+	private String fk_nickname;		// 작성회원닉네임
 	private String fk_categoryNo;	// 카테고리번호
-	private String categoryName;	// 카테고리이름
+	private String fk_categoryName;	// 카테고리이름
 	private String subject;			// 글 제목
 	private String regDate;			// 등록일자
 	private String editDate;		// 수정일자
 	private String content;			// 글 내용
 	private String readCount;		// 조회수
 	private String status;			// 게시글 상태
-	private String fileExist;		// 첨부파일 유무
 	private String writerIp;		// 작성자 ip
+	private String fileName;		// 첨부파일 저장이름
+	private String orgFilename;		// 첨부파일 원본이름
+	private String fileSize;		// 첨부파일 사이즈
+	
+	private MultipartFile attach;
+	/* form 태그에서 type="file" 인 파일을 받아서 저장되는 필드이다. 진짜파일 ==> WAS(톰캣) 디스크에 저장됨.
+       !!!!!! MultipartFile attach 는 오라클 데이터베이스 tblBoard 테이블의 컬럼이 아니다.!!!!!!  
+       /Board/src/main/webapp/WEB-INF/views/tiles1/board/add.jsp 파일에서 input type="file" 인 name 의 이름(attach)과 
+               동일해야만 파일첨부가 가능해진다.!!!!
+	*/
 	
 	///////////////////////////////////////////
 	private String upCount;			// 추천수
 	private String downCount;		// 비추천수
 	private String reportCount;		// 신고수
-	private String fileCount;		// 첨부파일수
+	private String levelImg;		// 작성회원 레벨 이미지
 	
 	
 	public BoardVO() {}
 
-	public BoardVO(String boardNo, String fk_boardKindNo, String fk_memberNo, String fk_categoryNo, String subject,
-			String regDate, String editDate, String content, String readCount, String status, String fileExist,
-			String writerIp) {
+	public BoardVO(String boardNo, String fk_boardKindNo, String fk_memberNo, String fk_nickname, String fk_categoryNo,
+			String fk_categoryName, String subject, String regDate, String editDate, String content, String readCount,
+			String status, String writerIp, String fileName, String orgFilename, String fileSize) {
 		super();
 		this.boardNo = boardNo;
 		this.fk_boardKindNo = fk_boardKindNo;
 		this.fk_memberNo = fk_memberNo;
+		this.fk_nickname = fk_nickname;
 		this.fk_categoryNo = fk_categoryNo;
+		this.fk_categoryName = fk_categoryName;
 		this.subject = subject;
 		this.regDate = regDate;
 		this.editDate = editDate;
 		this.content = content;
 		this.readCount = readCount;
 		this.status = status;
-		this.fileExist = fileExist;
 		this.writerIp = writerIp;
+		this.fileName = fileName;
+		this.orgFilename = orgFilename;
+		this.fileSize = fileSize;
 	}
 
 
@@ -145,16 +160,6 @@ public class BoardVO {
 	}
 
 
-	public String getFileExist() {
-		return fileExist;
-	}
-
-
-	public void setFileExist(String fileExist) {
-		this.fileExist = fileExist;
-	}
-
-
 	public String getWriterIp() {
 		return writerIp;
 	}
@@ -194,30 +199,64 @@ public class BoardVO {
 		this.reportCount = reportCount;
 	}
 
+	public String getFk_nickname() {
+		return fk_nickname;
+	}
 
-	public String getFileCount() {
-		return fileCount;
+	public void setFk_nickname(String fk_nickname) {
+		this.fk_nickname = fk_nickname;
+	}
+
+	public String getFk_categoryName() {
+		return fk_categoryName;
+	}
+
+	public void setFk_categoryName(String fk_categoryName) {
+		this.fk_categoryName = fk_categoryName;
+	}
+
+	public MultipartFile getAttach() {
+		return attach;
+	}
+
+	public void setAttach(MultipartFile attach) {
+		this.attach = attach;
+	}
+
+	public String getFileName() {
+		return fileName;
+	}
+
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
 	}
 
 
-	public void setFileCount(String fileCount) {
-		this.fileCount = fileCount;
+	public String getOrgFilename() {
+		return orgFilename;
 	}
 
-	public String getCategoryName() {
-		return categoryName;
+
+	public void setOrgFilename(String orgFilename) {
+		this.orgFilename = orgFilename;
 	}
 
-	public void setCategoryName(String categoryName) {
-		this.categoryName = categoryName;
+
+	public String getFileSize() {
+		return fileSize;
 	}
 
-	public String getNickname() {
-		return nickname;
+
+	public void setFileSize(String fileSize) {
+		this.fileSize = fileSize;
 	}
 
-	public void setNickname(String nickname) {
-		this.nickname = nickname;
+	public String getLevelImg() {
+		return levelImg;
+	}
+
+	public void setLevelImg(String levelImg) {
+		this.levelImg = levelImg;
 	}
 	
 	
