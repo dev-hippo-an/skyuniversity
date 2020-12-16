@@ -2,6 +2,10 @@
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+
+
 <style>
 	 tbody > tr > td {
 	 	text-align : left;
@@ -98,7 +102,7 @@
 	
 	button {
       width: 60px;
-      height: 30px;
+      height: 50px;
       margin: 0 5px;
       border-radius: 5%;
       border: none;
@@ -130,22 +134,22 @@
 <body>
 	<div class="content1">
 		<div class="contents" class="form-group">
-			<h1>글제목 <span>[카테고리]</span></h1>
-			<h4><span>유저 : 유저 1</span>ㅣ<span>조회수 : 230</span>ㅣ<span>작성시간 : 2020-12-24 12:23:10</span>ㅣ<span>수정시간 : 2020-12-24 12:23:10 </span></h4>
+			<h1>${ boardvo.subject } <span>[${boardvo.categoryName }]</span></h1>
+			<h4><span>유저 : ${boardvo.nickname }</span>ㅣ<span>조회수 : ${boardvo.readCount }</span>ㅣ<span>작성시간 : ${boardvo.regDate } </span>ㅣ<span>수정시간 :  ${boardvo.regDate } </span></h4>
 			<form action="" id="replycontent" >
-				<textarea id="main">글 내용을 입력하세요~ </textarea>
+				<textarea id="main" readonly> ${boardvo.content }</textarea>
 			</form>
 		</div>
 		
 		<div id="buttons1">
-			<button>추천</button>
-			<button>반대</button>
-			<button>신고</button>
+			<button>추천<br/>0</button>
+			<button>반대<br/>0</button>
+			<button>신고<br/>0</button>
 		</div>
-		
+
 		<div id="buttons2">
-			<button>수정</button>
-			<button>삭제</button>
+			<button type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/minsungEdit.sky?boardNo=${boardvo.boardNo}'">수정</button>
+			<button type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/minsungDel.sky?boardNo=${boardvo.boardNo}'">삭제</button>
 		</div>
 	</div>
 	
@@ -262,11 +266,10 @@
 				</tr>			
 		</table>
 		<h4>더보기...</h4>
-		<button id="goback">목록으로</button>
+		<button id="goback" type="button" onclick="javascript:location.href='${gobackURL}'">목록보기</button>	                        
+		
 		
 	</div>
-	
-	
 	
 	<div id="include">
 		<jsp:include page="minsungBoardList.jsp" />
