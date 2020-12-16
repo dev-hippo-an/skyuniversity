@@ -39,6 +39,8 @@ public interface InterEunjiService {
 
 	int dayInfo(Map<String, String> paraMap);
 
+	int uniqueInfo(Map<String, String> paraMap);
+
 	
 
 	

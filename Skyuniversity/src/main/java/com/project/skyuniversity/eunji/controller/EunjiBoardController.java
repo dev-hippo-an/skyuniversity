@@ -167,7 +167,6 @@ public class EunjiBoardController {
 				jsonarr.put(jsonobj);
 			}
 		}
-
 		return jsonarr.toString();
 	}
 	
@@ -176,7 +175,8 @@ public class EunjiBoardController {
 	public String insertSub(HttpServletRequest request) {
 
 		boolean ok = true;
-		
+		boolean unique = true;
+
 		String subjectno = request.getParameter("subjectno");
 		String year = request.getParameter("year");
 		String cursemester = request.getParameter("cursemester");
@@ -189,11 +189,7 @@ public class EunjiBoardController {
 		paraMap.put("day", day);
 		paraMap.put("period", period);
 		
-		int dayinfo = service.dayInfo(paraMap);
-		boolean dayre = true;
-		if(dayinfo >= 1) {
-			dayre = false;
-		}
+		
 		
 		String dept = service.selectDeptOneSub(subjectno);
 		
@@ -211,7 +207,6 @@ public class EunjiBoardController {
 		if(info == 1 && info2 == 0) {
 			recourse = true;
 		}
-		boolean unique = true;
 		boolean bool = true;
 		
 		if(!dept.equals(memdept)) {
@@ -219,6 +214,19 @@ public class EunjiBoardController {
 			unique = true;
 		}
 		boolean end = false;
+		
+		int dayinfo = service.dayInfo(paraMap);
+	
+		boolean dayre = true;
+		if(dayinfo >= 1) {
+			dayre = false;
+			unique = true;
+		}
+		
+		int uniqueinfo = service.uniqueInfo(paraMap);
+		if(uniqueinfo >= 1) {
+			unique = false;
+		}
 		if(!recourse && bool && dayre) {
 			try {
 				int n = service.insertCourse(paraMap);
@@ -232,7 +240,6 @@ public class EunjiBoardController {
 				unique = false;
 			}
 		}
-		
 		
 		JSONObject jsonobj = new JSONObject();
 		jsonobj.put("dayre", dayre);
@@ -253,7 +260,6 @@ public class EunjiBoardController {
 		String cursemester = request.getParameter("cursemester");
 		String year = request.getParameter("year");
 		String memberno = request.getParameter("memberno");
-		
 		
 		Map<String, String> paraMap2 = new HashMap<String, String>();
 	    paraMap2.put("subjectno", subjectno);

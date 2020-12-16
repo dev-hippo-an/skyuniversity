@@ -111,5 +111,11 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return dayinfo;
 	}
 
+	@Override
+	public int uniqueInfo(Map<String, String> paraMap) {
+		int uniqueinfo = sqlSession.selectOne("eunji.uniqueInfo", paraMap);
+		return uniqueinfo;
+	}
+
 
 }

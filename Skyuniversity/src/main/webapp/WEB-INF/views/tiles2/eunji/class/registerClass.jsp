@@ -201,7 +201,7 @@ table#scroltbl {
 			type: "POST",
 			dataType: "json",
 			success: function(json) {
-				if(!json.dayre){
+				if(!json.dayre && json.unique && json.bool){
 					alert("해당 요일,교시에 해당하는 과목이 존재합니다");
 				}
 				if(!json.bool){

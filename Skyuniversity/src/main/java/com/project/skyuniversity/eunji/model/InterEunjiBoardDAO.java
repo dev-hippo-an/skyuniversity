@@ -37,4 +37,6 @@ public interface InterEunjiBoardDAO {
 
 	int dayInfo(Map<String, String> paraMap);
 
+	int uniqueInfo(Map<String, String> paraMap);
+
 }
