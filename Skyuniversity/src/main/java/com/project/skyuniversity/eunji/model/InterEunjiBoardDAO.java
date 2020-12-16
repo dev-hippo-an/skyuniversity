@@ -33,4 +33,8 @@ public interface InterEunjiBoardDAO {
 
 	int updateDelCnt(String subno);
 
+	int selectSumCredit(Map<String, String> paraMap2);
+
+	int dayInfo(Map<String, String> paraMap);
+
 }

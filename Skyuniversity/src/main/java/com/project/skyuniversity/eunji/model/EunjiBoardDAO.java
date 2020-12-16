@@ -99,5 +99,17 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int selectSumCredit(Map<String, String> paraMap2) {
+		int sumcredit = sqlSession.selectOne("eunji.selectSumCredit", paraMap2);
+		return sumcredit;
+	}
+
+	@Override
+	public int dayInfo(Map<String, String> paraMap) {
+		int dayinfo = sqlSession.selectOne("eunji.dayInfo",paraMap);
+		return dayinfo;
+	}
+
 
 }

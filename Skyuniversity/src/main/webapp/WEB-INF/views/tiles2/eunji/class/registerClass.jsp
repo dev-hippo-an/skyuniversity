@@ -156,7 +156,7 @@ table#scroltbl {
 							   +"<td id='td2"+index+"'>"+item.subjectname+"</td>"
 							   +"<td id='td3"+index+"'>"+item.credits+"</td>"
 							   +"<td id='td4"+index+"'>"+item.name+"</td>"
-							   +"<td id='td5"+index+"'>"+item.day+" / " + item.period+"</td>"
+							   +"<td> <span id='span1"+index+"'>"+item.day+"</span> /  <span id='span2"+index+"'>" + item.period+"</span></td>"
 							   +"<td id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
 							   +"<td><button onclick='funcClassReg("+index+");'>신청</button></td>";
 						html += "</tr>";
@@ -175,7 +175,16 @@ table#scroltbl {
 	});	//-------------------------------- end of document.ready()
 	
 	function funcClassReg(index){
-		
+		var addcredit = $("#td3"+index).text();
+		var sumcredits = ${sumcredits};
+		var day = $("#span1"+index).text();
+		var period = $("#span2"+index).text();
+ 
+		var total = "19";
+		if(parseInt(sumcredits)+parseInt(addcredit) > parseInt(total)){
+			alert("신청가능한 학점이 초과되어 신청이 불가합니다.");
+			return;
+		}
 		var subjectno = $("#td1"+index).text();
 		var year = ${year};
 		var cursemester = ${mvo.currentSemester};
@@ -186,10 +195,15 @@ table#scroltbl {
 			data: {"subjectno":subjectno,
 				   "year":year,
 				   "cursemester":cursemester,
-				   "memberno":memberno},
+				   "memberno":memberno,
+				   "day":day,
+				   "period":period},
 			type: "POST",
 			dataType: "json",
 			success: function(json) {
+				if(!json.dayre){
+					alert("해당 요일,교시에 해당하는 과목이 존재합니다");
+				}
 				if(!json.bool){
 					alert("자신의 학과의 과목을 수강신청해주세요.");
 				}
@@ -219,7 +233,7 @@ table#scroltbl {
 					        }
 						}); 
 					}
-				}
+				} 
 				if(json.end){
 					alert("수강신청 되었습니다.");
 					location.reload();
@@ -230,6 +244,8 @@ table#scroltbl {
 	        }
 			
 		});	//------------------end of ajax
+		
+		
 	}
 	
 	function funcdelbtn(index) {
@@ -263,6 +279,16 @@ table#scroltbl {
 				<td>이름: ${mvo.name}</td>
 				<td>학번: ${mvo.memberNo}</td>
 				<td>학과: ${mvo.deptName}</td>
+			</tr>
+		</table>
+	</div>
+	<div>
+		<table class="table table-striped">
+			<tr id="credittbl">
+				<td style="width:120px; font-weight: bold;">수강가능학점:</td>
+				<td style="width:120px;">19학점</td>
+				<td style="width:160px; font-weight: bold;">총 수강신청 학점:</td>
+				<td>${sumcredits}학점</td>
 			</tr>
 		</table>
 	</div>

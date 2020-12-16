@@ -141,4 +141,21 @@
 	<update id="updateDelCnt" parameterType="String">
 		update Tbl_Subject set Curpeoplecnt = Curpeoplecnt-1 where Subjectno = #{subno}
 	</update>
+	
+	<select id="selectSumCredit" parameterType="HashMap" resultType="int">
+		select sum(credits)
+		from tbl_course C
+		inner join tbl_subject S
+		on c.fk_subjectno = S.subjectno
+		where fk_memberno = #{memberno} and courseyear = #{year} and semester = #{cursemester}
+	</select>
+	
+	<select id="dayInfo" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_course C
+		inner join tbl_subject S
+		on c.fk_subjectno = S.subjectno
+		where fk_memberno = #{memberNo} and day = #{day} and period = #{period}
+	</select>
+	
 </mapper>

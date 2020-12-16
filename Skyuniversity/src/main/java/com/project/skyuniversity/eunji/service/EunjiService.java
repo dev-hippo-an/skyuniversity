@@ -100,6 +100,18 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public int selectSumCredit(Map<String, String> paraMap2) {
+		int sumcredit = dao.selectSumCredit(paraMap2);
+		return sumcredit;
+	}
+
+	@Override
+	public int dayInfo(Map<String, String> paraMap) {
+		int dayinfo = dao.dayInfo(paraMap);
+		return dayinfo;
+	}
+
 
 
 }
