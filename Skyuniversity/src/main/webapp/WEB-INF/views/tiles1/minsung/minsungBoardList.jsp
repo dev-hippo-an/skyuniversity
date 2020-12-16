@@ -79,7 +79,11 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 <script type="text/javascript">
 
    $(document).ready(function() {
-      
+	   
+ 	   $("button#register").click(function() {
+		   goWrite();
+	   });
+       
 		$("div#tags li").click(function() {
 		   $(this).siblings().removeClass("active");
 		   $(this).addClass("active");
@@ -113,9 +117,17 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 	
 	function goView(boardNo) {
 		
-		var frm = document.goViewFrm;		
+		var frm = document.goViewFrm;
+		frm.boardNo.value = boardNo;
 		frm.method = "GET";
 		frm.action = "<%=request.getContextPath()%>/minsungBoardView.sky";
+		frm.submit();
+	}
+	
+	function goWrite() {
+		var frm = document.registerFrm;
+		frm.method = "GET";
+		frm.action = "<%=request.getContextPath()%>/minsungAdd.sky";
 		frm.submit();
 	}
 </script>
@@ -136,7 +148,7 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 				<form name="searchFrm" style="margin-top: 10px;">
 					<select name="searchType" id="searchType" style="height: 25px;">
 						<option value="subject">글제목</option>
-						<option value="name">작성자</option>
+						<option value="nickname">작성자</option>
 					</select> <input type="text" name="searchWord" id="searchWord" size="40"
 						style="width: 120px;" autocomplete="off" />
 					<button type="button" onclick="goSearch()">검색</button>
@@ -173,12 +185,18 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 			</tbody>
 		</table>
 	</div>
+	
+	<div align="right"><button id="register" onclick="<%=request.getContextPath()%>/minsungAdd.sky">글쓰기</button></div>
+	
 	<div align="center"
 		style="width: 70%; border: solid 0px gray; margin: 20px auto;">
 		${pageBar}</div>
 
 	<form name="goViewFrm">
-		<input type="hidden" name="${boardvo.boardNo}" /> <input
-			type="hidden" name="gobackURL" value="${gobackURL}" />
+		<input type="hidden" id="goViewBoardNo" name="boardNo" value="" /> 
+		<input type="hidden" name="gobackURL" value="${gobackURL}" />
+	</form>
+	<form name="registerFrm">
+
 	</form>
 </div>

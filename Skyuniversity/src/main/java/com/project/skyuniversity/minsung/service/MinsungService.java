@@ -51,6 +51,30 @@ public class MinsungService implements InterMinsungService{
 		String kindBoard = dao.kindBoard(boardKindNo);
 		return kindBoard;
 	}
+
+	@Override
+	public MinsungBoardVO getOneBoard(String boardNo) {
+		MinsungBoardVO boardvo = dao.getOneBoard(boardNo);
+		return boardvo;
+	}
+
+	@Override
+	public int edit(MinsungBoardVO boardvo) {
+		int n = dao.edit(boardvo);
+		return n;
+	}
+
+	@Override
+	public int del(MinsungBoardVO boardvo) {
+		int n = dao.del(boardvo);
+		return n;
+	}
+
+	@Override
+	public int add(MinsungBoardVO boardvo) {
+		int n = dao.add(boardvo);
+		return n;
+	}
 	
 }
 

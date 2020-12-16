@@ -49,4 +49,28 @@ public class MinsungBoardDAO implements InterMinsungBoardDAO {
 		return kindBoard;
 	}
 
+	@Override
+	public MinsungBoardVO getOneBoard(String boardNo) {
+		MinsungBoardVO boardvo = sqlsession.selectOne("minsung.getOneBoard", boardNo);
+		return boardvo;
+	}
+
+	@Override
+	public int edit(MinsungBoardVO boardvo) {
+		int n = sqlsession.update("minsung.edit", boardvo);
+		return n;
+	}
+
+	@Override
+	public int del(MinsungBoardVO boardvo) {
+		int n = sqlsession.delete("minsung.del", boardvo);
+		return n;
+	}
+
+	@Override
+	public int add(MinsungBoardVO boardvo) {
+		int n = sqlsession.insert("minsung.add", boardvo);
+		return n;
+	}
+
 }

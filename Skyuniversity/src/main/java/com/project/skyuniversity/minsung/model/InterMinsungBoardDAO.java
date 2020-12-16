@@ -15,4 +15,12 @@ public interface InterMinsungBoardDAO {
 
 	String kindBoard(String boardKindNo);		// 해당 게시판 리스트 종류
 
+	MinsungBoardVO getOneBoard(String boardNo);		// detail board 가져오기
+
+	int edit(MinsungBoardVO boardvo);		// 글 수정하기
+
+	int del(MinsungBoardVO boardvo);		// 글 삭제하기
+
+	int add(MinsungBoardVO boardvo);		// 글 쓰기
+
 }
