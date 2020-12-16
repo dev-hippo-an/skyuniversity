@@ -5,7 +5,7 @@ import java.util.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import com.project.skyuniversity.common.AES256;
+import com.project.skyuniversity.ohyoon.common.OhFileManager;
 import com.project.skyuniversity.ohyoon.model.BoardVO;
 import com.project.skyuniversity.ohyoon.model.CategoryVO;
 import com.project.skyuniversity.ohyoon.model.InterOhyoonDAO;
@@ -28,11 +28,8 @@ public class OhyoonService implements InterOhyoonService{
 	// Type 에 따라 Spring 컨테이너가 알아서 bean 으로 등록된 com.spring.model.BoardDAO 의 bean 을  dao 에 주입시켜준다. 
 	// 그러므로 dao 는 null 이 아니다.
 
-	// === #45. 양방향 암호화 알고리즘인 AES256 를 사용하여 복호화 하기 위한 클래스 의존객체 주입하기(DI: Dependency Injection) ===
 	@Autowired
-	private AES256 aes;
-
-	
+	private OhFileManager fileManager;
 	
 	// 게시판 번호를 입력하여 해당 게시판번호에 해당하는 게시판 이름 불러오기
 	@Override
@@ -66,4 +63,110 @@ public class OhyoonService implements InterOhyoonService{
 	}
 	
 	
+	// 파일첨부가 없는 글쓰기
+	@Override
+	public int addBoard(BoardVO boardvo) {
+		return dao.addBoard(boardvo);
+	}
+	
+	
+	// 파일첨부가 있는 글쓰기
+	@Override
+	public int addBoardWithFile(BoardVO boardvo) {
+		return dao.addBoardWithFile(boardvo);
+	}
+	
+	
+	// 회원 번호와 포인트를 받아와 회원 포인트를 올려주기
+	@Override
+	public void pointPlus(Map<String, String> paraMap) {
+		dao.pointPlus(paraMap);
+	}
+	
+	
+	// 게시물 1개를 보여주는 페이지 요청
+	@Override
+	public BoardVO getView(Map<String, String> paraMap) {
+		BoardVO boardvo = dao.getView(paraMap);
+		
+		// 로그인한 유저의 회원번호와 게시물의 작성자 회원번호가 다르다면 
+		if ( !boardvo.getFk_memberNo().equals(paraMap.get("loginNo")) ) { 
+			// 해당 게시물의 조회수를 1증가시킨다.
+			dao.addReadCount(paraMap);
+			boardvo = dao.getView(paraMap);
+		}
+		return boardvo;
+	}
+	
+
+	// 조회수 증가 없이 게시물 1개를 보여주는 페이지 요청
+	@Override
+	public BoardVO getViewNoAddCount(Map<String, String> paraMap) {
+		BoardVO boardvo = dao.getView(paraMap);
+		return boardvo;
+	}	
+	
+	
+	// 게시글의 추천 수를 가져온다.
+	@Override
+	public int getBoardGoodCount(Map<String, String> paraMap) {
+		int upCount = dao.getBoardGoodCount(paraMap);
+		return upCount;
+	}
+	
+	
+	// 게시글의 비추천 수를 가져온다.
+	@Override
+	public int getBoardBadCount(Map<String, String> paraMap) {
+		int downCount = dao.getBoardBadCount(paraMap);
+		return downCount;
+	}
+	
+	
+	// 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	@Override
+	public int addBoardUp(Map<String, String> paraMap) throws Exception{
+		int result = dao.addBoardUp(paraMap);
+		return result;
+	}
+	
+	
+	// 비추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	@Override
+	public int addBoardDown(Map<String, String> paraMap) throws Exception{
+		int result = dao.addBoardDown(paraMap);
+		return result;
+	}
+	
+
+	// 신고 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	@Override
+	public int addBoardReport(Map<String, String> paraMap) throws Exception {
+		int result = dao.addBoardReport(paraMap);
+		return result;
+	}
+	
+
+	// 게시물을 삭세해주기
+	@Override
+	public int deleteBoard(Map<String, String> paraMap) {
+		int result = dao.deleteBoard(paraMap);
+		
+		// 게시물 삭제가 되었다면 첨부파일을 삭제해준다.
+		if (result == 1) {
+			String fileName = paraMap.get("fileName");
+			String path = paraMap.get("path");
+			
+			if (fileName != null && !fileName.equals("")) { // fileName이 비어있지 않다면
+				try {
+					fileManager.doFileDelete(fileName, path);
+				} catch (Exception e) {}
+			}
+		}
+		return result;
+	}
+
+
+
+
 }
