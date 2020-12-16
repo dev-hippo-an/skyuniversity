@@ -13,7 +13,6 @@ public class MyUtil {
 		String queryString = request.getQueryString(); // URL다음부터 나오는 파라미터 부분이 리턴됨.
 		// currentShowPageNo=3&sizePerPage=10&searchType=name&searchWord=아이유
 		
-		
 		if (queryString != null) {
 			currentURL += "?" + queryString;
 			// http://localhost:9090/MyMVC/member/memberList.up?currentShowPageNo=3&sizePerPage=10&searchType=name&searchWord=아이유

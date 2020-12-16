@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <style type="text/css">
 table {
@@ -26,11 +27,11 @@ tbody {
 	font-size: 10pt;
 }
 
-tbody > tr > td:nth-child(3), td:nth-child(4) {
+td.left {
 	text-align: left;
 }
 
-tbody > tr > td:nth-child(3) {
+th.wide {
 	width: 400px;
 }
 
@@ -63,7 +64,7 @@ ul.pager {
 	margin-bottom: 50px;
 }
 
-tbody > tr > td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7) {
+th.narrow {
 	width: 70px;
 }
 
@@ -86,6 +87,11 @@ tr.board:hover {
 	background-color: #a8d2fe;
 }
 
+img.photo {
+	width: 20px;
+	height: 20px;
+}
+
 </style>
 
 
@@ -93,20 +99,34 @@ tr.board:hover {
 
    	$(document).ready(function() {
       
-      	$("div#tags li").click(function() {
-        	$(this).siblings().removeClass("active");
-        	$(this).addClass("active");
-	   	});
-      
-      	// 글쓰기 버튼을 누르면 파라미터 값으로 게시판 번를 가지고 작성 페이지로 넘어간다.
+   		// 선택한 카테고리(분류)에 active css가 적용되어 있도록 한다.
+   		$("div#tags .selectCategory").each(function(index,item) {
+			if ($(this).val() == "${paraMap.categoryNo}") {
+				$(this).siblings().removeClass("active");
+	        	$(this).addClass("active");	
+			}
+		});
+
+   		
+   		// 글쓰기 버튼을 누르면 파라미터 값으로 게시판 번호를 가지고 작성 페이지로 넘어간다.
       	$("button#register").click(function() {
-		
-      		var frm = document.boardInfo;
-      		frm.action = "<%= request.getContextPath()%>/boardRegister.sky";
-      		frm.submit();
-			
+      		location.href="<%= request.getContextPath()%>/boardRegister.sky?boardKindNo=${paraMap.boardKindNo}";
       	});
       
+
+   		// 각 게시물을 누르면 해당 게시물의 상세 페이지로 넘어간다.
+   		$("tr.board").click(function() {
+   			var boardNo = $(this).children("td.boardNo").text();
+   			$("input[name=boardNo]").val(boardNo);
+   			
+   			var frm = document.urlFrm;
+   			frm.method = "get";
+   			frm.action = "<%= request.getContextPath()%>/boardDetail.sky"; 
+   			frm.submit();
+   			
+		});
+       
+       
    	});// end of $(document).ready(function() {});-------------------------------------
 
    	// 검색 버튼을 누르면 list 페이지로 searchType과 searchWord를 보낸다.
@@ -129,15 +149,15 @@ tr.board:hover {
 	<div id="tags">
 		<ul class="nav nav-tabs">
 			<c:if test="${not empty cateList}">
-            	<li class="active" class="selectCategory" value="0"><a>전체</a></li>
+            	<li class="selectCategory" value="0"><a href="boardList.sky?boardKindNo=${paraMap.boardKindNo}&categoryNo=0">전체</a></li>
             	<c:forEach var="category" items="${cateList}">
-            		<input type="hidden" class="selectCategory" value="${category.categoryNo}" />
-            		<li><a href="">${category.categoryName}</a></li>
+            		<li class="selectCategory" value="${category.categoryNo}"><a href="boardList.sky?boardKindNo=${paraMap.boardKindNo}&categoryNo=${category.categoryNo}">${category.categoryName}</a></li>
             	</c:forEach>
 			</c:if>
 			<li>
 				<form name="searchFrm" style="margin-top: 10px;">
 		      		<input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}"/> 
+		      		<input type="hidden" name="categoryNo" value="${paraMap.categoryNo}"/> 
 		      		<select name="searchType" id="searchType" style="height: 25px;">
 		         		<option value="subject">글제목</option>
 		         		<option value="nickname">작성자</option>
@@ -152,23 +172,27 @@ tr.board:hover {
 		<table style="width: 100%;">
             <thead>
 	            <tr>
-	                <th>글번호</th>
-	                <th>분류</th>
-	                <th>글제목</th>
+	                <th class="narrow">글번호</th>
+	                <c:if test="${not empty cateList}">
+	                	<th class="narrow">분류</th>
+	                </c:if>
+	                <th class="wide">글제목</th>
 	                <th>작성자</th>
 	                <th>작성시간</th>
-	                <th>추천</th>
-	                <th>조회수</th>
+	                <th class="narrow">추천</th>
+	                <th class="narrow">조회수</th>
 	            </tr>
             </thead>
             <tbody>
             	<c:if test="${not empty boardList}">
 	            	<c:forEach var="board" items="${boardList}" varStatus="status">
 		            	<tr class="board">
-		                	<td>${board.boardNo}</td>
-		                	<td>${board.categoryName}</td>
-		                	<td>${board.subject}</td>
-		                	<td>${board.nickname}</td>
+		                	<td class="boardNo">${board.boardNo}</td>
+		                	<c:if test="${board.fk_categoryName ne null}">
+		                		<td>${board.fk_categoryName}</td>
+		                	</c:if>
+		                	<td class="left">${board.subject} <c:if test="${fn:contains(board.content, '<img src=')}"><img src="/skyuniversity/resources/images/picture.png" class="photo"></c:if></td>
+		                	<td class="left"><img src="<%= request.getContextPath()%>/resources/images/levelimg/${board.levelImg}" class="photo" />${board.fk_nickname}</td>
 		                	<td>${board.regDate}</td>
 		                	<td>
 		                		<c:if test="${empty board.upCount}">
@@ -193,12 +217,12 @@ tr.board:hover {
 
 	<div align="right"><button id="register">글쓰기</button></div>
 	
-	<form name="boardInfo"> <!-- 글쓰기 버튼을 눌렀을 때 넘어갈 정보들 -->
-		<input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}"/>
-		<input type="hidden" name="boardName" value="${paraMap.boardName}"/>
-	</form>
-	
 	${pageBar}
-	
+
+	<form name="urlFrm">
+		<input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}"/>
+		<input type="hidden" name="boardNo" value=""/>
+		<input type="hidden" name="gobackURL" value="${gobackURL}"/>
+	</form>	
 </div>
     
