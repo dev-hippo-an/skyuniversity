@@ -125,7 +125,31 @@ tr.marketBoardNotice td {
 <script type="text/javascript">
 
 	$(document).ready(function() {
-		if( '${paraMap.searchType}' != '' && '${paraMap.searchWord}' != '') {  // 또는 if( ${paraMap != null} ) { 
+		
+		
+		$.ajax({
+			url: "<%= request.getContextPath()%>/getNoticeList.sky",
+            type: "POST",
+            data: {"boardKindNo": "${paraMap.boardKindNo}"},
+            dataType:"JSON",
+            success: function(json){
+               
+            },
+            error: function(request, status, error){
+                     alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+             }
+			
+			
+		});
+		
+		
+		
+		
+		
+		
+		
+	
+		if( '${paraMap.searchType}' != '' && '${paraMap.searchWord}' != '') {
 			$("select#searchType").val("${paraMap.searchType}");
 			$("input#searchWord").val("${paraMap.searchWord}");
 		}
@@ -198,6 +222,14 @@ tr.marketBoardNotice td {
 		
 	}
 	
+	function allBoardAdminAdd() {
+		var frm = document.allBoardAdminAddFrm;
+		frm.action="<%= ctxPath%>/allBoardAdminAdd.sky";
+		frm.method="POST";
+		frm.submit();	
+	}
+	
+	
 </script>
 </head>
 
@@ -252,85 +284,41 @@ tr.marketBoardNotice td {
 	            </c:if>
 	            <c:if test="${not empty boardList}">
 	            	<c:forEach items="${boardList}" var="marketBoard" varStatus="status">
-		            	<c:if test="${marketBoard.categoryNo == 1}">
-			            	<tr class="marketBoardNotice">
-			                	<td>${marketBoard.boardNo}</td>
-			                	<td>${marketBoard.categoryName}</td>
-				           		<c:if test="${not empty marketBoard.fileName }">
-				           			<c:choose>
-								        <c:when test="${fn:length(marketBoard.subject) > 20}">
-						                	<td onclick="goview('${marketBoard.boardNo}')">${fn:substring(marketBoard.subject, 0, 20)}...&nbsp; <img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" /></td>
-								        </c:when>
-								        <c:otherwise>
-						                	<td onclick="goview('${marketBoard.boardNo}')">${marketBoard.subject}&nbsp; <img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" /></td>
-								        
-								        </c:otherwise>
-								       
-									</c:choose>
-				           		
-				           		</c:if>
-				           		
-				           		<c:if test="${empty marketBoard.fileName }">
-				           		
-				           			<c:choose>
-								        <c:when test="${fn:length(marketBoard.subject) > 20}">
-						                	<td onclick="goview('${marketBoard.boardNo}')">${fn:substring(marketBoard.subject, 0, 20)}</td>
-								        </c:when>
-								        <c:otherwise>
-						                	<td onclick="goview('${marketBoard.boardNo}')">${marketBoard.subject}</td>
-								        
-								        </c:otherwise>
-								       
-									</c:choose>
-				           		</c:if>
-			                	<td><fmt:formatNumber value="${marketBoard.price}" pattern="#,###" />원</td>
-			                	<td><img src="<%= ctxPath %>/resources/images/levelimg/${marketBoard.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${marketBoard.nickname}</td>
-			                	<td>${marketBoard.regDate}</td>
-			                	<td>${marketBoard.upCount}</td>
-			                	<td>${marketBoard.readCount}</td>
-			            	</tr>
-		            	
-		            	</c:if>
-		            	<c:if test="${marketBoard.categoryNo != 1}">
-			            	<tr>
-			                	<td>${marketBoard.boardNo}</td>
-			                	<td>${marketBoard.categoryName}</td>
-				           		<c:if test="${not empty marketBoard.fileName }">
-				           			<c:choose>
-								        <c:when test="${fn:length(marketBoard.subject) > 20}">
-						                	<td onclick="goview('${marketBoard.boardNo}')">${fn:substring(marketBoard.subject, 0, 20)}...&nbsp; <img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" /></td>
-								        </c:when>
-								        <c:otherwise>
-						                	<td onclick="goview('${marketBoard.boardNo}')">${marketBoard.subject}&nbsp; <img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" /></td>
-								        
-								        </c:otherwise>
-								       
-									</c:choose>
-				           		
-				           		</c:if>
-				           		
-				           		<c:if test="${empty marketBoard.fileName }">
-				           		
-				           			<c:choose>
-								        <c:when test="${fn:length(marketBoard.subject) > 20}">
-						                	<td onclick="goview('${marketBoard.boardNo}')">${fn:substring(marketBoard.subject, 0, 20)}</td>
-								        </c:when>
-								        <c:otherwise>
-						                	<td onclick="goview('${marketBoard.boardNo}')">${marketBoard.subject}</td>
-								        
-								        </c:otherwise>
-								       
-									</c:choose>
-				           		</c:if>
-			                	<td><fmt:formatNumber value="${marketBoard.price}" pattern="#,###" />원</td>
-			                	<td><img src="<%= ctxPath %>/resources/images/levelimg/${marketBoard.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${marketBoard.nickname}</td>
-			                	<td>${marketBoard.regDate}</td>
-			                	<td>${marketBoard.upCount}</td>
-			                	<td>${marketBoard.readCount}</td>
-			            	</tr>
-		            	
-		            	</c:if>
-			      
+	            	
+		            	<tr>
+		                	<td>${marketBoard.boardNo}</td>
+		                	<td>${marketBoard.categoryName}</td>
+			         
+		           			<c:choose>
+						        <c:when test="${fn:length(marketBoard.subject) > 20}">
+				                	<td onclick="goview('${marketBoard.boardNo}')">${fn:substring(marketBoard.subject, 0, 20)}...&nbsp;
+				                	<c:if test="${fn:contains(marketBoard.content, '<img src=')}">
+			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
+			                	</c:if>
+				                	</td>
+						        </c:when>
+						        <c:otherwise>
+				                	<td onclick="goview('${marketBoard.boardNo}')">${marketBoard.subject}&nbsp;
+				                	<c:if test="${fn:contains(marketBoard.content, '<img src=')}">
+			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
+			                	</c:if>
+				                	</td>
+						        
+						        </c:otherwise>
+						       
+							</c:choose>
+			           		
+			           		
+			           		
+		                	<td><fmt:formatNumber value="${marketBoard.price}" pattern="#,###" />원</td>
+		                	<td><img src="<%= ctxPath %>/resources/images/levelimg/${marketBoard.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${marketBoard.nickname}</td>
+		                	<td>${marketBoard.regDate}</td>
+		                	<td>${marketBoard.upCount}</td>
+		                	<td>${marketBoard.readCount}</td>
+		            	</tr>
+	            	
+	            	
+		      
 	            	</c:forEach>	            
 	            </c:if>
             
@@ -344,7 +332,7 @@ tr.marketBoardNotice td {
 	<div align="right">
 		<c:choose>
 			<c:when test="${sessionScope.loginuser.fk_memberNo == 0}">
-				<button id="marketBoardWrite" onclick="marketBoardWrite();">공지쓰기</button>
+				<button id="marketBoardWrite" onclick="allBoardAdminAdd();">공지쓰기</button>
 			</c:when>
 			<c:otherwise>
 				<button id="marketBoardWrite" onclick="marketBoardWrite();">글쓰기</button>			
@@ -365,6 +353,9 @@ tr.marketBoardNotice td {
 		<input type="hidden" name="gobackURL2" value="${gobackURL2}" />
 	</form>
 	
+	<form name="allBoardAdminAddFrm">
+		<input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />
+	</form>
 	
 	
 	

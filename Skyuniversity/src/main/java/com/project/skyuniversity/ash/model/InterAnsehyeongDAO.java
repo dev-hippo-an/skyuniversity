@@ -82,6 +82,14 @@ public interface InterAnsehyeongDAO {
 	// 신고수 알아오기~!!~!~!!!
 	int getReportCount(Map<String, String> paraMap);
 
+	
+	
+	// 관리자 글 쓰기용 게시판 리스트 불러오기
+	List<Map<String, String>> getAllBoardList();
+
+	// 관리자 공지쓰기맨~~
+	int allBoardAdminAdd(NoticeVO boardvo);
+
 
 
 	

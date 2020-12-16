@@ -88,9 +88,9 @@
 		select count(*)
 		from tbl_board_housemarket e join tbl_commu_member m
 		on e.fk_commuMemberNo = m.commuMemberNo
-		where status <![CDATA[ > ]]>= 1
+		where status = 1
 		<if test='categoryNo != "" '>
-        and (e.categoryNo = #{categoryNo} or e.categoryNo = 1)
+        and e.categoryNo = #{categoryNo}
         </if>
 		<if test='searchWord != "" '>
         and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
@@ -101,9 +101,9 @@
 		select count(*)
 		from tbl_board_bookmarket e join tbl_commu_member m
 		on e.fk_commuMemberNo = m.commuMemberNo
-		where status <![CDATA[ > ]]>= 1
+		where status = 1
 		<if test='categoryNo != "" '>
-        and (e.categoryNo = #{categoryNo} or e.categoryNo = 1)
+        and e.categoryNo = #{categoryNo}
         </if>
 		<if test='searchWord != "" '>
         and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
@@ -114,9 +114,9 @@
 		select count(*)
 		from tbl_board_etcmarket e join tbl_commu_member m
 		on e.fk_commuMemberNo = m.commuMemberNo
-		where status <![CDATA[ > ]]>= 1
+		where status = 1
 		<if test='categoryNo != "" '>
-		and (e.categoryNo = #{categoryNo} or e.categoryNo = 1)
+		and e.categoryNo = #{categoryNo}
         </if>
 		<if test='searchWord != "" '>
         and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
@@ -176,15 +176,15 @@
                     group by fk_boardNo
                 ) g
             	on  e.boardNo = g.fk_boardNo
-			    where e.status <![CDATA[ > ]]>= 1
+			    where e.status = 1
 	            <if test='categoryNo != "" '>
-	            and (e.categoryNo = #{categoryNo} or e.categoryNo = 1)
+	            and e.categoryNo = #{categoryNo}
 		        </if>
 			    <if test='searchWord != "" '>
-	            and (lower(${searchType}) like '%' || lower(#{searchWord}) || '%' or e.categoryNo = 1)
+	            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		        </if>
 			)T
-		where status = 2 or rno between #{startRno} and #{endRno}
+		where rno between #{startRno} and #{endRno}
 		order by rno asc
 	</select>
 	
@@ -231,15 +231,15 @@
                     group by fk_boardNo
                 ) g
             	on  e.boardNo = g.fk_boardNo
-			    where e.status <![CDATA[ > ]]>= 1
+			    where e.status = 1
 	            <if test='categoryNo != "" '>
-	            and (e.categoryNo = #{categoryNo} or e.categoryNo = 1)
+	            and e.categoryNo = #{categoryNo}
 		        </if>
 			    <if test='searchWord != "" '>
-	            and (lower(${searchType}) like '%' || lower(#{searchWord}) || '%' or e.categoryNo = 1)
+	            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		        </if>
 			)T
-		where status = 2 or rno between #{startRno} and #{endRno}
+		where rno between #{startRno} and #{endRno}
 		order by rno asc
 	</select>
 	
@@ -285,15 +285,15 @@
                     group by fk_boardNo
                 ) g
             	on  e.boardNo = g.fk_boardNo
-			    where e.status <![CDATA[ > ]]>= 1
+			    where e.status = 1
 	            <if test='categoryNo != "" '>
-	            and (e.categoryNo = #{categoryNo} or e.categoryNo = 1)
+	            and e.categoryNo = #{categoryNo}
 		        </if>
 			    <if test='searchWord != "" '>
-	            and (lower(${searchType}) like '%' || lower(#{searchWord}) || '%' or e.categoryNo = 1)
+	            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		        </if>
 			)T
-		where status = 2 or rno between #{startRno} and #{endRno}
+		where rno between #{startRno} and #{endRno}
 		order by rno asc
 	</select>
 	
@@ -318,36 +318,18 @@
 	
 	<insert id="marketHouseAdd" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
 		insert into tbl_board_housemarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price)
+		values(tbl_board_housemarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price})
 		
-		<if test="fk_memberNo == 0">
-			values(tbl_board_housemarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, 2, #{writerIp}, #{price})
-		</if>
-		<if test="fk_memberNo != 0">
-			values(tbl_board_housemarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price})
-		
-		</if>
 	</insert>
 	<insert id="marketBookAdd" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
 		insert into tbl_board_bookmarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price)
-
-		<if test="fk_memberNo == 0">
-			values(tbl_board_bookmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, 2, #{writerIp}, #{price})
-		</if>
-		<if test="fk_memberNo != 0">
-			values(tbl_board_bookmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price})
+		values(tbl_board_bookmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price})
 		
-		</if>
 	</insert>
 	<insert id="markeEtcAdd" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
 		insert into tbl_board_etcmarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price)
+		values(tbl_board_etcmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price})
 		
-		<if test="fk_memberNo == 0">
-			values(tbl_board_etcmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, 2, #{writerIp}, #{price})
-		</if>
-		<if test="fk_memberNo != 0">
-			values(tbl_board_etcmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price})
-		
-		</if>
 	</insert>
 	
 	
@@ -358,42 +340,20 @@
 	
 	<insert id="marketHouseaAddFile" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
 		insert into tbl_board_housemarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price, fileName, orgFileName, fileSize)
+		values(tbl_board_housemarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize})
 		
-		<if test="fk_memberNo == 0">
-			values(tbl_board_housemarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, 2, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize})
 		
-		</if>
-		
-		<if test="fk_memberNo != 0">
-			values(tbl_board_housemarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize})
-		
-		</if>
 	</insert>
 	<insert id="marketBookAddFile" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
 		insert into tbl_board_bookmarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price, fileName, orgFileName, fileSize)
+		values(tbl_board_bookmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize})
 		
-		<if test="fk_memberNo == 0">
-			values(tbl_board_bookmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, 2, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize})
-		
-		</if>
-		
-		<if test="fk_memberNo != 0">
-			values(tbl_board_bookmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize})
-		
-		</if>
 	</insert>
 	<insert id="markeEtcAddFile" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
 		insert into tbl_board_etcmarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price, fileName, orgFileName, fileSize)
+		values(tbl_board_etcmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize} )
 		
-		<if test="fk_memberNo == 0">
-			values(tbl_board_etcmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, 2, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize} )
 		
-		</if>
-		
-		<if test="fk_memberNo != 0">
-			values(tbl_board_etcmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize} )
-		
-		</if>
 	</insert>
 	
 	
@@ -442,7 +402,7 @@
 	            on m.fk_levelNo = l.levelNo
 	            join tbl_boardkind k
 	            on e.fk_boardKindNo = k.boardKindNo
-			    where e.status <![CDATA[ > ]]>= 1 and boardNo = #{boardNo}
+			    where e.status = 1 and boardNo = #{boardNo}
 	
 	</select>
 	
@@ -468,7 +428,7 @@
 	            on m.fk_levelNo = l.levelNo
 	            join tbl_boardkind k
 	            on e.fk_boardKindNo = k.boardKindNo
-			    where e.status <![CDATA[ > ]]>= 1 and boardNo = #{boardNo}
+			    where e.status = 1 and boardNo = #{boardNo}
 	
 	</select>
 	
@@ -494,7 +454,7 @@
 	            on m.fk_levelNo = l.levelNo
 	            join tbl_boardkind k
 	            on e.fk_boardKindNo = k.boardKindNo
-			    where e.status <![CDATA[ > ]]>= 1 and boardNo = #{boardNo}
+			    where e.status = 1 and boardNo = #{boardNo}
 	
 	</select>
 	
@@ -635,4 +595,19 @@
 		from tbl_board_report
 		where fk_boardKindNo = #{boardKindNo} and fk_boardNo = #{boardNo}
 	</select>
+	
+	
+	
+	<!-- // === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === // -->
+	<select id="getAllBoardList" resultMap="MarketTableInfo">
+		select boardKindNo, boardTypeNo, boardName
+        from tbl_boardkind
+	</select>
+	
+	<insert id="allBoardAdminAdd" parameterType="com.project.skyuniversity.ash.model.NoticeVO">
+		insert into tbl_notice(boardNo, fk_boardKindNo, subject, content, writerIp)
+		values(tbl_notice_seq.nextval, #{fk_boardKindNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	
+	
 </mapper>

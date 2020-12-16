@@ -331,10 +331,30 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 		return result;
 
 	}
+	// 신고수 알아오기~!!~!~!!!
 	@Override
 	public int getReportCount(Map<String, String> paraMap) {
 		
 		int result = sqlsession.selectOne("ansehyeong.getMarketReportCount", paraMap);
 		return result;
+	}
+	
+	
+	
+	
+	
+	
+	// 관리자 글 쓰기용 게시판 리스트 불러오기
+	@Override
+	public List<Map<String, String>> getAllBoardList() {
+		List<Map<String, String>> boardList = sqlsession.selectList("ansehyeong.getAllBoardList");
+		
+		return boardList;
+	}
+	@Override
+	public int allBoardAdminAdd(NoticeVO boardvo) {
+		int n = sqlsession.insert("ansehyeong.allBoardAdminAdd", boardvo);
+		
+		return n;
 	}
 }

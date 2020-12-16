@@ -6,6 +6,7 @@ import com.project.skyuniversity.ash.model.BannerVO;
 import com.project.skyuniversity.ash.model.CommuMemberLevelVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
+import com.project.skyuniversity.ash.model.NoticeVO;
 
 public interface InterAnsehyeongService {
 	
@@ -82,6 +83,13 @@ public interface InterAnsehyeongService {
 
 	// 신고다 신고!
 	int addMarketBoardReport(Map<String, String> paraMap) throws Exception;
+
+	
+	// 관리자 공지 쓰기용 게시판 리스트 불러오기
+	List<Map<String, String>> getAllBoardList();
+
+	// 관리자 공지쓰기맨~~
+	int allBoardAdminAdd(NoticeVO boardvo);
 
 
 

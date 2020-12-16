@@ -12,6 +12,7 @@ import com.project.skyuniversity.ash.model.CommuMemberLevelVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.InterAnsehyeongDAO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
+import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.ash.common.AES256;
 
 //=== #31. Service 선언 === 
@@ -240,6 +241,23 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		result *= dao.getReportCount(paraMap);
 		return result;
 
+	}
+
+	
+	// 관리자 글 쓰기용 게시판 리스트 불러오기
+	@Override
+	public List<Map<String, String>> getAllBoardList() {
+		List<Map<String, String>> boardList = dao.getAllBoardList();
+		
+		return boardList;
+	}
+
+	// 관리자 공지쓰기맨~~
+	@Override
+	public int allBoardAdminAdd(NoticeVO boardvo) {
+		int n = dao.allBoardAdminAdd(boardvo);
+		
+		return n;
 	}
 
 	

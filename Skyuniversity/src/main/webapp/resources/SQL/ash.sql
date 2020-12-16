@@ -558,3 +558,58 @@ select count(*)
         commit;
         
         select * from tbl_category;
+        
+        
+        
+        select boardKindNo, boardTypeNo, boardName
+        from tbl_boardkind;
+        
+        select commuMemberNo, fk_memberNo, fk_levelNo, nickname, point, m.name, m.email
+		from tbl_commu_member c
+		join
+			(select memberno, name, email
+			from tbl_member
+			where memberno = 0 and pwd = 'qwer1234$'
+		) m
+		on c.fk_memberNo = m.memberno
+        
+        delete from tbl_commu_member
+        where fk_levelNo = 21 and commuMemberNo = 0;
+        
+        commit;
+        
+        select * from tbl_board_etcmarket
+        
+        create table tbl_notice (
+        boardNo             number                  not null
+        , fk_boardKindNo    number                  not null
+        , fk_memberNo       number default 0        not null
+        , fk_categoryNo     number default 1        not null
+        , subject           varchar2(200)           not null
+        , regDate           date default sysdate    not null
+        , content           nvarchar2(2000)         not null
+        , readCount         number default 0                 not null
+        , status            number(1) default 1     not null  -- 0 : 못쓸글 , 1: 활성화글
+        , writerIp          varchar2(50)            not null
+        );
+        
+        create sequence tbl_notice_seq
+start with 1         -- 첫번째 출발은 1부터 한다.
+increment by 1        -- 증가치 값
+nomaxvalue          -- 최대값이 없이 무제한으로 증가시키겠다는 뜻. 최대값을 주고 싶다면 maxvalue 100이런 식으로 주면 된다.
+nominvalue          -- 최소값이 없다.
+nocycle             -- 반복이 없는 직진
+nocache;
+
+insert into tbl_notice(boardNo, fk_boardKindNo, subject, content, writerIp)
+values(tbl_notice_seq.nextval, #{fk_boardKindNo}, #{subject}, #{content}, #{writerIp})
+
+
+
+
+
+
+
+select *
+from tbl_notice;
+
