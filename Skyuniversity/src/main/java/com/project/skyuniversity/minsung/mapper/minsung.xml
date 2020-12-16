@@ -5,7 +5,7 @@
 <mapper namespace="minsung">
 
 	<select id="boardListSelected" resultType="com.project.skyuniversity.minsung.model.MinsungBoardVO">
-		select fk_boardKindNo, boardNo, fk_memberNo, subject, regDate, contents1, writerIp, fk_categoryNo
+		select fk_boardKindNo, boardNo, fk_memberNo, subject, regDate, contents1, writerIp, fk_categoryno
 		from tbl_board_notice
 	</select>
 	
@@ -19,7 +19,7 @@
                , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
                , content, readCount, status, fileExist, writerIp
           from tbl_category C join tbl_board_notice V 
-          on C.categoryNo = V.fk_categoryNo
+          on C.categoryno = V.fk_categoryno
           join tbl_commu_member M 
           on V.fk_memberNo = M.fk_memberNo
           where V.status = 1
@@ -32,10 +32,13 @@
 		
 	</select>
 	
+	
+	
 	<select id="getTotalCount" parameterType="HashMap" resultType="int">
     	
 		select count(*)       
-		from tbl_board_notice
+		from tbl_board_notice b join tbl_commu_member m
+        on b.fk_memberno = m.fk_memberno
 		where status = 1
 		<if test='searchWord != ""'>
 		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
@@ -53,4 +56,35 @@
     	select boardname from TBL_BOARDKIND
 		where boardkindno = #{boardKindNo}
     </select>
+    
+    <select id="getOneBoard" parameterType="String" resultType="com.project.skyuniversity.minsung.model.MinsungBoardVO">
+		select V.boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, V.fk_categoryno, C.categoryName,
+		subject, regDate, editDate, content, readCount, fileExist, writerIp
+		from tbl_category C join tbl_board_notice V 
+		on C.categoryno = V.fk_categoryno
+		join tbl_commu_member M 
+		on V.fk_memberNo = M.fk_memberNo
+		where boardno = #{boardNo}
+    </select>
+    
+    <update id="edit" parameterType="com.project.skyuniversity.minsung.model.MinsungBoardVO">
+    	update tbl_board_notice set subject = #{subject}
+                   , content = #{content}
+		where boardNo = #{boardNo}
+    </update>
+    
+    <delete id="del" parameterType="com.project.skyuniversity.minsung.model.MinsungBoardVO">
+    	delete from tbl_board_notice
+		where boardNo = #{boardNo}
+    </delete>
+    
+    <insert id="add" parameterType="com.project.skyuniversity.minsung.model.MinsungBoardVO">
+    
+    	insert into tbl_board_notice(fk_boardkindno, boardno, fk_categoryno, fk_memberno, subject, regdate,
+    	editdate, content, readcount, status, fileexist, writerip)
+		values(#{fk_boardKindNo}, tbl_boardNotice_seq.nextval, #{fk_categoryno}, #{fk_memberNo}, #{subject}, sysdate, default, #{content}, default, default, default, '12-34')
+
+    </insert>
+    
+	
 </mapper>
