@@ -199,7 +199,20 @@ table#scroltbl {
 				if(json.recourse){
 					var result = confirm("재수강 하시겠습니까?");
 					if(result){
-						location.href="<%=ctxPath%>/insertSub.sky?bool="+result+"&subjectno="+subjectno+"&cursemester="+cursemester;
+						<%-- location.href="<%=ctxPath%>/insertSub.sky?bool="+result+"&subjectno="+subjectno+"&cursemester="+cursemester; --%>
+						$.ajax({
+							url: "<%= request.getContextPath() %>/insertSub.sky",
+							data: {"bool":result,
+								   "subjectno":subjectno,
+								   "cursemester":cursemester},
+							type: "GET",
+							dataType: "json",
+							success: function(json) {
+								
+							},error: function(request, status, error){
+					               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+					        }
+						});
 					}
 				}
 				if(json.end){
@@ -256,9 +269,9 @@ table#scroltbl {
 						<label>학과: </label>
 						<select name="depts" id="depts">
 						  <option>전체</option>
-						  <c:forEach items="${deptlist}" var ="dept" >
+						  <c:forEach items="${deptlist}" var="dept">
 						  	<option>${dept}</option>
-						  </c:forEach> 	 	
+						 </c:forEach>
 						</select>
 					</td>
 					<td>

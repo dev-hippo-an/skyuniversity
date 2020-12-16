@@ -69,7 +69,7 @@ public class EunjiBoardController {
 		Map<String, String> paraMap2 = new HashMap<String, String>();
 		paraMap2.put("memberno", Integer.toString(memberNo));
 		paraMap2.put("year", Integer.toString(year));
-		paraMap2.put("semester", Integer.toString(mvo.getCurrentSemester()));
+		paraMap2.put("cursemester", Integer.toString(mvo.getCurrentSemester()));
 
 		List<Map<String, String>> reglist = service.selectRegList(paraMap2);
 		
@@ -264,12 +264,15 @@ public class EunjiBoardController {
 		paraMap2.put("memberno", Integer.toString(memberNo));
 		paraMap2.put("year", Integer.toString(year));
 
+		List<Map<String, String>> reglist = service.selectRegList(paraMap2);
+
 		if(bool.equals("true")) {
 			int n = service.insertReCourse(paraMap2);
 			if(n==1) {
 				int s = service.updatePlusCnt(paraMap2.get("subjectno"));
 			}
 		}
+		mav.addObject("reglist", reglist);
 		mav.addObject("deptlist", deptlist);
 		mav.addObject("subjectlist", subjectlist);
 		mav.addObject("year", year);

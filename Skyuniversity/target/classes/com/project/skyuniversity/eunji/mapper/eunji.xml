@@ -131,7 +131,7 @@
 		) V
 		inner join tbl_course C
 		on V.subjectno = C.fk_subjectno
-		where fk_memberno = #{memberno} and courseyear = #{year} and semester = #{semester}
+		where fk_memberno = #{memberno} and courseyear = #{year} and semester = #{cursemester}
 	</select>
 	
 	<delete id="deleteCourse" parameterType="String">
