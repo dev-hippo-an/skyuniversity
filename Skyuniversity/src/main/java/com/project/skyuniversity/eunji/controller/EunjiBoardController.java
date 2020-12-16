@@ -229,56 +229,38 @@ public class EunjiBoardController {
 		return jsonobj.toString();
 	}
 	
-	
-	@RequestMapping(value = "/insertSub.sky", method = {RequestMethod.GET})
-	public ModelAndView insertSub(ModelAndView mav, HttpServletRequest request) {
+	@ResponseBody
+	@RequestMapping(value = "/insertReSub.sky", method = {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+	public String insertReSub(HttpServletRequest request) {
 		
-		
-		CommuMemberVO cmvo = new CommuMemberVO();
-		HttpSession session = request.getSession();
-		
-		cmvo = (CommuMemberVO) session.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
-		Map<String, String> paraMap = new HashMap<String, String>();
-		paraMap.put("memberNo", Integer.toString(memberNo));
-		
-		MemberVO mvo = new MemberVO();
-		// 로그인한 유저의 해당하는 학적 정보를 불러온다.
-		mvo = service.selectMemberInfo(paraMap);
-
-		java.util.Calendar cal = java.util.Calendar.getInstance();
-		
-		int year = cal.get(cal.YEAR) + 1;
-		
-		// 전체 학과 리스트를 조회
-		List<String> deptlist = service.selectAllDept();
-		// 전체 과목 리스트 조회
-		List<String> subjectlist = service.selectAllSubject();
 		String bool = request.getParameter("bool");
 		String subjectno = request.getParameter("subjectno");
 		String cursemester = request.getParameter("cursemester");
+		String year = request.getParameter("year");
+		String memberno = request.getParameter("memberno");
+		
 		
 		Map<String, String> paraMap2 = new HashMap<String, String>();
-		paraMap2.put("subjectno", subjectno);
-		paraMap2.put("cursemester", cursemester);
-		paraMap2.put("memberno", Integer.toString(memberNo));
-		paraMap2.put("year", Integer.toString(year));
-
-		List<Map<String, String>> reglist = service.selectRegList(paraMap2);
-
+	    paraMap2.put("subjectno", subjectno);
+	    paraMap2.put("cursemester", cursemester);
+	    paraMap2.put("memberno", memberno);
+	    paraMap2.put("year", year);
+	    
+	    boolean boolre = false;
+	    
 		if(bool.equals("true")) {
 			int n = service.insertReCourse(paraMap2);
 			if(n==1) {
 				int s = service.updatePlusCnt(paraMap2.get("subjectno"));
+				boolre = true;
 			}
 		}
-		mav.addObject("reglist", reglist);
-		mav.addObject("deptlist", deptlist);
-		mav.addObject("subjectlist", subjectlist);
-		mav.addObject("year", year);
-		mav.addObject("mvo", mvo);
-		mav.setViewName("eunji/class/registerClass.tiles2");
-		return mav;
+		
+		JSONObject jsonobj = new JSONObject();
+		jsonobj.put("boolre", boolre);
+		
+		return jsonobj.toString();
+		
 	}
 	
 	@ResponseBody

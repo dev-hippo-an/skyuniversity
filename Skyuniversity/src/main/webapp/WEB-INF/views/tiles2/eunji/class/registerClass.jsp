@@ -201,18 +201,23 @@ table#scroltbl {
 					if(result){
 						<%-- location.href="<%=ctxPath%>/insertSub.sky?bool="+result+"&subjectno="+subjectno+"&cursemester="+cursemester; --%>
 						$.ajax({
-							url: "<%= request.getContextPath() %>/insertSub.sky",
+							url: "<%= request.getContextPath() %>/insertReSub.sky",
 							data: {"bool":result,
 								   "subjectno":subjectno,
-								   "cursemester":cursemester},
+								   "cursemester":cursemester,
+								   "year":year,
+								   "memberno":memberno},
 							type: "GET",
 							dataType: "json",
 							success: function(json) {
-								
+								if(json.boolre){
+									alert("재수강 신청이 되었습니다.");
+									location.reload();
+								}
 							},error: function(request, status, error){
 					               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 					        }
-						});
+						}); 
 					}
 				}
 				if(json.end){
@@ -239,6 +244,7 @@ table#scroltbl {
 			success: function(json) {
 				if(json.result){
 					alert("해당 과목이 삭제되었습니다.");
+					location.reload();
 				}
 			},
 			error: function(request, status, error){
