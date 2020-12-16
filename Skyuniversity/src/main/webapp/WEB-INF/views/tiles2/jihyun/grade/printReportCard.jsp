@@ -7,6 +7,6 @@
 <title>Insert title here</title>
 </head>
 <body>
-	호롤롤로
+
 </body>
 </html>

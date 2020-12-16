@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="Jihyun">
+	 <select id="getLoginMember" resultType="com.project.skyuniversity.jihyun.model.JihyunMemberVO" parameterType="HashMap">
+		select memberno, pwd, name, mobile, email, birth, jubun, engname, chinaname, grade, enterday, graduateday, absencecnt 
+			 , fk_regseq, fk_deptseq, address, detailaddress, extraaddress, img, graduateok, currentsemester
+		from tbl_member
+		where memberno = #{userid} and pwd = #{pwd} 
+	</select>
+
+</mapper>

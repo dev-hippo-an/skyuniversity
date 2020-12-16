@@ -63,8 +63,8 @@
 		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 100px;">
 	</div>
 	<div id="loginStudent">
-	      <span class="sname">${sessionScope.loginuser.name}김뫄뫄</span>
-	      <span class="sinfo">롸롸롸롸롸과 솨학년</span>
+	      <span class="sname">${sessionScope.loginuser.name}</span>
+	      <span class="sinfo">뫄뫄뫄뫄과 솨학년</span>
 	 </div>
 	 <div>
 	   <span class="btn">커뮤니티</span>
