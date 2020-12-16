@@ -27,6 +27,12 @@
 		margin-top: 20px;
 	}
 	
+	textarea#content {
+		 width: 95.4%; 
+		 height: 550px; 
+		 resize: none;
+	}
+	
 	button {
 		width: 80px;
 		height: 30px;
@@ -60,7 +66,7 @@
 	            // 툴바 사용 여부 (true:사용/ false:사용하지 않음)
 	            bUseToolbar : true,            
 	            // 입력창 크기 조절바 사용 여부 (true:사용/ false:사용하지 않음)
-	            bUseVerticalResizer : true,    
+	            bUseVerticalResizer : false,    
 	            // 모드 탭(Editor | HTML | TEXT) 사용 여부 (true:사용/ false:사용하지 않음)
 	            bUseModeChanger : true,
 	        }
@@ -101,7 +107,7 @@
            // 글내용 유효성 검사 
            if(contentval == "" || contentval == "<p>&nbsp;</p>") {
               alert("글내용을 입력하세요!!");
-              return;
+              return false;
            }
            
            // 스마트에디터 사용시 무의미하게 생기는 p태그 제거하기
@@ -128,6 +134,12 @@
 			frm.submit();
 		});
 	   
+		
+		// 취소 버튼을 누르면 다시 해당 게시판 리스트로 감.
+		$("button#reset").click(function() {
+			location.href="<%= request.getContextPath()%>/boardList.sky?boardKindNo=${infoMap.boardKindNo}";
+		});
+		
    	});// end of $(document).ready(function() {});-------------------------------------
 
    	
@@ -137,13 +149,16 @@
 <div class="container"  align="left" class="form-group">
 	<form class="form-inline" name="registerForm" enctype="multipart/form-data">		
 		<input type="hidden" name="fk_boardKindNo" value="${infoMap.boardKindNo}" />
+		<input type="hidden" name="fk_memberNo" value="${sessionScope.loginuser.fk_memberNo}" />
+		<input type="hidden" name="boardName" value="${infoMap.boardName}" />
 		<ul>
 			<li><h2>${infoMap.boardName}</h2></li>
 			<li><h3>작성자&nbsp;:&nbsp;${sessionScope.loginuser.nickname}</h3></li>
 			<li>
 				<c:if test="${not empty cateList}">
-					<select class="form-control" id="category" name="category" style="width: 10%;">
+					<select class="form-control" id="category" name="fk_categoryNo" style="width: 10%;">
 						<option value="0" selected>분류</option>
+						<c:if test="${sessionScope.loginuser.fk_memberNo eq 3}"><option value="1">공지</option></c:if>
 						<c:forEach var="category" items="${cateList}">
 							<option value="${category.categoryNo}">${category.categoryName}</option>
 						</c:forEach>
@@ -155,7 +170,7 @@
 				</c:if>
 			</li>
 			<li>
-				<textarea class="form-control" id="content" name="content" rows="30" style="width: 95.4%; resize: none;" placeholder="내용을 입력해 주세요"></textarea>
+				<textarea class="form-control" id="content" name="content"></textarea>
 			</li>
 			<li>
 				<input class="form-control" type="file" name="attach" /><br>
@@ -163,7 +178,7 @@
 		</ul>
 		<div align="center">
 			<button id="btnRegister">등록</button>
-			<button type="reset">취소</button>
+			<button id="reset" type="reset">취소</button>
 		</div>
 	</form>
 	

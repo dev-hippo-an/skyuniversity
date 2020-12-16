@@ -20,106 +20,267 @@
 		where fk_boardkindno = #{boardKindNo}
 	</select>
 	
-	<!-- 테이블명을 입력하여 해당 게시판에 해당하는 게시물들을 불러오기 -->
-	<!-- 
-	<select id="getBoardList" parameterType="int" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
-		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
-		         , content, readCount, status, fileExist, writerIp
-		from 
-		(
-		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
-		         , content, readCount, status, fileExist, writerIp
-		    from tbl_category C join ${value} V 
-		    on C.categoryNo = V.categoryNo
-		    join tbl_commu_member M 
-		    on V.fk_memberNo = M.fk_memberNo
-		)T
-		where rno between 1 and 5
-		order by rno desc
-	</select>
-	-->
 	
 	<!-- 각 테이블마다 게시글들을 받아오기 -->
 	<select id="getInformalBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
-		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
-		         , content, readCount, status, fileExist, writerIp
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
 		from 
 		(
-		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, subject
 		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
-		         , content, readCount, status, fileExist, writerIp
-		    from tbl_category C join tbl_board_informal V 
-		    on C.categoryNo = V.fk_categoryNo
-		    join tbl_commu_member M 
-		    on V.fk_memberNo = M.fk_memberNo
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
+		    from tbl_commu_member M join tbl_board_informal V  
+	    	on V.fk_memberNo = M.fk_memberNo
+	    	join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
 		    where V.status = 1
 		    <if test='searchWord != "" '>
             and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 	        </if>
 		)T
 		where rno between #{startRno} and #{endRno}
-		order by rno desc
+		order by rno asc
 	</select>
 	<select id="getPoliteBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
-		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
-		         , content, readCount, status, fileExist, writerIp
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
 		from 
 		(
-		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, subject
 		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
-		         , content, readCount, status, fileExist, writerIp
-		    from tbl_category C join tbl_board_polite V 
-		    on C.categoryNo = V.fk_categoryNo
-		    join tbl_commu_member M 
-		    on V.fk_memberNo = M.fk_memberNo
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
+		    from tbl_commu_member M join tbl_board_polite V  
+	    	on V.fk_memberNo = M.fk_memberNo
+	    	join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
 		    where V.status = 1
 		    <if test='searchWord != "" '>
             and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
             </if>
 		)T
 		where rno between #{startRno} and #{endRno}
-		order by rno desc
+		order by rno asc
 	</select>
 	<select id="getHumorBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
-		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
-		         , content, readCount, status, fileExist, writerIp
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
 		from 
 		(
-		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
 		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
-		         , content, readCount, status, fileExist, writerIp
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
 		    from tbl_category C join tbl_board_humor V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 
 		    on V.fk_memberNo = M.fk_memberNo
+		    join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
 		    where V.status = 1
 		    <if test='searchWord != "" '>
             and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
             </if>
+            <if test='categoryNo != "0" '>
+	        and fk_categoryNo = ${categoryNo}
+	        </if>
 		)T
 		where rno between #{startRno} and #{endRno}
-		order by rno desc
+		order by rno asc
 	</select>
 	<select id="getIssueBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
-		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
-		         , content, readCount, status, fileExist, writerIp
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
 		from 
 		(
-		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
 		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
-		         , content, readCount, status, fileExist, writerIp
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
 		    from tbl_category C join tbl_board_issue V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 
 		    on V.fk_memberNo = M.fk_memberNo
+		    join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
 		    where V.status = 1
 		    <if test='searchWord != "" '>
             and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
             </if>
+            <if test='categoryNo != "0" '>
+	        and fk_categoryNo = ${categoryNo}
+	        </if>
 		)T
 		where rno between #{startRno} and #{endRno}
-		order by rno desc
+		order by rno asc
+	</select>
+	<select id="getMbtiBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
+		    from tbl_category C join tbl_board_mbti V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+            </if>
+            <if test='categoryNo != "0" '>
+	        and fk_categoryNo = ${categoryNo}
+	        </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
+	</select>
+	<select id="getFoodBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
+		    from tbl_category C join tbl_board_food V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+            </if>
+            <if test='categoryNo != "0" '>
+	        and fk_categoryNo = ${categoryNo}
+	        </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
+	</select>
+	<select id="getLoveBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
+		    from tbl_category C join tbl_board_love V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+            </if>
+            <if test='categoryNo != "0" '>
+	        and fk_categoryNo = ${categoryNo}
+	        </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
+	</select>
+	<select id="getHobbyBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
+		    from tbl_category C join tbl_board_hobby V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+            </if>
+            <if test='categoryNo != "0" '>
+	        and fk_categoryNo = ${categoryNo}
+	        </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
+	</select>
+	<select id="getHealthBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		    	 , levelImg
+		    from tbl_category C join tbl_board_health V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+            </if>
+            <if test='categoryNo != "0" '>
+	        and fk_categoryNo = ${categoryNo}
+	        </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
+	</select>
+	<select id="getDietBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
+		    from tbl_category C join tbl_board_diet V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
+		    where V.status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+            </if>
+            <if test='categoryNo != "0" '>
+	        and fk_categoryNo = ${categoryNo}
+	        </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
 	</select>
 	
 	
@@ -150,6 +311,9 @@
 		<if test='searchWord != ""'>
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>
+		<if test='categoryNo != "0" '>
+        and fk_categoryNo = ${categoryNo}
+        </if>
 	</select>
 	<select id="getIssueTotalCount" parameterType="HashMap" resultType="int">
 		select count(*)
@@ -159,12 +323,456 @@
 		<if test='searchWord != ""'>
 		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
 		</if>
+		<if test='categoryNo != "0" '>
+        and fk_categoryNo = ${categoryNo}
+        </if>
+	</select>
+	<select id="getMbtiTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_mbti V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		<if test='categoryNo != "0" '>
+        and fk_categoryNo = ${categoryNo}
+        </if>
+	</select>
+	<select id="getFoodTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_food V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		<if test='categoryNo != "0" '>
+        and fk_categoryNo = ${categoryNo}
+        </if>
+	</select>
+	<select id="getLoveTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_love V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		<if test='categoryNo != "0" '>
+        and fk_categoryNo = ${categoryNo}
+        </if>
+	</select>
+	<select id="getHobbyTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_hobby V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		<if test='categoryNo != "0" '>
+        and fk_categoryNo = ${categoryNo}
+        </if>
+	</select>
+	<select id="getHealthTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_health V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		<if test='categoryNo != "0" '>
+        and fk_categoryNo = ${categoryNo}
+        </if>
+	</select>
+	<select id="getDietTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_diet V join tbl_commu_member M
+		on V.fk_memberNo = M.fk_memberNo
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		</if>
+		<if test='categoryNo != "0" '>
+        and fk_categoryNo = ${categoryNo}
+        </if>
 	</select>
 	
 	
+	<!-- 파일 첨부가 없는 글쓰기 -->
+	<insert id="addInformalBoard">
+		insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, subject, content, writerIp)
+		values(tbl_board_informal_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	<insert id="addPoliteBoard">
+		insert into tbl_board_polite(boardNo, fk_boardKindNo, fk_memberNo, subject, content, writerIp)
+		values(tbl_board_polite_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	<insert id="addHumorBoard">
+		insert into tbl_board_humor(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	<insert id="addIssueBoard">
+		insert into tbl_board_issue(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	<insert id="addMbtiBoard">
+		insert into tbl_board_mbti(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	<insert id="addFoodBoard">
+		insert into tbl_board_food(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	<insert id="addLoveBoard">
+		insert into tbl_board_love(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	<insert id="addHobbyBoard">
+		insert into tbl_board_hobby(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	<insert id="addHealthBoard">
+		insert into tbl_board_health(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	<insert id="addDietBoard">
+		insert into tbl_board_diet(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	
+		
+	<!-- 파일 첨부가 있는 글쓰기 -->
+	<insert id="addInformalBoardWithFile">
+		insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_informal_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
+	<insert id="addPoliteBoardWithFile">
+		insert into tbl_board_polite(boardNo, fk_boardKindNo, fk_memberNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_informal_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
+	<insert id="addHumorBoardWithFile">
+		insert into tbl_board_humor(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
+	<insert id="addIssueBoardWithFile">
+		insert into tbl_board_issue(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
+	<insert id="addMbtiBoardWithFile">
+		insert into tbl_board_mbti(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
+	<insert id="addFoodBoardWithFile">
+		insert into tbl_board_food(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
+	<insert id="addLoveBoardWithFile">
+		insert into tbl_board_love(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
+	<insert id="addHobbyBoardWithFile">
+		insert into tbl_board_hobby(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
+	<insert id="addHealthBoardWithFile">
+		insert into tbl_board_health(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
+	<insert id="addDietBoardWithFile">
+		insert into tbl_board_diet(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp, fileName, orgFilename, fileSize)
+		values(tbl_board_humor_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{fk_categoryNo}, #{subject}, #{content}, #{writerIp}, #{fileName}, #{orgFilename}, #{fileSize})
+	</insert>
 	
 	
+	<!-- 회원 번호와 포인트를 받아와 회원 포인트를 올려주기 -->
+	<update id="pointPlus" parameterType="HashMap">
+		update tbl_commu_member set point = point + ${point}
+		where fk_memberNo = #{fk_memberNo}
+	</update>
 	
+	<!-- 회원번호로 회원의 포인트와 레벨 등을 불러오기 -->
+	<resultMap type="HashMap" id="pointCheck"> <!-- property는 HashMap의 키값이며 column이 컬럼명이다. -->
+		<result property="fk_memberNo" column="fk_memberNo" javaType="int" />
+		<result property="fk_levelNo" column="fk_levelNo" javaType="int" />
+		<result property="currentPoint" column="currentPoint" javaType="int" />
+		<result property="nextLevelNo" column="nextLevelNo" javaType="int" />
+		<result property="nextLevelPoint" column="nextLevelPoint" javaType="int" />
+	</resultMap>
+	
+	<select id="pointCheck" parameterType="String" resultMap="pointCheck">
+		select fk_memberNo, fk_levelNo, point as currentPoint, levelNo as nextLevelNo, levelPoint as nextLevelPoint
+		from tbl_commu_member M join tbl_commu_member_level L
+		on M.fk_levelNo = (L.levelNo - 1)
+		where fk_memberNo = #{fk_memberNo}
+	</select>
+	
+	<!-- 회원의 포인트와 레벨을 올려주기 -->
+	<update id="pointPlusWithLevel" parameterType="HashMap">
+		update tbl_commu_member set point = point + ${point}, fk_levelNo = ${nextLevelNo}
+		where fk_memberNo = #{fk_memberNo}
+	</update>
+	
+	
+	<!-- 게시물 1개 조회하기 -->
+	<select id="getViewInformal" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, subject
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_informal V  
+		on V.fk_memberNo = M.fk_memberNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	<select id="getViewPolite" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, subject
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_polite V  
+		on V.fk_memberNo = M.fk_memberNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	<select id="getViewHumor" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, V.fk_categoryNo, C.categoryName
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_humor V  
+		on V.fk_memberNo = M.fk_memberNo
+		join tbl_category C
+		on V.fk_categoryNo = C.categoryNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	<select id="getViewIssue" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, V.fk_categoryNo, C.categoryName
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_Issue V  
+		on V.fk_memberNo = M.fk_memberNo
+		join tbl_category C
+		on V.fk_categoryNo = C.categoryNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	<select id="getViewMbti" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, V.fk_categoryNo, C.categoryName
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_mbti V  
+		on V.fk_memberNo = M.fk_memberNo
+		join tbl_category C
+		on V.fk_categoryNo = C.categoryNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	<select id="getViewFood" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, V.fk_categoryNo, C.categoryName
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_food V  
+		on V.fk_memberNo = M.fk_memberNo
+		join tbl_category C
+		on V.fk_categoryNo = C.categoryNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	<select id="getViewLove" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, V.fk_categoryNo, C.categoryName
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_love V  
+		on V.fk_memberNo = M.fk_memberNo
+		join tbl_category C
+		on V.fk_categoryNo = C.categoryNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	<select id="getViewHobby" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, V.fk_categoryNo, C.categoryName
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_hobby V  
+		on V.fk_memberNo = M.fk_memberNo
+		join tbl_category C
+		on V.fk_categoryNo = C.categoryNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	<select id="getViewHealth" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, V.fk_categoryNo, C.categoryName
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_health V  
+		on V.fk_memberNo = M.fk_memberNo
+		join tbl_category C
+		on V.fk_categoryNo = C.categoryNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	<select id="getViewDiet" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, V.fk_categoryNo, C.categoryName
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+		from tbl_commu_member M join tbl_board_diet V  
+		on V.fk_memberNo = M.fk_memberNo
+		join tbl_category C
+		on V.fk_categoryNo = C.categoryNo
+		where V.status = 1 and boardNo = #{boardNo}
+	</select>
+	
+	
+	<!-- 게시물 조회수 증가시키기 -->
+	<update id="addReadCountInformal" parameterType="String">
+		update tbl_board_informal set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+	<update id="addReadCountPolite" parameterType="String">
+		update tbl_board_polite set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+	<update id="addReadCountHumor" parameterType="String">
+		update tbl_board_humor set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+	<update id="addReadCountIssue" parameterType="String">
+		update tbl_board_issue set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+	<update id="addReadCountMbti" parameterType="String">
+		update tbl_board_mbti set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+	<update id="addReadCountFood" parameterType="String">
+		update tbl_board_food set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+	<update id="addReadCountLove" parameterType="String">
+		update tbl_board_love set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+	<update id="addReadCountHobby" parameterType="String">
+		update tbl_board_hobby set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+	<update id="addReadCountHealth" parameterType="String">
+		update tbl_board_health set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+	<update id="addReadCountDiet" parameterType="String">
+		update tbl_board_diet set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
+
+
+	<!-- 게시글의 추천수를 가져온다. -->
+	<select id="getBoardGoodCount" parameterType="HashMap" resultType="int">
+		select count(*) as upCount
+		from tbl_board_good
+		where fk_boardKindNo = ${boardKindNo} and fk_boardNo = ${boardNo}
+	</select>
+	
+	<!-- 게시글의 비추천수를 가져온다. -->
+	<select id="getBoardBadCount" parameterType="HashMap" resultType="int">
+		select count(*) as downCount
+		from tbl_board_bad
+		where fk_boardKindNo = ${boardKindNo} and fk_boardNo = ${boardNo}
+	</select>
+	
+	
+	<!-- 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다. -->
+	<delete id="getBoardBad" parameterType="HashMap">
+		delete from tbl_board_bad
+		where fk_boardKindNo = ${boardKindNo} and fk_boardNo = ${boardNo} and fk_memberNo = ${memberNo}
+	</delete>
+	
+	<!-- 추천 테이블에 행을 추가한다. -->
+	<insert id="addBoardUp" parameterType="HashMap">
+		insert into tbl_board_good
+		values(${boardKindNo}, ${boardNo}, ${memberNo})
+	</insert>
+	
+	
+	<!-- 추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다. -->
+	<delete id="getBoardGood" parameterType="HashMap">
+		delete from tbl_board_good
+		where fk_boardKindNo = ${boardKindNo} and fk_boardNo = ${boardNo} and fk_memberNo = ${memberNo}
+	</delete>
+	
+	<!-- 비추천 테이블에 행을 추가한다. -->
+	<insert id="addBoardDown" parameterType="HashMap">
+		insert into tbl_board_bad
+		values(${boardKindNo}, ${boardNo}, ${memberNo})
+	</insert>
+	
+	
+	<!-- 신고 테이블에 행을 추가한다. -->
+	<insert id="addBoardReport" parameterType="HashMap">
+		insert into tbl_board_report
+		values(${boardKindNo}, ${boardNo}, ${memberNo})
+	</insert>
+	
+	<!-- 신고한 게시글의 신고 개수를 알아온다. -->
+	<select id="getReportCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_report
+		where fk_boardKindNo = ${boardKindNo} and fk_boardNo = ${boardNo}
+	</select>
+	
+	<!-- 게시글의 상태를 0으로 update한다. -->
+	<update id="updateInformalBoardStatus" parameterType="String">
+		update tbl_board_informal set status = 0
+		where boardNo = #{boardNo}
+	</update>
+	<update id="updatePoliteBoardStatus" parameterType="String">
+		update tbl_board_polite set status = 0
+		where boardNo = #{boardNo}
+	</update>
+	<update id="updateHumorBoardStatus" parameterType="String">
+		update tbl_board_humor set status = 0
+		where boardNo = #{boardNo}
+	</update>
+	<update id="updateIssueBoardStatus" parameterType="String">
+		update tbl_board_issue set status = 0
+		where boardNo = #{boardNo}
+	</update>
+	<update id="updateMbtiBoardStatus" parameterType="String">
+		update tbl_board_mbti set status = 0
+		where boardNo = #{boardNo}
+	</update>
+	<update id="updateFoodBoardStatus" parameterType="String">
+		update tbl_board_food set status = 0
+		where boardNo = #{boardNo}
+	</update>
+	<update id="updateLoveBoardStatus" parameterType="String">
+		update tbl_board_love set status = 0
+		where boardNo = #{boardNo}
+	</update>
+	<update id="updateHobbyBoardStatus" parameterType="String">
+		update tbl_board_hobby set status = 0
+		where boardNo = #{boardNo}
+	</update>
+	<update id="updateHealthBoardStatus" parameterType="String">
+		update tbl_board_health set status = 0
+		where boardNo = #{boardNo}
+	</update>
+	<update id="updateDietBoardStatus" parameterType="String">
+		update tbl_board_diet set status = 0
+		where boardNo = #{boardNo}
+	</update>
 	
 	
 	

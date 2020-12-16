@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="minsung">
+
+	<select id="boardListSelected" resultType="com.project.skyuniversity.minsung.model.MinsungBoardVO">
+		select fk_boardKindNo, boardNo, fk_memberNo, subject, regDate, contents1, writerIp, fk_categoryNo
+		from tbl_board_notice
+	</select>
+	
+ 	<select id="boardListSearchWithPaging" parameterType="HashMap" resultType="com.project.skyuniversity.minsung.model.MinsungBoardVO">
+		
+		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, categoryName, subject, regDate, editDate
+               , content, readCount, status, fileExist, writerIp
+      from 
+      (
+          select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+               , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+               , content, readCount, status, fileExist, writerIp
+          from tbl_category C join tbl_board_notice V 
+          on C.categoryNo = V.fk_categoryNo
+          join tbl_commu_member M 
+          on V.fk_memberNo = M.fk_memberNo
+          where V.status = 1
+          <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+           </if>
+      )T
+      where rno between #{startRno} and #{endRno}
+      order by rno desc
+		
+	</select>
+	
+	<select id="getTotalCount" parameterType="HashMap" resultType="int">
+    	
+		select count(*)       
+		from tbl_board_notice
+		where status = 1
+		<if test='searchWord != ""'>
+		and lower(${searchType}) like '%'|| lower(#{searchWord}) ||'%'
+		</if>
+		
+    </select> 
+    
+    <select id="categoryList" parameterType="String" resultType="com.project.skyuniversity.minsung.model.MinsungCategoryVO">
+		select categoryno, fk_boardkindno, CATEGORYNAME
+		from TBL_CATEGORY
+		where fk_boardkindno = #{boardKindNo}
+    </select>
+    
+    <select id="kindBoard" parameterType="String" resultType="String">
+    	select boardname from TBL_BOARDKIND
+		where boardkindno = #{boardKindNo}
+    </select>
+</mapper>

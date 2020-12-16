@@ -62,6 +62,7 @@ from tbl_boardKind
 where boardkindno = 2;
 
 -------------------------- 반말 게시판 테이블 생성 ------------------------------
+drop table tbl_board_informal purge;
 CREATE TABLE tbl_board_informal(
     boardNo           NUMBER            NOT NULL,       -- 게시글 번호
     fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
@@ -70,7 +71,7 @@ CREATE TABLE tbl_board_informal(
     subject           VARCHAR2(200)     NOT NULL,       -- 글제목
     regDate           DATE              DEFAULT SYSDATE,-- 등록일자
     editDate          DATE,                             -- 수정일자
-    content           NVARCHAR2(4000)   NOT NULL,       -- 글내용
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
     readCount         NUMBER            DEFAULT 0,      -- 조회수
     status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
     fileExist         NUMBER(1)         NOT NULL,       -- 첨부파일 유무
@@ -210,7 +211,7 @@ CREATE TABLE tbl_board_polite(
     subject           VARCHAR2(200)     NOT NULL,       -- 글제목
     regDate           DATE              DEFAULT SYSDATE,-- 등록일자
     editDate          DATE,                             -- 수정일자
-    content           NVARCHAR2(4000)   NOT NULL,       -- 글내용
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
     readCount         NUMBER            DEFAULT 0,      -- 조회수
     status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
     fileExist         NUMBER(1)         NOT NULL,       -- 첨부파일 유무
@@ -235,7 +236,7 @@ CREATE TABLE tbl_board_humor(
     subject           VARCHAR2(200)     NOT NULL,       -- 글제목
     regDate           DATE              DEFAULT SYSDATE,-- 등록일자
     editDate          DATE,                             -- 수정일자
-    content           NVARCHAR2(4000)   NOT NULL,       -- 글내용
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
     readCount         NUMBER            DEFAULT 0,      -- 조회수
     status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
     fileExist         NUMBER(1)         NOT NULL,       -- 첨부파일 유무
@@ -261,7 +262,7 @@ CREATE TABLE tbl_board_issue(
     subject           VARCHAR2(200)     NOT NULL,       -- 글제목
     regDate           DATE              DEFAULT SYSDATE,-- 등록일자
     editDate          DATE,                             -- 수정일자
-    content           NVARCHAR2(4000)   NOT NULL,       -- 글내용
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
     readCount         NUMBER            DEFAULT 0,      -- 조회수
     status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
     fileExist         NUMBER(1)         NOT NULL,       -- 첨부파일 유무
@@ -427,6 +428,520 @@ insert into tbl_category values(tbl_category_seq.nextval, 24, '무료나눔');
 insert into tbl_category values(tbl_category_seq.nextval, 25, '삽니다');
 insert into tbl_category values(tbl_category_seq.nextval, 25, '팝니다');
 insert into tbl_category values(tbl_category_seq.nextval, 25, '무료나눔');
+
+
+ALTER TABLE tbl_board_polite MODIFY content NVARCHAR2(2000);
+
+commit;
+---------------------------------------------------------------
+alter table tbl_board_informal drop column fileExist; -- 테이블 컬럼 삭제
+
+alter table tbl_board_issue add fileSize varchar2(50); -- 테이블 컬럼 추가
+
+-------------------------- mbti 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_mbti(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    fileName          VARCHAR2(50),                     -- 첨부파일 저장명
+    orgFilename       VARCHAR2(200),                    -- 첨부파일 원본명
+    fileSize          VARCHAR2(50),                     -- 첨부파일 사이즈
+    CONSTRAINT PK_tbl_board_mbti PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_mbti_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 맛집 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_food(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    fileName          VARCHAR2(50),                     -- 첨부파일 저장명
+    orgFilename       VARCHAR2(200),                    -- 첨부파일 원본명
+    fileSize          VARCHAR2(50),                     -- 첨부파일 사이즈
+    CONSTRAINT PK_tbl_board_food PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_food_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 연애 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_love(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    fileName          VARCHAR2(50),                     -- 첨부파일 저장명
+    orgFilename       VARCHAR2(200),                    -- 첨부파일 원본명
+    fileSize          VARCHAR2(50),                     -- 첨부파일 사이즈
+    CONSTRAINT PK_tbl_board_love PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_love_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 취미 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_hobby(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    fileName          VARCHAR2(50),                     -- 첨부파일 저장명
+    orgFilename       VARCHAR2(200),                    -- 첨부파일 원본명
+    fileSize          VARCHAR2(50),                     -- 첨부파일 사이즈
+    CONSTRAINT PK_tbl_board_hobby PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_hobby_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 헬스 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_health(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    fileName          VARCHAR2(50),                     -- 첨부파일 저장명
+    orgFilename       VARCHAR2(200),                    -- 첨부파일 원본명
+    fileSize          VARCHAR2(50),                     -- 첨부파일 사이즈
+    CONSTRAINT PK_tbl_board_health PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_health_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 다이어트 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_diet(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    fk_memberNo       NUMBER            NOT NULL,       -- 작성회원 번호
+    fk_categoryNo     NUMBER            NOT NULL,       -- 카테고리 번호
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    fileName          VARCHAR2(50),                     -- 첨부파일 저장명
+    orgFilename       VARCHAR2(200),                    -- 첨부파일 원본명
+    fileSize          VARCHAR2(50),                     -- 첨부파일 사이즈
+    CONSTRAINT PK_tbl_board_diet PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_diet_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+-----------------------------------------------------
+select *
+from tbl_boardKind;
+
+insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, fk_categoryNo, subject, content, writerIp)
+values(tbl_board_informal_seq.nextval, ${}, ${}, ${}, #{}, #{}, #{});
+
+alter table tbl_board_informal MODIFY fk_categoryNo null;
+alter table tbl_board_polite MODIFY fk_categoryNo null;
+
+commit;
+
+select *
+from tbl_board_informal;
+
+select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname, subject, regDate, editDate
+		         , content, readCount, status
+from 
+(
+	    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, subject
+	         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	         , content, readCount, status
+	    from tbl_commu_member M join tbl_board_informal V  
+	    on V.fk_memberNo = M.fk_memberNo
+	    where V.status = 1
+	)T
+where rno between 1 and 15
+order by rno desc;
+
+select * 
+from tbl_commu_member;
+
+select * 
+from tbl_commu_member_level;
+
+
+update tbl_commu_member set point = point + ${}
+where fk_memberNo = #{}; 
+
+select fk_memberNo, fk_levelno, point
+     , lead(levelno) over(order by levelno) as nextlevelno, lead(levelpoint) over(order by levelpoint) as nextlevelpoint
+from tbl_commu_member M join tbl_commu_member_level L
+on M.fk_levelno = L.levelno
+where fk_memberNo = 101;
+
+select levelno, levelpoint
+from
+(
+    select fk_memberNo, fk_levelno, point
+    from tbl_commu_member M
+    where fk_memberNo = 101
+)V join tbl_commu_member_level L
+on V.fk_levelno = (L.levelno-1);
+
+
+select fk_memberNo, fk_levelNo, point, levelNo as nextLevelNo, levelPoint as nextLevelPoint
+from tbl_commu_member M join tbl_commu_member_level L
+on M.fk_levelNo = (L.levelNo - 1)
+where fk_memberNo = 102;
+
+
+update tbl_commu_member set fk_levelno = 21, point = 20000
+where fk_memberno = 102;
+
+update tbl_commu_member set fk_levelno = 4, point = 3000
+where fk_memberno = 101;
+
+commit;
+
+select *
+from tbl_board_humor;
+
+select count(*)
+from tbl_board_humor V join tbl_commu_member M
+on V.fk_memberNo = M.fk_memberNo
+where status = 1 
+and lower(subject) like '%' || lower('테') || '%'
+and fk_categoryNo = 17;
+
+
+select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status
+		from 
+		(
+		    select row_number() over(order by boardno asc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+		    from tbl_category C join tbl_board_humor V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+		    where V.status = 1
+            and lower(subject) like '%' || lower('테') || '%'
+	        and fk_categoryNo = 17
+		)T
+where rno between 1 and 15
+order by rno desc;
+
+
+
+select boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, subject, V.fk_categoryNo, C.categoryName
+     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	 , content, readCount, status
+from tbl_commu_member M join tbl_board_humor V  
+on V.fk_memberNo = M.fk_memberNo
+join tbl_category C
+on V.fk_categoryNo = C.categoryNo
+where V.status = 1 and boardNo = 5;
+
+
+------------- 게시물 추천 테이블 생성 -------------
+drop table tbl_board_bad purge;
+CREATE TABLE tbl_board_good(
+    fk_boardKindNo   NUMBER     NOT NULL,       -- 게시판 종류 번호
+    fk_boardNo       NUMBER     NOT NULL,       -- 게시글 번호
+    fk_memberNo      NUMBER     NOT NULL,       -- 회원 번호
+    CONSTRAINT PK_tbl_board_good PRIMARY KEY(fk_boardKindNo, fk_boardNo, fk_memberNo)
+);
+
+------------- 게시물 비추천 테이블 생성 -------------
+CREATE TABLE tbl_board_bad(
+    fk_boardKindNo   NUMBER     NOT NULL,       -- 게시판 종류 번호
+    fk_boardNo       NUMBER     NOT NULL,       -- 게시글 번호
+    fk_memberNo      NUMBER     NOT NULL,       -- 회원 번호
+    CONSTRAINT PK_tbl_board_bad PRIMARY KEY(fk_boardKindNo, fk_boardNo, fk_memberNo)
+);
+
+------------- 게시물 신고 테이블 생성 -------------
+CREATE TABLE tbl_board_report(
+    fk_boardKindNo   NUMBER     NOT NULL,       -- 게시판 종류 번호
+    fk_boardNo       NUMBER     NOT NULL,       -- 게시글 번호
+    fk_memberNo      NUMBER     NOT NULL,       -- 회원 번호
+    CONSTRAINT PK_tbl_report PRIMARY KEY(fk_boardKindNo, fk_boardNo, fk_memberNo)
+);
+
+update tbl_board_health set readCount = readCount + 1
+where boardNo = 2;
+
+select *
+from tbl_board_issue;
+
+insert into tbl_board_good values(11, 18, 101);
+insert into tbl_board_good values(11, 18, 103);
+insert into tbl_board_good values(11, 17, 103);
+insert into tbl_board_bad values(11, 18, 104);
+insert into tbl_board_bad values(11, 18, 105);
+insert into tbl_board_bad values(11, 18, 106);
+
+
+commit;
+
+
+select count(*) as upCount
+from tbl_board_good
+group by fk_boardKindNo, fk_boardNo
+having fk_boardKindNo = 11 and fk_boardNo = 20; 
+
+select count(*)
+from tbl_board_bad
+where fk_boardKindNo = 11 and fk_boardNo = 18 and fk_memberNo = 101;
+
+select *
+from tbl_board_humor
+order by boardNo desc;
+
+delete from tbl_board_bad
+where fk_boardKindNo = 11 and fk_boardNo = 18 and fk_memberNo = 101;
+
+select *
+from tbl_board_good;
+
+select *
+from tbl_board_bad;
+
+select *
+from tbl_board_report;
+
+
+
+
+select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+                 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		    from tbl_category C join tbl_board_humor V 
+		    on C.categoryNo = V.fk_categoryNo
+		    join tbl_commu_member M 
+		    on V.fk_memberNo = M.fk_memberNo
+            where V.status = 1
+		)T
+where rno between 1 and 30
+order by rno asc;
+
+select count(*)
+from tbl_board_good  
+where fk_boardKindNo =  and fk_boardNo = ;
+
+
+select *
+from tbl_board_humor;
+
+select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, subject
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status
+             , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+from tbl_commu_member M join tbl_board_humor V  
+on V.fk_memberNo = M.fk_memberNo
+where V.status = 1 and boardNo = 3;
+------------------------------- 2020-12-14 end ---------------------------------------
+
+select * 
+from tbl_commu_member;
+
+select * 
+from tbl_commu_member_level;
+
+
+select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+                 , levelImg
+		    from tbl_commu_member M join tbl_board_informal V  
+	    	on V.fk_memberNo = M.fk_memberNo
+		    join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
+            where V.status = 1
+		)T
+where rno between 1 and 35
+order by rno asc;
+
+
+
+
+select * 
+from tbl_board_bad
+where fk_boardKindNo = 9 and fk_boardNo = 11;
+
+select count(*)
+from tbl_board_report
+where fk_boardKindNo = 9 and fk_boardNo = 11;
+
+update tbl_board_Humor set status = 0
+where boardNo = 23;
+
+commit;
+
+
+select *
+from tbl_board_polite
+where fk_boardKindNo = 9 and boardNo = 10;
+
+update tbl_board_polite set status = 1
+where boardNo = 11;
+
+
+select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, subject
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status
+		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+		         , levelImg
+		    from tbl_commu_member M join tbl_board_polite V  
+	    	on V.fk_memberNo = M.fk_memberNo
+	    	join tbl_commu_member_level L
+            on M.fk_levelNo = L.levelNo
+		    where V.status = 1
+)T
+order by rno asc;
+
+delete from tbl_board_report
+where fk_boardKindNo = 9 and fk_boardNo = 11 and fk_memberNo = 105;
+rollback;
+commit;
+
+select *
+from tbl_board_report
+where fk_boardKindNo = 9 and fk_boardNo = 11 and fk_memberNo = 105;
+------------------------------- 2020-12-14 end -------------------------------------
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
