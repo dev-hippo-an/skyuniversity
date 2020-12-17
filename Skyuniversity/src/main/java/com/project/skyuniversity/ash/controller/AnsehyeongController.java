@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -44,6 +45,7 @@ import org.springframework.web.servlet.ModelAndView;
 import com.project.skyuniversity.ash.model.BannerVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
+import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.ash.model.PhotoVO;
 import com.project.skyuniversity.ash.service.InterAnsehyeongService;
 import com.project.skyuniversity.ash.common.AnFileManager;
@@ -203,7 +205,7 @@ public class AnsehyeongController {
 
 		mav.addObject("loc", loc);
 		mav.setViewName("msg");
-		
+
 		session.invalidate();
 		return mav;
 	}
@@ -290,9 +292,7 @@ public class AnsehyeongController {
 		if (categoryNo == null || categoryNo.trim().isEmpty()) {
 			categoryNo = "";
 		}
-		
-		
-		System.out.println("categoryNo : " + categoryNo );
+
 		paraMap.put("categoryNo", categoryNo);
 
 		////////////////////////////////////////////////////////////////////
@@ -342,12 +342,9 @@ public class AnsehyeongController {
 		startRno = ((currentShowPageNo - 1) * sizePerPage) + 1;
 		endRno = startRno + sizePerPage - 1;
 
-		
-		
 		paraMap.put("startRno", String.valueOf(startRno));
 		paraMap.put("endRno", String.valueOf(endRno));
 
-		
 		// 게시판 번호와 시작 게시글 번호, 끝 게시글 번호를 입력하여 해당 게시판번호에 해당하는 게시글들을 불러오기
 		List<MarketBoardVO> boardList = service.getMarketBoardList(paraMap);
 
@@ -364,10 +361,11 @@ public class AnsehyeongController {
 
 		// [맨처음][이전] 만들기
 		if (pageNo != 1) {
-			pageBar += "<li class='pageBtn hi'><a href='" + url + "&searchType=" + searchType + "&searchWord=" + searchWord
-					 + "&currentShowPageNo=1" + "&categoryNo=" + categoryNo + "'>맨처음</a></li>";
-			pageBar += "<li class='pageBtn hi'><a href='" + url + "&searchType=" + searchType + "&searchWord" + searchWord
-					 + "&currentShowPageNo=" + (pageNo - 1) + "&categoryNo=" + categoryNo + "'>Previous</a></li>";
+			pageBar += "<li class='pageBtn hi'><a href='" + url + "&searchType=" + searchType + "&searchWord="
+					+ searchWord + "&currentShowPageNo=1" + "&categoryNo=" + categoryNo + "'>맨처음</a></li>";
+			pageBar += "<li class='pageBtn hi'><a href='" + url + "&searchType=" + searchType + "&searchWord"
+					+ searchWord + "&currentShowPageNo=" + (pageNo - 1) + "&categoryNo=" + categoryNo
+					+ "'>Previous</a></li>";
 		}
 
 		while (!(loop > blockSize || pageNo > totalPage)) {
@@ -375,7 +373,7 @@ public class AnsehyeongController {
 				pageBar += "<li class='pageBtn'><a style='color: #0843ad; font-weight: bold;'>" + pageNo + "</a></li>";
 			} else {
 				pageBar += "<li class='pageBtn hi'><a href='" + url + "&searchType=" + searchType + "&searchWord="
-						+ searchWord  + "&currentShowPageNo=" + pageNo+ "&categoryNo=" + categoryNo + "'>" + pageNo
+						+ searchWord + "&currentShowPageNo=" + pageNo + "&categoryNo=" + categoryNo + "'>" + pageNo
 						+ "</a></li>";
 			}
 
@@ -385,21 +383,20 @@ public class AnsehyeongController {
 
 		// [다음][마지막] 만들기
 		if (!(pageNo > totalPage)) {
-			pageBar += "<li class='pageBtn hi'><a href='" + url + "&searchType=" + searchType + "&searchWord" + searchWord
-					 + "&currentShowPageNo=" + pageNo+ "&categoryNo=" + categoryNo + "'>Next</a></li>";
-			pageBar += "<li class='pageBtn hi'><a href='" + url + "&searchType=" + searchType + "&searchWord" + searchWord
-					 + "&currentShowPageNo=" + totalPage + "&categoryNo=" + categoryNo + "'>마지막</a></li>";
+			pageBar += "<li class='pageBtn hi'><a href='" + url + "&searchType=" + searchType + "&searchWord"
+					+ searchWord + "&currentShowPageNo=" + pageNo + "&categoryNo=" + categoryNo + "'>Next</a></li>";
+			pageBar += "<li class='pageBtn hi'><a href='" + url + "&searchType=" + searchType + "&searchWord"
+					+ searchWord + "&currentShowPageNo=" + totalPage + "&categoryNo=" + categoryNo + "'>마지막</a></li>";
 		}
 
 		pageBar += "</ul>";
-		
-		
+
 		// === #123. 페이징 처리 되어진 후 특정 글제목을 클릭하여 상세 내용을 본 이후 사용자가 목록보기 버튼을 클릭 했을때 돌아갈 페이지를
 		// 알려주기 위해
 		// 현재 페이지 주소를 뷰딴으로 넘겨준다.
 
 		String gobackURL2 = MyUtil.getCurrentURL(request);
-		
+
 		mav.addObject("gobackURL2", gobackURL2);
 
 		//////////////////////////////////////////////////////
@@ -417,9 +414,10 @@ public class AnsehyeongController {
 		 */
 		///////////////////////////////////////////////////////////////
 
+		List<NoticeVO> noticeList = service.getNoticeList(paraMap);
 		
+		mav.addObject("noticeList", noticeList);
 		
-
 		mav.addObject("paraMap", paraMap);
 		mav.addObject("tableInfo", tableInfo);
 		mav.addObject("categoryList", categoryList);
@@ -478,15 +476,11 @@ public class AnsehyeongController {
 		paraMap.put("boardKindNo", boardKindNo);
 
 		HttpSession session = request.getSession();
-		CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
+		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
 		List<Map<String, String>> categoryList = null;
-		if (loginuser.getFk_memberNo() == 0) {
-			// 관리자로 로그인 했을 경우 공지사항만 입력 할 수 있도록 카테고리 설정
-			categoryList = service.getAdminMarketCategoryList();
-		} else {
-			// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
-			categoryList = service.getMarketCategoryList(paraMap);			
-		}
+
+		// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
+		categoryList = service.getMarketCategoryList(paraMap);
 
 		//////////////////////////////////////////////////////////////////////
 
@@ -496,12 +490,10 @@ public class AnsehyeongController {
 		String writerIp = request.getRemoteAddr();
 		paraMap.put("writerIp", writerIp);
 		String categoryNo = request.getParameter("categoryNo");
-		
+
 		if (categoryNo != null && !"".equals(categoryNo)) {
 			paraMap.put("categoryNo", categoryNo);
 		}
-		
-		
 
 		mav.addObject("paraMap", paraMap);
 		mav.addObject("tableInfo", tableInfo);
@@ -516,12 +508,10 @@ public class AnsehyeongController {
 	// === 게시판 글쓰기 완료 요청 === //
 	@RequestMapping(value = "/marketAddEnd.sky")
 	public String anGetCheck_marketPointPlus_marketAddEnd(HttpServletRequest request, HttpServletResponse response,
-			Map<String, String> paraMap, MarketBoardVO boardvo, MultipartHttpServletRequest mrequest ) {
+			Map<String, String> paraMap, MarketBoardVO boardvo, MultipartHttpServletRequest mrequest) {
 
-		
 		String categoryNo = request.getParameter("hi");
-		
-		
+
 		MultipartFile attach = boardvo.getAttach();
 
 		if (!attach.isEmpty()) {
@@ -590,8 +580,8 @@ public class AnsehyeongController {
 		}
 
 		HttpSession session = request.getSession();
-		
-		CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
+
+		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
 		// == After Advice 를 사용하기 위해 파라미터를 생성하는 것임 ==
 		// (글쓰기를 한 이후에 회원의 포인트를 3점 증가)
 		// 증가하고 나서 바로 유저 포인트도 확인해서 레벨업하는지 아닌지 확인하기
@@ -609,7 +599,7 @@ public class AnsehyeongController {
 
 		// 첨부 파일이 있는 경우라면 ~
 		if (!attach.isEmpty()) {
-			
+
 			n = service.marketAddFile(boardvo);
 		}
 
@@ -617,33 +607,30 @@ public class AnsehyeongController {
 			if (categoryNo != null && !"".equals(categoryNo)) {
 				paraMap.put("boardKindNo", String.valueOf(boardvo.getFk_boardKindNo()));
 				paraMap.put("categoryNo", categoryNo);
-				
-				
-				
-				
+
 			} else {
 				paraMap.put("boardKindNo", String.valueOf(boardvo.getFk_boardKindNo()));
-				
-				
+
 			}
 		} else {
-			
+
 			String message = "글 입력에 실패했삼~~";
 			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardvo.getFk_boardKindNo();
-			
+
 			request.setAttribute("message", message);
 			request.setAttribute("loc", loc);
-			
+
 			return "msg";
 		}
 		return null;
 	}
-	
+
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	
+
 	// === 글1개를 보여주는 페이지 요청 === //
 	@RequestMapping(value = "/marketBoardDetail.sky")
-	public ModelAndView anRequiredLogin_marketBoardDetail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView anRequiredLogin_marketBoardDetail(HttpServletRequest request, HttpServletResponse response,
+			ModelAndView mav) {
 
 		// 조회하고자 하는 글번호 받아오기
 		String boardNo = request.getParameter("boardNo");
@@ -664,8 +651,7 @@ public class AnsehyeongController {
 			try {
 				Integer.parseInt(boardKindNo);
 				paraMap.put("boardKindNo", boardKindNo);
-				
-				
+
 				int n = service.checkBoardKindNo(boardKindNo);
 
 				if (n == 0) {
@@ -690,58 +676,51 @@ public class AnsehyeongController {
 			}
 
 		}
-		
-		
+
 		if (boardNo == null || "".equals(boardNo)) {
 			String message = "정상적인 경로좀 ㅎㅎ11";
 			String loc = request.getContextPath() + "/index.sky";
-			
+
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);
-			
+
 			mav.setViewName("msg");
 			return mav;
 		} else {
 			try {
 				Integer.parseInt(boardNo);
 				paraMap.put("boardNo", boardNo);
-				
+
 				MarketBoardVO n = service.getMarketViewWithNoAddCount(paraMap);
-				
+
 				if (n == null) {
 					String message = "정상적인 경로좀 ㅎㅎ22";
 					String loc = request.getContextPath() + "/index.sky";
-					
+
 					mav.addObject("message", message);
 					mav.addObject("loc", loc);
-					
+
 					mav.setViewName("msg");
 					return mav;
 				}
 			} catch (Exception e) {
 				String message = "정상적인 경로좀 ㅎㅎ33";
 				String loc = request.getContextPath() + "/index.sky";
-				
+
 				mav.addObject("message", message);
 				mav.addObject("loc", loc);
-				
+
 				mav.setViewName("msg");
 				return mav;
 			}
-			
+
 		}
-		
-		
-		
-		
-		
-		
+
 		paraMap.put("gobackURL2", gobackURL2);
-		
-		
+
 		// === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === //
 		Map<String, String> tableInfo = service.getMarketTableInfo(paraMap);
-		
+
 		HttpSession session = request.getSession();
 		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
 
@@ -754,37 +733,36 @@ public class AnsehyeongController {
 		// 실행하지 않도록 해주어야 한다. !!! === //
 
 		MarketBoardVO boardvo = null;
-		
-		
+
 		if (loginuser != null) {
 			// 위의 글목록보기 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
 			if ("yes".equals(session.getAttribute("readCountPermission"))) {
 				// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
-				
+
 				boardvo = service.getMarketView(paraMap, loginuser);
 				// 글조회수 증가와 함께 글1개를 조회를 해주는 것
-				
+
 				session.removeAttribute("readCountPermission");
 				// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
-				
+
 			} else {
 				// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
-				
+
 				boardvo = service.getMarketViewWithNoAddCount(paraMap);
 				// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
 			}
-			
+
 			mav.addObject("boardvo", boardvo);
 			mav.addObject("paraMap", paraMap);
 			mav.addObject("tableInfo", tableInfo);
-			
+
 			mav.setViewName("sehyeong/board/marketBoardDetail.tiles1");
-			
+
 		}
-		
+
 		return mav;
 	}
-	
+
 	@RequestMapping(value = "/fileDownloadGoGo.sky")
 	public void anRequiredLogin_anGetCheck_fileDownloadGoGo(HttpServletRequest request, HttpServletResponse response) {
 		String boardNo = request.getParameter("boardNo");
@@ -800,13 +778,12 @@ public class AnsehyeongController {
 
 		try {
 			Integer.parseInt(boardNo);
-			
-			Map<String,String> paraMap = new HashMap<String, String>();
-			
+
+			Map<String, String> paraMap = new HashMap<String, String>();
+
 			paraMap.put("boardNo", boardNo);
 			paraMap.put("boardKindNo", boardKindNo);
-			
-			
+
 			MarketBoardVO boardvo = service.getMarketViewWithNoAddCount(paraMap);
 
 			String fileName = boardvo.getFileName();
@@ -839,7 +816,7 @@ public class AnsehyeongController {
 			flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
 			// 파일 다운로드 tjdrhd시 flag = true;
 			// 파일 다운로드 실패시 flag = false;
-			
+
 			if (!flag) {
 				try {
 					writer = response.getWriter();
@@ -857,49 +834,38 @@ public class AnsehyeongController {
 			}
 		}
 	}
-	
-	
-	
+
 	// === #71. 글수정 페이지 요청 === //
 	@RequestMapping(value = "/marketBoardEdit.sky")
-	public ModelAndView anRequiredLogin_anGetCheck_marketBoardEdit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView anRequiredLogin_anGetCheck_marketBoardEdit(HttpServletRequest request,
+			HttpServletResponse response, ModelAndView mav) {
 
 		// 글 수정해야 할 글번호 가져오기
 		String boardNo = request.getParameter("boardNo");
 		String boardKindNo = request.getParameter("boardKindNo");
 		String gobackURL2 = request.getParameter("gobackURL2");
 
-		
 		System.out.println("이것은 gobackURL2 입니다 => " + gobackURL2);
-		Map<String,String> paraMap = new HashMap<String, String>();
-		
+		Map<String, String> paraMap = new HashMap<String, String>();
+
 		paraMap.put("boardNo", boardNo);
 		paraMap.put("boardKindNo", boardKindNo);
 		paraMap.put("gobackURL2", gobackURL2);
-		
-		
+
 		// === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === //
 		Map<String, String> tableInfo = service.getMarketTableInfo(paraMap);
 		List<Map<String, String>> categoryList;
-		
+
 		HttpSession session = request.getSession();
-		CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
-		
-		if (loginuser.getFk_memberNo() == 0) {
-			// 관리자로 로그인 했을 경우 공지사항만 입력 할 수 있도록 카테고리 설정
-			categoryList = service.getAdminMarketCategoryList();
-		} else {
-			// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
-			categoryList = service.getMarketCategoryList(paraMap);			
-		}		
+		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
+
 		// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
-		 
+		categoryList = service.getMarketCategoryList(paraMap);
 
 		// 글 수정해야할 글1개 내용 가져오기
 		MarketBoardVO boardvo = service.getMarketViewWithNoAddCount(paraMap);
-		
-		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회 해주는 것이다.
 
+		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회 해주는 것이다.
 
 		if (loginuser.getCommuMemberNo() != boardvo.getFk_commuMemberNo()) {
 			String message = "다른 사용자의 글은 수정이 불가합니다.";
@@ -922,156 +888,152 @@ public class AnsehyeongController {
 	}
 
 	// === 게시판 글쓰기 완료 요청 === //
-		@RequestMapping(value = "/marketBoardEditEnd.sky")
-		public ModelAndView anGetCheck_marketBoardEditEnd(HttpServletRequest request, HttpServletResponse response,
-				Map<String, String> paraMap, MarketBoardVO boardvo, MultipartHttpServletRequest mrequest, ModelAndView mav ) {
+	@RequestMapping(value = "/marketBoardEditEnd.sky")
+	public ModelAndView anGetCheck_marketBoardEditEnd(HttpServletRequest request, HttpServletResponse response,
+			Map<String, String> paraMap, MarketBoardVO boardvo, MultipartHttpServletRequest mrequest,
+			ModelAndView mav) {
 
-			
-			String gobackURL2 = request.getParameter("gobackURL2");
-			
-			HttpSession session = request.getSession();
-			
-			System.out.println("마켓보드에딧엔드 gobackURL2 입니다 => " + gobackURL2);
-			
-			MultipartFile attach = boardvo.getAttach();
+		String gobackURL2 = request.getParameter("gobackURL2");
 
-			if (!attach.isEmpty()) {
-				// attach가 비어있지 않으면! (즉, 첨부 파일이 있는 경우라면~)
+		HttpSession session = request.getSession();
+
+		System.out.println("마켓보드에딧엔드 gobackURL2 입니다 => " + gobackURL2);
+
+		MultipartFile attach = boardvo.getAttach();
+
+		if (!attach.isEmpty()) {
+			// attach가 비어있지 않으면! (즉, 첨부 파일이 있는 경우라면~)
+
+			/*
+			 * 1. 사용자가 보낸 첨부파일을 WAS의 특정 폴더에 저장해주어야 한다. >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기 우리는
+			 * WAS의 webapp/resources/files라는 폴더로 지정해 준다. 조심할 것은 Package Explorer에서 files라는
+			 * 폴더를 직접 만드는 것이 아니다.
+			 */
+
+			// WAS의 webapp의 절대 경로를 알아와야 한다.
+			session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+
+			System.out.println("this is root : " + root);
+
+			String path = root + "resources" + File.separator + "files";
+
+			// path 가 첨부파일이 저장될 WAS의 폴더가 된다.
+			System.out.println("this is path : " + path);
+
+			/*
+			 * 2. 파일 첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
+			 */
+
+			String newFileName = "";
+			// WAS의 디스크에 저장될 파일명입니다.
+
+			byte[] bytes = null;
+			// 첨부 파일의 내용물
+
+			long fileSize = 0;
+			// 첨부파일의 크기
+			try {
+				bytes = attach.getBytes();
+				// 첨부 파일의 내용물을 읽어 오는것
+
+				// 첨부 되어진 파일을 업로드 되도록 하는 것이다!
+				// attach.getOriginalFilename()은 첨부 파일의 파일명 (예: 강아지.png)을 얻어 오는 것 입니다!
+				newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+
+				System.out.println("확인용인디! ===>>>>>> " + newFileName);
+				// 확인용인디! ===>>>>>> 202012091037071013008888107800.png
 
 				/*
-				 * 1. 사용자가 보낸 첨부파일을 WAS의 특정 폴더에 저장해주어야 한다. >>> 파일이 업로드 되어질 특정 경로(폴더)지정해주기 우리는
-				 * WAS의 webapp/resources/files라는 폴더로 지정해 준다. 조심할 것은 Package Explorer에서 files라는
-				 * 폴더를 직접 만드는 것이 아니다.
+				 * 3. BoardVO boardvo에 fileName 값과 orgFilename값과 fileSize 값을 넣어주기
+				 * 
 				 */
 
-				// WAS의 webapp의 절대 경로를 알아와야 한다.
-				session = mrequest.getSession();
-				String root = session.getServletContext().getRealPath("/");
+				boardvo.setFileName(newFileName);
+				// WAS에 저장될 파일명 => 202012091037071013008888107800.png
 
-				System.out.println("this is root : " + root);
+				boardvo.setOrgFileName(attach.getOriginalFilename());
+				// 게시판 페이지에 청부된 파일을 보여줄때 사용
+				// 또한 사용자가 파일을 다운로드 할때 사용!
 
-				String path = root + "resources" + File.separator + "files";
+				fileSize = attach.getSize(); // 첨부 파일의 크기 (단뒤는 byte임)
 
-				// path 가 첨부파일이 저장될 WAS의 폴더가 된다.
-				System.out.println("this is path : " + path);
+				boardvo.setFileSize(String.valueOf(fileSize));
 
-				/*
-				 * 2. 파일 첨부를 위한 변수의 설정 및 값을 초기화 한 후 파일 올리기
-				 */
-
-				String newFileName = "";
-				// WAS의 디스크에 저장될 파일명입니다.
-
-				byte[] bytes = null;
-				// 첨부 파일의 내용물
-
-				long fileSize = 0;
-				// 첨부파일의 크기
-				try {
-					bytes = attach.getBytes();
-					// 첨부 파일의 내용물을 읽어 오는것
-
-					// 첨부 되어진 파일을 업로드 되도록 하는 것이다!
-					// attach.getOriginalFilename()은 첨부 파일의 파일명 (예: 강아지.png)을 얻어 오는 것 입니다!
-					newFileName = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
-
-					System.out.println("확인용인디! ===>>>>>> " + newFileName);
-					// 확인용인디! ===>>>>>> 202012091037071013008888107800.png
-
-					/*
-					 * 3. BoardVO boardvo에 fileName 값과 orgFilename값과 fileSize 값을 넣어주기
-					 * 
-					 */
-
-					boardvo.setFileName(newFileName);
-					// WAS에 저장될 파일명 => 202012091037071013008888107800.png
-
-					boardvo.setOrgFileName(attach.getOriginalFilename());
-					// 게시판 페이지에 청부된 파일을 보여줄때 사용
-					// 또한 사용자가 파일을 다운로드 할때 사용!
-
-					fileSize = attach.getSize(); // 첨부 파일의 크기 (단뒤는 byte임)
-
-					boardvo.setFileSize(String.valueOf(fileSize));
-
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
-
+			} catch (Exception e) {
+				e.printStackTrace();
 			}
 
-
-			int n = 0;
-
-			// 첨부 파일이 없는 경우라면~
-			if (attach.isEmpty()) {
-				n = service.marketEdit(boardvo);
-			}
-
-			// 첨부 파일이 있는 경우라면 ~
-			if (!attach.isEmpty()) {
-				
-				String root = session.getServletContext().getRealPath("/");
-				String path = root + "resources" + File.separator + "files";
-				Map<String, String> paraMap1 = new HashMap<>();
-				paraMap1.put("boardKindNo", String.valueOf(boardvo.getFk_boardKindNo()));
-				paraMap1.put("boardNo", String.valueOf(boardvo.getBoardNo()));
-				
-				MarketBoardVO oldboardvo = service.getMarketViewWithNoAddCount(paraMap1);
-				
-				
-				try {
-					fileManager.doFileDelete(oldboardvo.getFileName(), path);
-					n = 1;
-				} catch (Exception e) {
-					n = 0;
-				}
-					
-				
-				
-				n *= service.marketEditFile(boardvo);
-			}
-
-			if (n == 1) {
-				String message = "글 수정에 성공했삼~~";
-				String loc = request.getContextPath() + "/marketBoardDetail.sky?boardKindNo=" + boardvo.getFk_boardKindNo() + "&boardNo=" + boardvo.getBoardNo() + "&gobackURL2=" + gobackURL2;
-				
-				mav.addObject("message", message);
-				mav.addObject("loc", loc);
-				
-				mav.setViewName("msg");
-			} else {
-				
-				String message = "글 수정에 실패했삼~~";
-				String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardvo.getFk_boardKindNo();
-				
-				mav.addObject("message", message);
-				mav.addObject("loc", loc);
-				
-				mav.setViewName("msg");
-				
-				
-			}
-			return mav;
 		}
-	
+
+		int n = 0;
+
+		// 첨부 파일이 없는 경우라면~
+		if (attach.isEmpty()) {
+			n = service.marketEdit(boardvo);
+		}
+
+		// 첨부 파일이 있는 경우라면 ~
+		if (!attach.isEmpty()) {
+
+			String root = session.getServletContext().getRealPath("/");
+			String path = root + "resources" + File.separator + "files";
+			Map<String, String> paraMap1 = new HashMap<>();
+			paraMap1.put("boardKindNo", String.valueOf(boardvo.getFk_boardKindNo()));
+			paraMap1.put("boardNo", String.valueOf(boardvo.getBoardNo()));
+
+			MarketBoardVO oldboardvo = service.getMarketViewWithNoAddCount(paraMap1);
+
+			try {
+				fileManager.doFileDelete(oldboardvo.getFileName(), path);
+				n = 1;
+			} catch (Exception e) {
+				n = 0;
+			}
+
+			n *= service.marketEditFile(boardvo);
+		}
+
+		if (n == 1) {
+			String message = "글 수정에 성공했삼~~";
+			String loc = request.getContextPath() + "/marketBoardDetail.sky?boardKindNo=" + boardvo.getFk_boardKindNo()
+					+ "&boardNo=" + boardvo.getBoardNo() + "&gobackURL2=" + gobackURL2;
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		} else {
+
+			String message = "글 수정에 실패했삼~~";
+			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardvo.getFk_boardKindNo();
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+
+		}
+		return mav;
+	}
 
 	// === #76. 글삭제 페이지 요청 === //
 	@RequestMapping(value = "/marketBoardDelete.sky")
-	public ModelAndView anGetCheck_marketBoardDelete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView anGetCheck_marketBoardDelete(HttpServletRequest request, HttpServletResponse response,
+			ModelAndView mav) {
 
 		// 글 삭제해야 할 글번호 가져오기
 		String boardNo = request.getParameter("boardNo");
 		String boardKindNo = request.getParameter("boardKindNo");
-		
-		Map<String,String> paraMap = new HashMap<String, String>();
-		
+
+		Map<String, String> paraMap = new HashMap<String, String>();
+
 		paraMap.put("boardNo", boardNo);
 		paraMap.put("boardKindNo", boardKindNo);
-		
+
 		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회 해주는 것이다.
 		MarketBoardVO boardvo = service.getMarketViewWithNoAddCount(paraMap);
-		
+
 		// 삭제해야할 글1개 내용 가져와서 로그인한 사람이 쓴 글이라면 글삭제가 가능하지만
 		// 다른 사람이 쓴 글은 삭제가 불가하도록 해야 한다.
 		HttpSession session = request.getSession();
@@ -1090,8 +1052,8 @@ public class AnsehyeongController {
 		String path = root + "resources" + File.separator + "files";
 
 		int n = 0;
-		
-		if ( loginuser.getCommuMemberNo() != boardvo.getFk_commuMemberNo() ) {
+
+		if (loginuser.getCommuMemberNo() != boardvo.getFk_commuMemberNo()) {
 			String message = "다른 사용자의 글은 삭제가 불가합니다.";
 			String loc = "javascript:history.back()";
 
@@ -1099,60 +1061,55 @@ public class AnsehyeongController {
 			mav.addObject("loc", loc);
 			mav.setViewName("msg");
 		} else {
-			
-			
+
 			if (boardvo.getFileName() == null) {
 				n = service.marketBoardDelete(paraMap);
 
 			} else {
 				n = service.marketBoardDelete(paraMap);
-				
-				if ( n== 1) {
+
+				if (n == 1) {
 					try {
 						fileManager.doFileDelete(fileName, path);
 					} catch (Exception e) {
 						n = 0;
 					}
-					
+
 				}
 			}
-			
-			
+
 		}
 
 		if (n == 0) {
-			mav.addObject("message", "글 삭제 쌉 실패ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");			
+			mav.addObject("message", "글 삭제 쌉 실패ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
 			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
-			
+
 		} else {
 			mav.addObject("message", "글삭제 쌉 성공~!~!!~!!!~!!~!!~!~!");
 			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
-			
+
 		}
-		
+
 		mav.setViewName("msg");
-		
+
 		return mav;
 	}
-	
+
 	// 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
-    @ResponseBody
-    @RequestMapping(value="/addMaketBoardUp.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
-    public String addMaketBoardUp(HttpServletRequest request) {
+	@ResponseBody
+	@RequestMapping(value = "/addMaketBoardUp.sky", method = {
+			RequestMethod.POST }, produces = "text/plain; charset=UTF-8")
+	public String addMaketBoardUp(HttpServletRequest request) {
 		String boardKindNo = request.getParameter("boardKindNo");
 		String boardNo = request.getParameter("boardNo");
 
-		
-		
 		int fk_memberNo = 0;
 		HttpSession session = request.getSession();
-		
+
 		if (session.getAttribute("loginuser") != null) {
 			fk_memberNo = ((CommuMemberVO) session.getAttribute("loginuser")).getFk_memberNo();
 		}
 
-		
-		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("boardKindNo", boardKindNo);
 		paraMap.put("boardNo", boardNo);
@@ -1165,32 +1122,31 @@ public class AnsehyeongController {
 			n = 0;
 		}
 
-
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("n", n);
-	
+
 		return jsonObj.toString();
-    }
-    
-    
-    // 비추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
-    @ResponseBody
-    @RequestMapping(value="/addMaketBoardDown.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
-    public String addMaketBoardDown(HttpServletRequest request) {
-    	String boardKindNo = request.getParameter("boardKindNo");
-    	String boardNo = request.getParameter("boardNo");
-       
-    	int fk_memberNo = 0;
+	}
+
+	// 비추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	@ResponseBody
+	@RequestMapping(value = "/addMaketBoardDown.sky", method = {
+			RequestMethod.POST }, produces = "text/plain; charset=UTF-8")
+	public String addMaketBoardDown(HttpServletRequest request) {
+		String boardKindNo = request.getParameter("boardKindNo");
+		String boardNo = request.getParameter("boardNo");
+
+		int fk_memberNo = 0;
 		HttpSession session = request.getSession();
 		if (session.getAttribute("loginuser") != null) {
-			fk_memberNo = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
+			fk_memberNo = ((CommuMemberVO) session.getAttribute("loginuser")).getFk_memberNo();
 		}
-       
+
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("boardKindNo", boardKindNo);
 		paraMap.put("boardNo", boardNo);
 		paraMap.put("memberNo", String.valueOf(fk_memberNo));
-       
+
 		int n;
 		try {
 			n = service.addMarketBoardDown(paraMap);
@@ -1198,154 +1154,524 @@ public class AnsehyeongController {
 			n = 0;
 		}
 
-		
-      
 		JSONObject jsonObj = new JSONObject();
 		jsonObj.put("n", n);
-		
-       
+
 		return jsonObj.toString();
 	}
-    
-    
-    // 신고 테이블에 행을 추가해주는 메서드(ajax로 처리)
-    @ResponseBody
-    @RequestMapping(value="/addMarketBoardReport.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
-    public String addMarketBoardReport(HttpServletRequest request) {
-    	String boardKindNo = request.getParameter("boardKindNo");
-    	String boardNo = request.getParameter("boardNo");
-   
-    	int fk_memberNo = 0;
-    	HttpSession session = request.getSession();
-   
-    	if (session.getAttribute("loginuser") != null) {
-    		fk_memberNo = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
-    	}
-   
-    	Map<String, String> paraMap = new HashMap<>();
-    	paraMap.put("boardKindNo", boardKindNo);
-    	paraMap.put("boardNo", boardNo);
-    	paraMap.put("memberNo", String.valueOf(fk_memberNo));
-   
-    	int n = 0;
-   
-    	try {
-    		n = service.addMarketBoardReport(paraMap);
-    	} catch (Exception e) {
-    		n = 0;
-    	}
-   
-    	JSONObject jsonObj = new JSONObject();
-    	jsonObj.put("n", n);
-   
-    	return jsonObj.toString();
-    }
 
-	
-    // 보드 카운트 가져오기 기릿
-    @ResponseBody
-    @RequestMapping(value="/getMarketBoardCount.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
-    public String getMarketBoardCount(HttpServletRequest request) {
-    	String boardKindNo = request.getParameter("boardKindNo");
-    	String boardNo = request.getParameter("boardNo");
-    	
-    	int fk_memberNo = 0;
-    	HttpSession session = request.getSession();
-    	if (session.getAttribute("loginuser") != null) {
-    		fk_memberNo = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
-    	}
-    	
-    	Map<String, String> paraMap = new HashMap<>();
-    	paraMap.put("boardKindNo", boardKindNo);
-    	paraMap.put("boardNo", boardNo);
-    	paraMap.put("memberNo", String.valueOf(fk_memberNo));
-    	
-    	
-    	
-    	// 게시글의 추천, 비추천 수를 가져온다.
-    	int upCount = 0;
-    	int downCount = 0;
-    	
-    	try {
-    		upCount = service.getMarketBoardGoodCount(paraMap);
-    		downCount = service.getMarketBoardBadCount(paraMap);
-    	} catch (Exception e) {
-    	}
-    	
-    	JSONObject jsonObj = new JSONObject();
-    	jsonObj.put("upCount", upCount);
-    	jsonObj.put("downCount", downCount);
-    	
-    	return jsonObj.toString();
-    }
-    
- // === #76. 글삭제 페이지 요청 === //
- 	@RequestMapping(value = "/marketTooMuchReport.sky")
- 	public ModelAndView anGetCheck_marketTooMuchReport(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	// 신고 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	@ResponseBody
+	@RequestMapping(value = "/addMarketBoardReport.sky", method = {
+			RequestMethod.POST }, produces = "text/plain; charset=UTF-8")
+	public String addMarketBoardReport(HttpServletRequest request) {
+		String boardKindNo = request.getParameter("boardKindNo");
+		String boardNo = request.getParameter("boardNo");
 
- 		// 글 삭제해야 할 글번호 가져오기
- 		String boardNo = request.getParameter("boardNo");
- 		String boardKindNo = request.getParameter("boardKindNo");
- 		String policeCount = request.getParameter("policeCount");
- 		
- 		Map<String,String> paraMap = new HashMap<String, String>();
- 		
- 		paraMap.put("boardNo", boardNo);
- 		paraMap.put("boardKindNo", boardKindNo);
- 		
- 		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회 해주는 것이다.
- 		MarketBoardVO boardvo = service.getMarketViewWithNoAddCount(paraMap);
- 		
- 		// 삭제해야할 글1개 내용 가져와서 로그인한 사람이 쓴 글이라면 글삭제가 가능하지만
- 		// 다른 사람이 쓴 글은 삭제가 불가하도록 해야 한다.
- 		HttpSession session = request.getSession();
+		int fk_memberNo = 0;
+		HttpSession session = request.getSession();
 
- 		String fileName = boardvo.getFileName();
- 		String root = session.getServletContext().getRealPath("/");
+		if (session.getAttribute("loginuser") != null) {
+			fk_memberNo = ((CommuMemberVO) session.getAttribute("loginuser")).getFk_memberNo();
+		}
 
- 		// this is root :
- 		// C:\eclipse\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("boardKindNo", boardKindNo);
+		paraMap.put("boardNo", boardNo);
+		paraMap.put("memberNo", String.valueOf(fk_memberNo));
 
- 		/*
- 		 * File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다. 운영체제가 Windows 이라면 File.separator
- 		 * 는 "\" 이고, 운영체제가 UNIX, Linux 이라면 File.separator 는 "/" 이다.
- 		 */
- 		String path = root + "resources" + File.separator + "files";
+		int n = 0;
 
- 		int n = 0;
- 		
-		
+		try {
+			n = service.addMarketBoardReport(paraMap);
+		} catch (Exception e) {
+			n = 0;
+		}
+
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+
+		return jsonObj.toString();
+	}
+
+	// 보드 카운트 가져오기 기릿
+	@ResponseBody
+	@RequestMapping(value = "/getMarketBoardCount.sky", method = {
+			RequestMethod.POST }, produces = "text/plain; charset=UTF-8")
+	public String getMarketBoardCount(HttpServletRequest request) {
+		String boardKindNo = request.getParameter("boardKindNo");
+		String boardNo = request.getParameter("boardNo");
+
+		int fk_memberNo = 0;
+		HttpSession session = request.getSession();
+		if (session.getAttribute("loginuser") != null) {
+			fk_memberNo = ((CommuMemberVO) session.getAttribute("loginuser")).getFk_memberNo();
+		}
+
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("boardKindNo", boardKindNo);
+		paraMap.put("boardNo", boardNo);
+		paraMap.put("memberNo", String.valueOf(fk_memberNo));
+
+		// 게시글의 추천, 비추천 수를 가져온다.
+		int upCount = 0;
+		int downCount = 0;
+
+		try {
+			upCount = service.getMarketBoardGoodCount(paraMap);
+			downCount = service.getMarketBoardBadCount(paraMap);
+		} catch (Exception e) {
+		}
+
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("upCount", upCount);
+		jsonObj.put("downCount", downCount);
+
+		return jsonObj.toString();
+	}
+
+	// === #76. 글삭제 페이지 요청 === //
+	@RequestMapping(value = "/marketTooMuchReport.sky")
+	public ModelAndView anGetCheck_marketTooMuchReport(HttpServletRequest request, HttpServletResponse response,
+			ModelAndView mav) {
+
+		// 글 삭제해야 할 글번호 가져오기
+		String boardNo = request.getParameter("boardNo");
+		String boardKindNo = request.getParameter("boardKindNo");
+		String policeCount = request.getParameter("policeCount");
+
+		Map<String, String> paraMap = new HashMap<String, String>();
+
+		paraMap.put("boardNo", boardNo);
+		paraMap.put("boardKindNo", boardKindNo);
+
+		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회 해주는 것이다.
+		MarketBoardVO boardvo = service.getMarketViewWithNoAddCount(paraMap);
+
+		// 삭제해야할 글1개 내용 가져와서 로그인한 사람이 쓴 글이라면 글삭제가 가능하지만
+		// 다른 사람이 쓴 글은 삭제가 불가하도록 해야 한다.
+		HttpSession session = request.getSession();
+
+		String fileName = boardvo.getFileName();
+		String root = session.getServletContext().getRealPath("/");
+
+		// this is root :
+		// C:\eclipse\workspace(spring)\.metadata\.plugins\org.eclipse.wst.server.core\tmp0\wtpwebapps\Board\
+
+		/*
+		 * File.separator 는 운영체제에서 사용하는 폴더와 파일의 구분자이다. 운영체제가 Windows 이라면 File.separator
+		 * 는 "\" 이고, 운영체제가 UNIX, Linux 이라면 File.separator 는 "/" 이다.
+		 */
+		String path = root + "resources" + File.separator + "files";
+
+		int n = 0;
+
 		if (boardvo.getFileName() == null) {
 			n = service.marketBoardDelete(paraMap);
 
 		} else {
 			n = service.marketBoardDelete(paraMap);
-			
-			if ( n== 1) {
+
+			if (n == 1) {
 				try {
 					fileManager.doFileDelete(fileName, path);
 				} catch (Exception e) {
 					n = 0;
 				}
-				
+
 			}
 		}
- 			
- 			
- 		
 
- 		if (n == 0) {
- 			mav.addObject("message", "신고가 너무많아서 글을 블락처리 하려 했지만 실패했닼ㅋㅋㅋㅋ미안ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");			
- 			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
- 			
- 		} else {
- 			mav.addObject("message", "신고가 많이 쌓인 아주 xxx같은 글이라 블락처리함! 당신이 마지막 신고자! 빵야!");
- 			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
- 			
- 		}
- 		
- 		mav.setViewName("msg");
- 		
- 		return mav;
- 	}
+		if (n == 0) {
+			mav.addObject("message", "신고가 너무많아서 글을 블락처리 하려 했지만 실패했닼ㅋㅋㅋㅋ미안ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
+
+		} else {
+			mav.addObject("message", "신고가 많이 쌓인 아주 xxx같은 글이라 블락처리함! 당신이 마지막 신고자! 빵야!");
+			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
+
+		}
+
+		mav.setViewName("msg");
+
+		return mav;
+	}
+
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+	// === 게시판 글쓰기 폼페이지 요청 === //
+	@RequestMapping(value = "/allBoardAdminAdd.sky")
+	public ModelAndView anGetCheck_allBoardAdminAdd(HttpServletRequest request, HttpServletResponse response,
+			ModelAndView mav) {
+
+		String boardKindNo = request.getParameter("boardKindNo");
+
+		if (boardKindNo == null || "".equals(boardKindNo)) {
+			String message = "정상적인 경로좀 ㅎㅎ";
+			String loc = request.getContextPath() + "/index.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+			return mav;
+		} else {
+			try {
+				Integer.parseInt(boardKindNo);
+				int n = service.checkBoardKindNo(boardKindNo);
+
+				if (n == 0) {
+					String message = "정상적인 경로좀 ㅎㅎ";
+					String loc = request.getContextPath() + "/index.sky";
+
+					mav.addObject("message", message);
+					mav.addObject("loc", loc);
+
+					mav.setViewName("msg");
+					return mav;
+				}
+			} catch (Exception e) {
+				String message = "정상적인 경로좀 ㅎㅎ";
+				String loc = request.getContextPath() + "/index.sky";
+
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+
+				mav.setViewName("msg");
+				return mav;
+			}
+
+		}
+
+		Map<String, String> paraMap = new HashMap<>();
+
+		paraMap.put("boardKindNo", boardKindNo);
+
+		HttpSession session = request.getSession();
+		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
+		List<Map<String, String>> boardList = null;
+
+		String writerIp = request.getRemoteAddr();
+		paraMap.put("writerIp", writerIp);
+		
+		
+		if (loginuser.getFk_memberNo() == 0) {
+			// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
+			boardList = service.getAllBoardList();
+			
+			mav.addObject("paraMap", paraMap);
+			mav.addObject("boardList", boardList);
+			
+			mav.setViewName("sehyeong/board/allBoardAdminAdd.tiles1");
+			// /WEB-INF/views/tiles1/sehyeong/board/marketBoardRegister.jsp 파일을 불러온다.
+			
+			return mav;
+
+		} else {
+			String message = "정상적인 경로좀 ㅎㅎ";
+			String loc = request.getContextPath() + "/index.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+			return mav;
+		}
+
+	}
+
+	// === 게시판 글쓰기 완료 요청 === //
+	@RequestMapping(value = "/allBoardAdminAddEnd.sky")
+	public String anGetCheck_allBoardAdminAddEnd(HttpServletRequest request, HttpServletResponse response,
+			NoticeVO boardvo) {
+
+
+		int n = service.allBoardAdminAdd(boardvo);
+
+		if (n == 1) {
+			String message = "⭕⭕⭕⭕⭕⭕쌉대성공⭕⭕⭕⭕⭕";
+			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardvo.getFk_boardKindNo();
+
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+
+			return "msg";
+		} else {
+
+			String message = "글 입력에 실패했삼~~";
+			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardvo.getFk_boardKindNo();
+
+			request.setAttribute("message", message);
+			request.setAttribute("loc", loc);
+
+			return "msg";
+		}
+	}
+	
+	// === rhdwltkgkd 글1개를 보여주는 페이지 요청 === //
+	@RequestMapping(value = "/notificationDetail.sky")
+	public ModelAndView anRequiredLogin_notificationDetail(HttpServletRequest request, HttpServletResponse response,
+			ModelAndView mav) {
+
+		// 조회하고자 하는 글번호 받아오기
+		String noticeNo = request.getParameter("noticeNo");
+		String boardKindNo = request.getParameter("boardKindNo");
+		String gobackURL2 = request.getParameter("gobackURL2");
+
+		
+		
+		Map<String, String> paraMap = new HashedMap<String, String>();
+		
+		if (boardKindNo == null || "".equals(boardKindNo)) {
+			String message = "정상적인 경로좀 ㅎㅎ";
+			String loc = request.getContextPath() + "/index.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+			return mav;
+		} else {
+			try {
+				Integer.parseInt(boardKindNo);
+				paraMap.put("boardKindNo", boardKindNo);
+
+				int n = service.checkBoardKindNo(boardKindNo);
+
+				if (n == 0) {
+					String message = "정상적인 경로좀 ㅎㅎ";
+					String loc = request.getContextPath() + "/index.sky";
+
+					mav.addObject("message", message);
+					mav.addObject("loc", loc);
+
+					mav.setViewName("msg");
+					return mav;
+				}
+			} catch (Exception e) {
+				String message = "정상적인 경로좀 ㅎㅎ";
+				String loc = request.getContextPath() + "/index.sky";
+
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+
+				mav.setViewName("msg");
+				return mav;
+			}
+
+		}
+
+		if (noticeNo == null || "".equals(noticeNo)) {
+			String message = "정상적인 경로좀 ㅎㅎ11";
+			String loc = request.getContextPath() + "/index.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+			return mav;
+		} else {
+			try {
+				Integer.parseInt(noticeNo);
+				
+				paraMap.put("noticeNo", noticeNo);
+
+				NoticeVO notice = service.getNoticeViewWithNoAddCount(paraMap);
+
+				if (notice == null) {
+					String message = "정상적인 경로좀 ㅎㅎ22";
+					String loc = request.getContextPath() + "/index.sky";
+
+					mav.addObject("message", message);
+					mav.addObject("loc", loc);
+
+					mav.setViewName("msg");
+					return mav;
+				}
+			} catch (Exception e) {
+				String message = "정상적인 경로좀 ㅎㅎ33";
+				String loc = request.getContextPath() + "/index.sky";
+
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+
+				mav.setViewName("msg");
+				return mav;
+			}
+
+		}
+
+		paraMap.put("gobackURL2", gobackURL2);
+
+		// === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === //
+		Map<String, String> tableInfo = service.getMarketTableInfo(paraMap);
+
+		HttpSession session = request.getSession();
+		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
+
+		// 글1개를 보여주는 페이지 요청은 select 와 함께
+		// DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
+		// 이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
+		// 매번 글조회수 증가가 발생한다.
+		// 그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
+		// 단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은
+		// 실행하지 않도록 해주어야 한다. !!! === //
+
+		NoticeVO noticevo = null;
+
+		if (loginuser != null) {
+			// 위의 글목록보기 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
+			if ("yes".equals(session.getAttribute("readCountPermission"))) {
+				// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+
+				noticevo = service.getNoticeView(paraMap, loginuser);
+				// 글조회수 증가와 함께 글1개를 조회를 해주는 것
+
+				session.removeAttribute("readCountPermission");
+				// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+
+			} else {
+				// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
+
+				noticevo = service.getNoticeViewWithNoAddCount(paraMap);
+				// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
+			}
+
+			
+			
+			
+			mav.addObject("noticevo", noticevo);
+			mav.addObject("paraMap", paraMap);
+			mav.addObject("tableInfo", tableInfo);
+
+			mav.setViewName("sehyeong/board/marketBoardDetail.tiles1");
+
+		}
+
+		return mav;
+	}
+
+
+	
+	
+	// === #71. 글수정 페이지 요청 === //
+	@RequestMapping(value = "/noticeEdit.sky")
+	public ModelAndView anRequiredLogin_anGetCheck_noticeEdit(HttpServletRequest request,
+			HttpServletResponse response, ModelAndView mav) {
+
+		// 글 수정해야 할 글번호 가져오기
+		String noticeNo = request.getParameter("noticeNo");
+		String boardKindNo = request.getParameter("boardKindNo");
+		String gobackURL2 = request.getParameter("gobackURL2");
+
+		System.out.println("이것은 gobackURL2 입니다 => " + gobackURL2);
+		Map<String, String> paraMap = new HashMap<String, String>();
+
+		paraMap.put("noticeNo", noticeNo);
+		paraMap.put("boardKindNo", boardKindNo);
+		paraMap.put("gobackURL2", gobackURL2);
+
+		String writerIp = request.getRemoteAddr();
+		paraMap.put("writerIp", writerIp);
+		
+		// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
+		List<Map<String, String>> boardList = service.getAllBoardList();
+			
+		mav.addObject("paraMap", paraMap);
+		mav.addObject("boardList", boardList);
+		
+		
+		HttpSession session = request.getSession();
+		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
+
+
+		// 글 수정해야할 글1개 내용 가져오기
+		NoticeVO noticevo = service.getNoticeViewWithNoAddCount(paraMap);
+
+		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회 해주는 것이다.
+
+		if (loginuser.getFk_memberNo() != noticevo.getFk_memberNo()) {
+			String message = "다른 사용자의 글은 수정이 불가합니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");
+		} else {
+			// 자신의 글을 수정할 경우
+			// 가져온 1개글을 글수정할 폼이 있는 view 단으로 보내준다.
+			mav.addObject("noticevo", noticevo);
+			mav.addObject("boardList", boardList);
+			mav.addObject("paraMap", paraMap);
+			mav.setViewName("sehyeong/board/allBoardAdminAdd.tiles1");
+		}
+
+		return mav;
+	}
+
+	// === 게시판 글쓰기 완료 요청 === //
+	@RequestMapping(value = "/noticeEditEnd.sky")
+	public ModelAndView anGetCheck_noticeEditEnd(HttpServletRequest request, HttpServletResponse response,
+			NoticeVO noticevo, ModelAndView mav) {
+
+		String gobackURL2 = request.getParameter("gobackURL2");
+
+		int n = service.noticeEdit(noticevo);
+		
+		if (n == 1) {
+			String message = "글 수정에 성공했삼~~";
+			String loc = request.getContextPath() + "/notificationDetail.sky?boardKindNo=" + noticevo.getFk_boardKindNo()
+					+ "&noticeNo=" + noticevo.getNoticeNo() + "&gobackURL2=" + gobackURL2;
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		} else {
+
+			String message = "글 수정에 실패했삼~~";
+			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + noticevo.getFk_boardKindNo();
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+
+		}
+		return mav;
+	}
+
+	// === #76. 글삭제 페이지 요청 === //
+	@RequestMapping(value = "/noticeDelete.sky")
+	public ModelAndView anGetCheck_noticeDelete(HttpServletRequest request, HttpServletResponse response,
+			ModelAndView mav) {
+
+		// 글 삭제해야 할 글번호 가져오기
+		String noticeNo = request.getParameter("noticeNo");
+		String boardKindNo = request.getParameter("boardKindNo");
+
+		Map<String, String> paraMap = new HashMap<String, String>();
+
+		paraMap.put("noticeNo", noticeNo);
+		paraMap.put("boardKindNo", boardKindNo);
+
+
+
+		int n = service.noticeDelete(paraMap);
+		
+		if (n == 0) {
+			mav.addObject("message", "글 삭제 쌉 실패ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
+
+		} else {
+			mav.addObject("message", "글삭제 쌉 성공~!~!!~!!!~!!~!!~!~!");
+			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
+
+		}
+
+		mav.setViewName("msg");
+
+		return mav;
+	}
+
 }

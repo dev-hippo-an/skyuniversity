@@ -12,6 +12,7 @@ import com.project.skyuniversity.ash.model.CommuMemberLevelVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.InterAnsehyeongDAO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
+import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.ash.common.AES256;
 
 //=== #31. Service 선언 === 
@@ -240,6 +241,66 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		result *= dao.getReportCount(paraMap);
 		return result;
 
+	}
+
+	
+	// 관리자 글 쓰기용 게시판 리스트 불러오기
+	@Override
+	public List<Map<String, String>> getAllBoardList() {
+		List<Map<String, String>> boardList = dao.getAllBoardList();
+		
+		return boardList;
+	}
+
+	// 관리자 공지쓰기맨~~
+	@Override
+	public int allBoardAdminAdd(NoticeVO boardvo) {
+		int n = dao.allBoardAdminAdd(boardvo);
+		
+		return n;
+	}
+
+	// 공지리스트 컴컴
+	@Override
+	public List<NoticeVO> getNoticeList(Map<String, String> paraMap) {
+		List<NoticeVO> noticeList = dao.getNoticeList(paraMap);
+		return noticeList;
+	}
+	
+	// 조회수를 1 올려주면 한개의 공지글의 디테일을 가지고 오는 것!
+	@Override
+	public NoticeVO getNoticeView(Map<String, String> paraMap, CommuMemberVO loginuser) {
+		NoticeVO noticevo = dao.getNoticeView(paraMap);
+		
+		if(loginuser != null && noticevo != null && !(loginuser.getCommuMemberNo() == noticevo.getFk_memberNo()) ) {
+			// 글조회수 증가는 로그인을 한 상태에서 다른 사람의 글을 읽을때만 증가하도록 해야 한다. 
+			
+			dao.setNoticeReadCount(paraMap);   // 글조회수 1증가 하기 
+			
+			noticevo = dao.getNoticeView(paraMap);
+		}
+		return noticevo;
+	}
+	
+	// 조회수 증가 없이 한개의 공지글의 디테일을 가지고 오는 것!
+	@Override
+	public NoticeVO getNoticeViewWithNoAddCount(Map<String, String> paraMap) {
+		NoticeVO noticevo = dao.getNoticeView(paraMap);
+		return noticevo;
+	}
+
+	
+	// 공지글 수정
+	@Override
+	public int noticeEdit(NoticeVO noticevo) {
+		int n = dao.noticeEdit(noticevo);
+		return n;
+	}
+	// 공지글 삭제
+	@Override
+	public int noticeDelete(Map<String, String> paraMap) {
+		int n = dao.noticeDelete(paraMap);
+		return n;
 	}
 
 	
