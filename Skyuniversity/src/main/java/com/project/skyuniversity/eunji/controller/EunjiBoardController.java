@@ -1,5 +1,6 @@
 package com.project.skyuniversity.eunji.controller;
 
+import java.io.File;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -18,10 +19,13 @@ import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.multipart.MultipartFile;
+import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
+import com.project.skyuniversity.eunji.model.OfficialLeaveDAO;
 import com.project.skyuniversity.eunji.service.InterEunjiService;
 
 @Controller
@@ -306,6 +310,33 @@ public class EunjiBoardController {
 	
 	@RequestMapping(value = "/officalLeave.sky", method = {RequestMethod.GET})
 	public ModelAndView officalLeave(ModelAndView mav, HttpServletRequest request) {
+		
+		mav.setViewName("eunji/class/officalLeave.tiles2");
+		return mav;
+	}
+	
+	@RequestMapping(value = "/officalLeaveEnd.sky", method = {RequestMethod.POST})
+	public ModelAndView officalLeaveEnd(ModelAndView mav, HttpServletRequest request, MultipartHttpServletRequest mrequest, OfficialLeaveDAO ocvo) {
+		
+		String startday = ocvo.getStartDate();
+		String endday = ocvo.getEndDate();
+		String reason = ocvo.getReason();
+		String starttime = ocvo.getStartTime();
+		String endtime = ocvo.getEndTime();
+		
+		MultipartFile attach = ocvo.getAttach();
+		if(!attach.isEmpty()) {
+			HttpSession session = mrequest.getSession();
+			String root = session.getServletContext().getRealPath("/");
+	        String path = root+"resources"+File.separator+"files";
+
+	        String newFilename = "";
+	        byte[] bytes = null;
+	        long fileSize = 0;
+	        
+	        
+		}
+		
 		
 		mav.setViewName("eunji/class/officalLeave.tiles2");
 		return mav;
