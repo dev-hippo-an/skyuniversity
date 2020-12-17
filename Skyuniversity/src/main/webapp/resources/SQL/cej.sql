@@ -485,8 +485,14 @@ on V.fk_deptseq = D.deptseq
 where deptname = '경영학과' and subjectname = '컴퓨터공학개론' and grade = '1'
 
 
-select *
-from tbl_subject
+select count(*)
+from tbl_course C
+inner join tbl_subject S
+on c.fk_subjectno = S.subjectno
+where fk_memberno = '102' and subjectno = 'NE104' and recourse = '0'
 
 update tbl_subject set curpeoplecnt = 1 where subjectname='경영수학'
 commit
+
+select *
+from tbl_course

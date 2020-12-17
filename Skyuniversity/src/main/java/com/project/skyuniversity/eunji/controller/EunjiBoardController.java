@@ -303,4 +303,11 @@ public class EunjiBoardController {
 		
 		return jsonobj.toString();
 	}
+	
+	@RequestMapping(value = "/officalLeave.sky", method = {RequestMethod.GET})
+	public ModelAndView officalLeave(ModelAndView mav, HttpServletRequest request) {
+		
+		mav.setViewName("eunji/class/officalLeave.tiles2");
+		return mav;
+	}
 }
