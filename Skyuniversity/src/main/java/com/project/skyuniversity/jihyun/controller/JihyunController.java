@@ -114,7 +114,7 @@ public class JihyunController {
 		return mav;
 	}
 	// 증명서발급
-	@RequestMapping(value = "/certificate .sky")
+	@RequestMapping(value = "/certificate.sky")
 	public ModelAndView certificate (ModelAndView mav, HttpServletRequest request) {
 		
 		mav.setViewName("jihyun/studentinfo/certificate.tiles2");

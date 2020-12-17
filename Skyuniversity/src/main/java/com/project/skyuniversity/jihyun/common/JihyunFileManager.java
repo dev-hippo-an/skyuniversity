@@ -19,7 +19,7 @@ import org.springframework.stereotype.Component;
 
 // === #154. FileManager 클래스 생성하기 ===
 @Component
-public class FileManager {
+public class JihyunFileManager {
 
 	// == 파일 업로드 하기 첫번째방법 ==
 	// 리턴 : 서버에 저장된 새로운 파일명 (예: 20201208092715353243254235235234.png)
