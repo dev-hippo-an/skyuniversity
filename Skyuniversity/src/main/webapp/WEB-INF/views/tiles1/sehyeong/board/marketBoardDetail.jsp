@@ -28,25 +28,31 @@
 	}
 	
 	textarea#reply {
-		width : 30%;
-		height : 25px;
+		width: 90%;
+      margin-top: 20px;
+      border: solid 1px gray;
+
 	}
 	
 	div#marketBoardMain{
 		float : left;
-		width: 60%;
-		min-height: 600px;
-	 	margin-bottom : 5%;
-	 	margin-left : 15%;
+      width: 60%;
+      min-height: 550px;
+     
+       margin-bottom : 5%;
+       margin-left : 15%;
+
 	}
 	
 	div#replyContent {
-		float : left;
-		width: 60%;
-		min-height: 400px;
-		border: solid gray 1px;
-	 	margin-bottom : 5%;
-	 	margin-left : 15%;
+		  float : left;
+      width: 60%;
+      /* height: 700px; */
+      max-height: 1000px;
+      border: solid gray 1px;
+       margin-bottom : 5%;
+       margin-left : 15%;
+
 	}
 	
 	#replyContentTable {
@@ -75,7 +81,7 @@
 	}
 	
 	div#buttons1 {
-		width : 30%;
+		width : 50%;
 	}
 	
 	div#editAndDel-div {
@@ -238,6 +244,28 @@
 		frm.submit();
 	}
 	
+	
+	<%-- 공지 수정 및 삭제!!! 시작--%>
+	function noticedEdit (){
+		var frm = document.editAndDeleteFrm;
+		frm.action = "<%= ctxPath%>/noticeEdit.sky";
+		frm.method = "POST";
+		frm.submit();
+	}
+	
+	
+	
+	function noticeDelete () {
+		var frm = document.editAndDeleteFrm;
+		frm.action = "<%= ctxPath%>/noticeDelete.sky";
+		frm.method = "POST";
+		frm.submit();
+	}
+	
+	<%-- 공지 수정 및 삭제!!! 끝--%>
+	
+	
+	
 	function fileDownloadGoGo () {
 		var frm = document.editAndDeleteFrm;
 		frm.action = "<%= ctxPath%>/fileDownloadGoGo.sky";
@@ -292,14 +320,55 @@
 </script>
 
 
+<c:if test="${not empty noticevo}">
 	<div id="marketBoardMain">
 		<h1 align="left">${tableInfo.boardName}</h1>
-		<div id="marketContent" style="min-height: 600px; text-align: left;">
-			<div id="mainTitle" style="border: solid 5px #0843ad; font-weight: bold; padding-left: 20px;">
+		<div id="marketContent" style="min-height: 600px; text-align: left;  border: solid gray 1px;">
+			<div id="mainTitle" style=" font-weight: bold; padding-left: 20px;">
+				<h2><span>[${noticevo.categoryName}]&nbsp;&nbsp;</span>${noticevo.subject} </h2>
+			</div>
+			
+			<div id="mainSubInfo" style="padding-left: 20px; border-bottom: solid 1px gray;">
+				<h5><span>닉네임 : <img src="<%= ctxPath %>/resources/images/levelimg/${noticevo.levelImg}" style="width: 17px; height: 17px;" />&nbsp;${noticevo.nickname}</span>ㅣ<span>조회수 : ${noticevo.readCount}</span>ㅣ<span>작성시간 : ${noticevo.regDate}</span></h5>
+			
+			</div>
+			
+			<div id="content-div" style="overflow: auto; word-break: break-all; padding: 30px; min-height: 500px;">
+				${noticevo.content}
+			
+			</div>
+		</div>
+		<br>
+		<br>
+		<button type="button" id="letsgoback" onclick="javascript:location.href='${paraMap.gobackURL2}'">목록으로</button>
+		
+		<br>
+		<br>
+		<div id="editAndDel-div">
+			<c:if test="${noticevo.fk_memberNo eq sessionScope.loginuser.fk_memberNo}">
+				<button type="button" onclick="noticedEdit();">수정</button>
+				<button type="button" onclick="noticeDelete();">삭제</button>
+			</c:if>
+		</div>
+		
+		<form name="editAndDeleteFrm">
+			<input type="hidden" name="noticeNo" value="${noticevo.noticeNo}" />
+			<input type="hidden" name="boardKindNo" value="${noticevo.fk_boardKindNo}" />
+			<input type="hidden" name="gobackURL2" value="${paraMap.gobackURL2}" />
+		</form>
+		
+	</div>
+
+</c:if>
+<c:if test="${empty noticevo}">
+	<div id="marketBoardMain">
+		<h1 align="left">${tableInfo.boardName}</h1>
+		<div id="marketContent" style="min-height: 600px; text-align: left; border: solid gray 1px;">
+			<div id="mainTitle" style="font-weight: bold; padding-left: 20px;">
 				<h2><span>[${boardvo.categoryName}]&nbsp;&nbsp;</span>${boardvo.subject} </h2>
 			</div>
 			
-			<div id="mainSubInfo" style="border: solid 5px #0843ad; padding-left: 20px;">
+			<div id="mainSubInfo" style=" padding-left: 20px; border-bottom: solid 1px gray;">
 				<h5><span>닉네임 : <img src="<%= ctxPath %>/resources/images/levelimg/${boardvo.levelImg}" style="width: 17px; height: 17px;" />&nbsp;${boardvo.nickname}</span>ㅣ<span>조회수 : ${boardvo.readCount}</span>ㅣ<span>작성시간 : ${boardvo.regDate}</span>
 				<c:if test="${boardvo.editDate != null}">
 					ㅣ<span>수정시간 : ${boardvo.editDate} </span>
@@ -309,11 +378,11 @@
 			
 			</div>
 			
-			<div id="content-div" style="overflow: auto; word-break: break-all; border: solid 5px #0843ad; padding: 30px; min-height: 500px;">
+			<div id="content-div" style="overflow: auto; word-break: break-all;  padding: 30px; min-height: 500px;">
 				${boardvo.content}
 			
 			</div>
-			<div id="fileDownload" style="border: solid 5px #0843ad; font-weight: bold; padding-left: 20px;">
+			<div id="fileDownload" style=" font-weight: bold; padding-left: 20px;">
 				<a href="javascript:fileDownloadGoGo();">${boardvo.orgFileName}</a>				
 				
 			</div>
@@ -323,10 +392,8 @@
 		<button type="button" id="letsgoback" onclick="javascript:location.href='${paraMap.gobackURL2}'">목록으로</button>
 			<div id="buttons1">
 				<button type="button" id="verygooda">추천<br><span id="verygooda-span"></span></button>
-		<c:if test="${boardvo.categoryNo != 1}">
 				<button type="button" id="verybadda">반대<br><span id="verybadda-span"></span></button>
 				<button type="button" id="gotopolice">신고<br><span id="gotopolice-span"><img src="<%= request.getContextPath()%>/resources/images/sehyeong/call.png" style="width: 20px; height: 20px;"/></span></button>
-		</c:if>
 			</div>
 		
 		<br>
@@ -345,6 +412,8 @@
 		</form>
 		
 	</div>
+</c:if>
+
 	<!-- 
 	<div id="sideBar">
 	

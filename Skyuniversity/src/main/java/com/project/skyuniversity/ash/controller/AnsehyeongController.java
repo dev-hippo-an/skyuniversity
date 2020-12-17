@@ -30,6 +30,7 @@ import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.apache.commons.collections4.map.HashedMap;
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -292,7 +293,6 @@ public class AnsehyeongController {
 			categoryNo = "";
 		}
 
-		System.out.println("categoryNo : " + categoryNo);
 		paraMap.put("categoryNo", categoryNo);
 
 		////////////////////////////////////////////////////////////////////
@@ -414,6 +414,10 @@ public class AnsehyeongController {
 		 */
 		///////////////////////////////////////////////////////////////
 
+		List<NoticeVO> noticeList = service.getNoticeList(paraMap);
+		
+		mav.addObject("noticeList", noticeList);
+		
 		mav.addObject("paraMap", paraMap);
 		mav.addObject("tableInfo", tableInfo);
 		mav.addObject("categoryList", categoryList);
@@ -1385,7 +1389,7 @@ public class AnsehyeongController {
 		int n = service.allBoardAdminAdd(boardvo);
 
 		if (n == 1) {
-			String message = "⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕쌉대성공⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕⭕";
+			String message = "⭕⭕⭕⭕⭕⭕쌉대성공⭕⭕⭕⭕⭕";
 			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardvo.getFk_boardKindNo();
 
 			request.setAttribute("message", message);
@@ -1404,16 +1408,270 @@ public class AnsehyeongController {
 		}
 	}
 	
-	@ResponseBody
-	@RequestMapping(value="/getNoticeList.sky", method = {RequestMethod.POST }, produces = "text/plain; charset=UTF-8")
-	public String getNoticeList(HttpServletRequest request) {
-		
+	// === rhdwltkgkd 글1개를 보여주는 페이지 요청 === //
+	@RequestMapping(value = "/notificationDetail.sky")
+	public ModelAndView anRequiredLogin_notificationDetail(HttpServletRequest request, HttpServletResponse response,
+			ModelAndView mav) {
+
+		// 조회하고자 하는 글번호 받아오기
+		String noticeNo = request.getParameter("noticeNo");
 		String boardKindNo = request.getParameter("boardKindNo");
+		String gobackURL2 = request.getParameter("gobackURL2");
+
 		
 		
+		Map<String, String> paraMap = new HashedMap<String, String>();
 		
-		return "";
+		if (boardKindNo == null || "".equals(boardKindNo)) {
+			String message = "정상적인 경로좀 ㅎㅎ";
+			String loc = request.getContextPath() + "/index.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+			return mav;
+		} else {
+			try {
+				Integer.parseInt(boardKindNo);
+				paraMap.put("boardKindNo", boardKindNo);
+
+				int n = service.checkBoardKindNo(boardKindNo);
+
+				if (n == 0) {
+					String message = "정상적인 경로좀 ㅎㅎ";
+					String loc = request.getContextPath() + "/index.sky";
+
+					mav.addObject("message", message);
+					mav.addObject("loc", loc);
+
+					mav.setViewName("msg");
+					return mav;
+				}
+			} catch (Exception e) {
+				String message = "정상적인 경로좀 ㅎㅎ";
+				String loc = request.getContextPath() + "/index.sky";
+
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+
+				mav.setViewName("msg");
+				return mav;
+			}
+
+		}
+
+		if (noticeNo == null || "".equals(noticeNo)) {
+			String message = "정상적인 경로좀 ㅎㅎ11";
+			String loc = request.getContextPath() + "/index.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+			return mav;
+		} else {
+			try {
+				Integer.parseInt(noticeNo);
+				
+				paraMap.put("noticeNo", noticeNo);
+
+				NoticeVO notice = service.getNoticeViewWithNoAddCount(paraMap);
+
+				if (notice == null) {
+					String message = "정상적인 경로좀 ㅎㅎ22";
+					String loc = request.getContextPath() + "/index.sky";
+
+					mav.addObject("message", message);
+					mav.addObject("loc", loc);
+
+					mav.setViewName("msg");
+					return mav;
+				}
+			} catch (Exception e) {
+				String message = "정상적인 경로좀 ㅎㅎ33";
+				String loc = request.getContextPath() + "/index.sky";
+
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+
+				mav.setViewName("msg");
+				return mav;
+			}
+
+		}
+
+		paraMap.put("gobackURL2", gobackURL2);
+
+		// === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === //
+		Map<String, String> tableInfo = service.getMarketTableInfo(paraMap);
+
+		HttpSession session = request.getSession();
+		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
+
+		// 글1개를 보여주는 페이지 요청은 select 와 함께
+		// DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
+		// 이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
+		// 매번 글조회수 증가가 발생한다.
+		// 그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
+		// 단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은
+		// 실행하지 않도록 해주어야 한다. !!! === //
+
+		NoticeVO noticevo = null;
+
+		if (loginuser != null) {
+			// 위의 글목록보기 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
+			if ("yes".equals(session.getAttribute("readCountPermission"))) {
+				// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+
+				noticevo = service.getNoticeView(paraMap, loginuser);
+				// 글조회수 증가와 함께 글1개를 조회를 해주는 것
+
+				session.removeAttribute("readCountPermission");
+				// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+
+			} else {
+				// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
+
+				noticevo = service.getNoticeViewWithNoAddCount(paraMap);
+				// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
+			}
+
+			
+			
+			
+			mav.addObject("noticevo", noticevo);
+			mav.addObject("paraMap", paraMap);
+			mav.addObject("tableInfo", tableInfo);
+
+			mav.setViewName("sehyeong/board/marketBoardDetail.tiles1");
+
+		}
+
+		return mav;
+	}
+
+
+	
+	
+	// === #71. 글수정 페이지 요청 === //
+	@RequestMapping(value = "/noticeEdit.sky")
+	public ModelAndView anRequiredLogin_anGetCheck_noticeEdit(HttpServletRequest request,
+			HttpServletResponse response, ModelAndView mav) {
+
+		// 글 수정해야 할 글번호 가져오기
+		String noticeNo = request.getParameter("noticeNo");
+		String boardKindNo = request.getParameter("boardKindNo");
+		String gobackURL2 = request.getParameter("gobackURL2");
+
+		System.out.println("이것은 gobackURL2 입니다 => " + gobackURL2);
+		Map<String, String> paraMap = new HashMap<String, String>();
+
+		paraMap.put("noticeNo", noticeNo);
+		paraMap.put("boardKindNo", boardKindNo);
+		paraMap.put("gobackURL2", gobackURL2);
+
+		String writerIp = request.getRemoteAddr();
+		paraMap.put("writerIp", writerIp);
 		
+		// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
+		List<Map<String, String>> boardList = service.getAllBoardList();
+			
+		mav.addObject("paraMap", paraMap);
+		mav.addObject("boardList", boardList);
+		
+		
+		HttpSession session = request.getSession();
+		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
+
+
+		// 글 수정해야할 글1개 내용 가져오기
+		NoticeVO noticevo = service.getNoticeViewWithNoAddCount(paraMap);
+
+		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회 해주는 것이다.
+
+		if (loginuser.getFk_memberNo() != noticevo.getFk_memberNo()) {
+			String message = "다른 사용자의 글은 수정이 불가합니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");
+		} else {
+			// 자신의 글을 수정할 경우
+			// 가져온 1개글을 글수정할 폼이 있는 view 단으로 보내준다.
+			mav.addObject("noticevo", noticevo);
+			mav.addObject("boardList", boardList);
+			mav.addObject("paraMap", paraMap);
+			mav.setViewName("sehyeong/board/allBoardAdminAdd.tiles1");
+		}
+
+		return mav;
+	}
+
+	// === 게시판 글쓰기 완료 요청 === //
+	@RequestMapping(value = "/noticeEditEnd.sky")
+	public ModelAndView anGetCheck_noticeEditEnd(HttpServletRequest request, HttpServletResponse response,
+			NoticeVO noticevo, ModelAndView mav) {
+
+		String gobackURL2 = request.getParameter("gobackURL2");
+
+		int n = service.noticeEdit(noticevo);
+		
+		if (n == 1) {
+			String message = "글 수정에 성공했삼~~";
+			String loc = request.getContextPath() + "/notificationDetail.sky?boardKindNo=" + noticevo.getFk_boardKindNo()
+					+ "&noticeNo=" + noticevo.getNoticeNo() + "&gobackURL2=" + gobackURL2;
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		} else {
+
+			String message = "글 수정에 실패했삼~~";
+			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + noticevo.getFk_boardKindNo();
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+
+		}
+		return mav;
+	}
+
+	// === #76. 글삭제 페이지 요청 === //
+	@RequestMapping(value = "/noticeDelete.sky")
+	public ModelAndView anGetCheck_noticeDelete(HttpServletRequest request, HttpServletResponse response,
+			ModelAndView mav) {
+
+		// 글 삭제해야 할 글번호 가져오기
+		String noticeNo = request.getParameter("noticeNo");
+		String boardKindNo = request.getParameter("boardKindNo");
+
+		Map<String, String> paraMap = new HashMap<String, String>();
+
+		paraMap.put("noticeNo", noticeNo);
+		paraMap.put("boardKindNo", boardKindNo);
+
+
+
+		int n = service.noticeDelete(paraMap);
+		
+		if (n == 0) {
+			mav.addObject("message", "글 삭제 쌉 실패ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
+			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
+
+		} else {
+			mav.addObject("message", "글삭제 쌉 성공~!~!!~!!!~!!~!!~!~!");
+			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
+
+		}
+
+		mav.setViewName("msg");
+
+		return mav;
 	}
 
 }

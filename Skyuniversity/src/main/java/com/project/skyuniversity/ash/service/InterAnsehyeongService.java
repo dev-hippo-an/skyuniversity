@@ -91,6 +91,23 @@ public interface InterAnsehyeongService {
 	// 관리자 공지쓰기맨~~
 	int allBoardAdminAdd(NoticeVO boardvo);
 
+	// 공지리스트 컴컴
+	List<NoticeVO> getNoticeList(Map<String, String> paraMap);
+
+	
+	// 조회수를 1 올려주면 한개의 공지글의 디테일을 가지고 오는 것!
+	NoticeVO getNoticeView(Map<String, String> paraMap, CommuMemberVO loginuser);
+	
+	// 조회수 증가 없이 한개의 공지글의 디테일을 가지고 오는 것!
+	NoticeVO getNoticeViewWithNoAddCount(Map<String, String> paraMap);
+
+	
+	// 공지글 수정
+	int noticeEdit(NoticeVO noticevo);
+	
+	// 공지글 삭제
+	int noticeDelete(Map<String, String> paraMap);
+
 
 
 

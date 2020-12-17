@@ -604,10 +604,70 @@
         from tbl_boardkind
 	</select>
 	
+	
+	<!-- 관리자 글쓰기지롱 -->
 	<insert id="allBoardAdminAdd" parameterType="com.project.skyuniversity.ash.model.NoticeVO">
-		insert into tbl_notice(boardNo, fk_boardKindNo, subject, content, writerIp)
+		insert into tbl_notice(noticeNo, fk_boardKindNo, subject, content, writerIp)
 		values(tbl_notice_seq.nextval, #{fk_boardKindNo}, #{subject}, #{content}, #{writerIp})
 	</insert>
+	
+	
+	<!-- 	// 공지리스트 컴컴 -->
+	<select id="getNoticeList" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.NoticeVO">
+		select n.noticeNo, n.fk_boardKindNo, n.fk_memberNo, n.fk_categoryNo
+		, n.subject, to_char(n.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, n.content, n.readCount, n.status, n.writerIp
+		
+		, c.categoryName
+		
+		, m.commuMemberNo, m.fk_levelNo, m.nickname, m.point
+		
+		, l.levelName, l.levelPoint, l.levelImg
+		
+		, k.boardTypeNo, k.boardName
+		
+		, nvl(g.upCount, 0) as upCount
+		
+		from tbl_notice n join tbl_category c
+		on n.fk_categoryNo = c.categoryNo
+		join tbl_commu_member m 
+		on n.fk_memberNo = m.fk_memberNo
+		join tbl_commu_member_level l
+		on m.fk_levelNo = l.levelNo
+		join tbl_boardkind k
+		on n.fk_boardKindNo = k.boardKindNo
+		left join (select fk_boardNo, count(*) as upCount
+		                    from tbl_board_good
+		                    where fk_boardKindNo = #{boardKindNo}
+		                    group by fk_boardNo
+		                ) g
+		on  n.noticeNo = g.fk_boardNo
+		where n.status = 1 and n.fk_boardKindNo = #{boardKindNo}
+		<if test="noticeNo != null">
+		and noticeNo = #{noticeNo}
+		</if>
+		order by n.noticeNo desc
+	
+	</select>
+	
+	<update id="setNoticeReadCount" parameterType="HashMap">
+		update tbl_notice set readCount = readCount + 1 
+		where noticeNo = #{noticeNo}
+	</update>
+	
+	
+	
+	<update id="noticeEdit" parameterType="com.project.skyuniversity.ash.model.NoticeVO">
+		update tbl_notice set fk_boardKindNo = #{fk_boardKindNo}, subject = #{subject}, content = #{content}, writerIp = #{writerIp}
+		where noticeNo = #{noticeNo}
+	</update>
+	
+	
+	
+	
+	<update id="noticeDelete" parameterType="HashMap">
+		update tbl_notice set status = 0
+		where noticeNo = #{noticeNo} and fk_boardKindNo = #{boardKindNo}
+	</update>
 	
 	
 </mapper>

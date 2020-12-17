@@ -89,6 +89,24 @@ public interface InterAnsehyeongDAO {
 
 	// 관리자 공지쓰기맨~~
 	int allBoardAdminAdd(NoticeVO boardvo);
+	
+	// 공지리스트 컴컴
+	List<NoticeVO> getNoticeList(Map<String, String> paraMap);
+
+	
+	// 한개의 글의 디테일을 가지고 오는 것!
+	NoticeVO getNoticeView(Map<String, String> paraMap);
+	
+	// 조회수 1개 올려주기
+	void setNoticeReadCount(Map<String, String> paraMap);
+	
+	// 공지글 수정
+	int noticeEdit(NoticeVO noticevo);
+
+	// 공지글 삭제
+	int noticeDelete(Map<String, String> paraMap);
+
+	
 
 
 

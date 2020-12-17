@@ -37,7 +37,7 @@ tbody > tr > td:nth-child(3), td:nth-child(5) {
 }
 
 tbody > tr > td:nth-child(3) {
-	width: 400px;
+	width: 360px;
 }
 
 tbody > tr > td:nth-child(3):hover {
@@ -105,16 +105,16 @@ div#tags li.cate:hover {
 	cursor: pointer;
 }
 
-tr.marketBoardNotice {
+tr.notification {
 	
 	background-color: rgba(8,65,173,0.2);
 }
 
-tr.marketBoardNotice td:nth-child(3):hover{
+tr.notification td:nth-child(3):hover{
 	
 	font-weight: normal;
 }
-tr.marketBoardNotice td {
+tr.notification td {
 	font-weight: bold;
 }
 
@@ -127,28 +127,6 @@ tr.marketBoardNotice td {
 	$(document).ready(function() {
 		
 		
-		$.ajax({
-			url: "<%= request.getContextPath()%>/getNoticeList.sky",
-            type: "POST",
-            data: {"boardKindNo": "${paraMap.boardKindNo}"},
-            dataType:"JSON",
-            success: function(json){
-               
-            },
-            error: function(request, status, error){
-                     alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-             }
-			
-			
-		});
-		
-		
-		
-		
-		
-		
-		
-	
 		if( '${paraMap.searchType}' != '' && '${paraMap.searchWord}' != '') {
 			$("select#searchType").val("${paraMap.searchType}");
 			$("input#searchWord").val("${paraMap.searchWord}");
@@ -229,6 +207,14 @@ tr.marketBoardNotice td {
 		frm.submit();	
 	}
 	
+	function goNotice(noticeNo) {
+		var frm = document.notificationFrm;
+		frm.noticeNo.value = noticeNo;
+		frm.action = "<%= request.getContextPath()%>/notificationDetail.sky";
+		frm.method="GET";
+		frm.submit();
+		
+	}
 	
 </script>
 </head>
@@ -275,8 +261,50 @@ tr.marketBoardNotice td {
 	                <th>조회수</th>
 	            </tr>
             </thead>
-            <tbody>
+            <tbody >
+            	<c:if test="${not empty noticeList}">
+	            	<c:forEach items="${noticeList}" var="notice" varStatus="status">
+	            	
+		            	<tr class="notification">
+		                	<td>${notice.noticeNo}</td>
+		                	<td>${notice.categoryName}</td>
+			         
+		           			<c:choose>
+						        <c:when test="${fn:length(notice.subject) > 20}">
+				                	<td onclick="goNotice('${notice.noticeNo}');">${fn:substring(notice.subject, 0, 20)}...&nbsp;
+				                	
+				                	<c:if test="${fn:contains(notice.content, '<img src=')}">
+			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
+			                	</c:if>
+				                	</td>
+						        </c:when>
+						        <c:otherwise>
+				                	<td onclick="goNotice('${notice.noticeNo}');">${notice.subject}&nbsp;
+				                	<c:if test="${fn:contains(notice.content, '<img src=')}">
+			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
+			                	</c:if>
+				                	</td>
+						        
+						        </c:otherwise>
+						       
+							</c:choose>
+			           		
+			           		
+			           		
+		                	<td>0원</td>
+		                	<td><img src="<%= ctxPath %>/resources/images/levelimg/${notice.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${notice.nickname}</td>
+		                	<td>${notice.regDate}</td>
+		                	<td>/</td>
+		                	<td>${notice.readCount}</td>
+		            	</tr>
+	            	
+	            	
+		      
+	            	</c:forEach>	            
+	            </c:if>
             
+            
+            	
 	            <c:if test="${empty boardList}">
             		<tr>
 	                	<td colspan="8"><span>작성된 글이 없습니다!</span></td>
@@ -357,6 +385,11 @@ tr.marketBoardNotice td {
 		<input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />
 	</form>
 	
+	<form name="notificationFrm">
+		<input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />
+		<input type="hidden" name="noticeNo" />
+		<input type="hidden" name="gobackURL2" value="${gobackURL2}" />
+	</form>
 	
 	
 	<br>

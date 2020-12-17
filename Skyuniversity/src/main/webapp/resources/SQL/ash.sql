@@ -581,35 +581,75 @@ select count(*)
         select * from tbl_board_etcmarket
         
         create table tbl_notice (
-        boardNo             number                  not null
-        , fk_boardKindNo    number                  not null
-        , fk_memberNo       number default 0        not null
-        , fk_categoryNo     number default 1        not null
-        , subject           varchar2(200)           not null
-        , regDate           date default sysdate    not null
-        , content           nvarchar2(2000)         not null
-        , readCount         number default 0                 not null
-        , status            number(1) default 1     not null  -- 0 : 못쓸글 , 1: 활성화글
-        , writerIp          varchar2(50)            not null
+            noticeNo             number                  not null
+            , fk_boardKindNo    number                  not null
+            , fk_memberNo       number default 0        not null
+            , fk_categoryNo     number default 1        not null
+            , subject           varchar2(200)           not null
+            , regDate           date default sysdate    not null
+            , content           nvarchar2(2000)         not null
+            , readCount         number default 0                 not null
+            , status            number(1) default 1     not null  -- 0 : 못쓸글 , 1: 활성화글
+            , writerIp          varchar2(50)            not null
         );
         
         create sequence tbl_notice_seq
-start with 1         -- 첫번째 출발은 1부터 한다.
-increment by 1        -- 증가치 값
-nomaxvalue          -- 최대값이 없이 무제한으로 증가시키겠다는 뜻. 최대값을 주고 싶다면 maxvalue 100이런 식으로 주면 된다.
-nominvalue          -- 최소값이 없다.
-nocycle             -- 반복이 없는 직진
-nocache;
+        start with 1         -- 첫번째 출발은 1부터 한다.
+        increment by 1        -- 증가치 값
+        nomaxvalue          -- 최대값이 없이 무제한으로 증가시키겠다는 뜻. 최대값을 주고 싶다면 maxvalue 100이런 식으로 주면 된다.
+        nominvalue          -- 최소값이 없다.
+        nocycle             -- 반복이 없는 직진
+        nocache;
 
 insert into tbl_notice(boardNo, fk_boardKindNo, subject, content, writerIp)
 values(tbl_notice_seq.nextval, #{fk_boardKindNo}, #{subject}, #{content}, #{writerIp})
 
+drop table tbl_notice purge;
+drop sequence tbl_notice_seq;
 
 
+select * from tbl_commu_member;
+select * from tbl_category;
+select * from tbl_commu_member;
+select * from tbl_commu_member_level;
+select * from tbl_boardKind;
 
+select n.noticeNo, n.fk_boardKindNo, n.fk_memberNo, n.fk_categoryNo
+, n.subject, n.regDate, n.content, n.readCount, n.status, n.writerIp
 
+, c.categoryName
 
+, m.commuMemberNo, m.fk_levelNo, m.nickname, m.point
 
-select *
-from tbl_notice;
+, l.levelName, l.levelPoint, l.levelImg
 
+, k.boardKindNo, k.boardTypeNo, k.boardName
+
+, nvl(g.upCount, 0) as upCount
+
+from tbl_notice n join tbl_category c
+on n.fk_categoryNo = c.categoryNo
+join tbl_commu_member m 
+on n.fk_memberNo = m.fk_memberNo
+join tbl_commu_member_level l
+on m.fk_levelNo = l.levelNo
+join tbl_boardkind k
+on n.fk_boardKindNo = k.boardKindNo
+left join (select fk_boardNo, count(*) as upCount
+                    from tbl_board_bad
+                    where fk_boardKindNo = 25
+                    group by fk_boardNo
+                ) g
+on  n.noticeNo = g.fk_boardNo
+where n.fk_boardKindNo = 25 and noticeNo = 1;
+
+select * from tbl_member;
+select * from tbl_notice;
+
+update from tbl_notice set fk_boardKindNo = 3, subject = '[공지] 업뎃 -  중고거래 게시판 이용수칙', content = ' 업뎃 이용수칙1.ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ<br>이용수칙1.ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ&nbsp;<br>이용수칙1.ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ&nbsp;<br>이용수칙1.ㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁㅁ&nbsp;', writerIp = '0:0:0:0:0:0:0:1'
+where noticeNo = 1
+
+update tbl_notice set fk_boardKindNo = 24
+where noticeNo = 2
+
+commit;

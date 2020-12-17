@@ -357,4 +357,41 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 		
 		return n;
 	}
+	
+	// 공지리스트 컴컴
+	@Override
+	public List<NoticeVO> getNoticeList(Map<String, String> paraMap) {
+		List<NoticeVO> noticeList = sqlsession.selectList("ansehyeong.getNoticeList", paraMap);
+		return noticeList;
+	}
+	
+	
+	// 한개의 글의 디테일을 가지고 오는 것!
+	@Override
+	public NoticeVO getNoticeView(Map<String, String> paraMap) {
+		NoticeVO noticevo = sqlsession.selectOne("ansehyeong.getNoticeList",paraMap);
+		
+		return noticevo;
+	}
+	
+	// 조회수 1개 올려주기
+	@Override
+	public void setNoticeReadCount(Map<String, String> paraMap) {
+		sqlsession.update("ansehyeong.setNoticeReadCount", paraMap);
+	}
+	
+	
+	// 공지글 수정
+	@Override
+	public int noticeEdit(NoticeVO noticevo) {
+		int n = sqlsession.update("ansehyeong.noticeEdit", noticevo);
+		return n;
+	}
+	
+	// 공지글 삭제
+	@Override
+	public int noticeDelete(Map<String, String> paraMap) {
+		int n = sqlsession.update("ansehyeong.noticeDelete", paraMap);
+		return n;
+	}
 }
