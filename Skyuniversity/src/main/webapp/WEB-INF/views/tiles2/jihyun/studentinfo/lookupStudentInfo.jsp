@@ -6,12 +6,27 @@
 %>
 
 <style>
- span#sPhoto {
- 	
+
+ div#stundentInfoContainer {
+ 	display: flex;
+ 	flex-direction: column;
+ 	align-items: center;	
+ }
+ 
+ div#sPhoto {
+ 	/* border: solid 1px gray; */
+ 	/* width: 15%; */
+ 	display: flex; 
+ 	flex-direction: column; 
+ 	justify-content: center;
  }
 
  label.miniTitle {
  	width: 100px;
+ }
+ 
+ label.miniTitle2 {
+ 	width: 70px;
  }
  
  input.readInfo {
@@ -20,20 +35,36 @@
 
  #block1, #block2 {
  	display: flex;
- 	margin: 50px auto;
+ 	justify-content: space-between;
+ 	/* margin: 10px auto; */
+ 	width: 80%;
  }
  
- div#changeAdd, div#changeName {
+ div#changeAdd, div#changePhoto {
  	border: solid 1px gray;
  	border-radius: 10px;
  	padding: 40px 30px;
+ 	margin-top: 30px;
+ }
+ 
+ div#changeAdd {
+ 	display: flex;
+ 	justify-content: space-between;
+ 	width: 60%;
+ 	margin-right: 1%;
+ }
+ 
+ div#changePhoto {
+ 	display: flex; 
+ 	justify-content: center;
+ 	width: 49%;
  }
  
  div#sInfomation {
  	border: solid 1px gray;
  	border-radius: 10px;
- 	padding: 40px 30px;
- 	margin-left: 30px;
+ 	padding: 40px 20px;
+ 	width: 100%;
  }
  
  span.detailInfo {
@@ -42,9 +73,31 @@
  
  .readInfo {
  	outline:none;
- 	
+ 	}
+
+.btnChange {
+	font-family: 'Lato', sans-serif;
+	box-sizing: border-box;
+	margin: 5px;
+	color: white;
+	padding: 10px 30px;
+	position: relative;
+	border: 1px solid rgba(0,0,0,0.21);
+	border-bottom: 4px solid rgba(0,0,0,0.21);
+	border-radius: 4px;
+	text-shadow: 0 1px 0 rgba(0,0,0,0.15);
+	text-decoration: none;
+	display: block;
+	width: 60%;
+	margin-left: auto;
+	margin-right: auto;
+	text-align: center;
+	background: linear-gradient(to bottom, rgba(102,152,203,1) 0%, rgba(92,138,184,1) 100%);
  }
  
+ .btn-gradient {
+	margin: 5px;
+}
 </style>
 
 <script type="text/javascript">
@@ -54,8 +107,8 @@
 <div id="stundentInfoContainer">
 	
 	<div id="block1">
-		<div id="sPhoto"><img src="<%=ctxPath%>/resources/images/studentImg/imgtest_jh.png" width="170px;"/></div>
-		<div id="sInfomation" style="display: flex;">
+		<div id="sInfomation" style="display: flex; justify-content: space-between;">
+			<div id="sPhoto"><img src="<%=ctxPath%>/resources/images/studentImg/imgtest_jh.png" width="170px;"/></div>
 			<span class="detailInfo">
 				<br>
 				<label class="miniTitle">성명</label><input class="readInfo" type="text" value="" readonly/><br>
@@ -97,20 +150,25 @@
 	</div>
 	<div id="block2">
 		<div id="changeAdd">
-			<label class="miniTitle">우편번호</label><input type="text" name="postcode"/><button type="button">주소찾기</button><br>
-			<label class="miniTitle">주소</label><input type="text" name="address"/><br>
-			<label class="miniTitle">상세주소</label><input type="text" name="detailaddress"/><br>
-			<label class="miniTitle">연락처</label><input type="text" name="mobile"/><br>
-			<label class="miniTitle">이메일</label><input type="text" name="email"/><br>
+			<div>
+				<div><label class="miniTitle2">우편번호</label><input type="text" class="caInput" name="postcode"/><button type="button" class="btn btn-primary">주소찾기</button></div>
+				<label class="miniTitle2">주소</label><input type="text" class="caInput" name="address"/><br>
+				<label class="miniTitle2">상세주소</label><input type="text" class="caInput" name="detailaddress"/><br>
+				<label class="miniTitle2">연락처</label><input type="text" class="caInput" name="mobile"/><br>
+				<label class="miniTitle2">이메일</label><input type="text" class="caInput" name="email"/><br>
+				<label class="miniTitle2">한자명</label><input type="text" class="caInput" name="chinaname"/><br>
+				<label class="miniTitle2">영문명</label><input type="text" class="caInput" name="engname"/>
+			</div>
 		</div>
-		<div id="changeName">
-			<label class="miniTitle">한자명</label><input type="text" name="email"/><br>
-			<label class="miniTitle">영문명</label><input type="text" name="email"/><br>
-			<span style="border: solid 1px gray; width: 100px; height: 150px;">사진파일을 첨부해주세요</span>
-			<button>사진업로드</button>
-			<button>사진변경신청</button>
-		</div>
+		<div id="changePhoto">
+			<div style="width: 150px; height: 200px; border: solid 1px gray;">등록할사진</div>
+				<div style="display: flex; flex-direction: column; justify-content:flex-end; margin-left: 20px;">
+					<span style="border: solid 1px gray; width: 200px;">사진파일을 첨부해주세요</span>
+					<button type="button" class="btnChange" style="margin-top: 20px;">사진업로드</button>
+					<button type="button" class="btnChange" style="margin-top: 20px;">사진변경신청</button>
+				</div>
+			</div>
 		
-	</div>
+		</div>
 	
 </div>
