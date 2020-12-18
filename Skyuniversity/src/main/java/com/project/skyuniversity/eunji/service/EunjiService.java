@@ -155,6 +155,18 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public List<Map<String, String>> selectLeaveInfo(Map<String, String> hashmap) {
+		List<Map<String, String>> leavelist = dao.selectLeaveInfo(hashmap);
+		return leavelist;
+	}
+
+	@Override
+	public OfficialLeaveVO getLeaveVO(String seq) {
+		OfficialLeaveVO olvo = dao.getLeaveVO(seq);
+		return olvo;
+	}
+
 
 
 }

@@ -51,4 +51,8 @@ public interface InterEunjiBoardDAO {
 
 	int delOfficialLeave(String seq);
 
+	List<Map<String, String>> selectLeaveInfo(Map<String, String> hashmap);
+
+	OfficialLeaveVO getLeaveVO(String seq);
+
 }

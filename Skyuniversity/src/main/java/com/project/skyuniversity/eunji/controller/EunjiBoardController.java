@@ -1,11 +1,14 @@
 package com.project.skyuniversity.eunji.controller;
 
 import java.io.File;
+import java.io.IOException;
+import java.io.PrintWriter;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
 import org.json.JSONArray;
@@ -410,4 +413,105 @@ public class EunjiBoardController {
 		
 		return jsonobj.toString();
 	}
+	
+	@RequestMapping(value = "/officalLeaveInfo.sky", method = {RequestMethod.GET})
+	public ModelAndView officalLeaveInfo(ModelAndView mav, HttpServletRequest request) {
+		
+		mav.setViewName("eunji/class/officalLeaveInfo.tiles2");
+		return mav;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/officalLeaveInfo_End.sky", method = {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+	public String officalLeaveInfo_End(HttpServletRequest request) {
+		String year = request.getParameter("year");
+		String semester = request.getParameter("semester");
+		
+		String month = "";
+		
+		if(semester.equals("1")) {
+			month = "03,04,05,06";
+		}
+		else if(semester.equals("2")) {
+			month = "09,10,11,12";
+		}
+		else {
+			month = "03,04,05,06,09,10,11,12";
+		}
+		
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
+		
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		
+		Map<String, String> hashmap = new HashMap<String, String>();
+		hashmap.put("year", year);
+		hashmap.put("month", month);
+		hashmap.put("memberno", Integer.toString(memberNo));
+
+		List<Map<String, String>> officiallist = service.selectLeaveInfo(hashmap);
+		
+		JSONArray jsonarr = new JSONArray();
+		if(officiallist != null) {
+			for(Map<String, String> map : officiallist) {
+				JSONObject jsonobj = new JSONObject();
+				jsonobj.put("deptname", map.get("deptname"));
+				jsonobj.put("grade", map.get("grade"));
+				jsonobj.put("memberno", map.get("memberno"));
+				jsonobj.put("name", map.get("name"));
+				jsonobj.put("startDate", map.get("startDate"));
+				jsonobj.put("reason", map.get("reason"));
+				jsonobj.put("endDate", map.get("endDate"));
+				jsonobj.put("approve", map.get("approve"));
+				jsonobj.put("filename", map.get("filename"));
+				jsonobj.put("leaveNo", map.get("leaveNo"));
+				
+				jsonarr.put(jsonobj);
+			}
+		}
+			return jsonarr.toString();
+	}
+	
+	   @RequestMapping(value="/download.sky")
+	   public void download(HttpServletRequest request, HttpServletResponse response) {
+	      
+	      String seq = request.getParameter("seq");
+	     // System.out.println(seq);
+	      response.setContentType("text/html; charset=UTF-8");
+	      PrintWriter writer = null;
+	      
+	      try {
+	      OfficialLeaveVO olvo = service.getLeaveVO(seq);
+	      String fileName = olvo.getFileName();
+	      
+	      String orgFilename = olvo.getOrgFileName();
+	      
+	      HttpSession session = request.getSession();
+	      String root = session.getServletContext().getRealPath("/");
+	      
+	      String path = root+"resources"+File.separator+"files";
+	      
+	      // **** file 다운로드 하기 **** // 
+	      boolean flag = false; 
+	      flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+	      if (!flag) {
+	    	  try {
+	               writer = response.getWriter();
+	               
+	               writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가합니다.'); history.back();</script>");
+	            } catch (IOException e) {}
+	      }
+	      }catch (NumberFormatException e) {
+	          try {
+	             writer = response.getWriter();
+	             writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가합니다.'); history.back();</script>");
+	          } catch (IOException e1) {
+	             
+	          }
+	       }
+	   }
+
 }
+
+

@@ -495,9 +495,98 @@ update tbl_subject set curpeoplecnt = 1 where subjectname='경영수학'
 commit
 
 select *
-from tbl_course
+from tbl_official_leave
 --------------------------------------------------
 insert into tbl_official_leave(leaveno, startdate, enddate, starttime, endtime, reason, fk_memberno)
 values(tbl_official_leave_seq.nextval, '2010-10-10', '2010-10-10', '1', '2', '1', '102')
 rollback
 
+commit
+select *
+from tbl_dept
+update tbl_member set grade = '1' where memberno = '102'
+select name, filename, orgfilename, filesize, leaveNo, to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+from tbl_official_leave O
+inner join tbl_member M
+on O.fk_memberno = M.memberno
+where fk_memberno = '102';
+
+select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, startDate, endDate, reason, approve, approveDate, noReason, regdate, regyear, regmonth
+from
+(
+select leaveno, name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, startDate, regyear, regmonth, endDate, reason, approve, approveDate, noReason, regdate
+from
+(
+    select leaveno, name,memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(regdate, 'yyyy') as regyear,to_char(regdate, 'mm') as regmonth, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+    from 
+    (
+    select name, memberno, grade, deptname
+    from tbl_member M
+    inner join tbl_dept D
+    on M.fk_deptseq = D.deptseq
+    )V
+    inner join tbl_official_leave O
+    on V.memberno = O.fk_memberno
+    where fk_memberno = '102'
+    order by regdate desc
+)Z
+where approve in ('승인완료','승인취소') and regyear = '2020' and regmonth in (09,12,11)
+)
+where rno between 1 and 3
+
+select H.leaveno, name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, startDate, endDate, reason, approve, approveDate, noReason
+		from
+		(
+		select W.leaveno, name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, startDate, endDate, reason, approve, approveDate, noReason, regdate, regyear, regmonth
+		from
+		(
+		    select rownum as rno, name, O.leaveno, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(regdate, 'yyyy') as regyear,to_char(regdate, 'mm') as regmonth, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+		    from 
+		    (
+		    select name, memberno, grade, deptname
+		    from tbl_member M
+		    inner join tbl_dept D
+		    on M.fk_deptseq = D.deptseq
+		    )V
+		    inner join tbl_official_leave O
+		    on V.memberno = O.fk_memberno
+		    where fk_memberno = '102'
+		    order by regdate desc
+		)W
+		where approve in ('승인완료','승인취소') and regyear = '2020'
+		)H
+		where rno between 1 and 3
+
+select *
+from tbl_official_leave
+
+update tbl_official_leave set approve='승인완료' where leaveno = '5'
+commit
+
+
+select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, startDate, endDate, reason, approve, approveDate, noReason
+		from
+		(
+		select rownum as rno, name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, startDate, endDate, reason, approve, approveDate, noReason, regdate, regyear, regmonth
+		from
+		(
+		    select name, memberno, grade, deptname,leaveno, filename, orgfilename, filesize, leaveNo, to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(regdate, 'yyyy') as regyear,to_char(regdate, 'mm') as regmonth, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+		    from 
+		    (
+		    select name, memberno, grade, deptname
+		    from tbl_member M
+		    inner join tbl_dept D
+		    on M.fk_deptseq = D.deptseq
+		    )V
+		    inner join tbl_official_leave O
+		    on V.memberno = O.fk_memberno
+		    where fk_memberno = '102'
+		    order by regdate desc
+		)
+		where approve in ('승인완료','승인취소') and regyear = '2020' and regmonth in ('12')
+		)
+		where rno between 1 and 3
+        
+        select startDate, endDate, reason, approve, noReason, approveDate, fileName, orgFileName, fileSize, regdate, fk_memberNo
+        from tbl_official_leave
+        where leaveNo='5'

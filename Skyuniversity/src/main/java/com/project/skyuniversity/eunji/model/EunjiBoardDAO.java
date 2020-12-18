@@ -153,5 +153,17 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public List<Map<String, String>> selectLeaveInfo(Map<String, String> hashmap) {
+		List<Map<String, String>> leavelist = sqlSession.selectList("eunji.selectLeaveInfo", hashmap);
+		return leavelist;
+	}
+
+	@Override
+	public OfficialLeaveVO getLeaveVO(String seq) {
+		OfficialLeaveVO olvo = sqlSession.selectOne("eunji.getLeaveVO", seq);
+		return olvo;
+	}
+
 
 }
