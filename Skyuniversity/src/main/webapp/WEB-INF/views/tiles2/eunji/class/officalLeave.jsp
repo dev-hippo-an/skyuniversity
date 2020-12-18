@@ -14,6 +14,11 @@
 <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
 
 <style type="text/css">
+#divbtn {
+	float: right;
+	margin-right: 20px;
+	margin-bottom: 20px;
+}
 </style>
 
 <script type="text/javascript">
@@ -110,20 +115,17 @@ $(document).ready(function() {
 </script>
 
 <div>
-<div>
-	<span>공결신청</span>
-</div>
 
-<div>
+<div id="divbtn">
+	<span style="font-size: 14pt; font-weight: bold;">공결신청</span>
 	<button id="newbtn">신규</button>
 	<button id="addbtn">신청</button>
 </div>
-
+<br>
 <div>
 	<table class="table table-bordered">
 		<tr>
-			<td>학년도</td>
-			<td>학기</td>
+			<td>신청일자</td>
 			<td>시작일자</td>
 			<td>종료일자</td>
 			<td>사유</td>
@@ -131,24 +133,38 @@ $(document).ready(function() {
 			<td>승인/반려일자</td>
 			<td>반려이유</td>
 		</tr>
-		<%-- <c:forEach> --%>
+		<c:forEach items="${leavelist}" var="vo">
 		<tr>
+			<td>${vo.regdate}</td>
+			<td>${vo.startDate}</td>
+			<td>${vo.endDate}</td>
+			<td>${vo.reason}</td>
+			<c:if test="${vo.approve == null}">
+			<td> </td>
+			</c:if>
+			<c:if test="${vo.approve != null}">
+			<td>${vo.approve}</td>
+			</c:if>
+			<c:if test="${vo.approveDate == null}">
 			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
-			<td></td>
+			</c:if>
+			<c:if test="${vo.approveDate != null}">
+			<td>${vo.approveDate}</td>
+			</c:if>
+			<c:if test="${vo.noReason == null}">
+			<td> </td>
+			</c:if>
+			<c:if test="${vo.noReason != null}">
+			<td>${vo.noReason}</td>
+			</c:if>
 		</tr>
-		<%-- </c:forEach> --%>
+		</c:forEach>
 	</table>
 </div>
 
 <div>
  <form name="addFrm" enctype="multipart/form-data"> 
-	<table>
+	<table class="table table-bordered" style="border:none;">
 		<tr>
 			<td>일자</td>
 			<td>
@@ -157,10 +173,13 @@ $(document).ready(function() {
   			</td>
 		</tr>
 		<tr>
-			<td>전일</td>
-			<td><input type="checkbox" id="alldaychk" name="alldaychk"/></td>
-			<td>시간</td>
-			<td><input type="time" id="starttime" name="startTime"/> ~ <input type="time" id="endtime" name="endTime"/></td>
+			<td>전일 &nbsp;
+			<input type="checkbox" id="alldaychk" name="alldaychk"/>
+			</td>
+			<td>
+			 시간 &nbsp;
+			<input type="time" id="starttime" name="startTime"/> ~ <input type="time" id="endtime" name="endTime"/>
+			</td>
 		</tr>
 		<tr>
 			<td>사유</td>

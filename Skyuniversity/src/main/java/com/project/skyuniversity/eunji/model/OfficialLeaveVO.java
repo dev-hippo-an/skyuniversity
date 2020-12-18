@@ -2,21 +2,22 @@ package com.project.skyuniversity.eunji.model;
 
 import org.springframework.web.multipart.MultipartFile;
 
-public class OfficialLeaveDAO {
+public class OfficialLeaveVO {
 	
-	int leaveNo;
-	String startDate;
-	String endDate;
-	String startTime;
-	String endTime;
-	String reason;
-	String approve;
-	String noReason;
-	String approveDate;
-	String fileName;
-	String orgFileName;
-	int fileSize;
-	int fk_memberNo;
+	private int leaveNo;
+	private String startDate;
+	private String endDate;
+	private String startTime;
+	private String endTime;
+	private String reason;
+	private String approve;
+	private String noReason;
+	private String approveDate;
+	private String fileName;
+	private String orgFileName;
+	private String fileSize;
+	private String regdate;
+	private int fk_memberNo;
 	
 	private MultipartFile attach;
 	
@@ -86,10 +87,10 @@ public class OfficialLeaveDAO {
 	public void setOrgFileName(String orgFileName) {
 		this.orgFileName = orgFileName;
 	}
-	public int getFileSize() {
+	public String getFileSize() {
 		return fileSize;
 	}
-	public void setFileSize(int fileSize) {
+	public void setFileSize(String fileSize) {
 		this.fileSize = fileSize;
 	}
 	public int getFk_memberNo() {
@@ -103,6 +104,12 @@ public class OfficialLeaveDAO {
 	}
 	public void setAttach(MultipartFile attach) {
 		this.attach = attach;
+	}
+	public String getRegdate() {
+		return regdate;
+	}
+	public void setRegdate(String regdate) {
+		this.regdate = regdate;
 	}
 	
 	

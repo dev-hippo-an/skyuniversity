@@ -1,13 +1,10 @@
 package com.project.skyuniversity.eunji.controller;
 
 import java.io.File;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.servlet.ServletRequest;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -15,7 +12,6 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.interceptor.TransactionAspectSupport;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -24,13 +20,15 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.ash.model.CommuMemberVO;
+import com.project.skyuniversity.eunji.common.EjFileManager;
 import com.project.skyuniversity.eunji.model.MemberVO;
-import com.project.skyuniversity.eunji.model.OfficialLeaveDAO;
+import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.service.InterEunjiService;
 
 @Controller
 public class EunjiBoardController {
-
+	@Autowired
+    private EjFileManager fileManager;
 	@Autowired
 	private InterEunjiService service;
 	
@@ -310,20 +308,42 @@ public class EunjiBoardController {
 	
 	@RequestMapping(value = "/officalLeave.sky", method = {RequestMethod.GET})
 	public ModelAndView officalLeave(ModelAndView mav, HttpServletRequest request) {
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
 		
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		int year = cal.get(cal.YEAR) + 1;
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("memberNo", Integer.toString(memberNo));
+		MemberVO mvo = new MemberVO();
+		// 로그인한 유저의 해당하는 학적 정보를 불러온다.
+		mvo = service.selectMemberInfo(paraMap);
+		paraMap.put("cursemester", Integer.toString(mvo.getCurrentSemester()));
+		paraMap.put("year", Integer.toString(year));
+		
+		// 공결 내역 조회
+		
+		List<OfficialLeaveVO> leavelist = service.selectOfficial(paraMap.get("memberNo"));
+		
+		mav.addObject("leavelist",leavelist);
 		mav.setViewName("eunji/class/officalLeave.tiles2");
 		return mav;
 	}
 	
 	@RequestMapping(value = "/officalLeaveEnd.sky", method = {RequestMethod.POST})
-	public ModelAndView officalLeaveEnd(ModelAndView mav, HttpServletRequest request, MultipartHttpServletRequest mrequest, OfficialLeaveDAO ocvo) {
+	public String officalLeaveEnd(HttpServletRequest request, MultipartHttpServletRequest mrequest, OfficialLeaveVO ocvo) {
+
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
 		
-		String startday = ocvo.getStartDate();
-		String endday = ocvo.getEndDate();
-		String reason = ocvo.getReason();
-		String starttime = ocvo.getStartTime();
-		String endtime = ocvo.getEndTime();
-		
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		ocvo.setFk_memberNo(memberNo);
+		System.out.println(ocvo.getEndTime());
+		System.out.println(ocvo.getStartTime());
 		MultipartFile attach = ocvo.getAttach();
 		if(!attach.isEmpty()) {
 			HttpSession session = mrequest.getSession();
@@ -334,11 +354,45 @@ public class EunjiBoardController {
 	        byte[] bytes = null;
 	        long fileSize = 0;
 	        
+	        try {
+	            bytes = attach.getBytes();
+	         
+	            newFilename = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+	            
+	            ocvo.setFileName(newFilename);
+	            // WAS(톰캣)에 저장될 파일명(202012091040316143631028500.png)
+	            
+	            ocvo.setOrgFileName(attach.getOriginalFilename());
+	            // 게시판 페이지에서 첨부된 파일(강아지.png)을 보여줄 때 사용.
+	            // 또한 사용자가 파일을 다운로드 할 때 사용되어지는 파일명으로 사용.
+	            
+	            fileSize = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
+	            ocvo.setFileSize(String.valueOf(fileSize));
+	            
+	         } catch (Exception e) {
+	            e.printStackTrace();
+	         }
 	        
 		}
-		
-		
-		mav.setViewName("eunji/class/officalLeave.tiles2");
-		return mav;
+
+		int n = 0;
+
+		if (attach.isEmpty()) {
+			if(ocvo.getStartTime() == null && ocvo.getEndTime() == null) {
+				n = service.addNonTime(ocvo);
+			}
+			else {
+				n = service.add(ocvo);
+			}
+		} else {
+			if(ocvo.getStartTime() == null && ocvo.getEndTime() == null) {
+				n = service.add_withFileNonTime(ocvo);
+			}
+			else {
+				n = service.add_withFile(ocvo);
+			}	
+		}
+		return "redirect:/officalLeave.sky";
+
 	}
 }

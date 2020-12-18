@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.project.skyuniversity.eunji.model.MemberVO;
+import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 
 public interface InterEunjiService {
 
@@ -40,6 +41,16 @@ public interface InterEunjiService {
 	int dayInfo(Map<String, String> paraMap);
 
 	int uniqueInfo(Map<String, String> paraMap);
+
+	int add(OfficialLeaveVO ocvo);
+
+	int addNonTime(OfficialLeaveVO ocvo);
+
+	int add_withFile(OfficialLeaveVO ocvo);
+
+	int add_withFileNonTime(OfficialLeaveVO ocvo);
+
+	List<OfficialLeaveVO> selectOfficial(String string);
 
 	
 

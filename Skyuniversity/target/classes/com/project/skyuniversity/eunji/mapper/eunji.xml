@@ -166,4 +166,30 @@
 		where fk_memberno = #{memberNo} and subjectno = #{subjectno} and recourse = '0'
 	</select>
 	
+	<insert id="add" parameterType="com.project.skyuniversity.eunji.model.OfficialLeaveVO">
+		insert into tbl_official_leave(leaveno, startdate, enddate, starttime, endtime, reason, fk_memberno)
+		values(tbl_official_leave_seq.nextval, #{startDate}, #{endDate}, #{startTime}, #{endTime}, #{reason}, #{fk_memberNo})
+	</insert>
+	
+	<insert id="addNonTime" parameterType="com.project.skyuniversity.eunji.model.OfficialLeaveVO">
+		insert into tbl_official_leave(leaveno, startdate, enddate, reason, fk_memberno)
+		values(tbl_official_leave_seq.nextval, #{startDate}, #{endDate}, #{reason}, #{fk_memberNo})
+	</insert>
+	
+	<insert id="add_withFile" parameterType="com.project.skyuniversity.eunji.model.OfficialLeaveVO">
+		insert into tbl_official_leave(leaveno, startdate, enddate, starttime, endtime, reason, fk_memberno, filename, orgfilename, filesize)
+		values(tbl_official_leave_seq.nextval, #{startDate}, #{endDate}, #{startTime}, #{endTime}, #{reason}, #{fk_memberNo}, #{fileName}, #{orgFileName}, #{fileSize})
+	</insert>
+	
+	<insert id="add_withFileNonTime" parameterType="com.project.skyuniversity.eunji.model.OfficialLeaveVO">
+		insert into tbl_official_leave(leaveno, startdate, enddate, reason, fk_memberno, filename, orgfilename, filesize)
+		values(tbl_official_leave_seq.nextval, #{startDate}, #{endDate}, #{reason}, #{fk_memberNo}, #{fileName}, #{orgFileName}, #{fileSize})
+	</insert>
+	
+	<select id="selectOfficial" resultType="com.project.skyuniversity.eunji.model.OfficialLeaveVO" parameterType="String">
+		select to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+		from tbl_official_leave
+		<![CDATA[where add_months(sysdate, -3) <= regdate]]> and fk_memberno = #{string}
+		order by  regdate desc
+	</select>
 </mapper>

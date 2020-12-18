@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
+import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 
 @Service
 public class EunjiService implements InterEunjiService {
@@ -116,6 +117,36 @@ public class EunjiService implements InterEunjiService {
 	public int uniqueInfo(Map<String, String> paraMap) {
 		int uniqueinfo = dao.uniqueInfo(paraMap);
 		return uniqueinfo;
+	}
+
+	@Override
+	public int add(OfficialLeaveVO ocvo) {
+		int n = dao.add(ocvo);
+		return n;
+	}
+
+	@Override
+	public int addNonTime(OfficialLeaveVO ocvo) {
+		int n = dao.addNonTime(ocvo);
+		return n;
+	}
+
+	@Override
+	public int add_withFile(OfficialLeaveVO ocvo) {
+		int n = dao.add_withFile(ocvo);
+		return n;
+	}
+
+	@Override
+	public int add_withFileNonTime(OfficialLeaveVO ocvo) {
+		int n = dao.add_withFileNonTime(ocvo);
+		return n;
+	}
+
+	@Override
+	public List<OfficialLeaveVO> selectOfficial(String string) {
+		List<OfficialLeaveVO> leavelist = dao.selectOfficial(string);
+		return leavelist;
 	}
 
 

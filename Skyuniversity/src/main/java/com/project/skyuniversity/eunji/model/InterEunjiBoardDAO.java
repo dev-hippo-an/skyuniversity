@@ -39,4 +39,14 @@ public interface InterEunjiBoardDAO {
 
 	int uniqueInfo(Map<String, String> paraMap);
 
+	int add(OfficialLeaveVO ocvo);
+
+	int addNonTime(OfficialLeaveVO ocvo);
+
+	int add_withFile(OfficialLeaveVO ocvo);
+
+	int add_withFileNonTime(OfficialLeaveVO ocvo);
+
+	List<OfficialLeaveVO> selectOfficial(String string);
+
 }

@@ -496,3 +496,8 @@ commit
 
 select *
 from tbl_course
+--------------------------------------------------
+insert into tbl_official_leave(leaveno, startdate, enddate, starttime, endtime, reason, fk_memberno)
+values(tbl_official_leave_seq.nextval, '2010-10-10', '2010-10-10', '1', '2', '1', '102')
+rollback
+

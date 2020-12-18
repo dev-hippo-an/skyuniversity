@@ -117,5 +117,35 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return uniqueinfo;
 	}
 
+	@Override
+	public int add(OfficialLeaveVO ocvo) {
+		int n = sqlSession.insert("eunji.add", ocvo);
+		return n;
+	}
+
+	@Override
+	public int addNonTime(OfficialLeaveVO ocvo) {
+		int n = sqlSession.insert("eunji.addNonTime", ocvo);
+		return n;
+	}
+
+	@Override
+	public int add_withFile(OfficialLeaveVO ocvo) {
+		int n = sqlSession.insert("eunji.add_withFile", ocvo);
+		return n;
+	}
+
+	@Override
+	public int add_withFileNonTime(OfficialLeaveVO ocvo) {
+		int n = sqlSession.insert("eunji.add_withFileNonTime", ocvo);
+		return n;
+	}
+
+	@Override
+	public List<OfficialLeaveVO> selectOfficial(String string) {
+		List<OfficialLeaveVO> leavelist = sqlSession.selectList("eunji.selectOfficial", string);
+		return leavelist;
+	}
+
 
 }
