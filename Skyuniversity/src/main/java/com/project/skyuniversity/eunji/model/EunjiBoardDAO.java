@@ -147,5 +147,11 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return leavelist;
 	}
 
+	@Override
+	public int delOfficialLeave(String seq) {
+		int n = sqlSession.delete("eunji.delOfficialLeave", seq);
+		return n;
+	}
+
 
 }

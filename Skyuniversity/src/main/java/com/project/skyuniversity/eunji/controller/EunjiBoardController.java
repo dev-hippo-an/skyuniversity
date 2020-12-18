@@ -372,7 +372,6 @@ public class EunjiBoardController {
 	         } catch (Exception e) {
 	            e.printStackTrace();
 	         }
-	        
 		}
 
 		int n = 0;
@@ -393,6 +392,22 @@ public class EunjiBoardController {
 			}	
 		}
 		return "redirect:/officalLeave.sky";
-
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/delOfficialLeave.sky", method = {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+	public String delOfficialLeave(HttpServletRequest request) {
+		String seq = request.getParameter("seq"); 
+		
+		boolean result = false;
+		int n = service.delOfficialLeave(seq);
+		if(n == 1) {
+			result = true;
+		}
+		
+		JSONObject jsonobj = new JSONObject();
+		jsonobj.put("result", result);
+		
+		return jsonobj.toString();
 	}
 }

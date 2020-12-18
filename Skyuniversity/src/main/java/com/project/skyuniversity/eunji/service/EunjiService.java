@@ -149,6 +149,12 @@ public class EunjiService implements InterEunjiService {
 		return leavelist;
 	}
 
+	@Override
+	public int delOfficialLeave(String seq) {
+		int n = dao.delOfficialLeave(seq);
+		return n;
+	}
+
 
 
 }

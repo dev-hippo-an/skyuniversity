@@ -15,9 +15,13 @@
 
 <style type="text/css">
 #divbtn {
-	float: right;
 	margin-right: 20px;
-	margin-bottom: 20px;
+}
+.centr > td {
+	text-align: center;
+}
+#info {
+	color: #737373;
 }
 </style>
 
@@ -63,6 +67,7 @@ $(document).ready(function() {
 		if($("#datepicker1").val().trim()=="" || $("#datepicker1").val().trim()==""){
 			alert("일자를 입력해주세요.");
 			bool = false;
+			return;
 		}
 		
 		// 시간 유효성 검사
@@ -70,6 +75,7 @@ $(document).ready(function() {
 			if($("#starttime").val().trim()=="" || $("#endtime").val().trim()==""){
 				alert("시간을 입력해주세요.");
 				bool = false;
+				return;
 			}
 		}
 		
@@ -78,12 +84,14 @@ $(document).ready(function() {
 		if(str == "전체"){
 			alert("공결 사유를 선택해주세요.");
 			bool = false;
+			return;
 		}
 		else if(str == "본인 및 형제자매 결혼[허용기간:1일]"){
 			if(min >= 1){
 				alert("선택하신 일자는 해당 사유의 허용기간을 초과했습니다. 다시 선택해주세요.");
 				bool = false;
 				$("#datepicker1").focus();
+				return;
 			}
 		}
 		else if(str == "형제, 부모, 조부모, 외조부모의 사망[허용기간:5일]"){
@@ -91,6 +99,7 @@ $(document).ready(function() {
 				alert("선택하신 일자는 해당 사유의 허용기간을 초과했습니다. 다시 선택해주세요.");
 				bool = false;
 				$("#datepicker1").focus();
+				return;
 			}
 		}
 		else if(str == "수술, 중병으로 인한 입원[허용기간:2주]" || str == "전염성 질병으로 인한 격리[허용기간:2주]"){
@@ -98,6 +107,7 @@ $(document).ready(function() {
 				alert("선택하신 일자는 해당 사유의 허용기간을 초과했습니다. 다시 선택해주세요.");
 				bool = false;
 				$("#datepicker1").focus();
+				return;
 			}
 		}
 		
@@ -112,19 +122,38 @@ $(document).ready(function() {
 	});
 });	
 
+function funcdel(index){
+	var result = confirm("공결 신청을 취소하시겠습니까?");
+	var seq = $("#seq"+index).val();
+	if(result){
+		$.ajax({
+			url: "<%= request.getContextPath() %>/delOfficialLeave.sky",
+			data: {"seq":seq},
+			type: "GET",
+			dataType: "json",
+			success: function(json) {
+				if(json.result){
+					alert("삭제가 완료되었습니다.");
+					location.reload();
+				}
+			},error: function(request, status, error){
+	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		}); 
+	}
+}
 </script>
 
-<div>
+<div style="padding-left: 10px; padding-right: 10px;">
 
 <div id="divbtn">
-	<span style="font-size: 14pt; font-weight: bold;">공결신청</span>
-	<button id="newbtn">신규</button>
-	<button id="addbtn">신청</button>
+	<span style="font-size: 12pt; font-weight: bold;float: left;">공결신청 내역</span>
+	
 </div>
 <br>
-<div>
-	<table class="table table-bordered">
-		<tr>
+<div style="clear: both; padding-top: 20px;">
+	<table class="table table-bordered" id="scroltbl">
+		<tr class="centr">
 			<td>신청일자</td>
 			<td>시작일자</td>
 			<td>종료일자</td>
@@ -132,19 +161,15 @@ $(document).ready(function() {
 			<td>승인구분</td>
 			<td>승인/반려일자</td>
 			<td>반려이유</td>
+			<td>취소</td>
 		</tr>
-		<c:forEach items="${leavelist}" var="vo">
-		<tr>
+		<c:forEach items="${leavelist}" var="vo" varStatus="status">
+		<tr class="centr">
 			<td>${vo.regdate}</td>
 			<td>${vo.startDate}</td>
 			<td>${vo.endDate}</td>
 			<td>${vo.reason}</td>
-			<c:if test="${vo.approve == null}">
-			<td> </td>
-			</c:if>
-			<c:if test="${vo.approve != null}">
 			<td>${vo.approve}</td>
-			</c:if>
 			<c:if test="${vo.approveDate == null}">
 			<td></td>
 			</c:if>
@@ -157,23 +182,36 @@ $(document).ready(function() {
 			<c:if test="${vo.noReason != null}">
 			<td>${vo.noReason}</td>
 			</c:if>
+			<c:if test="${vo.approve == '승인전'}">
+			<td>
+				<button id="delbtn${status.index}" onclick="funcdel(${status.index})">취소</button>
+				<input value="${vo.leaveNo}" type="text" id="seq${status.index}" hidden="true"/>
+			</td>
+			</c:if>
+			<c:if test="${vo.approve == '승인완료' || vo.approve == '승인불가'}">
+			<td>
+			</td>
+			</c:if>
 		</tr>
 		</c:forEach>
 	</table>
 </div>
-
-<div>
+<div id="divbtn">
+<span style="font-size: 12pt; font-weight: bold;">공결신청</span>
+<button id="addbtn" style="float: right;">신청</button>
+</div>
+<div style="padding-top: 20px;">
  <form name="addFrm" enctype="multipart/form-data"> 
 	<table class="table table-bordered" style="border:none;">
 		<tr>
-			<td>일자</td>
+			<td style="text-align: center;">일자</td>
 			<td>
 			<input type="text" id="datepicker1" name="startDate"/> ~
   			<input type="text" id="datepicker2" name="endDate"/>
   			</td>
 		</tr>
 		<tr>
-			<td>전일 &nbsp;
+			<td style="text-align: center;">전일 &nbsp;
 			<input type="checkbox" id="alldaychk" name="alldaychk"/>
 			</td>
 			<td>
@@ -182,7 +220,7 @@ $(document).ready(function() {
 			</td>
 		</tr>
 		<tr>
-			<td>사유</td>
+			<td style="text-align: center;" >사유</td>
 			<td>
 				<select name="reason" id="reason">
 					<option>전체</option>
@@ -197,10 +235,23 @@ $(document).ready(function() {
 			</td>
 		</tr>
 		<tr>
-			<td>파일첨부</td>
+			<td style="text-align: center;" >파일첨부</td>
 			<td><input type="file" name="attach"/></td>
 		</tr>
 	</table>
 </form>
+</div>
+<br>
+<div id="divbtn">
+<span style="font-size: 12pt; font-weight: bold; color: #ff4000">공결신청 유의사항</span>
+</div>
+<div style="padding-top: 20px;">
+<ul id="info" >
+	<li>결석일 전후 7일 이내에만 가능하며, 반드시 결석일 이후 7일 이내에 신청을 해야 공결을 인정받을 수 있습니다.</li>
+	<li>공결 사유 선택 후 그에 해당하는 증빙서류를 업로드하여 신청해주세요.</li>
+	<li>공결 승인 여부는 최소 1일 ~ 최대 3일 소요됩니다. </li>
+	<li>3개월 이상의 공결 조회는 '공결내역조회'에서 확인 가능합니다.</li>
+	<li>승인 구분 상태가 '승인전'일 때에는 취소가 가능합니다.</li>
+</ul>
 </div>
 </div>

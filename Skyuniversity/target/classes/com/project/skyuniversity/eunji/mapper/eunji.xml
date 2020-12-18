@@ -187,9 +187,13 @@
 	</insert>
 	
 	<select id="selectOfficial" resultType="com.project.skyuniversity.eunji.model.OfficialLeaveVO" parameterType="String">
-		select to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+		select leaveNo, to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
 		from tbl_official_leave
 		<![CDATA[where add_months(sysdate, -3) <= regdate]]> and fk_memberno = #{string}
 		order by  regdate desc
 	</select>
+	
+	<delete id="delOfficialLeave" parameterType="String">
+		delete from tbl_official_leave where leaveno=#{seq}
+	</delete>
 </mapper>

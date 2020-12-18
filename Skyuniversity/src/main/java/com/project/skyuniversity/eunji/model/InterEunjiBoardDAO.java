@@ -49,4 +49,6 @@ public interface InterEunjiBoardDAO {
 
 	List<OfficialLeaveVO> selectOfficial(String string);
 
+	int delOfficialLeave(String seq);
+
 }
