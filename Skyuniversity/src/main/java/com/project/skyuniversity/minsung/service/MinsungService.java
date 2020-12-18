@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.common.AES256;
 import com.project.skyuniversity.minsung.model.InterMinsungBoardDAO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
@@ -74,6 +75,33 @@ public class MinsungService implements InterMinsungService{
 	public int add(MinsungBoardVO boardvo) {
 		int n = dao.add(boardvo);
 		return n;
+	}
+
+	// 공지리스트 컴컴
+	   @Override
+	   public List<NoticeVO> getNoticeList(Map<String, String> paraMap) {
+	      List<NoticeVO> noticeList = dao.getNoticeList(paraMap);
+	      return noticeList;
+	   }
+
+	@Override
+	public List<MinsungBoardVO> recentBoardList() {
+		
+		List<MinsungBoardVO> recentBoardList = dao.recentBoardList();
+		return recentBoardList;
+		
+	}
+
+	@Override
+	public List<MinsungBoardVO> bestBoardList() {
+		List<MinsungBoardVO> bestBoardList = dao.bestBoardList();
+		return bestBoardList;
+	}
+
+	@Override
+	public List<MinsungBoardVO> popularBoardList() {
+		List<MinsungBoardVO> popularBoardList = dao.popularBoardList();
+		return popularBoardList;
 	}
 	
 }

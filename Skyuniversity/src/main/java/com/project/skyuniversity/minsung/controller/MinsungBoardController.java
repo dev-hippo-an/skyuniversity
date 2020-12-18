@@ -18,6 +18,8 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.project.skyuniversity.ash.model.CommuMemberVO;
+import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.minsung.common.FileManager;
 import com.project.skyuniversity.minsung.common.MyUtil;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
@@ -35,7 +37,7 @@ public class MinsungBoardController {
 	private FileManager fileManager;
 	
 	@RequestMapping(value = "minsungBoardDetail.sky")
-	public ModelAndView minsungBoardDetail(ModelAndView mav) {
+	public ModelAndView requiredLoginMS_minsungBoardDetail(ModelAndView mav) {
 
 		mav.setViewName("minsung/minsungBoardDetails.tiles1");
 
@@ -44,7 +46,10 @@ public class MinsungBoardController {
 
 	@RequestMapping(value = "minsungBoardList.sky")
 	public ModelAndView NoticeBoardList(HttpServletRequest request, ModelAndView mav) {
-
+				
+		HttpSession session = request.getSession();
+		
+		
 		String boardKindNo = "1";
 		String kindBoard = service.kindBoard(boardKindNo);
 		List<MinsungCategoryVO> categoryList = service.categoryList(boardKindNo);
@@ -66,6 +71,7 @@ public class MinsungBoardController {
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("searchType", searchType);
 		paraMap.put("searchWord", searchWord);
+		paraMap.put("boardKindNo", boardKindNo);
 
 		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
 		// 총 게시물 건수(totalCount)는 검색조건이 있을때와 없을때로 나뉘어진다.
@@ -164,15 +170,18 @@ public class MinsungBoardController {
 		}
 
 		pageBar += "</ul>";
-
-		// 현재 페이지 주소를 뷰단으로 넘겨준다.
+		
+		List<NoticeVO> noticeList = service.getNoticeList(paraMap);
 		String gobackURL = MyUtil.getCurrentURL(request);
+	
+		
 		mav.addObject("gobackURL", gobackURL);
-
 		mav.addObject("boardList", boardList);
 		mav.addObject("pageBar", pageBar);
 		mav.addObject("categoryList", categoryList);
 		mav.addObject("kindBoard", kindBoard);
+		mav.addObject("paraMap", paraMap);
+		mav.addObject("noticeList", noticeList);
 
 		mav.setViewName("minsung/minsungBoardList.tiles1");
 
@@ -183,7 +192,27 @@ public class MinsungBoardController {
 	public ModelAndView view(HttpServletRequest request, ModelAndView mav) {
 
 		String boardNo = request.getParameter("boardNo");
+		String boardKindNo = request.getParameter("boardKindNo");
 		MinsungBoardVO boardvo = service.getOneBoard(boardNo);
+		boardvo.setFk_boardKindNo(boardKindNo);
+		boardvo.setBoardNo(boardNo);
+		
+    	try {
+			Integer.parseInt(boardKindNo);
+			Integer.parseInt(boardNo);
+		} catch (Exception e) {
+			mav.addObject("message", "잘못된 형식입니다.");
+    		mav.addObject("loc", "javascript:history.back();");
+
+			mav.setViewName("msg");
+			return mav;
+		}
+    	
+    	int loginNo = 0;
+    	HttpSession session = request.getSession();
+    	if (session.getAttribute("loginuser") != null) {
+    		loginNo = ( (CommuMemberVO)session.getAttribute("loginuser") ).getFk_memberNo();
+    	}
 
 		String gobackURL = request.getParameter("gobackURL");
 
@@ -198,10 +227,8 @@ public class MinsungBoardController {
 		try {
 			Integer.parseInt(boardNo);
 
-			HttpSession session = request.getSession();
+	
 			// MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
-
-			String login_userid = null;
 
 			/*
 			 * if (loginuser != null) { login_userid = loginuser.getUserid(); //
@@ -237,6 +264,14 @@ public class MinsungBoardController {
 		} catch (NumberFormatException e) {
 
 		}
+		
+		List<MinsungBoardVO> recentBoardList = service.recentBoardList();
+		List<MinsungBoardVO> bestBoardList = service.bestBoardList();
+		List<MinsungBoardVO> popularBoardList = service.popularBoardList();
+		
+		mav.addObject("recentBoardList", recentBoardList);
+		mav.addObject("bestBoardList", bestBoardList);
+		mav.addObject("popularBoardList", popularBoardList);
 
 		mav.addObject("boardvo", boardvo);
 		mav.setViewName("minsung/minsungBoardDetails.tiles1");
@@ -426,7 +461,7 @@ public class MinsungBoardController {
 		String fk_memberNo = "101";
 		String fk_categoryno = request.getParameter("category");
 		boardvo.setFk_boardKindNo(fk_boardKindNo);
-		boardvo.setFk_categoryno("1");
+		boardvo.setFk_categoryNo("1");
 		boardvo.setFk_memberNo(fk_memberNo);
 		
 		///////////////////////////////////////////////////

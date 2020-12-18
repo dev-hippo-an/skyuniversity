@@ -8,6 +8,8 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.project.skyuniversity.ash.model.NoticeVO;
+
 
 @Repository
 public class MinsungBoardDAO implements InterMinsungBoardDAO {
@@ -71,6 +73,32 @@ public class MinsungBoardDAO implements InterMinsungBoardDAO {
 	public int add(MinsungBoardVO boardvo) {
 		int n = sqlsession.insert("minsung.add", boardvo);
 		return n;
+	}
+
+	// 공지리스트 컴컴
+	   @Override
+	   public List<NoticeVO> getNoticeList(Map<String, String> paraMap) {
+	      List<NoticeVO> noticeList = sqlsession.selectList("ansehyeong.getNoticeList", paraMap);
+	      return noticeList;
+	   }
+
+	@Override
+	public List<MinsungBoardVO> recentBoardList() {
+		List<MinsungBoardVO> recentBoardList = sqlsession.selectList("minsung.recentBoardList");
+		return recentBoardList;
+	}
+
+	@Override
+	public List<MinsungBoardVO> bestBoardList() {
+		
+		List<MinsungBoardVO> bestBoardList = sqlsession.selectList("minsung.bestBoardList"); 
+		return bestBoardList;
+	}
+
+	@Override
+	public List<MinsungBoardVO> popularBoardList() {
+		List<MinsungBoardVO> popularBoardList = sqlsession.selectList("minsung.popularBoardList"); 
+		return popularBoardList;
 	}
 
 }

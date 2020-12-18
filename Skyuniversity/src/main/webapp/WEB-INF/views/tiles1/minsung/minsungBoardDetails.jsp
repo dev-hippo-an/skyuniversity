@@ -129,13 +129,36 @@
 			
 </style>
 
-<script type="text/javascript"></script>
+<script type="text/javascript">
+
+	function goView2(fk_boardKindNo, boardNo){
+		
+		console.log(boardNo);
+		console.log(fk_boardKindNo);
+		
+		var frm = document.goViewFrm2;
+		frm.boardNo.value = boardNo;
+		frm.boardKindNo.value = fk_boardKindNo;
+		frm.method = "GET";
+		
+		if (fk_boardKindNo <= 6 || (18 <= fk_boardKindNo && fk_boardKindNo <= 22)) {
+			frm.action = "<%=request.getContextPath()%>/minsungBoardView.sky";
+		} else if (23 <= fk_boardKindNo){
+			frm.action = "<%=request.getContextPath()%>/marketBoardDetail.sky";
+		} else {
+			frm.action = "<%=request.getContextPath()%>/boardDetail.sky";
+		}
+		
+		frm.submit();
+		
+	}
+</script>
 
 <body>
 	<div class="content1">
 		<div class="contents" class="form-group">
-			<h1>${ boardvo.subject } <span>[${boardvo.categoryName }]</span></h1>
-			<h4><span>유저 : ${boardvo.nickname }</span>ㅣ<span>조회수 : ${boardvo.readCount }</span>ㅣ<span>작성시간 : ${boardvo.regDate } </span>ㅣ<span>수정시간 :  ${boardvo.regDate } </span></h4>
+			<h1>${ boardvo.subject } <span>[${boardvo.fk_categoryName }]</span></h1>
+			<h4><span>유저 : ${boardvo.fk_nickname }</span>ㅣ<span>조회수 : ${boardvo.readCount }</span>ㅣ<span>작성시간 : ${boardvo.regDate } </span>ㅣ<span>수정시간 :  ${boardvo.regDate } </span></h4>
 			<form action="" id="replycontent" >
 				<textarea id="main" readonly> ${boardvo.content }</textarea>
 			</form>
@@ -155,77 +178,49 @@
 	
 	<div id="sideBar">
 	
-		게시판 1
+		최근 게시판
 		<table>
-			<tr>
-				<td>신규글</td>
-				<td>인기글</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
+			<c:forEach var="recentBoard" items="${recentBoardList}">
+				<tr>
+					<td colspan="2">${recentBoard.boardName}</td>
+					<td colspan="2"><a class="subject" style="cursor:pointer" 
+					onclick="goView2('${recentBoard.fk_boardKindNo}', '${recentBoard.boardNo}')">
+					${recentBoard.subject}</a></td>
+				</tr>
+			</c:forEach>
 		</table>
 	</div>
-<div id="sideBar">
-		게시판 1
+	
+ 	<div id="sideBar">
+	
+		주간 베스트 게시물
 		<table>
-			<tr>
-				<td>신규글</td>
-				<td>인기글</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
+			<c:forEach var="bestBoard" items="${bestBoardList}">
+				<tr>
+					<td colspan="2">${bestBoard.boardName}</td>
+					<td colspan="2"><a class="subject" style="cursor:pointer" 
+					onclick="goView2('${bestBoard.fk_boardKindNo}', '${bestBoard.boardNo}')">
+					${bestBoard.subject}</a></td>
+				</tr>
+			</c:forEach>
 		</table>
 	</div>
-<div id="sideBar">
-		게시판 1
+	
+	<div id="sideBar">
+	
+		인기 게시물
 		<table>
-			<tr>
-				<td>신규글</td>
-				<td>인기글</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
-			<tr>
-				<td colspan="2">제목1</td>
-			</tr>
+			<c:forEach var="popularBoard" items="${popularBoardList}">
+				<tr>
+					<td colspan="2">${popularBoard.boardName}</td>
+					<td colspan="2"><a class="subject" style="cursor:pointer" 
+					onclick="goView2('${popularBoard.fk_boardKindNo}', '${popularBoard.boardNo}')">
+					${popularBoard.subject}</a></td>
+				</tr>
+			</c:forEach>
 		</table>
-	</div>
+	</div> 
+
 	
 	<div class="content2">
 		
@@ -274,6 +269,11 @@
 	<div id="include">
 		<jsp:include page="minsungBoardList.jsp" />
 	</div>
+	
+	<form name="goViewFrm2">
+		<input type="hidden" id="boardNo" name="boardNo" value="" /> 
+		<input type="hidden" id="boardKindNo" name="boardKindNo" value="" /> 
+	</form>
 
 
 </body>

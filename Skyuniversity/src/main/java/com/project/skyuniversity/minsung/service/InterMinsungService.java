@@ -3,6 +3,7 @@ package com.project.skyuniversity.minsung.service;
 import java.util.List;
 import java.util.Map;
 
+import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.minsung.model.MinsungCategoryVO;
 
@@ -25,5 +26,13 @@ public interface InterMinsungService {
 	int del(MinsungBoardVO boardvo);		// 글 삭제
 
 	int add(MinsungBoardVO boardvo);		// 글 쓰기
+
+	List<NoticeVO> getNoticeList(Map<String, String> paraMap);
+
+	List<MinsungBoardVO> recentBoardList();
+
+	List<MinsungBoardVO> bestBoardList();
+
+	List<MinsungBoardVO> popularBoardList();
 
 }
