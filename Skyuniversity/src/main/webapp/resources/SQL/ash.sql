@@ -657,3 +657,100 @@ commit;
 
 
 select * from tbl_boardkind;
+
+
+select fk_boardKindNo, subject, readCount, boardName, boardNo
+      from
+      (
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_notice b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_council b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_major b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_club b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_graduate b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_critic b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_study b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_cert b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_emp b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_joboffer b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_lost b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_informal b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_polite b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_humor b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_issue b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_mbti b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_food b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_love b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_hobby b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_health b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+      ) V
+      
+      
+      select * from tbl_category;
+      select boardNo, fk_boardkindno, subject from tbl_board_notice;
+      select * from tbl_board_council;
+      select * from TBL_BOARD_major;
+      select * from TBL_BOARD_club;
+      select * from TBL_BOARD_graduate;
+      select * from tbl_board_critic;
+      select * from TBL_BOARD_study;
+      select * from TBL_BOARD_cert;
+      select * from TBL_BOARD_emp;
+      select * from tbl_board_joboffer;
+      select * from TBL_BOARD_lost;
+      select * from tbl_board_informal;
+      select * from tbl_board_polite;
+      select * from tbl_board_humor;
+      select * from tbl_board_issue;
+      select * from tbl_board_mbti;
+      select * from tbl_board_food;
+      select * from tbl_board_love;
+      select * from tbl_board_hobby;
+      select * from tbl_board_health;
+      select * from tbl_board_diet;
+      select * from tbl_board_etcmarket;
+      select * from tbl_board_housemarket;
+      select * from tbl_board_bookmarket;
+      
+      
