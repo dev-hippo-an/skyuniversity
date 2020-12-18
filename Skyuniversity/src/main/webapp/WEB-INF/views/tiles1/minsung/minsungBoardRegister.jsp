@@ -136,7 +136,7 @@
     
 <div class="container"  align="left" class="form-group">
 	<form class="form-inline" name="registerForm" enctype="multipart/form-data">		
-		<input type="hidden" name="fk_boardKindNo" value="${infoMap.boardKindNo}" />
+		<input type="hidden" name="fk_boardKindNo" value="${paraMap.boardKindNo}" />
 		<ul>
 			<li><h2>${infoMap.boardName}</h2></li>
 			<li><h3>작성자&nbsp;:&nbsp;${sessionScope.loginuser.nickname}</h3></li>

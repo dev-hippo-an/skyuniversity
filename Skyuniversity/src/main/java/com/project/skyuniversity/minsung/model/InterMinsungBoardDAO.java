@@ -3,6 +3,8 @@ package com.project.skyuniversity.minsung.model;
 import java.util.List;
 import java.util.Map;
 
+import com.project.skyuniversity.ash.model.NoticeVO;
+
 public interface InterMinsungBoardDAO {
 
 	List<MinsungBoardVO> boardListSelected();		// 선택된 게시물 리스트
@@ -22,5 +24,13 @@ public interface InterMinsungBoardDAO {
 	int del(MinsungBoardVO boardvo);		// 글 삭제하기
 
 	int add(MinsungBoardVO boardvo);		// 글 쓰기
+
+	List<NoticeVO> getNoticeList(Map<String, String> paraMap);
+
+	List<MinsungBoardVO> recentBoardList();
+
+	List<MinsungBoardVO> bestBoardList();
+
+	List<MinsungBoardVO> popularBoardList();
 
 }
