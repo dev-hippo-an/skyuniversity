@@ -1,7 +1,13 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c"%>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
+<%@ taglib prefix="fmt" uri="http://java.sun.com/jsp/jstl/fmt" %>
 
+<%
+   String ctxPath = request.getContextPath();
+%>
 <style type="text/css">
 table {
 	border-collapse: collapse;
@@ -73,6 +79,19 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 	color: navy;
 	cursor: pointer;
 }
+
+tr.notification {
+   
+   background-color: rgba(8,65,173,0.2);
+}
+
+tr.notification td:nth-child(3):hover{
+   
+   font-weight: normal;
+}
+tr.notification td {
+   font-weight: bold;
+}
 </style>
 
 
@@ -89,12 +108,12 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 		   $(this).addClass("active");
 		});
      
-		$("span.subject").bind("mouseover", function(event){
+		$("a.subject").bind("mouseover", function(event){
 			var $target = $(event.target);
 			$target.addClass("subjectStyle");
 		});
 		
-		$("span.subject").bind("mouseout", function(event){
+		$("a.subject").bind("mouseout", function(event){
 			var $target = $(event.target);
 			$target.removeClass("subjectStyle");
 		});
@@ -105,6 +124,8 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 				goSearch();
 			}
 		});
+		
+
       
    });// end of $(document).ready(function() {});-------------------------------------
 
@@ -130,6 +151,22 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 		frm.action = "<%=request.getContextPath()%>/minsungAdd.sky";
 		frm.submit();
 	}
+	
+	function allBoardAdminAdd() {
+	      var frm = document.allBoardAdminAddFrm;
+	      frm.action="<%=request.getContextPath()%>/allBoardAdminAdd.sky";
+	      frm.method="POST";
+	      frm.submit();   
+	   }
+	
+	function goNotice(noticeNo) {
+	      var frm = document.notificationFrm;
+	      frm.noticeNo.value = noticeNo;
+	      frm.action = "<%= request.getContextPath()%>/notificationDetail.sky";
+	      frm.method="GET";
+	      frm.submit();
+	      
+	   } 
 </script>
 </head>
 
@@ -149,8 +186,8 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 					<select name="searchType" id="searchType" style="height: 25px;">
 						<option value="subject">글제목</option>
 						<option value="nickname">작성자</option>
-					</select> <input type="text" name="searchWord" id="searchWord" size="40"
-						style="width: 120px;" autocomplete="off" />
+					</select> 
+					<input type="text" name="searchWord" id="searchWord" size="40" style="width: 120px;" autocomplete="off" />
 					<button type="button" onclick="goSearch()">검색</button>
 				</form>
 			</li>
@@ -170,16 +207,53 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 				</tr>
 			</thead>
 			<tbody>
+
+			<c:if test="${not empty noticeList}">
+				<c:forEach items="${noticeList}" var="notice" varStatus="status">
+                  
+                     <tr class="notification">
+                         <td>${notice.noticeNo}</td>
+                         <td>${notice.categoryName}</td>
+                  
+                          <c:choose>
+                          <c:when test="${fn:length(notice.subject) > 20}">
+                               <td onclick="goNotice('${notice.noticeNo}');">${fn:substring(notice.subject, 0, 20)}...&nbsp;
+                               
+                               <c:if test="${fn:contains(notice.content, '<img src=')}">
+                               <img src="<%=request.getContextPath()%>/resources/images/sehyeong/disk.gif" >
+                            </c:if>
+                               </td>
+                          </c:when>
+                          <c:otherwise>
+                               <td onclick="goNotice('${notice.noticeNo}');">${notice.subject}&nbsp;
+                               <c:if test="${fn:contains(notice.content, '<img src=')}">
+                               <img src="<%=request.getContextPath()%>/resources/images/sehyeong/disk.gif" >
+                            </c:if>
+                               </td>
+                          
+                          </c:otherwise>
+                         
+                     </c:choose>
+                          
+                         <td><img src="<%=request.getContextPath()%>/resources/images/levelimg/${notice.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${notice.nickname}</td>
+                         <td>${notice.regDate}</td>
+                         <td>/</td>
+                         <td>${notice.readCount}</td>
+                     </tr>
+                  
+                  </c:forEach>               
+               </c:if>
+			
 				<c:forEach var="boardvo" items="${boardList}">
-					<tr>
-						<td>${boardvo.boardNo}</td>
-						<td>${boardvo.categoryName}</td>
-						<td><span class="subject"
-							onclick="goView('${boardvo.boardNo}')">${boardvo.subject}</span></td>
-						<td>${boardvo.nickname}</td>
+					<tr class="board">
+						<td class="boardNo">${boardvo.boardNo}</td>
+						<td>${boardvo.fk_categoryName}</td>
+						<td><a class="subject" style="cursor:pointer" onclick="goView('${boardvo.boardNo}')">${boardvo.subject}</a></td>
+						<td>${boardvo.fk_nickname}</td>
 						<td>${boardvo.regDate}</td>
 						<td>추천</td>
 						<td>${boardvo.readCount}</td>
+						
 					</tr>
 				</c:forEach>
 			</tbody>
@@ -187,16 +261,36 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 	</div>
 	
 	<div align="right"><button id="register" onclick="<%=request.getContextPath()%>/minsungAdd.sky">글쓰기</button></div>
+	<c:if test="${sessionScope.loginuser.fk_memberNo == 0}">
+		<div align="right">
+		    <button style="text-align : right;" id="marketBoardWrite" onclick="allBoardAdminAdd();">공지쓰기</button>
+		</div>
+	</c:if>
+	
+
 	
 	<div align="center"
 		style="width: 70%; border: solid 0px gray; margin: 20px auto;">
 		${pageBar}</div>
 
 	<form name="goViewFrm">
+	    <input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />
 		<input type="hidden" id="goViewBoardNo" name="boardNo" value="" /> 
 		<input type="hidden" name="gobackURL" value="${gobackURL}" />
 	</form>
 	<form name="registerFrm">
 
 	</form>
+	
+	<form name="allBoardAdminAddFrm">
+		<input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />
+	</form>
+	
+	<form name="notificationFrm">
+      <input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />
+      <input type="hidden" name="noticeNo" />
+      <input type="hidden" name="gobackURL2" value="${gobackURL}" />
+   </form>
+	
+
 </div>
