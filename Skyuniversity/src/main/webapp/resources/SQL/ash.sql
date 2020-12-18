@@ -177,7 +177,7 @@ create table tbl_board_etcmarket(
 boardNo               number                                not null         -- 시퀀스 고유넘버
 , fk_boardKindNo      number                                not null         -- tbl_boardkind 참조!
 , fk_commuMemberNo    number                                not null         -- 유저넘버 (현재는 101, 102)
-, categoryNo          number                                not null         -- 삽니다: 1 , 팝니다: 2,  무료나눔: 3,  거래완료: 4
+, categoryNo          number                                not null         -- 삽니다: 1 , 팝니다: 2,  무료나눔: 3
 , subject             varchar2(200)                         not null         -- 글제목
 , regDate             date             default sysdate      not null         -- 등록일자
 , editDate            date                                                   -- 글 수정 일자
@@ -207,7 +207,7 @@ create table tbl_board_housemarket(
 boardNo               number                                not null         -- 시퀀스 고유넘버
 , fk_boardKindNo      number                                not null         -- tbl_boardkind 참조!
 , fk_commuMemberNo    number                                not null         -- 유저넘버 (현재는 101, 102)
-, categoryNo          number                                not null         -- 삽니다: 1 , 팝니다: 2,  무료나눔: 3,  거래완료: 4
+, categoryNo          number                                not null         -- 삽니다: 1 , 팝니다: 2
 , subject             varchar2(200)                         not null         -- 글제목
 , regDate             date             default sysdate      not null         -- 등록일자
 , editDate            date                                                   -- 글 수정 일자
@@ -237,7 +237,7 @@ create table tbl_board_bookmarket(
 boardNo               number                                not null         -- 시퀀스 고유넘버
 , fk_boardKindNo      number                                not null         -- tbl_boardkind 참조!
 , fk_commuMemberNo    number                                not null         -- 유저넘버 (현재는 101, 102)
-, categoryNo          number                                not null         -- 삽니다: 1 , 팝니다: 2,  무료나눔: 3,  거래완료: 4
+, categoryNo          number                                not null         -- 삽니다: 1 , 팝니다: 2,  무료나눔: 3
 , subject             varchar2(200)                         not null         -- 글제목
 , regDate             date             default sysdate      not null         -- 등록일자
 , editDate            date                                                   -- 글 수정 일자
@@ -653,3 +653,7 @@ update tbl_notice set fk_boardKindNo = 24
 where noticeNo = 2
 
 commit;
+
+
+
+select * from tbl_boardkind;

@@ -389,7 +389,12 @@
 		</div>
 		<br>
 		<br>
-		<button type="button" id="letsgoback" onclick="javascript:location.href='${paraMap.gobackURL2}'">목록으로</button>
+		<c:if test="${not empty paraMap.gobackURL2}">
+			<button type="button" id="letsgoback" onclick="javascript:location.href='${paraMap.gobackURL2}'">목록으로</button>
+		</c:if>
+		<c:if test="${empty paraMap.gobackURL2}">
+			<button type="button" id="letsgoback" onclick="javascript:location.href='<%= ctxPath%>/index.sky'">목록으로</button>	
+		</c:if>
 			<div id="buttons1">
 				<button type="button" id="verygooda">추천<br><span id="verygooda-span"></span></button>
 				<button type="button" id="verybadda">반대<br><span id="verybadda-span"></span></button>

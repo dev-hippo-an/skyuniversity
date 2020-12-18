@@ -39,6 +39,16 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		return bannerList;
 	}
 	
+	
+	// 인덱스 화면에 보여질 게시글들의 정보를 가져온다.
+	@Override
+	public List<MarketBoardVO> getIndexBoardList() {
+		List<MarketBoardVO> indexBoardList = dao.getIndexBoardList();
+		
+		return indexBoardList;
+	}
+	
+	
 	// 로그인 요청하기 입니다!!
 	@Override
 	public CommuMemberVO getLoginUser(Map<String, String> paraMap) {
@@ -254,8 +264,8 @@ public class AnsehyeongService implements InterAnsehyeongService {
 
 	// 관리자 공지쓰기맨~~
 	@Override
-	public int allBoardAdminAdd(NoticeVO boardvo) {
-		int n = dao.allBoardAdminAdd(boardvo);
+	public int allBoardAdminAdd(NoticeVO noticevo) {
+		int n = dao.allBoardAdminAdd(noticevo);
 		
 		return n;
 	}
@@ -302,6 +312,34 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		int n = dao.noticeDelete(paraMap);
 		return n;
 	}
+
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	 @Override
+	   public List<MarketBoardVO> recentBoardList() {
+	      
+	      List<MarketBoardVO> recentBoardList = dao.recentBoardList();
+	      return recentBoardList;
+	      
+	   }
+
+	   @Override
+	   public List<MarketBoardVO> bestBoardList() {
+	      List<MarketBoardVO> bestBoardList = dao.bestBoardList();
+	      return bestBoardList;
+	   }
+
+	   @Override
+	   public List<MarketBoardVO> popularBoardList() {
+	      List<MarketBoardVO> popularBoardList = dao.popularBoardList();
+	      return popularBoardList;
+	   }
+
+
+	
+
 
 	
 

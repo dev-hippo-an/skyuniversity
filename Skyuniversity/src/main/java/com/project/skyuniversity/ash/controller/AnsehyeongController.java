@@ -110,6 +110,41 @@ public class AnsehyeongController {
 		// 인덱스의 캐러셀에 들어갈 배너 광고를 가져오기
 		List<BannerVO> bannerList = service.getBannerList();
 
+		
+		// 메인페이지에 들어갈 게시판 글 리스트 가져오기
+		
+		// 1. 먼저 모든 보드의 종류를 받아온다.
+		
+		List<Map<String, String>> boardKindList = service.getAllBoardList();
+		
+		
+		// 2. 가져온 보드 종류 리스트를 이용해서 각각의 보드에서 글 리스트를 꺼내온다.
+		
+		List<MarketBoardVO> indexBoardList = service.getIndexBoardList();
+		
+		
+		List<MarketBoardVO> recentBoardList = service.recentBoardList();
+		List<MarketBoardVO> bestBoardList = service.bestBoardList();
+		List<MarketBoardVO> popularBoardList = service.popularBoardList();
+
+		mav.addObject("recentBoardList", recentBoardList);
+		mav.addObject("bestBoardList", bestBoardList);
+		mav.addObject("popularBoardList", popularBoardList);
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
+		
 		mav.addObject("bannerList", bannerList);
 		mav.setViewName("main/index.tiles1");
 		// /WEB-INF/views/tiles1/main/index.jsp 파일을 생성한다.
@@ -1383,29 +1418,64 @@ public class AnsehyeongController {
 	// === 게시판 글쓰기 완료 요청 === //
 	@RequestMapping(value = "/allBoardAdminAddEnd.sky")
 	public String anGetCheck_allBoardAdminAddEnd(HttpServletRequest request, HttpServletResponse response,
-			NoticeVO boardvo) {
+			NoticeVO noticevo) {
 
 
-		int n = service.allBoardAdminAdd(boardvo);
+		int n = service.allBoardAdminAdd(noticevo);
 
+		int boardKindNo = noticevo.getFk_boardKindNo();
+		String loc = "";
+		switch (boardKindNo) {
+		case 1:
+		case 2:
+		case 3:
+		case 4:
+		case 5:
+		case 6:
+		case 18:
+		case 19:
+		case 20:
+		case 21:
+		case 22:
+			loc = request.getContextPath() + "/minsungBoardList.sky?boardKindNo=" + noticevo.getFk_boardKindNo();
+			
+			break;
+		case 7:
+		case 8:
+		case 9:
+		case 10:
+		case 11:
+		case 12:
+		case 13:
+		case 14:
+		case 15:
+		case 16:
+		case 17:
+			loc = request.getContextPath() + "/boardList.sky?boardKindNo=" + noticevo.getFk_boardKindNo();
+			break;
+		case 23:
+		case 24:
+		case 25:
+			loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + noticevo.getFk_boardKindNo();
+			break;
+
+		}
+		
 		if (n == 1) {
 			String message = "⭕⭕⭕⭕⭕⭕쌉대성공⭕⭕⭕⭕⭕";
-			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardvo.getFk_boardKindNo();
-
+			
 			request.setAttribute("message", message);
 			request.setAttribute("loc", loc);
 
-			return "msg";
 		} else {
 
 			String message = "글 입력에 실패했삼~~";
-			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardvo.getFk_boardKindNo();
-
+			
 			request.setAttribute("message", message);
 			request.setAttribute("loc", loc);
 
-			return "msg";
 		}
+		return "msg";
 	}
 	
 	// === rhdwltkgkd 글1개를 보여주는 페이지 요청 === //
@@ -1630,8 +1700,43 @@ public class AnsehyeongController {
 		} else {
 
 			String message = "글 수정에 실패했삼~~";
-			String loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + noticevo.getFk_boardKindNo();
+			int boardKindNo = noticevo.getFk_boardKindNo();
+			String loc = "";
+			switch (boardKindNo) {
+			case 1:
+			case 2:
+			case 3:
+			case 4:
+			case 5:
+			case 6:
+			case 18:
+			case 19:
+			case 20:
+			case 21:
+			case 22:
+				loc = request.getContextPath() + "/minsungBoardList.sky?boardKindNo=" + noticevo.getFk_boardKindNo();
+				
+				break;
+			case 7:
+			case 8:
+			case 9:
+			case 10:
+			case 11:
+			case 12:
+			case 13:
+			case 14:
+			case 15:
+			case 16:
+			case 17:
+				loc = request.getContextPath() + "/boardList.sky?boardKindNo=" + noticevo.getFk_boardKindNo();
+				break;
+			case 23:
+			case 24:
+			case 25:
+				loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + noticevo.getFk_boardKindNo();
+				break;
 
+			}
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);
 
@@ -1659,13 +1764,50 @@ public class AnsehyeongController {
 
 		int n = service.noticeDelete(paraMap);
 		
+		String loc = "";
+		switch (boardKindNo) {
+		case "1":
+		case "2":
+		case "3":
+		case "4":
+		case "5":
+		case "6":
+		case "18":
+		case "19":
+		case "20":
+		case "21":
+		case "22":
+			loc = request.getContextPath() + "/minsungBoardList.sky?boardKindNo=" + boardKindNo;
+			
+			break;
+		case "7":
+		case "8":
+		case "9":
+		case "10":
+		case "11":
+		case "12":
+		case "13":
+		case "14":
+		case "15":
+		case "16":
+		case "17":
+			loc = request.getContextPath() + "/boardList.sky?boardKindNo=" + boardKindNo;
+			break;
+		case "23":
+		case "24":
+		case "25":
+			loc = request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo;
+			break;
+
+		}
+		
 		if (n == 0) {
 			mav.addObject("message", "글 삭제 쌉 실패ㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋㅋ");
-			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
+			mav.addObject("loc", loc);
 
 		} else {
 			mav.addObject("message", "글삭제 쌉 성공~!~!!~!!!~!!~!!~!~!");
-			mav.addObject("loc", request.getContextPath() + "/marketboardList.sky?boardKindNo=" + boardKindNo);
+			mav.addObject("loc", loc);
 
 		}
 
@@ -1673,5 +1815,8 @@ public class AnsehyeongController {
 
 		return mav;
 	}
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	
+	
+	
 }

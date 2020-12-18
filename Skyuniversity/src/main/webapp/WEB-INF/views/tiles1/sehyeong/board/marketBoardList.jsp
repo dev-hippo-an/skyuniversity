@@ -289,8 +289,6 @@ tr.notification td {
 						       
 							</c:choose>
 			           		
-			           		
-			           		
 		                	<td>0원</td>
 		                	<td><img src="<%= ctxPath %>/resources/images/levelimg/${notice.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${notice.nickname}</td>
 		                	<td>${notice.regDate}</td>
@@ -298,8 +296,6 @@ tr.notification td {
 		                	<td>${notice.readCount}</td>
 		            	</tr>
 	            	
-	            	
-		      
 	            	</c:forEach>	            
 	            </c:if>
             

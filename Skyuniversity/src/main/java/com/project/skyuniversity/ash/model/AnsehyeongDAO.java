@@ -25,6 +25,15 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 		List<BannerVO> bannerList = sqlsession.selectList("ansehyeong.getBannerList");
 		return bannerList;
 	}
+	
+	// 인덱스 화면에 보여질 게시글들의 정보를 가져온다.
+	@Override
+	public List<MarketBoardVO> getIndexBoardList() {
+		List<MarketBoardVO> indexBoardList = sqlsession.selectList("ansehyeong.getIndexBoardList");
+		return indexBoardList;
+	}
+	
+	
 	// 로그인 하는 유저 한명 알아오기
 	@Override
 	public CommuMemberVO getLoginUser(Map<String, String> paraMap) {
@@ -352,8 +361,8 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 		return boardList;
 	}
 	@Override
-	public int allBoardAdminAdd(NoticeVO boardvo) {
-		int n = sqlsession.insert("ansehyeong.allBoardAdminAdd", boardvo);
+	public int allBoardAdminAdd(NoticeVO noticevo) {
+		int n = sqlsession.insert("ansehyeong.allBoardAdminAdd", noticevo);
 		
 		return n;
 	}
@@ -394,4 +403,33 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 		int n = sqlsession.update("ansehyeong.noticeDelete", paraMap);
 		return n;
 	}
+	
+	
+	
+	
+	
+	
+	   @Override
+	   public List<MarketBoardVO> recentBoardList() {
+	      List<MarketBoardVO> recentBoardList = sqlsession.selectList("ansehyeong.recentBoardList");
+	      return recentBoardList;
+	   }
+
+	   @Override
+	   public List<MarketBoardVO> bestBoardList() {
+	      
+	      List<MarketBoardVO> bestBoardList = sqlsession.selectList("ansehyeong.bestBoardList"); 
+	      return bestBoardList;
+	   }
+
+	   @Override
+	   public List<MarketBoardVO> popularBoardList() {
+	      List<MarketBoardVO> popularBoardList = sqlsession.selectList("ansehyeong.popularBoardList"); 
+	      return popularBoardList;
+	   }
+
+
+	
+
+	
 }
