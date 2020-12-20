@@ -42,12 +42,632 @@
 		where commuMemberNo = #{commuMemberNo}
 	</update>
 	
+	<resultMap type="HashMap" id="MarketCategoryList">
+		<id column="categoryNo" 	property="categoryNo" />
+		<id column="fk_boardKindNo" property="fk_boardKindNo" />
+		<id column="categoryName" 	property="categoryName" />
+	
+	</resultMap>
+	
 	<!-- // === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기=== // -->
-	<select id="getCategoryList" parameterType="String" resultType="HashMap">
+	<select id="getMarketCategoryList" parameterType="HashMap" resultMap="MarketCategoryList">
 		select categoryNo, fk_boardKindNo, categoryName
 		from tbl_category
-		where fk_boardKindNo = #{boardKindNo}
+		where fk_boardKindNo = to_number(#{boardKindNo})
+		order by categoryNo
 	</select>
+	
+	<!-- // === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 관리자버전=== // -->
+	<select id="getAdminMarketCategoryList" resultMap="MarketCategoryList">
+		select categoryNo, fk_boardKindNo, categoryName
+		from tbl_category
+		where fk_boardKindNo = 0
+		order by categoryNo
+	</select>
+	
+	
+	<resultMap type="HashMap" id="MarketTableInfo">
+		<id column="boardKindNo" 	property="boardKindNo" />
+		<id column="boardTypeNo" property="boardTypeNo" />
+		<id column="boardName" 	property="boardName" />
+	</resultMap>
+	
+	<!-- // === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === // -->
+	<select id="getMarketTableInfo" parameterType="HashMap" resultMap="MarketTableInfo">
+		select boardKindNo, boardTypeNo, boardName
+		from tbl_boardkind
+		where boardKindNo = #{boardKindNo}
+	</select>
+	
+	
+	
+	
+	
+	<!-- // === 게시판 별 총 게시물 건수 알아오기 === // -->
+	<select id="getHouseTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_housemarket e join tbl_commu_member m
+		on e.fk_commuMemberNo = m.commuMemberNo
+		where status = 1
+		<if test='categoryNo != "" '>
+        and e.categoryNo = #{categoryNo}
+        </if>
+		<if test='searchWord != "" '>
+        and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+        </if>
+	</select>
+	
+	<select id="getBookTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_bookmarket e join tbl_commu_member m
+		on e.fk_commuMemberNo = m.commuMemberNo
+		where status = 1
+		<if test='categoryNo != "" '>
+        and e.categoryNo = #{categoryNo}
+        </if>
+		<if test='searchWord != "" '>
+        and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+        </if>
+	</select>
+	
+	<select id="getEtcTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_etcmarket e join tbl_commu_member m
+		on e.fk_commuMemberNo = m.commuMemberNo
+		where status = 1
+		<if test='categoryNo != "" '>
+		and e.categoryNo = #{categoryNo}
+        </if>
+		<if test='searchWord != "" '>
+        and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+        </if>
+		
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	<!-- // === 게시판 번호와 시작 게시글 번호, 끝 게시글 번호를 입력하여 해당 게시판번호에 해당하는 게시글들을 불러오기 === // -->
+	
+	<select id="getHouseBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject 
+                 , content, readCount, status, writerIp, fileName, orgFileName, fileSize
+                 , regDate, editDate, price
+                 
+                 , categoryName
+                 
+                 , commuMemberNo, fk_memberNo, fk_levelNo, nickname, point
+                 
+                 , levelNo, levelName, levelPoint, levelImg
+                 
+                 , boardKindNo, boardTypeNo, boardName
+                 , upCount
+		from 
+			(
+			    select row_number() over(order by e.status desc, boardNo desc)  as rno, e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
+	                 , e.categoryNo, e.subject, e.price
+	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
+	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 
+	                 , c.categoryName
+	                 
+	                 , m.commuMemberNo, m.fk_memberNo, m.fk_levelNo, m.nickname, m.point
+	                 
+	                 , l.levelNo, l.levelName, l.levelPoint, l.levelImg
+	                 
+	                 , k.boardKindNo, k.boardTypeNo, k.boardName
+	                 
+	                 , nvl(g.upCount, 0) as upCount
+			    from tbl_board_housemarket e join tbl_category c  
+			    on e.categoryNo =  c.categoryNo
+			    join tbl_commu_member m 
+			    on e.fk_commuMemberNo = m.commuMemberNo
+	            join tbl_commu_member_level l
+	            on m.fk_levelNo = l.levelNo
+	            join tbl_boardkind k
+	            on e.fk_boardKindNo = k.boardKindNo
+	            left join (select fk_boardNo, count(*) as upCount
+                    from tbl_board_good
+                    where fk_boardKindNo = #{boardKindNo}
+                    group by fk_boardNo
+                ) g
+            	on  e.boardNo = g.fk_boardNo
+			    where e.status = 1
+	            <if test='categoryNo != "" '>
+	            and e.categoryNo = #{categoryNo}
+		        </if>
+			    <if test='searchWord != "" '>
+	            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		        </if>
+			)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
+	</select>
+	
+	<select id="getBookBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject 
+                 , content, readCount, status, writerIp, fileName, orgFileName, fileSize
+                 , regDate, editDate, price
+                 
+                 , categoryName
+                 
+                 , commuMemberNo, fk_memberNo,  fk_levelNo, nickname, point
+                 
+                 , levelNo, levelName, levelPoint, levelImg
+                 
+                 , boardKindNo, boardTypeNo, boardName
+                 , upCount
+		from 
+			(
+			    select row_number() over(order by e.status desc, boardNo desc)  as rno, e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
+	                 , e.categoryNo, e.subject, e.price
+	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
+	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 
+	                 , c.categoryName
+	                 
+	                 , m.commuMemberNo, m.fk_memberNo, m.fk_levelNo, m.nickname, m.point
+	                 
+	                 , l.levelNo, l.levelName, l.levelPoint, l.levelImg
+	                 
+	                 , k.boardKindNo, k.boardTypeNo, k.boardName
+	                 
+	                 , nvl(g.upCount, 0) as upCount
+			    from tbl_board_bookmarket e join tbl_category c  
+			    on e.categoryNo =  c.categoryNo
+			    join tbl_commu_member m 
+			    on e.fk_commuMemberNo = m.commuMemberNo
+	            join tbl_commu_member_level l
+	            on m.fk_levelNo = l.levelNo
+	            join tbl_boardkind k
+	            on e.fk_boardKindNo = k.boardKindNo
+	            left join (select fk_boardNo, count(*) as upCount
+                    from tbl_board_good
+                    where fk_boardKindNo = #{boardKindNo}
+                    group by fk_boardNo
+                ) g
+            	on  e.boardNo = g.fk_boardNo
+			    where e.status = 1
+	            <if test='categoryNo != "" '>
+	            and e.categoryNo = #{categoryNo}
+		        </if>
+			    <if test='searchWord != "" '>
+	            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		        </if>
+			)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
+	</select>
+	
+	<select id="getEtcBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		select rno, boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject 
+                 , content, readCount, status, writerIp, fileName, orgFileName, fileSize
+                 , regDate, editDate, price
+                 
+                 , categoryName
+                 
+                 , commuMemberNo, fk_memberNo, fk_levelNo, nickname, point
+                 
+                 , levelNo, levelName, levelPoint, levelImg
+                 
+                 , boardKindNo, boardTypeNo, boardName
+                 , upCount
+		from 
+			(
+			    select row_number() over(order by e.status desc, boardNo desc)  as rno, e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
+	                 , e.categoryNo, e.subject, e.price
+	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
+	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 
+	                 , c.categoryName
+	                 
+	                 , m.commuMemberNo, m.fk_memberNo, m.fk_levelNo, m.nickname, m.point
+	                 
+	                 , l.levelNo, l.levelName, l.levelPoint, l.levelImg
+	                 
+	                 , k.boardKindNo, k.boardTypeNo, k.boardName
+	                 , nvl(g.upCount, 0) as upCount
+			    from tbl_board_etcmarket e join tbl_category c  
+			    on e.categoryNo =  c.categoryNo
+			    join tbl_commu_member m 
+			    on e.fk_commuMemberNo = m.commuMemberNo
+	            join tbl_commu_member_level l
+	            on m.fk_levelNo = l.levelNo
+	            join tbl_boardkind k
+	            on e.fk_boardKindNo = k.boardKindNo
+	            left join (select fk_boardNo, count(*) as upCount
+                    from tbl_board_good
+                    where fk_boardKindNo = #{boardKindNo}
+                    group by fk_boardNo
+                ) g
+            	on  e.boardNo = g.fk_boardNo
+			    where e.status = 1
+	            <if test='categoryNo != "" '>
+	            and e.categoryNo = #{categoryNo}
+		        </if>
+			    <if test='searchWord != "" '>
+	            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+		        </if>
+			)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	<select id="checkBoardKindNo" resultType="int" parameterType="String">
+		select count(*)
+        from tbl_boardkind
+        where boardKindNo = #{boardKindNo}
+	</select>
+	
+	
+	
+	
+	
+	
+	
+	
+	<insert id="marketHouseAdd" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		insert into tbl_board_housemarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price)
+		values(tbl_board_housemarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price})
+		
+	</insert>
+	<insert id="marketBookAdd" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		insert into tbl_board_bookmarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price)
+		values(tbl_board_bookmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price})
+		
+	</insert>
+	<insert id="markeEtcAdd" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		insert into tbl_board_etcmarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price)
+		values(tbl_board_etcmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price})
+		
+	</insert>
+	
+	
+	
+	
+	
+	
+	
+	<insert id="marketHouseaAddFile" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		insert into tbl_board_housemarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price, fileName, orgFileName, fileSize)
+		values(tbl_board_housemarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize})
+		
+		
+	</insert>
+	<insert id="marketBookAddFile" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		insert into tbl_board_bookmarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price, fileName, orgFileName, fileSize)
+		values(tbl_board_bookmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize})
+		
+	</insert>
+	<insert id="markeEtcAddFile" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		insert into tbl_board_etcmarket(boardNo, fk_boardKindNo, fk_commuMemberNo, categoryNo, subject, regDate, content, readCount, status, writerIp, price, fileName, orgFileName, fileSize)
+		values(tbl_board_etcmarket_seq.nextval, #{fk_boardKindNo}, #{fk_commuMemberNo}, #{categoryNo}, #{subject}, default, #{content}, default, default, #{writerIp}, #{price}, #{fileName}, #{orgFileName}, #{fileSize} )
+		
+		
+	</insert>
+	
+	
+	<update id="marketPointPlus" parameterType="HashMap">
+    	update tbl_commu_member set point = point + to_number(#{addPoint})
+		where commuMemberNo = #{fk_commuMemberNo}
+    </update>
+	
+	
+	
+	<select id="getLevelNo" parameterType="HashMap" resultType="String">
+		select levelNo
+		from tbl_commu_member_level
+		where trunc(${point} , -3)  <![CDATA[ < ]]>= levelPoint and levelPoint  <![CDATA[ < ]]>= ${point}
+	</select>
+	
+	
+	<update id="levelUp">
+		update tbl_commu_member set fk_levelNo = #{levelNo}
+		where commuMemberNo = #{fk_commuMemberNo}
+	</update>
+	
+	
+	
+	<!-- //======= 한개의 글의 디테일을 가지고 오는 것! ============// -->
+	
+	<select id="getHouseMarketView" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		select e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
+	                 , e.categoryNo, e.subject, e.price
+	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
+	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 
+	                 , c.categoryName
+	                 
+	                 , m.commuMemberNo, m.fk_levelNo, m.nickname, m.point
+	                 
+	                 , l.levelNo, l.levelName, l.levelPoint, l.levelImg
+	                 
+	                 , k.boardKindNo, k.boardTypeNo, k.boardName
+	                 
+			    from tbl_board_housemarket e join tbl_category c  
+			    on e.categoryNo =  c.categoryNo
+			    join tbl_commu_member m 
+			    on e.fk_commuMemberNo = m.commuMemberNo
+	            join tbl_commu_member_level l
+	            on m.fk_levelNo = l.levelNo
+	            join tbl_boardkind k
+	            on e.fk_boardKindNo = k.boardKindNo
+			    where e.status = 1 and boardNo = #{boardNo}
+	
+	</select>
+	
+	<select id="getBookMarketView" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		select e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
+	                 , e.categoryNo, e.subject, e.price
+	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
+	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 
+	                 , c.categoryName
+	                 
+	                 , m.commuMemberNo, m.fk_levelNo, m.nickname, m.point
+	                 
+	                 , l.levelNo, l.levelName, l.levelPoint, l.levelImg
+	                 
+	                 , k.boardKindNo, k.boardTypeNo, k.boardName
+	                 
+			    from tbl_board_bookmarket e join tbl_category c  
+			    on e.categoryNo =  c.categoryNo
+			    join tbl_commu_member m 
+			    on e.fk_commuMemberNo = m.commuMemberNo
+	            join tbl_commu_member_level l
+	            on m.fk_levelNo = l.levelNo
+	            join tbl_boardkind k
+	            on e.fk_boardKindNo = k.boardKindNo
+			    where e.status = 1 and boardNo = #{boardNo}
+	
+	</select>
+	
+	<select id="getEtcMarketView" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		select e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
+	                 , e.categoryNo, e.subject, e.price
+	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
+	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 
+	                 , c.categoryName
+	                 
+	                 , m.commuMemberNo, m.fk_levelNo, m.nickname, m.point
+	                 
+	                 , l.levelNo, l.levelName, l.levelPoint, l.levelImg
+	                 
+	                 , k.boardKindNo, k.boardTypeNo, k.boardName
+	                 
+			    from tbl_board_etcmarket e join tbl_category c  
+			    on e.categoryNo =  c.categoryNo
+			    join tbl_commu_member m 
+			    on e.fk_commuMemberNo = m.commuMemberNo
+	            join tbl_commu_member_level l
+	            on m.fk_levelNo = l.levelNo
+	            join tbl_boardkind k
+	            on e.fk_boardKindNo = k.boardKindNo
+			    where e.status = 1 and boardNo = #{boardNo}
+	
+	</select>
+	
+	<!-- //======= 조회수를 올려블게 ============// -->
+	
+	<update id="setHouseReadCount" parameterType="HashMap">
+		update tbl_board_housemarket set readCount = readCount + 1 
+		where boardNo = #{boardNo}
+	</update>
+	
+	<update id="setBookReadCount" parameterType="HashMap">
+		update tbl_board_bookmarket set readCount = readCount + 1 
+		where boardNo = #{boardNo}
+	</update>
+	
+	<update id="setEtcReadCount" parameterType="HashMap">
+		update tbl_board_etcmarket set readCount = readCount + 1 
+		where boardNo = #{boardNo}
+	</update>
+	
+	
+	
+	
+	
+	<!-- // 글 수정 레스기릿 파일 없다 -->
+	
+	<update id="marketHouseaEdit" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		update tbl_board_housemarket set categoryNo = #{categoryNo}, subject = #{subject}, editDate = sysdate, content = #{content}, price = #{price}
+		where boardNo = #{boardNo}
+	</update>	
+	<update id="marketBookEdit" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		update tbl_board_bookmarket set categoryNo = #{categoryNo}, subject = #{subject}, editDate = sysdate, content = #{content}, price = #{price}
+		where boardNo = #{boardNo}
+	</update>	
+	<update id="markeEtcEdit" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		update tbl_board_etcmarket set categoryNo = #{categoryNo}, subject = #{subject}, editDate = sysdate, content = #{content}, price = #{price}
+		where boardNo = #{boardNo}
+	</update>	
+	
+	
+	
+	
+	
+	
+	
+	<!-- // // 글 수정 레스기릿 파일 첨부 있다 -->
+	
+	
+	<update id="marketHouseaEditFile" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		update tbl_board_housemarket set categoryNo = #{categoryNo}, subject = #{subject}, editDate = sysdate, content = #{content}, price = #{price}, fileName = #{fileName}, orgFileName = #{orgFileName}, fileSize = #{fileSize}
+		where boardNo = #{boardNo}
+	</update>	
+	<update id="marketBookEditFile" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		update tbl_board_bookmarket set categoryNo = #{categoryNo}, subject = #{subject}, editDate = sysdate, content = #{content}, price = #{price}, fileName = #{fileName}, orgFileName = #{orgFileName}, fileSize = #{fileSize}
+		where boardNo = #{boardNo}
+	</update>	
+	<update id="markeEtcEditFile" parameterType="com.project.skyuniversity.ash.model.MarketBoardVO">
+		update tbl_board_etcmarket set categoryNo = #{categoryNo}, subject = #{subject}, editDate = sysdate, content = #{content}, price = #{price}, fileName = #{fileName}, orgFileName = #{orgFileName}, fileSize = #{fileSize}
+		where boardNo = #{boardNo}
+	</update>	
+	
+	
+	
+	
+	
+	<!-- //======= 글을 삭제해 볼게~ ============// -->
+	
+	<update id="marketHouseBoardDelete" parameterType="HashMap">
+		update tbl_board_housemarket set status = 0
+   		where boardNo = #{boardNo}
+	</update>
+	
+	<update id="marketBookBoardDelete" parameterType="HashMap">
+		update tbl_board_bookmarket set status = 0
+   		where boardNo = #{boardNo}
+	</update>
+	
+	<update id="marketEtcBoardDelete" parameterType="HashMap">
+		update tbl_board_etcmarket set status = 0
+   		where boardNo = #{boardNo}
+	</update>
+
+
+
+	<!-- // 좋아요 싫어요 숫자 받아오기~~~ -->
+	
+	<select id="getMarketBoardGoodCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_good
+		where fk_boardKindNo = #{boardKindNo} and fk_boardNo = #{boardNo}
+	</select>
+	
+	<select id="getMarketBoardBadCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_bad
+		where fk_boardKindNo = #{boardKindNo} and fk_boardNo = #{boardNo}
+	</select>
+
+
+
+
+	<!-- 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다. -->
+	<delete id="getMaketBoardBad" parameterType="HashMap">
+		delete from tbl_board_bad
+		where fk_boardKindNo = #{boardKindNo} and fk_boardNo = #{boardNo} and fk_memberNo = #{memberNo}
+	</delete>
+
+
+	<!-- 추천 테이블에 행을 추가한다. -->
+	<insert id="addMaketBoardUp" parameterType="HashMap">
+		insert into tbl_board_good
+		values(#{boardKindNo}, #{boardNo}, #{memberNo})
+	</insert>
+	
+	
+	
+	<!-- 추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다. -->
+	<delete id="getMaketBoardGood" parameterType="HashMap">
+		delete from tbl_board_good
+		where fk_boardKindNo = #{boardKindNo} and fk_boardNo = #{boardNo} and fk_memberNo = #{memberNo}
+	</delete>
+
+
+	<!-- 비추천 테이블에 행을 추가한다. -->
+	<insert id="addMaketBoardDown" parameterType="HashMap">
+		insert into tbl_board_bad
+		values(#{boardKindNo}, #{boardNo}, #{memberNo})
+	</insert>
+	
+	<!-- // 신고다 신고!! -->
+	<insert id="addMarketBoardReport" parameterType="HashMap">
+      insert into tbl_board_report
+      values(#{boardKindNo}, #{boardNo}, #{memberNo})
+   </insert>
+	
+	<select id="getMarketReportCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_report
+		where fk_boardKindNo = #{boardKindNo} and fk_boardNo = #{boardNo}
+	</select>
+	
+	
+	
+	<!-- // === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === // -->
+	<select id="getAllBoardList" resultMap="MarketTableInfo">
+		select boardKindNo, boardTypeNo, boardName
+        from tbl_boardkind
+	</select>
+	
+	
+	<!-- 관리자 글쓰기지롱 -->
+	<insert id="allBoardAdminAdd" parameterType="com.project.skyuniversity.ash.model.NoticeVO">
+		insert into tbl_notice(noticeNo, fk_boardKindNo, subject, content, writerIp)
+		values(tbl_notice_seq.nextval, #{fk_boardKindNo}, #{subject}, #{content}, #{writerIp})
+	</insert>
+	
+	
+	<!-- 	// 공지리스트 컴컴 -->
+	<select id="getNoticeList" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.NoticeVO">
+		select n.noticeNo, n.fk_boardKindNo, n.fk_memberNo, n.fk_categoryNo
+		, n.subject, to_char(n.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, n.content, n.readCount, n.status, n.writerIp
+		
+		, c.categoryName
+		
+		, m.commuMemberNo, m.fk_levelNo, m.nickname, m.point
+		
+		, l.levelName, l.levelPoint, l.levelImg
+		
+		, k.boardTypeNo, k.boardName
+		
+		, nvl(g.upCount, 0) as upCount
+		
+		from tbl_notice n join tbl_category c
+		on n.fk_categoryNo = c.categoryNo
+		join tbl_commu_member m 
+		on n.fk_memberNo = m.fk_memberNo
+		join tbl_commu_member_level l
+		on m.fk_levelNo = l.levelNo
+		join tbl_boardkind k
+		on n.fk_boardKindNo = k.boardKindNo
+		left join (select fk_boardNo, count(*) as upCount
+		                    from tbl_board_good
+		                    where fk_boardKindNo = #{boardKindNo}
+		                    group by fk_boardNo
+		                ) g
+		on  n.noticeNo = g.fk_boardNo
+		where n.status = 1 and n.fk_boardKindNo = #{boardKindNo}
+		<if test="noticeNo != null">
+		and noticeNo = #{noticeNo}
+		</if>
+		order by n.noticeNo desc
+	
+	</select>
+	
+	<update id="setNoticeReadCount" parameterType="HashMap">
+		update tbl_notice set readCount = readCount + 1 
+		where noticeNo = #{noticeNo}
+	</update>
+	
+	
+	
+	<update id="noticeEdit" parameterType="com.project.skyuniversity.ash.model.NoticeVO">
+		update tbl_notice set fk_boardKindNo = #{fk_boardKindNo}, subject = #{subject}, content = #{content}, writerIp = #{writerIp}
+		where noticeNo = #{noticeNo}
+	</update>
+	
+	
+	
+	
+	<update id="noticeDelete" parameterType="HashMap">
+		update tbl_notice set status = 0
+		where noticeNo = #{noticeNo} and fk_boardKindNo = #{boardKindNo}
+	</update>
 	
 	
 </mapper>

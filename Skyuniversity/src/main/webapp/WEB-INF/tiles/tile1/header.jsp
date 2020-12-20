@@ -163,7 +163,7 @@ label#update-nickname:hover {
 		          	</c:if>
 		          	
 		          	<c:if test="${not empty loginuser.nickname}">
-		        		<span id="nickname">${loginuser.nickname}</span>&nbsp;<span>님 로그인중..</span>
+		        		<span id="nickname" style="font-size: 15pt; color: blue;">${loginuser.nickname}</span>&nbsp;<span></span>
 		        		<br>
 		          		<label id="update-nickname" onclick="javascript:location.href='<%=ctxPath%>/updateNicknameStart.sky'">닉네임 재설정</label>
 		          	</c:if>

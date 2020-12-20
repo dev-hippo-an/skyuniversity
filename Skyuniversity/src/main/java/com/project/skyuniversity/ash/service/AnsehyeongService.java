@@ -2,6 +2,8 @@ package com.project.skyuniversity.ash.service;
 
 import java.util.*;
 
+import javax.servlet.http.HttpSession;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -9,6 +11,8 @@ import com.project.skyuniversity.ash.model.BannerVO;
 import com.project.skyuniversity.ash.model.CommuMemberLevelVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.InterAnsehyeongDAO;
+import com.project.skyuniversity.ash.model.MarketBoardVO;
+import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.ash.common.AES256;
 
 //=== #31. Service 선언 === 
@@ -59,11 +63,246 @@ public class AnsehyeongService implements InterAnsehyeongService {
 	
 	// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 === //
 	@Override
-	public List<Map<String, String>> getCategoryList(String boardKindNo) {
+	public List<Map<String, String>> getMarketCategoryList(Map<String, String> paraMap) {
 		
-		List<Map<String, String>> categoryList = dao.getCategoryList(boardKindNo);
+		List<Map<String, String>> categoryList = dao.getMarketCategoryList(paraMap);
 		
 		return categoryList;
 	}
+	// === 장터 게시판 리스트 페이지 요청시 카테고리 목록 가져오기 관리자버전=== //
+	@Override
+	public List<Map<String, String>> getAdminMarketCategoryList() {
+		
+		List<Map<String, String>> categoryList = dao.getAdminMarketCategoryList();
+		
+		return categoryList;
+	}
+	
+	// === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === //
+	@Override
+	public Map<String, String> getMarketTableInfo(Map<String, String> paraMap) {
+		 Map<String, String> tableInfo = dao.getMarketTableInfo(paraMap);
+		 
+		return tableInfo;
+	}
+
+	// === 총 게시물 건수 알아오기 === // 
+	@Override
+	public int getMarketTotalCount(Map<String, String> paraMap) {
+		int totalCount = dao.getMarketTotalCount(paraMap);
+		return totalCount;
+	}
+	
+	// === 게시판 번호와 시작 게시글 번호, 끝 게시글 번호를 입력하여 해당 게시판번호에 해당하는 게시글들을 불러오기 === //
+	@Override
+	public List<MarketBoardVO> getMarketBoardList(Map<String, String> paraMap) {
+		List<MarketBoardVO> boardList = dao.getMarketBoardList(paraMap);
+		return boardList;
+	}
+
+	@Override
+	public int checkBoardKindNo(String boardKindNo) {
+		int n = dao.checkBoardKindNo(boardKindNo);
+		return n;
+	}
+	// 장터 게시판 글쓰기 맨~
+	@Override
+	public int marketAdd(MarketBoardVO boardvo) {
+		int n = dao.marketAdd(boardvo);
+		
+		return n;
+	}
+	
+	// 장터 게시판 글쓰기 맨~ 첨부파일 같이~~~~~~
+	@Override
+	public int marketAddFile(MarketBoardVO boardvo) {
+		int n = dao.marketAddFile(boardvo);
+		
+		return n;
+	}
+	
+	// 글쓴 사람 포인트 올려보자
+	@Override
+	public int marketPointPlus(Map<String, String> paraMap) {
+		int n = dao.marketPointPlus(paraMap);
+		return n;
+		
+	}
+	
+	// 레벨확인해서 레벨업 해주기~
+	@Override
+	public String getLevelNo(Map<String, String> paraMap, CommuMemberVO loginuser) {
+		String levelNo = dao.getLevelNo(paraMap);
+		
+		
+		return levelNo;
+	}
+
+	@Override
+	public int levelUp(Map<String, String> paraMap) {
+		
+		int n = dao.levelUp(paraMap);
+		return n;
+	}
+
+	@Override
+	public CommuMemberLevelVO getLoginUserLevel(CommuMemberVO loginuser) {
+		
+		CommuMemberLevelVO levelvo = dao.getLoginUserLevel(loginuser);
+		
+		return levelvo;
+	}
+
+	
+	// 조회수를 1 올려주면 한개의 글의 디테일을 가지고 오는 것!
+	@Override
+	public MarketBoardVO getMarketView(Map<String, String> paraMap, CommuMemberVO loginuser) {
+		
+		MarketBoardVO boardvo = dao.getMarketView(paraMap);
+		
+		if(loginuser != null && boardvo != null && !(loginuser.getCommuMemberNo() == boardvo.getFk_commuMemberNo()) ) {
+			// 글조회수 증가는 로그인을 한 상태에서 다른 사람의 글을 읽을때만 증가하도록 해야 한다. 
+			
+			dao.setReadCount(paraMap);   // 글조회수 1증가 하기 
+			
+			boardvo = dao.getMarketView(paraMap);
+		}
+		
+		return boardvo;
+	}
+	
+	// 조회수를 올리지 않고! 글의 디테일을 가지고 오는 것!
+	@Override
+	public MarketBoardVO getMarketViewWithNoAddCount(Map<String, String> paraMap) {
+		
+		MarketBoardVO boardvo = dao.getMarketView(paraMap);
+		
+		return boardvo;
+	}
+
+	// 글 수정 레스기릿 파일 없다
+	@Override
+	public int marketEdit(MarketBoardVO boardvo) {
+		int n = dao.marketEdit(boardvo);
+		return n;
+	}
+	// 글 수정 레스기릿 파일 첨부 있다
+	@Override
+	public int marketEditFile(MarketBoardVO boardvo) {
+		int n = dao.marketEditFile(boardvo);
+		return n;
+	}
+
+	// 글 삭제 레스기릿 ~~~~~~~~~~
+	@Override
+	public int marketBoardDelete(Map<String, String> paraMap) {
+		
+		int n = dao.marketBoardDelete(paraMap);
+		
+		return n;
+	}
+	
+	
+	// 좋아요 싫어요 숫자 받아오기~~~
+	@Override
+	public int getMarketBoardGoodCount(Map<String, String> paraMap) throws Exception {
+		int upCount = dao.getMarketBoardGoodCount(paraMap);
+		return upCount;
+	}
+	
+	@Override
+	public int getMarketBoardBadCount(Map<String, String> paraMap) throws Exception {
+		int downCount = dao.getMarketBoardBadCount(paraMap);
+		return downCount;
+	}
+	
+	
+	// 게시글 추천이염~~~~
+	@Override
+	public int addMaketBoardUp(Map<String, String> paraMap) throws Exception {
+		int result = dao.addMaketBoardUp(paraMap);
+		return result;
+
+	}
+
+	// 게시글 비추천이여~~
+	@Override
+	public int addMarketBoardDown(Map<String, String> paraMap) throws Exception {
+		int result = dao.addMarketBoardDown(paraMap);
+		return result;
+	}
+
+	// 신고다 신고!
+	@Override
+	public int addMarketBoardReport(Map<String, String> paraMap) throws Exception {
+		int result = dao.addMarketBoardReport(paraMap);
+		
+		
+		result *= dao.getReportCount(paraMap);
+		return result;
+
+	}
+
+	
+	// 관리자 글 쓰기용 게시판 리스트 불러오기
+	@Override
+	public List<Map<String, String>> getAllBoardList() {
+		List<Map<String, String>> boardList = dao.getAllBoardList();
+		
+		return boardList;
+	}
+
+	// 관리자 공지쓰기맨~~
+	@Override
+	public int allBoardAdminAdd(NoticeVO boardvo) {
+		int n = dao.allBoardAdminAdd(boardvo);
+		
+		return n;
+	}
+
+	// 공지리스트 컴컴
+	@Override
+	public List<NoticeVO> getNoticeList(Map<String, String> paraMap) {
+		List<NoticeVO> noticeList = dao.getNoticeList(paraMap);
+		return noticeList;
+	}
+	
+	// 조회수를 1 올려주면 한개의 공지글의 디테일을 가지고 오는 것!
+	@Override
+	public NoticeVO getNoticeView(Map<String, String> paraMap, CommuMemberVO loginuser) {
+		NoticeVO noticevo = dao.getNoticeView(paraMap);
+		
+		if(loginuser != null && noticevo != null && !(loginuser.getCommuMemberNo() == noticevo.getFk_memberNo()) ) {
+			// 글조회수 증가는 로그인을 한 상태에서 다른 사람의 글을 읽을때만 증가하도록 해야 한다. 
+			
+			dao.setNoticeReadCount(paraMap);   // 글조회수 1증가 하기 
+			
+			noticevo = dao.getNoticeView(paraMap);
+		}
+		return noticevo;
+	}
+	
+	// 조회수 증가 없이 한개의 공지글의 디테일을 가지고 오는 것!
+	@Override
+	public NoticeVO getNoticeViewWithNoAddCount(Map<String, String> paraMap) {
+		NoticeVO noticevo = dao.getNoticeView(paraMap);
+		return noticevo;
+	}
+
+	
+	// 공지글 수정
+	@Override
+	public int noticeEdit(NoticeVO noticevo) {
+		int n = dao.noticeEdit(noticevo);
+		return n;
+	}
+	// 공지글 삭제
+	@Override
+	public int noticeDelete(Map<String, String> paraMap) {
+		int n = dao.noticeDelete(paraMap);
+		return n;
+	}
+
+	
 
 }
