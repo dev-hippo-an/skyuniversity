@@ -128,6 +128,14 @@
 
 <script type="text/javascript">
 	$(document).ready(function(){
+		
+		
+	      $("span#alert").hide();      
+	      
+	      $("input#startNo").val("1");
+	      $("h4.more").show();      
+	      goViewComment();
+		
 		getCountComeOn();
 		
 		// 추천 버튼을 누르면 ajax로 추천수를 1증가 시킨다.
@@ -419,6 +427,31 @@
 	</div>
 </c:if>
 
+
+
+   <div class="content2">
+      
+      <div id="reply" >
+         <div><span>댓글쓰기</span><span><img  class="photo" src="<%= ctxPath%>/resources/images/levelimg/level${sessionScope.loginuser.fk_levelNo}.png"/>${sessionScope.loginuser.nickname}</span></div>
+         <form name="addWriteFrm" style="margin-top: 5px; width: 90%; height: 125px;" class="form-group">
+            <textarea id="cmtContent" name="cmtContent" class="form-control"></textarea>
+            <input type="hidden" name="fk_boardKindNo" value="${boardvo.fk_boardKindNo}"/>
+            <input type="hidden" name="fk_boardNo" value="${boardvo.boardNo}"/>
+         </form>
+         <div>
+            <span id="alert" style="color:red; margin-right: 20px;">200자가 넘으면 댓글을 등록할 수 없습니다.</span><span id="characters" style="">0</span><span> / 200</span>
+            <button id="btnComment" type="button" onclick="goAddWrite()">확인</button>
+         </div> 
+      </div>
+      <hr>
+      
+      <!-- 댓글 부분 -->
+      <table id="contentTable2" class="form-group" ></table>
+      <h4 class="more">더보기...</h4>
+      <input type="hidden" id="startNo" value="1"/>
+      <input type="hidden" id="cmtCount" value="0"/>
+      
+   </div>
 	
 	
 	

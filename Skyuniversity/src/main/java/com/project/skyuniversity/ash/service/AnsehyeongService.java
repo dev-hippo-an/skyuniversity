@@ -353,75 +353,7 @@ public class AnsehyeongService implements InterAnsehyeongService {
 	}
 
 
-	// 작성한 댓글 저장하기
-	@Override
-	public int addComment(CommentVO commentvo) {
-		int result = dao.addComment(commentvo);
-		return result;
-	}
-
-	// 요청한 순서의 댓글을 8개씩 가져오기
-	@Override
-	public List<CommentVO> getCommentList(Map<String, String> paraMap) {
-		List<CommentVO> commentList = dao.getCommentList(paraMap);
-		return commentList;
-	}
-
-	// 댓글의 추천 수를 가져온다.
-	@Override
-	public int getCommentGoodCount(Map<String, String> paraMap) {
-		int cmtUpCount = dao.getCommentGoodCount(paraMap);
-		return cmtUpCount;
-	}
-
-	// 댓글의 비추천 수를 가져온다.
-	@Override
-	public int getCommentBadCount(Map<String, String> paraMap) {
-		int cmtDownCount = dao.getCommentBadCount(paraMap);
-		return cmtDownCount;
-	}
-
-	// 댓글 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
-	@Override
-	public int addCommentUp(Map<String, String> paraMap) {
-		int result = dao.addCommentUp(paraMap);
-		return result;
-	}
-
-	// 댓글 비추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
-	@Override
-	public int addCommentDown(Map<String, String> paraMap) {
-		int result = dao.addCommentDown(paraMap);
-		return result;
-	}
-
-	// 댓글 신고 테이블에 행을 추가해주는 메서드(ajax로 처리)
-	@Override
-	public int addCommentReport(Map<String, String> paraMap) {
-		int result = dao.addCommentReport(paraMap);
-		return result;
-	}
-
-	// 댓글을 삭제해주는 메서드(ajax로 처리)
-	@Override
-	public int deleteComment(Map<String, String> paraMap) {
-		int result = dao.deleteComment(paraMap);
-		return result;
-	}
-
-	// 댓글을 수정해주는 메서드 (ajax로 처리)
-	@Override
-	public int updateComment(Map<String, String> paraMap) {
-		int result = dao.updateComment(paraMap);
-		return result;
-	}
-
-	// 댓글쓰기 완료 후, 포인트 올려주기
-	@Override
-	public int addPoint(Map<String, String> paraMap) {
-		return dao.addPoint(paraMap);
-	}
-   
+	
 	
 
 
