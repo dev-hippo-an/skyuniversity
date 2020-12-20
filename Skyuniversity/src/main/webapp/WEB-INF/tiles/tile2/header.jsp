@@ -20,7 +20,7 @@
  	justify-content: space-between;
  }
  
- ul {
+ ul#myMenu {
  	list-style-type: none;
  }
 

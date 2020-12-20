@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
+import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 
 @Service
 public class EunjiService implements InterEunjiService {
@@ -98,6 +99,72 @@ public class EunjiService implements InterEunjiService {
 	public int updateDelCnt(String subno) {
 		int n = dao.updateDelCnt(subno);
 		return n;
+	}
+
+	@Override
+	public int selectSumCredit(Map<String, String> paraMap2) {
+		int sumcredit = dao.selectSumCredit(paraMap2);
+		return sumcredit;
+	}
+
+	@Override
+	public int dayInfo(Map<String, String> paraMap) {
+		int dayinfo = dao.dayInfo(paraMap);
+		return dayinfo;
+	}
+
+	@Override
+	public int uniqueInfo(Map<String, String> paraMap) {
+		int uniqueinfo = dao.uniqueInfo(paraMap);
+		return uniqueinfo;
+	}
+
+	@Override
+	public int add(OfficialLeaveVO ocvo) {
+		int n = dao.add(ocvo);
+		return n;
+	}
+
+	@Override
+	public int addNonTime(OfficialLeaveVO ocvo) {
+		int n = dao.addNonTime(ocvo);
+		return n;
+	}
+
+	@Override
+	public int add_withFile(OfficialLeaveVO ocvo) {
+		int n = dao.add_withFile(ocvo);
+		return n;
+	}
+
+	@Override
+	public int add_withFileNonTime(OfficialLeaveVO ocvo) {
+		int n = dao.add_withFileNonTime(ocvo);
+		return n;
+	}
+
+	@Override
+	public List<OfficialLeaveVO> selectOfficial(String string) {
+		List<OfficialLeaveVO> leavelist = dao.selectOfficial(string);
+		return leavelist;
+	}
+
+	@Override
+	public int delOfficialLeave(String seq) {
+		int n = dao.delOfficialLeave(seq);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> selectLeaveInfo(Map<String, String> hashmap) {
+		List<Map<String, String>> leavelist = dao.selectLeaveInfo(hashmap);
+		return leavelist;
+	}
+
+	@Override
+	public OfficialLeaveVO getLeaveVO(String seq) {
+		OfficialLeaveVO olvo = dao.getLeaveVO(seq);
+		return olvo;
 	}
 
 

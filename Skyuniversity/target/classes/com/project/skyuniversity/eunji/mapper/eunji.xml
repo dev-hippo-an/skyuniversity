@@ -141,4 +141,107 @@
 	<update id="updateDelCnt" parameterType="String">
 		update Tbl_Subject set Curpeoplecnt = Curpeoplecnt-1 where Subjectno = #{subno}
 	</update>
+	
+	<select id="selectSumCredit" parameterType="HashMap" resultType="int">
+		select sum(credits)
+		from tbl_course C
+		inner join tbl_subject S
+		on c.fk_subjectno = S.subjectno
+		where fk_memberno = #{memberno} and courseyear = #{year} and semester = #{cursemester}
+	</select>
+	
+	<select id="dayInfo" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_course C
+		inner join tbl_subject S
+		on c.fk_subjectno = S.subjectno
+		where fk_memberno = #{memberNo} and day = #{day} and period = #{period}
+	</select>
+	
+	<select id="uniqueInfo" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_course C
+		inner join tbl_subject S
+		on c.fk_subjectno = S.subjectno
+		where fk_memberno = #{memberNo} and subjectno = #{subjectno} and recourse = '0'
+	</select>
+	
+	<insert id="add" parameterType="com.project.skyuniversity.eunji.model.OfficialLeaveVO">
+		insert into tbl_official_leave(leaveno, startdate, enddate, starttime, endtime, reason, fk_memberno)
+		values(tbl_official_leave_seq.nextval, #{startDate}, #{endDate}, #{startTime}, #{endTime}, #{reason}, #{fk_memberNo})
+	</insert>
+	
+	<insert id="addNonTime" parameterType="com.project.skyuniversity.eunji.model.OfficialLeaveVO">
+		insert into tbl_official_leave(leaveno, startdate, enddate, reason, fk_memberno)
+		values(tbl_official_leave_seq.nextval, #{startDate}, #{endDate}, #{reason}, #{fk_memberNo})
+	</insert>
+	
+	<insert id="add_withFile" parameterType="com.project.skyuniversity.eunji.model.OfficialLeaveVO">
+		insert into tbl_official_leave(leaveno, startdate, enddate, starttime, endtime, reason, fk_memberno, filename, orgfilename, filesize)
+		values(tbl_official_leave_seq.nextval, #{startDate}, #{endDate}, #{startTime}, #{endTime}, #{reason}, #{fk_memberNo}, #{fileName}, #{orgFileName}, #{fileSize})
+	</insert>
+	
+	<insert id="add_withFileNonTime" parameterType="com.project.skyuniversity.eunji.model.OfficialLeaveVO">
+		insert into tbl_official_leave(leaveno, startdate, enddate, reason, fk_memberno, filename, orgfilename, filesize)
+		values(tbl_official_leave_seq.nextval, #{startDate}, #{endDate}, #{reason}, #{fk_memberNo}, #{fileName}, #{orgFileName}, #{fileSize})
+	</insert>
+	
+	<select id="selectOfficial" resultType="com.project.skyuniversity.eunji.model.OfficialLeaveVO" parameterType="String">
+		select leaveNo, to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+		from tbl_official_leave
+		<![CDATA[where add_months(sysdate, -3) <= regdate]]> and fk_memberno = #{string}
+		order by  regdate desc
+	</select>
+	
+	<delete id="delOfficialLeave" parameterType="String">
+		delete from tbl_official_leave where leaveno=#{seq}
+	</delete>
+	
+	<resultMap type="HashMap" id="leaveMap">
+		<result property="name" column="name" javaType="String"/>
+		<result property="memberno" column="memberno" javaType="String"/>
+		<result property="grade" column="grade" javaType="String"/>
+		<result property="deptname" column="deptname" javaType="String"/>
+		<result property="filename" column="filename" javaType="String"/>
+		<result property="orgfilename" column="orgfilename" javaType="String"/>
+		<result property="filesize" column="filesize" javaType="String"/>
+		<result property="leaveNo" column="leaveNo" javaType="String"/>
+		<result property="startDate" column="startDate" javaType="String"/>
+		<result property="endDate" column="endDate" javaType="String"/>
+		<result property="reason" column="reason" javaType="String"/>
+		<result property="approve" column="approve" javaType="String"/>
+		<result property="approveDate" column="approveDate" javaType="String"/>
+		<result property="noReason" column="noReason" javaType="String"/>
+	</resultMap>
+	<select id="selectLeaveInfo" parameterType="HashMap" resultMap="leaveMap">
+		select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, startDate, endDate, reason, approve, approveDate, noReason
+		from
+		(
+		select rownum as rno, name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, startDate, endDate, reason, approve, approveDate, noReason, regdate, regyear, regmonth
+		from
+		(
+		    select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(regdate, 'yyyy') as regyear,to_char(regdate, 'mm') as regmonth, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+		    from 
+		    (
+		    select name, memberno, grade, deptname
+		    from tbl_member M
+		    inner join tbl_dept D
+		    on M.fk_deptseq = D.deptseq
+		    )V
+		    inner join tbl_official_leave O
+		    on V.memberno = O.fk_memberno
+		    where fk_memberno = #{memberno}
+		    order by regdate desc
+		)
+		where approve in ('승인완료','승인취소') and regyear = #{year} and regmonth in (${month})
+		)
+		where rno between 1 and 3
+
+	</select>
+	
+	<select id="getLeaveVO" parameterType="String" resultType="com.project.skyuniversity.eunji.model.OfficialLeaveVO">
+		select startDate, endDate, reason, approve, noReason, approveDate, fileName, orgFileName, fileSize, regdate, fk_memberNo
+        from tbl_official_leave
+        where leaveNo=#{seq}
+	</select>
 </mapper>
