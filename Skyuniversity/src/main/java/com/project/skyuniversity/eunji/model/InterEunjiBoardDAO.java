@@ -33,4 +33,26 @@ public interface InterEunjiBoardDAO {
 
 	int updateDelCnt(String subno);
 
+	int selectSumCredit(Map<String, String> paraMap2);
+
+	int dayInfo(Map<String, String> paraMap);
+
+	int uniqueInfo(Map<String, String> paraMap);
+
+	int add(OfficialLeaveVO ocvo);
+
+	int addNonTime(OfficialLeaveVO ocvo);
+
+	int add_withFile(OfficialLeaveVO ocvo);
+
+	int add_withFileNonTime(OfficialLeaveVO ocvo);
+
+	List<OfficialLeaveVO> selectOfficial(String string);
+
+	int delOfficialLeave(String seq);
+
+	List<Map<String, String>> selectLeaveInfo(Map<String, String> hashmap);
+
+	OfficialLeaveVO getLeaveVO(String seq);
+
 }

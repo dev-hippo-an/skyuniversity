@@ -99,5 +99,71 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int selectSumCredit(Map<String, String> paraMap2) {
+		int sumcredit = sqlSession.selectOne("eunji.selectSumCredit", paraMap2);
+		return sumcredit;
+	}
+
+	@Override
+	public int dayInfo(Map<String, String> paraMap) {
+		int dayinfo = sqlSession.selectOne("eunji.dayInfo",paraMap);
+		return dayinfo;
+	}
+
+	@Override
+	public int uniqueInfo(Map<String, String> paraMap) {
+		int uniqueinfo = sqlSession.selectOne("eunji.uniqueInfo", paraMap);
+		return uniqueinfo;
+	}
+
+	@Override
+	public int add(OfficialLeaveVO ocvo) {
+		int n = sqlSession.insert("eunji.add", ocvo);
+		return n;
+	}
+
+	@Override
+	public int addNonTime(OfficialLeaveVO ocvo) {
+		int n = sqlSession.insert("eunji.addNonTime", ocvo);
+		return n;
+	}
+
+	@Override
+	public int add_withFile(OfficialLeaveVO ocvo) {
+		int n = sqlSession.insert("eunji.add_withFile", ocvo);
+		return n;
+	}
+
+	@Override
+	public int add_withFileNonTime(OfficialLeaveVO ocvo) {
+		int n = sqlSession.insert("eunji.add_withFileNonTime", ocvo);
+		return n;
+	}
+
+	@Override
+	public List<OfficialLeaveVO> selectOfficial(String string) {
+		List<OfficialLeaveVO> leavelist = sqlSession.selectList("eunji.selectOfficial", string);
+		return leavelist;
+	}
+
+	@Override
+	public int delOfficialLeave(String seq) {
+		int n = sqlSession.delete("eunji.delOfficialLeave", seq);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> selectLeaveInfo(Map<String, String> hashmap) {
+		List<Map<String, String>> leavelist = sqlSession.selectList("eunji.selectLeaveInfo", hashmap);
+		return leavelist;
+	}
+
+	@Override
+	public OfficialLeaveVO getLeaveVO(String seq) {
+		OfficialLeaveVO olvo = sqlSession.selectOne("eunji.getLeaveVO", seq);
+		return olvo;
+	}
+
 
 }

@@ -36,7 +36,7 @@
  	margin:0;
  }
  
- ul {
+ ul#myMenu {
  	list-style-type: none;
  	width: 225px;
  	margin: 0;
@@ -73,7 +73,12 @@
 		
 		$("li.menu2").hide();
 		
-		$("li").hover(function(){
+		$("li.menu1").hover(function(){
+			$(this).addClass("choice");
+		}, function(){
+			$(this).removeClass("choice");
+		});
+		$("li.menu2").hover(function(){
 			$(this).addClass("choice");
 		}, function(){
 			$(this).removeClass("choice");
