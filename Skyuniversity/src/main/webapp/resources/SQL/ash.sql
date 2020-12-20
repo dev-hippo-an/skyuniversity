@@ -1620,4 +1620,69 @@ select fk_boardKindNo, subject, readCount, boardName, boardNo
       (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_diet b
       join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
       ) V
-    where lower(subject) like '%' || lower('테') || '%'
+    where lower(subject) like '%' || lower('테') || '%';
+    
+    
+    
+    
+-------------------------- 다이어트 댓글 테이블 생성 ------------------------------
+create table tbl_comment_housemarket(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,      -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_housemarket PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_housemarket_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 다이어트 댓글 테이블 생성 ------------------------------
+create table tbl_comment_bookmarket(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,      -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_bookmarket PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_bookmarket_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 다이어트 댓글 테이블 생성 ------------------------------
+create table tbl_comment_etcmarket(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,      -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_etcmarket PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_etcmarket_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;

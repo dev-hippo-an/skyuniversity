@@ -128,6 +128,34 @@ public interface InterAnsehyeongDAO {
 
 
 	
+
+	// 요청한 순서의 댓글을 8개씩 가져오기
+	List<CommentVO> getCommentList(Map<String, String> paraMap);
+
+	// 댓글의 추천, 비추천 수를 가져온다.
+	int getCommentGoodCount(Map<String, String> paraMap);
+
+	int getCommentBadCount(Map<String, String> paraMap);
+
+	// 댓글 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	int addCommentUp(Map<String, String> paraMap);
+
+	// 댓글 비추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	int addCommentDown(Map<String, String> paraMap);
+
+	// 댓글 신고 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	int addCommentReport(Map<String, String> paraMap);
+
+	// 댓글을 삭제해주는 메서드(ajax로 처리)
+	int deleteComment(Map<String, String> paraMap);
+
+	// 댓글을 수정해주는 메서드 (ajax로 처리)
+	int updateComment(Map<String, String> paraMap);
+
+	// 댓글쓰기 완료 후, 포인트 올려주기
+	int addPoint(Map<String, String> paraMap);
+	   
+	
 	
 
 

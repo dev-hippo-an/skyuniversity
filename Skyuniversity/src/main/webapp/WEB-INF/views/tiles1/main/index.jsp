@@ -5,6 +5,33 @@
 <%
 	String ctxPath = request.getContextPath();
 %>
+
+<style>
+table {
+   border-collapse: collapse;
+   border-spacing: 0;
+   width: 80%;
+  /*  border: 1px solid #ddd; */
+}
+
+th, td {
+   text-align: center;
+   padding: 8px;
+   border: 1px solid #ddd;
+}
+
+thead {
+	background-color: #0841ad;
+	font-size: 10pt;
+	color: white;
+}
+
+tbody {
+	font-size: 10pt;
+}
+
+
+</style>
 <script type="text/javascript">
 	$(document).ready(function(){
 		autoSlide();

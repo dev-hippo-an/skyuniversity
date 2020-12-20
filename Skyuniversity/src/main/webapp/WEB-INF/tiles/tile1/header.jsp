@@ -90,7 +90,7 @@ label#update-nickname:hover {
 		
 		$("input#search").keydown(function(event){
 	           if(event.keyCode == 13) { 
-	              goSearch();
+	        	   goAnSearch();
 	           }
 	    });
 		
@@ -137,7 +137,7 @@ label#update-nickname:hover {
 	var lenBoardList = 10;
 	
 	
-	function goSearch() {
+	function goAnSearch() {
 		
 		var searchVal = $("input#search").val().trim();
 		
@@ -176,7 +176,7 @@ label#update-nickname:hover {
 				
 				html = "";
 				if(json.length == 0) {
-        			html += "<p>"+
+        			html += "<p style='font-size: 15pt; font-weight: bold; color: red;'>"+
         					"검색기록이 없습니다!!ㅋㅋ" +
         					"</p>" +
         					"<br>";
@@ -498,7 +498,7 @@ label#update-nickname:hover {
 		</ul>
 		<input type="text" name="search" id="search" placeholder="Search.." autocomplete="off"  maxlength="8" />
 		<input type="text" style="display: none;" id="hideSearchWord">
-		<button type="button" onclick="goSearch();">검색</button>
+		<button type="button"  style="width: 40px; background-color: #0843ad; color: white; padding: 2px; border-radius: 7px; border: none;" onclick="goAnSearch();">검색</button>
 		
 		<div id="myModal" class="modal">
 			
