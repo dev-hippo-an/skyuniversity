@@ -895,54 +895,388 @@ select *
 from tbl_board_report
 where fk_boardKindNo = 9 and fk_boardNo = 11 and fk_memberNo = 105;
 ------------------------------- 2020-12-14 end -------------------------------------
+------------------------------- 2020-12-15 start -------------------------------------
+select *
+from tbl_board_humor;
+
+update tbl_board_humor set editDate = sysdate
+where boardNo = 31;
+
+rollback;
+------------------------------- 2020-12-15 end -------------------------------------
+------------------------------- 2020-12-17 start -------------------------------------
+select *
+from tbl_notice;
+
+-------------------------- 자유게시판(반말) 댓글 테이블 생성 ------------------------------
+drop table tbl_comment_informal purge;
+create table tbl_comment_informal(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_informal PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_informal_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 자유게시판(존대) 댓글 테이블 생성 ------------------------------
+create table tbl_comment_polite(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_polite PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_polite_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 유머게시판 댓글 테이블 생성 ------------------------------
+create table tbl_comment_humor(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_humor PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_humor_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 정치,사회,이슈게시판 댓글 테이블 생성 ------------------------------
+create table tbl_comment_issue(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_issue PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_issue_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- mbti게시판 댓글 테이블 생성 ------------------------------
+create table tbl_comment_mbti(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_mbti PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_mbti_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 맛집게시판 댓글 테이블 생성 ------------------------------
+create table tbl_comment_food(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_food PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_food_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 연애게시판 댓글 테이블 생성 ------------------------------
+create table tbl_comment_love(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_love PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_love_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 취미게시판 댓글 테이블 생성 ------------------------------
+create table tbl_comment_hobby(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_hobby PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_hobby_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 헬스 댓글 테이블 생성 ------------------------------
+create table tbl_comment_health(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent     VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_health PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_health_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 다이어트 댓글 테이블 생성 ------------------------------
+create table tbl_comment_diet(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,      -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_diet PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_diet_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+ALTER TABLE TBL_COMMENT_INFORMAL RENAME COLUMN content TO cmtContent;
+
+select *
+from tbl_comment_humor;
+
+
+select rno, commentNo, fk_boardNo, fk_memberNo, fk_nickname
+     , levelImg, cmtContent, regDate
+     , (select count(*) from tbl_comment_humor where status = 1 and fk_boardNo = 39) AS totalCount
+from 
+(
+    select row_number() over(order by commentNo desc) AS rno, V.commentNo, V.fk_boardNo
+         , V.fk_memberNo, M.nickname AS fk_nickname, L.levelImg, cmtContent
+         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+        
+	from tbl_commu_member M join tbl_comment_humor V  
+	on V.fk_memberNo = M.fk_memberNo
+	join tbl_commu_member_level L
+    on M.fk_levelNo = L.levelNo
+	where V.status = 1 and fk_boardNo = 39
+)T
+order by rno asc;
+
+
+select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, subject
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, fileName, orgFilename, fileSize
+			 , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+             , (select count(*) from tbl_board_bad where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as downCount
+             , levelImg
+        from tbl_commu_member M join tbl_board_informal V  
+		on V.fk_memberNo = M.fk_memberNo
+        join tbl_commu_member_level L
+        on M.fk_levelNo = L.levelNo
+		where V.status = 1 and boardNo = 13;
+
+select *
+from tbl_board_good
+where fk_boardKindNo = 10 and fk_boardNo = 39;
+
+
+------------- 댓글 추천 테이블 생성 -------------
+drop table tbl_comment_bad purge;
+CREATE TABLE tbl_comment_good(
+    fk_boardKindNo   NUMBER     NOT NULL,       -- 게시판 종류 번호
+    fk_boardNo       NUMBER     NOT NULL,       -- 게시글 번호
+    fk_commentNo     NUMBER     NOT NULL,       -- 댓글 번호
+    fk_memberNo      NUMBER     NOT NULL,       -- 회원 번호
+    CONSTRAINT PK_tbl_comment_good PRIMARY KEY(fk_boardKindNo, fk_boardNo, fk_commentNo, fk_memberNo)
+);
+
+------------- 댓글 비추천 테이블 생성 -------------
+CREATE TABLE tbl_comment_bad(
+    fk_boardKindNo   NUMBER     NOT NULL,       -- 게시판 종류 번호
+    fk_boardNo       NUMBER     NOT NULL,       -- 게시글 번호
+    fk_commentNo     NUMBER     NOT NULL,       -- 댓글 번호
+    fk_memberNo      NUMBER     NOT NULL,       -- 회원 번호
+    CONSTRAINT PK_tbl_comment_bad PRIMARY KEY(fk_boardKindNo, fk_boardNo, fk_commentNo, fk_memberNo)
+);
+
+------------- 댓글 신고 테이블 생성 -------------
+CREATE TABLE tbl_comment_report(
+    fk_boardKindNo   NUMBER     NOT NULL,       -- 게시판 종류 번호
+    fk_boardNo       NUMBER     NOT NULL,       -- 게시글 번호
+    fk_commentNo     NUMBER     NOT NULL,       -- 댓글 번호
+    fk_memberNo      NUMBER     NOT NULL,       -- 회원 번호
+    CONSTRAINT PK_tbl_comment_report PRIMARY KEY(fk_boardKindNo, fk_boardNo, fk_commentNo, fk_memberNo)
+);
+
+
+select *
+from tbl_comment_humor;
+
+
+		select rno, commentNo, fk_boardNo, fk_memberNo, fk_nickname
+		     , levelImg, cmtContent, regDate
+		     , (select count(*) from tbl_comment_humor where status = 1 and fk_boardNo = 39) AS totalCount
+		     , (select count(*) from tbl_comment_good where fk_boardKindNo = 10 and fk_boardNo = 39 and fk_commentNo = commentNo) as cmtUpCount
+             , (select count(*) from tbl_comment_bad where fk_boardKindNo = 10 and fk_boardNo = 39 and fk_commentNo = commentNo) as cmtDownCount
+		from 
+		(
+		    select row_number() over(order by commentNo desc) AS rno, V.commentNo, V.fk_boardNo
+		         , V.fk_memberNo, M.nickname AS fk_nickname, L.levelImg, cmtContent
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+			from tbl_commu_member M join tbl_comment_humor V  
+			on V.fk_memberNo = M.fk_memberNo
+			join tbl_commu_member_level L
+		    on M.fk_levelNo = L.levelNo
+			where V.status = 1 and fk_boardNo = 39
+		)T
+where rno between 1 and 22
+order by rno asc;
+
+select *
+from tbl_comment_humor;
+
+select *
+from tbl_comment_report;
+
+insert into tbl_comment_report
+values(10, 39, 24, 110);
+
+commit;
+
+ALTER TABLE tbl_comment_diet MODIFY(cmtContent NVARCHAR2(200));
+
+select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, categoryName as fk_categoryName, subject, regDate, editDate
+		         , content, readCount, status, upCount, levelImg, cmtCount
+from 
+(
+    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
+         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+         , content, readCount, status
+         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+         , levelImg
+         , (select count(*) from tbl_comment_humor where fk_boardNo = V.boardNo) as cmtCount
+    from tbl_category C join tbl_board_humor V 
+    on C.categoryNo = V.fk_categoryNo
+    join tbl_commu_member M 
+    on V.fk_memberNo = M.fk_memberNo
+    join tbl_commu_member_level L
+    on M.fk_levelNo = L.levelNo
+    where V.status = 1
+)T
+where rno between 1 and 15
+order by rno asc;
+
+select * 
+from tbl_comment_humor
+where fk_boardNo = 39 and status = 1;
+
+select *
+from tbl_commu_member;
+
+select * 
+from tbl_member;
+
+update tbl_member set pwd = 'qwer1234$';
+
+commit;
 
 
 
+-------------------------- 다이어트 댓글 테이블 생성 ------------------------------
+create table tbl_comment_diet(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호  
+    cmtContent        VARCHAR2(200)  NOT NULL,      -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    CONSTRAINT PK_tbl_comment_diet PRIMARY KEY(commentNo)
+);
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
+create sequence tbl_comment_diet_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;

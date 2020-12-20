@@ -33,6 +33,7 @@ public class BoardVO {
 	private String downCount;		// 비추천수
 	private String reportCount;		// 신고수
 	private String levelImg;		// 작성회원 레벨 이미지
+	private String cmtCount;		// 댓글수
 	
 	
 	public BoardVO() {}
@@ -257,6 +258,14 @@ public class BoardVO {
 
 	public void setLevelImg(String levelImg) {
 		this.levelImg = levelImg;
+	}
+
+	public String getCmtCount() {
+		return cmtCount;
+	}
+
+	public void setCmtCount(String cmtCount) {
+		this.cmtCount = cmtCount;
 	}
 	
 	
