@@ -16,7 +16,6 @@ table#scroltbl {
 	float:left; width:100%;
 }
 #bodys {
-	border: solid 1px gray;
 	overflow-y:auto; overflow-x:hidden; float:left; width:100%; height:350px;
 }
 #subli {
@@ -65,45 +64,49 @@ table#scroltbl {
 					$.each(json, function(index, item){
 						html += "<tr class='sublicl'>";
 						html += "<td>"+item.deptname+"</td>"+
-						        "<td style='padding-left:50px;'>"+item.grade+"</td>"+
-						        "<td style='padding-left:40px;'>"+item.memberno+"</td>"+
-						        "<td style='padding-left:50px;'>"+item.name+"<td>"+
-						        "<td style='padding-right:100px;'>"+item.startDate+"</td>"+
-						        "<td>"+item.endDate+"</td>"+
+						        "<td style='padding-left:25px;'>"+item.grade+"</td>"+
+						        "<td style='padding-left:20px;'>"+item.memberno+"</td>"+
+						        "<td style='padding-left:25px;'>"+item.name+"</td>"+
+						        "<td style='padding-left:25px;'>"+item.startDate+"</td>"+
+						        "<td style='padding-right:20px;'>"+item.endDate+"</td>"+
 						        "<td>"+item.reason+"</td>";
 						        if(item.filename == null){
-						        	html += "<td></td>";
+						        	html += "<td> </td>";
 						        }
 						        else{
-						        	html +="<td><a href='<%= request.getContextPath()%>/downloadLeaveInfo.sky?seq="+item.leaveNo+"'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>"
+						        	html +="<td style='padding-left:10px; width: 460px;'><a href='<%= request.getContextPath()%>/downloadLeaveInfo.sky?seq="+item.leaveNo+"'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>"
 						        }
 						        html += "<td>"+item.approve+"</td>";
 					    html += "</tr>";
 					});
 					$("#bodys").html(html);
-					
 				},error: function(request, status, error){
 		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 		        }
 			}); 
-			
 		});
 		
 	});
 </script>
-<div>
-	<label>학년도</label>
+<div style="padding-left: 10px; padding-right: 10px;">
+<div style="background-color: #b3d9ff; padding: 10px; border-radius: 3px;">
+	<label style="padding-right:10px;">학년도</label>
 	<select name="year" id="year">	
 	</select>
-	<label>학기</label>
+	<label style="padding-right:10px;">학기</label>
 	<select name="semester" id="semester">
 		<option>전체</option>
 		<option>1</option>
 		<option>2</option>
 	</select>
-	<button id="searchbtn2">조회</button>
+	<button id="searchbtn2" style="margin-left: 70px; border: none;">조회</button>
 </div>
+<br>
 <div>
+<span style="font-size: 12pt; font-weight: bold;">공결 목록</span>
+</div>
+<br>
+<div style="border: solid 1px #d9d9d9; height: 450px;">
 	<table class="table table-striped" id="scroltbl">
 		<thead id="scrolth">
 			<tr id="subli">
@@ -121,4 +124,5 @@ table#scroltbl {
 		<tbody id="bodys">
 		</tbody>
 	</table>
+</div>
 </div>

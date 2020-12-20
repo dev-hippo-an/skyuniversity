@@ -235,7 +235,6 @@
 		)
 		where approve in ('승인완료','승인취소') and regyear = #{year} and regmonth in (${month})
 		)
-		where rno between 1 and 3
 
 	</select>
 	
