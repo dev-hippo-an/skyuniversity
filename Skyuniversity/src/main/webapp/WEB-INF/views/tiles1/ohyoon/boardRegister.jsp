@@ -150,7 +150,7 @@
 	<form class="form-inline" name="registerForm" enctype="multipart/form-data">		
 		<input type="hidden" name="fk_boardKindNo" value="${infoMap.boardKindNo}" />
 		<input type="hidden" name="fk_memberNo" value="${sessionScope.loginuser.fk_memberNo}" />
-		<input type="hidden" name="boardName" value="${infoMap.boardName}" />
+		<%-- <input type="hidden" name="boardName" value="${infoMap.boardName}" /> --%>
 		<ul>
 			<li><h2>${infoMap.boardName}</h2></li>
 			<li><h3>작성자&nbsp;:&nbsp;${sessionScope.loginuser.nickname}</h3></li>

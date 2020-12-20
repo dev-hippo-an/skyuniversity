@@ -98,8 +98,8 @@ public class OhyoonAOP {
        // 회원의 포인트를 특정점수(예: 100점, 200점, 300점)만큼 증가시키는 메소드 작성하기
 	   // JoinPoint joinPoint 는 포인트컷 되어진 주업무의 메소드이다. 
        
-	   HttpServletRequest request = (HttpServletRequest)joinPoint.getArgs()[2];
-	   HttpServletResponse response = (HttpServletResponse)joinPoint.getArgs()[3];
+	   HttpServletRequest request = (HttpServletRequest)joinPoint.getArgs()[1];
+	   HttpServletResponse response = (HttpServletResponse)joinPoint.getArgs()[2];
 	   
 	   Map<String, String> paraMap = (Map<String, String>) joinPoint.getArgs()[0]; 
 	   // 주업무 메소드의 첫번쨰 파라미터를 얻어오는 것이다. 

@@ -7,6 +7,8 @@ import javax.annotation.Resource;
 import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
+import com.project.skyuniversity.ash.model.NoticeVO;
+
 @Repository
 public class OhyoonDAO implements InterOhyoonDAO {
 
@@ -318,7 +320,7 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	@Override
 	public int addBoardUp(Map<String, String> paraMap) throws Exception {
 		// 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
-		sqlsession.delete("ohyoon.getBoardBad", paraMap);
+		sqlsession.delete("ohyoon.deleteBoardBad", paraMap);
 		
 		// 추천 테이블에 행을 추가한다.
 		int result = sqlsession.insert("ohyoon.addBoardUp", paraMap);
@@ -330,7 +332,7 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	@Override
 	public int addBoardDown(Map<String, String> paraMap) throws Exception {
 		// 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
-		sqlsession.delete("ohyoon.getBoardGood", paraMap);
+		sqlsession.delete("ohyoon.deleteBoardGood", paraMap);
 		
 		// 추천 테이블에 행을 추가한다.
 		int result = sqlsession.insert("ohyoon.addBoardDown", paraMap);
@@ -381,10 +383,7 @@ public class OhyoonDAO implements InterOhyoonDAO {
 				sqlsession.update("ohyoon.updateDietBoardStatus", paraMap.get("boardNo"));
 				break;
 			}
-			
-			
 		}
-		
 		return result;
 	}
 
@@ -429,7 +428,394 @@ public class OhyoonDAO implements InterOhyoonDAO {
 		return result;
 	}
 
+	
+	// 게시물의 첨부파일 저장명, 원본명, 파일사이즈를 삭제해주기
+	@Override
+	public int deleteAttach(Map<String, String> paraMap) {
+		int result = 0;
+		switch (paraMap.get("boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
+		case "8":
+			result = sqlsession.update("ohyoon.deleteInformalAttach", paraMap.get("boardNo"));
+			break;
+		case "9":
+			result = sqlsession.update("ohyoon.deletePoliteAttach", paraMap.get("boardNo"));
+			break;
+		case "10":
+			result = sqlsession.update("ohyoon.deleteHumorAttach", paraMap.get("boardNo"));
+			break;
+		case "11":
+			result = sqlsession.update("ohyoon.deleteIssueAttach", paraMap.get("boardNo"));
+			break;
+		case "12":
+			result = sqlsession.update("ohyoon.deleteMbtiAttach", paraMap.get("boardNo"));
+			break;
+		case "13":
+			result = sqlsession.update("ohyoon.deleteFoodAttach", paraMap.get("boardNo"));
+			break;
+		case "14":
+			result = sqlsession.update("ohyoon.deleteLoveAttach", paraMap.get("boardNo"));
+			break;
+		case "15":
+			result = sqlsession.update("ohyoon.deleteHobbyAttach", paraMap.get("boardNo"));
+			break;
+		case "16":
+			result = sqlsession.update("ohyoon.deleteHealthAttach", paraMap.get("boardNo"));
+			break;
+		case "17":
+			result = sqlsession.update("ohyoon.deleteDietAttach", paraMap.get("boardNo"));
+			break;
+		}
+		return result;
+	}
+	
+	
+	// 파일첨부가 없는 글수정
+	@Override
+	public int updateBoard(BoardVO boardvo) {
+		int result = 0;
+		switch (boardvo.getFk_boardKindNo()) { // 게시판 번호에 따라 sql문을 다르게 한다.
+		case "8":
+			result = sqlsession.update("ohyoon.updateInformalBoard", boardvo);
+			break;
+		case "9":
+			result = sqlsession.update("ohyoon.updatePoliteBoard", boardvo);
+			break;
+		case "10":
+			result = sqlsession.update("ohyoon.updateHumorBoard", boardvo);
+			break;
+		case "11":
+			result = sqlsession.update("ohyoon.updateIssueBoard", boardvo);
+			break;
+		case "12":
+			result = sqlsession.update("ohyoon.updateMbtiBoard", boardvo);
+			break;
+		case "13":
+			result = sqlsession.update("ohyoon.updateFoodBoard", boardvo);
+			break;
+		case "14":
+			result = sqlsession.update("ohyoon.updateLoveBoard", boardvo);
+			break;
+		case "15":
+			result = sqlsession.update("ohyoon.updateHobbyBoard", boardvo);
+			break;
+		case "16":
+			result = sqlsession.update("ohyoon.updateHealthBoard", boardvo);
+			break;
+		case "17":
+			result = sqlsession.update("ohyoon.updateDietBoard", boardvo);
+			break;
+		}
+		return result;
+	}
 
 
+	// 파일첨부가 있는 글수정
+	@Override
+	public int updateBoardWithFile(BoardVO boardvo) {
+		int result = 0;
+		switch (boardvo.getFk_boardKindNo()) { // 게시판 번호에 따라 sql문을 다르게 한다.
+		case "8":
+			result = sqlsession.update("ohyoon.updateInformalBoardWithFile", boardvo);
+			break;
+		case "9":
+			result = sqlsession.update("ohyoon.updatePoliteBoardWithFile", boardvo);
+			break;
+		case "10":
+			result = sqlsession.update("ohyoon.updateHumorBoardWithFile", boardvo);
+			break;
+		case "11":
+			result = sqlsession.update("ohyoon.updateIssueBoardWithFile", boardvo);
+			break;
+		case "12":
+			result = sqlsession.update("ohyoon.updateMbtiBoardWithFile", boardvo);
+			break;
+		case "13":
+			result = sqlsession.update("ohyoon.updateFoodBoardWithFile", boardvo);
+			break;
+		case "14":
+			result = sqlsession.update("ohyoon.updateLoveBoardWithFile", boardvo);
+			break;
+		case "15":
+			result = sqlsession.update("ohyoon.updateHobbyBoardWithFile", boardvo);
+			break;
+		case "16":
+			result = sqlsession.update("ohyoon.updateHealthBoardWithFile", boardvo);
+			break;
+		case "17":
+			result = sqlsession.update("ohyoon.updateDietBoardWithFile", boardvo);
+			break;
+		}
+		return result;
+	}
+	
+	
+	// 공지리스트 불러오기
+    @Override
+    public List<NoticeVO> getNoticeList(Map<String, String> paraMap) {
+       List<NoticeVO> noticeList = sqlsession.selectList("ansehyeong.getNoticeList", paraMap);
+       return noticeList;
+    }
+	
+	
+    // 작성한 댓글 저장하기
+    @Override
+    public int addComment(CommentVO commentvo) {
+    	int  result = 0;
+    	switch (commentvo.getFk_boardKindNo()) {
+		case "8":
+			result = sqlsession.insert("ohyoon.addInformalComment", commentvo);
+			break;
+		case "9":
+			result = sqlsession.insert("ohyoon.addPoliteComment", commentvo);
+			break;
+		case "10":
+			result = sqlsession.insert("ohyoon.addHumorComment", commentvo);
+			break;
+		case "11":
+			result = sqlsession.insert("ohyoon.addIssueComment", commentvo);
+			break;
+		case "12":
+			result = sqlsession.insert("ohyoon.addMbtiComment", commentvo);
+			break;
+		case "13":
+			result = sqlsession.insert("ohyoon.addFoodComment", commentvo);
+			break;
+		case "14":
+			result = sqlsession.insert("ohyoon.addLoveComment", commentvo);
+			break;
+		case "15":
+			result = sqlsession.insert("ohyoon.addHobbyComment", commentvo);
+			break;
+		case "16":
+			result = sqlsession.insert("ohyoon.addHealthComment", commentvo);
+			break;
+		case "17":
+			result = sqlsession.insert("ohyoon.addDietComment", commentvo);
+			break;
+		}
+    	return result;
+    }
 
+    
+    // 요청한 순서의 댓글을 8개씩 가져오기
+    @Override
+    public List<CommentVO> getCommentList(Map<String, String> paraMap) {
+    	List<CommentVO> commentList = null;
+    	switch (paraMap.get("fk_boardKindNo")) {
+		case "8":
+			commentList = sqlsession.selectList("ohyoon.getInformalCommentList", paraMap);
+			break;
+		case "9":
+			commentList = sqlsession.selectList("ohyoon.getPoliteCommentList", paraMap);
+			break;
+		case "10":
+			commentList = sqlsession.selectList("ohyoon.getHumorCommentList", paraMap);
+			break;
+		case "11":
+			commentList = sqlsession.selectList("ohyoon.getIssueCommentList", paraMap);
+			break;
+		case "12":
+			commentList = sqlsession.selectList("ohyoon.getMbtiCommentList", paraMap);
+			break;
+		case "13":
+			commentList = sqlsession.selectList("ohyoon.getFoodCommentList", paraMap);
+			break;
+		case "14":
+			commentList = sqlsession.selectList("ohyoon.getLoveCommentList", paraMap);
+			break;
+		case "15":
+			commentList = sqlsession.selectList("ohyoon.getHobbyCommentList", paraMap);
+			break;
+		case "16":
+			commentList = sqlsession.selectList("ohyoon.getHealthCommentList", paraMap);
+			break;
+		case "17":
+			commentList = sqlsession.selectList("ohyoon.getDietCommentList", paraMap);
+			break;
+		}
+    	return commentList;
+    }
+
+    
+    // 댓글의 추천 수를 가져온다.
+    @Override
+    public int getCommentGoodCount(Map<String, String> paraMap) {
+    	int cmtUpCount = sqlsession.selectOne("ohyoon.getCommentGoodCount", paraMap);
+    	return cmtUpCount;
+    }
+    
+    
+    // 댓글의 비추천 수를 가져온다.
+    @Override
+    public int getCommentBadCount(Map<String, String> paraMap) {
+    	int cmtDownCount = sqlsession.selectOne("ohyoon.getCommentBadCount", paraMap);
+    	return cmtDownCount;
+    }
+    
+    
+    // 댓글 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
+    @Override
+    public int addCommentUp(Map<String, String> paraMap) {
+    	// 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
+		sqlsession.delete("ohyoon.deleteCommentBad", paraMap);
+		
+		// 추천 테이블에 행을 추가한다.
+		int result = sqlsession.insert("ohyoon.addCommentUp", paraMap);
+		return result;
+    }
+    
+    
+    // 댓글 비추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
+    @Override
+    public int addCommentDown(Map<String, String> paraMap) {
+    	// 댓글 추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
+		sqlsession.delete("ohyoon.deleteCommentGood", paraMap);
+		
+		// 댓글 비추천 테이블에 행을 추가한다.
+		int result = sqlsession.insert("ohyoon.addCommentDown", paraMap);
+		return result;
+    }
+    
+    
+    // 댓글 신고 테이블에 행을 추가해주는 메서드(ajax로 처리)
+    @Override
+    public int addCommentReport(Map<String, String> paraMap) {
+    	// 신고 테이블에 행을 추가한다.
+		int result = sqlsession.insert("ohyoon.addCommentReport", paraMap);
+		
+		// 해당 댓글의 신고 개수를 알아온다.
+		int reportCount = sqlsession.selectOne("ohyoon.getCommentReportCount", paraMap);
+		
+		// 만일 해당 댓글의 신고 개수가 10이상이면 글의 상태를 0으로 변경한다.
+		if (reportCount >= 10) {
+			switch (paraMap.get("fk_boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
+			case "8":
+				sqlsession.update("ohyoon.updateInformalCommentStatus", paraMap);
+				break;
+			case "9":
+				sqlsession.update("ohyoon.updatePoliteCommentStatus", paraMap);
+				break;
+			case "10":
+				sqlsession.update("ohyoon.updateHumorCommentStatus", paraMap);
+				break;
+			case "11":
+				sqlsession.update("ohyoon.updateIssueCommentStatus", paraMap);
+				break;
+			case "12":
+				sqlsession.update("ohyoon.updateMbtiCommentStatus", paraMap);
+				break;
+			case "13":
+				sqlsession.update("ohyoon.updateFoodCommentStatus", paraMap);
+				break;
+			case "14":
+				sqlsession.update("ohyoon.updateLoveCommentStatus", paraMap);
+				break;
+			case "15":
+				sqlsession.update("ohyoon.updateHobbyCommentStatus", paraMap);
+				break;
+			case "16":
+				sqlsession.update("ohyoon.updateHealthCommentStatus", paraMap);
+				break;
+			case "17":
+				sqlsession.update("ohyoon.updateDietCommentStatus", paraMap);
+				break;
+			}
+		}
+		return result;
+    }
+    
+    
+    // 댓글을 삭제해주는 메서드(ajax로 처리)
+    @Override
+    public int deleteComment(Map<String, String> paraMap) {
+    	// 댓글을 삭제하는 것이 아닌 상태(status)를 0으로 바꿔준다 
+    	int result = 0;
+    	switch (paraMap.get("fk_boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
+		case "8":
+			result = sqlsession.update("ohyoon.updateInformalCommentStatus", paraMap);
+			break;
+		case "9":
+			result = sqlsession.update("ohyoon.updatePoliteCommentStatus", paraMap);
+			break;
+		case "10":
+			result = sqlsession.update("ohyoon.updateHumorCommentStatus", paraMap);
+			break;
+		case "11":
+			result = sqlsession.update("ohyoon.updateIssueCommentStatus", paraMap);
+			break;
+		case "12":
+			result = sqlsession.update("ohyoon.updateMbtiCommentStatus", paraMap);
+			break;
+		case "13":
+			result = sqlsession.update("ohyoon.updateFoodCommentStatus", paraMap);
+			break;
+		case "14":
+			result = sqlsession.update("ohyoon.updateLoveCommentStatus", paraMap);
+			break;
+		case "15":
+			result = sqlsession.update("ohyoon.updateHobbyCommentStatus", paraMap);
+			break;
+		case "16":
+			result = sqlsession.update("ohyoon.updateHealthCommentStatus", paraMap);
+			break;
+		case "17":
+			result = sqlsession.update("ohyoon.updateDietCommentStatus", paraMap);
+			break;
+		}
+    	return result;
+    }
+    
+    
+    // 댓글을 수정해주는 메서드 (ajax로 처리)
+    @Override
+    public int updateComment(Map<String, String> paraMap) {
+    	int result = 0;
+    	switch (paraMap.get("fk_boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
+		case "8":
+			result = sqlsession.update("ohyoon.updateInformalComment", paraMap);
+			break;
+		case "9":
+			result = sqlsession.update("ohyoon.updatePoliteComment", paraMap);
+			break;
+		case "10":
+			result = sqlsession.update("ohyoon.updateHumorComment", paraMap);
+			break;
+		case "11":
+			result = sqlsession.update("ohyoon.updateIssueComment", paraMap);
+			break;
+		case "12":
+			result = sqlsession.update("ohyoon.updateMbtiComment", paraMap);
+			break;
+		case "13":
+			result = sqlsession.update("ohyoon.updateFoodComment", paraMap);
+			break;
+		case "14":
+			result = sqlsession.update("ohyoon.updateLoveComment", paraMap);
+			break;
+		case "15":
+			result = sqlsession.update("ohyoon.updateHobbyComment", paraMap);
+			break;
+		case "16":
+			result = sqlsession.update("ohyoon.updateHealthComment", paraMap);
+			break;
+		case "17":
+			result = sqlsession.update("ohyoon.updateDietComment", paraMap);
+			break;
+		}
+    	return result;
+    }
+    
+    
+    // 댓글쓰기 완료 후, 포인트 올려주기 
+    @Override
+    public int addPoint(Map<String, String> paraMap) {
+    	return sqlsession.update("ohyoon.pointPlus", paraMap);
+    }
+    
+    
+    
+    
+    
+    
+    
 }
