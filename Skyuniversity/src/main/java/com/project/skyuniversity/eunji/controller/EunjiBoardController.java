@@ -473,7 +473,7 @@ public class EunjiBoardController {
 			return jsonarr.toString();
 	}
 	
-	   @RequestMapping(value="/download.sky")
+	   @RequestMapping(value="/downloadLeaveInfo.sky")
 	   public void download(HttpServletRequest request, HttpServletResponse response) {
 	      
 	      String seq = request.getParameter("seq");

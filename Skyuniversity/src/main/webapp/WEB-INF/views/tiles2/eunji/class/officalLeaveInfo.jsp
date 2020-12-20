@@ -75,7 +75,7 @@ table#scroltbl {
 						        	html += "<td></td>";
 						        }
 						        else{
-						        	html +="<td><a href='<%= request.getContextPath()%>/download.sky?seq="+item.leaveNo+"'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>"
+						        	html +="<td><a href='<%= request.getContextPath()%>/downloadLeaveInfo.sky?seq="+item.leaveNo+"'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>"
 						        }
 						        html += "<td>"+item.approve+"</td>";
 					    html += "</tr>";
