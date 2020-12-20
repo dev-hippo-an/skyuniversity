@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.project.skyuniversity.common.Sha256;
 import com.project.skyuniversity.jihyun.model.JihyunMemberVO;
 import com.project.skyuniversity.jihyun.service.InterJihyunService;
 
@@ -49,9 +50,11 @@ public class JihyunController {
 		String userid = request.getParameter("userid");
 		String pwd = request.getParameter("pwd");
 
+		//System.out.println(userid +"pwd:"+pwd);
+		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("userid", userid);
-		paraMap.put("pwd", pwd); //Sha256.encrypt(pwd)
+		paraMap.put("pwd", Sha256.encrypt(pwd)); //Sha256.encrypt(pwd)
 
 		JihyunMemberVO loginuser = service.getLoginMember(paraMap);
 
@@ -92,58 +95,105 @@ public class JihyunController {
 	
 	// 학생정보조회
 	@RequestMapping(value = "/lookupStudentInfo.sky")
-	public ModelAndView lookupStudentInfo(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLoginhs_lookupStudentInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		mav.setViewName("jihyun/studentinfo/lookupStudentInfo.tiles2");
 		return mav;
 	}
 	
-	// 비밀번호 변경
+asdfasdfasdfasdf	
+	// 비밀번호 변경 페이지 요청
+		@RequestMapping(value = "/checkPwd.sky")
+		public ModelAndView checkPwd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+			
+			mav.setViewName("jihyun/studentinfo/changepwd.tiles2");
+			return mav;
+		}
+	
+	// 비밀번호 변경 페이지 요청
 	@RequestMapping(value = "/changepwd.sky")
-	public ModelAndView changepwd(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLoginhs_changepwd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		mav.setViewName("jihyun/studentinfo/changepwd.tiles2");
 		return mav;
 	}
 	
+	// 비밀번호 변경
+	@RequestMapping(value="/pwdChangeEndhs.sky", method = {RequestMethod.POST})
+	public ModelAndView pwdChangeEndhs(ModelAndView mav, HttpServletRequest request) {
+		
+		System.out.println("들어와따");
+		
+		String memberno = request.getParameter("memberno");
+		String pwd = request.getParameter("pwd");
+		
+		System.out.println("memberno :"+memberno);
+		System.out.println("pwd :"+pwd);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("memberno", memberno);
+		paraMap.put("pwd", Sha256.encrypt(pwd)); //비밀번호 암호화
+		
+		int n = service.updatePwd(paraMap);
+		
+		System.out.println("n :"+n);
+		
+		String message = "";
+		String loc = request.getContextPath()+"/changepwd.sky";
+		if(n == 1) {
+			message = "비밀번호 변경 성공";
+		}
+		else {
+			message = "비밀번호 변경 실패";
+		}
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+
+		mav.setViewName("msg");
+		
+		return mav;
+	}
+	
+	
 	// 학사일정
 	@RequestMapping(value = "/schedule.sky")
-	public ModelAndView schedule(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLoginhs_schedule(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		mav.setViewName("jihyun/studentinfo/schedule.tiles2");
 		return mav;
 	}
 	// 증명서발급
 	@RequestMapping(value = "/certificate.sky")
-	public ModelAndView certificate (ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLoginhs_certificate (HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		mav.setViewName("jihyun/studentinfo/certificate.tiles2");
 		return mav;
 	}
 	// 기이수성적조회
 	@RequestMapping(value = "/totalGrade.sky")
-	public ModelAndView totalGrade(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLoginhs_totalGrade(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		mav.setViewName("jihyun/grade/totalGrade.tiles2");
 		return mav;
 	}
 	// 당학기성적조회
 	@RequestMapping(value = "/thisSemesterGrade.sky")
-	public ModelAndView thisSemesterGrade(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLoginhs_thisSemesterGrade(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		mav.setViewName("jihyun/grade/thisSemesterGrade.tiles2");
 		return mav;
 	}
 	// 성적표출력
 	@RequestMapping(value = "/printReportCard.sky")
-	public ModelAndView printReportCard(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLoginhs_printReportCard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		mav.setViewName("jihyun/grade/printReportCard.tiles2");
 		return mav;
 	}
 	// 교양 및 전공필수 이수현황
 	@RequestMapping(value = "/statusOfComplete.sky")
-	public ModelAndView statusOfComplete(ModelAndView mav, HttpServletRequest request) {
+	public ModelAndView requiredLoginhs_statusOfComplete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
 		mav.setViewName("jihyun/grade/statusOfComplete.tiles2");
 		return mav;

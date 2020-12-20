@@ -20,4 +20,10 @@ public class JihyunService implements InterJihyunService {
 		return getLoginMember;
 	}
 
+	@Override
+	public int updatePwd(Map<String, String> paraMap) {
+		int n = dao.updatePwd(paraMap);
+		return n;
+	}
+
 }

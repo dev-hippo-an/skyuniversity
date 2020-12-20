@@ -68,16 +68,157 @@
 	outline: none;
 }
 
+.errorMessage {
+	color: red;
+	font-weight: 300;
+}
 
 </style>
 
 <script type="text/javascript">
+	
+	var boolNowPwd = false;
+	var boolNewPwd = false;
+	var boolCheckPwd = false;
+
 	$(document).ready(function(){
 		
+		console.log("${loginuser.pwd}");
 		
+		$("p.error").hide();
+		
+		$("input#nowPwd").blur(function(){
+			
+			$(this).next().hide();
+			$(this).next().removeClass("errorMessage");
+			
+			// 현재비밀번호를 가져온다.
+			var nowPwd = $(this).val().trim();
+			if("${loginuser.pwd}" != nowPwd){
+				$.ajax({
+					url:"<%= request.getContextPath() %>/checkPwd.sky",
+					data:{"nowPwd":nowPwd},
+					type:"POST",
+					dataType:"json",
+					success: function(json){
+						
+					},
+					error: function(request, status, error){
+			               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			           }
+					
+				});
+				$(this).next().text("비밀번호를 확인해주세요.");
+				$(this).next().addClass("errorMessage");
+				$(this).next().show();
+			}
+			else if(nowPwd == ""){
+				$(this).next().text("현재 비밀번호를 입력해주세요.");
+				$(this).next().addClass("errorMessage");
+				$(this).next().show();
+			}
+			else{
+				boolNowPwd = true;
+			}
+			
+		});
+		
+		$("input#newPwd").blur(function(){
+			
+			$(this).next().hide();
+			$(this).next().removeClass("errorMessage");
+			
+			var newPwd = $(this).val().trim();
+
+            if (newPwd == "") {
+                $(this).next().text("새비밀번호를 입력해주세요.");
+                $(this).next().addClass("errorMessage");
+                $(this).next().show();
+            } else if("${loginuser.pwd}" == newPwd) {
+            	$(this).next().text("현재와 같은 비밀번호는 사용하실 수 없습니다.");
+                $(this).next().addClass("errorMessage");
+                $(this).next().show();
+            } else {
+                var regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
+                // 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
+
+                var bool = regExp.test(newPwd);
+
+                if (!bool) {
+                    $(this).next().text("비밀번호는 영문자,숫자,특수기호가 혼합된 8~15 글자로 입력하세요.");
+                    $(this).next().addClass("errorMessage");
+                    $(this).next().show();
+                } else {
+                	boolNewPwd = true;
+                }
+            }
+		});
+		
+		$("input#CheckPwd").blur(function(){
+			$(this).next().hide();
+			$(this).next().removeClass("errorMessage");
+			
+			var newPwd = $("input#newPwd").val();
+			var checkPwd = $(this).val().trim();
+
+			if (checkPwd == "") {
+                 $(this).next().text("새비밀번호 확인을 진행해주세요.");
+                 $(this).next().addClass("errorMessage");
+                 $(this).next().show();
+            } else {
+                 if (newPwd != checkPwd) {
+                     $(this).next().text("비밀번호가 일치하지 않습니다.");
+                     $(this).next().addClass("errorMessage");
+                     $(this).next().show();
+                     $("input#newPwd").focus();
+                 } else {
+                	 boolCheckPwd = true;
+                 }
+             }
+		});
+		
+		$("input#CheckPwd").keyup(function(){
+			if(event.keyCode == 13) {
+				goChangePwd();
+			}
+		});
 	});
 	
-	function goChagePwd() {
+	function goChangePwd() {
+		/* 
+		console.log(boolNowPwd);
+		console.log(boolNewPwd);
+		console.log(boolCheckPwd);
+		 */
+		if(boolNowPwd && boolNewPwd && boolCheckPwd ){
+			console.log("비밀번호변경");
+			var frm = document.pwdChangeFrm;
+			
+			frm.action = "<%=request.getContextPath()%>/pwdChangeEndhs.sky";
+			frm.method = "POST";
+			frm.submit();
+		}
+		else {
+			
+			var error = "";
+			var cnt = 0;
+			if(!boolNowPwd){
+				error += "<현재 비밀번호>";
+				cnt += 1;
+			}
+			
+			if(!boolNewPwd){
+				error += " <새 비밀번호>";
+				cnt += 1;
+			}
+			
+			if(!boolCheckPwd){
+				error += " <비밀번호 확인란>";
+				cnt += 1;
+			}
+			
+			alert(error+"을(를) 확인해주세요.");
+		}
 		
 	}
 </script>
@@ -85,19 +226,20 @@
 <div id="pwdChageContainer">
 
 	<div class="defaultInfo">
-		<label style="width: 35px;">학번</label><input type="text" class="defaultInput" readonly/>
-		<label style="width: 35px;">이름</label><input type="text" class="defaultInput" readonly/>
+		<label style="width: 35px;">학번</label><input type="text" class="defaultInput" value="${loginuser.memberno}" readonly/>
+		<label style="width: 35px;">이름</label><input type="text" class="defaultInput" value="${loginuser.name}" readonly/>
 	</div>
 	<form name="pwdChangeFrm" class="changeInput">
 		<label class="pcLabel">현재 비밀번호</label><br>
-		<input class="pcInput" type="password"/><br>
+		<input id="nowPwd"class="pcInput" type="password"/>
 		<p class="error"></p>    	
 		<label class="pcLabel">새 비밀번호</label><br>
-		<input class="pcInput" type="password" name="pwd"/><br>
+		<input id="newPwd" class="pcInput" type="password" name="pwd"/>
 		<p class="error"></p>    	
 		<label class="pcLabel">비밀번호 확인</label><br>
-		<input class="pcInput" type="password" /><br>
-		<p class="error"></p>    	
+		<input id="CheckPwd" class="pcInput" type="password" />
+		<p class="error"></p>
+		<input type="hidden" value="${loginuser.memberno}" name="memberno"/>
 	</form>  	
-	<button type="button" class="btnChange" onclick="goChagePwd();">비밀번호 변경</button>
+	<button type="button" class="btnChange" onclick="goChangePwd();">비밀번호 변경</button>
 </div>

@@ -94,10 +94,28 @@
 	text-align: center;
 	background: linear-gradient(to bottom, rgba(102,152,203,1) 0%, rgba(92,138,184,1) 100%);
  }
- 
- .btn-gradient {
-	margin: 5px;
-}
+
+	
+	.mybtn {
+		background-color: #2b79c2;
+		color: white;
+		font-weight: bold;
+	}
+	
+	.mybtn:hover {
+		background-color: #1d85e6;
+		color: white;
+	}
+	
+	.mybtn:focus {
+		outline: none;
+		color: white;
+	}
+	
+	.yourbtn:focus {
+		outline: none;
+	}
+	
 </style>
 
 <script type="text/javascript">
@@ -151,7 +169,11 @@
 	<div id="block2">
 		<div id="changeAdd">
 			<div>
-				<div><label class="miniTitle2">우편번호</label><input type="text" class="caInput" name="postcode"/><button type="button" class="btn btn-primary">주소찾기</button></div>
+				<div>
+					<label class="miniTitle2">우편번호</label><input type="text" class="caInput" name="postcode"/>
+					<button type="button" class="btn btn-default yourbtn" style="margin: 0 10px;;">주소찾기</button>
+					<button type="button" class="btn mybtn" style="margin-left: 40px;">저장</button>
+				</div>
 				<label class="miniTitle2">주소</label><input type="text" class="caInput" name="address"/><br>
 				<label class="miniTitle2">상세주소</label><input type="text" class="caInput" name="detailaddress"/><br>
 				<label class="miniTitle2">연락처</label><input type="text" class="caInput" name="mobile"/><br>
@@ -164,8 +186,8 @@
 			<div style="width: 150px; height: 200px; border: solid 1px gray;">등록할사진</div>
 				<div style="display: flex; flex-direction: column; justify-content:flex-end; margin-left: 20px;">
 					<span style="border: solid 1px gray; width: 200px;">사진파일을 첨부해주세요</span>
-					<button type="button" class="btnChange" style="margin-top: 20px;">사진업로드</button>
-					<button type="button" class="btnChange" style="margin-top: 20px;">사진변경신청</button>
+					<button type="button" class="btn mybtn" style="margin-top: 20px;">사진업로드</button>
+					<button type="button" class="btn mybtn" style="margin-top: 20px;">사진변경신청</button>
 				</div>
 			</div>
 		

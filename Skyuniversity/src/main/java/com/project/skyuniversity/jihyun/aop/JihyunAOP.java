@@ -37,7 +37,7 @@ public class JihyunAOP {
 		public void requiredLogin() {}
 		// execution()-> 주업무인 메소드를 말함
 		// com.spring.. => 패키지명에 com.spring가 들어가는 모든 패키지를 말함.
-		// *Controller => 앞에 뭐가 들어오든 클래스명이 Controller로 끝나는 모든 메소드
+		// *Controller => 앞에 뭐가 들어오든 클래스명이 Controller로 끝나는 모든 클래스
 		// com.spring..*Controller => 패키지명이 com.spring로 시작하고 클래스명이 Controller로 끝나는 모든 메소드
 		// public * => 접근제한자가 public이고 리턴타입은 아무거나
 		// requiredLogin_* => 메소드명이 requiredLogin_으로 시작해야함

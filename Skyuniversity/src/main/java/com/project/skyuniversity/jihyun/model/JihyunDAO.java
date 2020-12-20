@@ -18,4 +18,9 @@ public class JihyunDAO implements InterJihyunDAO {
 		return getLoginMember;
 	}
 
+	public int updatePwd(Map<String, String> paraMap) {
+		int n = sqlsession.update("Jihyun.updatePwd", paraMap);
+		return n;
+	}
+
 }

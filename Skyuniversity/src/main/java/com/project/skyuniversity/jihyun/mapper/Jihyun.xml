@@ -12,4 +12,8 @@
 		where memberno = #{userid} and pwd = #{pwd} 
 	</select>
 
+	<update id="updatePwd" parameterType="HashMap">
+		update tbl_member set pwd = #{pwd} 
+   		where memberno = #{memberno}
+	</update>
 </mapper>
