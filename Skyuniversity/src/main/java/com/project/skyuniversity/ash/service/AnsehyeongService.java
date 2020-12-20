@@ -338,6 +338,21 @@ public class AnsehyeongService implements InterAnsehyeongService {
 	   }
 
 
+	@Override
+	public List<MarketBoardVO> getSearchBoardList(Map<String, String> paraMap) {
+		List<MarketBoardVO> searchBoardList = dao.getSearchBoardList(paraMap);
+		return searchBoardList;
+	}
+
+
+	@Override
+	public int getAnTotalHitCount(Map<String, String> paraMap) {
+		
+		int totalHitCount = dao.getAnTotalHitCount(paraMap);
+		return totalHitCount;
+	}
+
+
 	
 
 

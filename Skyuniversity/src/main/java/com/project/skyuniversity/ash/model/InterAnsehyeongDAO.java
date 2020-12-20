@@ -121,6 +121,10 @@ public interface InterAnsehyeongDAO {
 
 	List<MarketBoardVO> popularBoardList();
 
+	List<MarketBoardVO> getSearchBoardList(Map<String, String> paraMap);
+
+	int getAnTotalHitCount(Map<String, String> paraMap);
+
 
 
 	

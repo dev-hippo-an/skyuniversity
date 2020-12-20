@@ -636,7 +636,7 @@ on m.fk_levelNo = l.levelNo
 join tbl_boardkind k
 on n.fk_boardKindNo = k.boardKindNo
 left join (select fk_boardNo, count(*) as upCount
-                    from tbl_board_bad
+                    from tbl_board_good
                     where fk_boardKindNo = 25
                     group by fk_boardNo
                 ) g
@@ -726,9 +726,236 @@ select fk_boardKindNo, subject, readCount, boardName, boardNo
       join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
       ) V
       
+    
+      
       
       select * from tbl_category;
-      select boardNo, fk_boardkindno, subject from tbl_board_notice;
+      select b.boardNo, b.fk_boardkindno, b.subject, c.categoryName from tbl_board_notice b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo;
+      
+      
+      
+      selectboardNo, fk_boardKindNo, subject, categoryName
+      from 
+      (
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_notice b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+      union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_council b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from TBL_BOARD_major b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from TBL_BOARD_club b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from TBL_BOARD_graduate b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_critic b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from TBL_BOARD_study b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from TBL_BOARD_cert b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from TBL_BOARD_emp b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_joboffer b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from TBL_BOARD_lost b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_informal b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_polite b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from  tbl_board_humor b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_issue b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from  tbl_board_mbti b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_food b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_love b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from  tbl_board_hobby b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_health b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_diet b left join tbl_category c
+      on b.fk_categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+       union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_housemarket b left join tbl_category c
+      on b.categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+      union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_bookmarket b left join tbl_category c
+      on b.categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5
+      
+      union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_etcmarket b left join tbl_category c
+      on b.categoryNo = c.categoryNo
+      where status = 1) aa
+      where rno between 1 and 5)
+      order by fk_boardKindNo
+      ;
+      
+      select * from tbl_boardKind;
+      select * from tbl_board_notice;
       select * from tbl_board_council;
       select * from TBL_BOARD_major;
       select * from TBL_BOARD_club;
@@ -749,8 +976,648 @@ select fk_boardKindNo, subject, readCount, boardName, boardNo
       select * from tbl_board_hobby;
       select * from tbl_board_health;
       select * from tbl_board_diet;
-      select * from tbl_board_etcmarket;
       select * from tbl_board_housemarket;
       select * from tbl_board_bookmarket;
+      select * from tbl_board_etcmarket;
       
       
+      select * from tbl_boardKind;
+      
+      
+      
+      select boardName, fk_boardNo as boardNo, fk_boardKindNo, subject
+      from
+      (
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_notice where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_council where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_major where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_club where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_graduate where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_critic where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_study where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_cert where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_emp where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_joboffer where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_lost where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_informal where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_polite where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_humor where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_issue where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_mbti where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_food where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_love where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_hobby where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname,subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_health where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      union all
+      (select boardname, subject, fk_boardKindNo, fk_boardno, count(*) as goodCount
+      from
+      (select k.boardname, b.fk_boardkindno, g.fk_boardno, subject from tbl_board_good g
+      inner join (select * from tbl_board_diet where status = 1 and regDate >= sysdate - 7) b 
+      on g.fk_boardno = b.boardno
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+      V group by fk_boardno, fk_boardkindno, boardname, subject)
+      order by goodCount desc)
+      V2 
+     where rownum <= 11
+     
+     
+     
+     select fk_boardKindNo, fk_boardNo, count(*)
+     from tbl_board_good
+     group by fk_boardKindNo, fk_boardNo
+     
+     
+     
+     select boardNo, fk_boardKindNo, subject, boardName
+     from
+     ( 
+     select row_number() over(order by upCount desc, readCount desc) as rno, boardNo, fk_boardKindNo, subject, readCount, upCount, boardName
+     from 
+     (
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_NOTICE b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+      
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_COUNCIL b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_MAJOR b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_CLUB b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_GRADUATE b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_CRITIC b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_INFORMAL b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from tbl_board_polite b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_HUMOR b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_ISSUE b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_MBTI b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_FOOD b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_LOVE b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_HOBBY b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_HEALTH b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_DIET b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_STUDY b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_CERT b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_EMP b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_JOBOFFER b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     union all
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
+     from TBL_BOARD_LOST b
+     left join 
+     (
+         select fk_boardKindNo, fk_boardNo, count(*) as upCount
+         from tbl_board_good
+         group by fk_boardKindNo, fk_boardNo
+     ) v 
+     on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     ) ee
+     where status = 1
+     ) 
+     where rno <= 11;
+     
+     
+     select * from tab;
+     
+     
+     
+     select fk_boardKindNo, subject, boardName, boardNo
+     from
+     (
+     select row_number() over (order by fk_boardKindNo) as rno, fk_boardKindNo, subject, boardName, boardNo
+      from
+      (
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_notice b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_council b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_major b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_club b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_graduate b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_critic b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_study b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_cert b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_emp b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_joboffer b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_lost b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_informal b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_polite b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_humor b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_issue b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_mbti b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_food b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_love b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_hobby b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_health b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      ) V
+    where lower(subject) like '%' || lower('하') || '%'
+    ) tt
+    where rno between 1 and 3;
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    
+    select count(*) as count
+      from
+      (
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_notice b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_council b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_major b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_club b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_graduate b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_critic b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_study b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_cert b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_emp b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_joboffer b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_lost b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_informal b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_polite b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_humor b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_issue b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_mbti b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_food b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_love b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_hobby b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_health b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      ) V
+    where lower(subject) like '%' || lower('테') || '%'

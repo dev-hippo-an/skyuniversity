@@ -116,13 +116,16 @@ public interface InterAnsehyeongService {
 	
 	
 	
-	
 
 	List<MarketBoardVO> recentBoardList();
 
 	List<MarketBoardVO> bestBoardList();
 
 	List<MarketBoardVO> popularBoardList();
+
+	List<MarketBoardVO> getSearchBoardList(Map<String, String> paraMap);
+
+	int getAnTotalHitCount(Map<String, String> paraMap);
 
 
 

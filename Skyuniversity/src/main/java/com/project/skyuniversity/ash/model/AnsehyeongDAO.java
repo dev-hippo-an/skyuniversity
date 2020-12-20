@@ -411,22 +411,35 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 	
 	   @Override
 	   public List<MarketBoardVO> recentBoardList() {
-	      List<MarketBoardVO> recentBoardList = sqlsession.selectList("ansehyeong.recentBoardList");
+	      List<MarketBoardVO> recentBoardList = sqlsession.selectList("ansehyeong.indexRecentBoardList");
 	      return recentBoardList;
 	   }
 
 	   @Override
 	   public List<MarketBoardVO> bestBoardList() {
 	      
-	      List<MarketBoardVO> bestBoardList = sqlsession.selectList("ansehyeong.bestBoardList"); 
+	      List<MarketBoardVO> bestBoardList = sqlsession.selectList("ansehyeong.indexBestBoardList"); 
 	      return bestBoardList;
 	   }
 
 	   @Override
 	   public List<MarketBoardVO> popularBoardList() {
-	      List<MarketBoardVO> popularBoardList = sqlsession.selectList("ansehyeong.popularBoardList"); 
+	      List<MarketBoardVO> popularBoardList = sqlsession.selectList("ansehyeong.indexPopularBoardList"); 
 	      return popularBoardList;
 	   }
+
+	@Override
+	public List<MarketBoardVO> getSearchBoardList(Map<String, String> paraMap) {
+		List<MarketBoardVO> searchBoardList = sqlsession.selectList("ansehyeong.getSearchBoardList", paraMap);
+		return searchBoardList;
+	}
+
+	
+	@Override
+	public int getAnTotalHitCount(Map<String, String> paraMap) {
+		int totalHitCount = sqlsession.selectOne("ansehyeong.getAnTotalHitCount",paraMap);
+		return totalHitCount;
+	}
 
 
 	

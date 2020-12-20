@@ -111,14 +111,11 @@ public class AnsehyeongController {
 		List<BannerVO> bannerList = service.getBannerList();
 
 		
-		// 메인페이지에 들어갈 게시판 글 리스트 가져오기
-		
-		// 1. 먼저 모든 보드의 종류를 받아온다.
-		
-		List<Map<String, String>> boardKindList = service.getAllBoardList();
 		
 		
-		// 2. 가져온 보드 종류 리스트를 이용해서 각각의 보드에서 글 리스트를 꺼내온다.
+		
+		
+		//  각각의 보드에서 글 리스트를 꺼내온다.
 		
 		List<MarketBoardVO> indexBoardList = service.getIndexBoardList();
 		
@@ -127,21 +124,10 @@ public class AnsehyeongController {
 		List<MarketBoardVO> bestBoardList = service.bestBoardList();
 		List<MarketBoardVO> popularBoardList = service.popularBoardList();
 
+		mav.addObject("indexBoardList", indexBoardList);
 		mav.addObject("recentBoardList", recentBoardList);
 		mav.addObject("bestBoardList", bestBoardList);
 		mav.addObject("popularBoardList", popularBoardList);
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
-		
 		
 		
 		
@@ -252,6 +238,19 @@ public class AnsehyeongController {
 
 		// 인덱스의 캐러셀에 들어갈 배너 광고를 가져오기
 		List<BannerVO> bannerList = service.getBannerList();
+		//  각각의 보드에서 글 리스트를 꺼내온다.
+		
+		List<MarketBoardVO> indexBoardList = service.getIndexBoardList();
+		
+		
+		List<MarketBoardVO> recentBoardList = service.recentBoardList();
+		List<MarketBoardVO> bestBoardList = service.bestBoardList();
+		List<MarketBoardVO> popularBoardList = service.popularBoardList();
+
+		mav.addObject("indexBoardList", indexBoardList);
+		mav.addObject("recentBoardList", recentBoardList);
+		mav.addObject("bestBoardList", bestBoardList);
+		mav.addObject("popularBoardList", popularBoardList);
 
 		mav.addObject("bannerList", bannerList);
 		mav.setViewName("sehyeong/member/updateNickname.tiles1");
@@ -1816,6 +1815,61 @@ public class AnsehyeongController {
 		return mav;
 	}
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	@ResponseBody
+	@RequestMapping(value = "/getAnSearchList.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	public String getSearchList(HttpServletRequest request) {
+		
+		
+		String searchWord = request.getParameter("searchWord");
+		String start = request.getParameter("start");
+		String len = request.getParameter("len");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchWord", searchWord);
+		paraMap.put("start", start);
+		
+		String end = String.valueOf(Integer.parseInt(start) + Integer.parseInt(len) - 1);
+		paraMap.put("end", end);
+		
+		List<MarketBoardVO> searchBoardList = service.getSearchBoardList(paraMap);
+		
+		
+		JSONArray jsonArr = new JSONArray();  // []
+		
+		if (searchBoardList.size() > 0) {
+			for (MarketBoardVO board : searchBoardList) {
+				JSONObject jsonObj = new JSONObject();  // {}
+				
+				jsonObj.put("fk_boardKindNo", board.getFk_boardKindNo());
+				jsonObj.put("subject", board.getSubject());
+				jsonObj.put("boardName", board.getBoardName());
+				jsonObj.put("boardNo", board.getBoardNo());
+				
+				jsonArr.put(jsonObj);
+			}
+		}
+		return jsonArr.toString();
+	}
+	@ResponseBody
+	@RequestMapping(value = "/getAnTotalHitCount.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	public String getAnTotalHitCount(HttpServletRequest request) {
+		
+		
+		String searchWord = request.getParameter("searchWord");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("searchWord", searchWord);
+		
+		int totalHitCount = service.getAnTotalHitCount(paraMap);
+		
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+
+		jsonObj.put("totalHitCount", totalHitCount);
+				
+		
+		return jsonObj.toString();
+	}
 	
 	
 	
