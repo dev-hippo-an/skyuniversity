@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -21,6 +22,7 @@ import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.ash.model.CommuMemberVO;
+import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.ohyoon.common.MyUtil;
 import com.project.skyuniversity.ohyoon.common.OhFileManager;
 import com.project.skyuniversity.ohyoon.model.*;
@@ -74,23 +76,6 @@ public class BoardController {
 		private OhFileManager fileManager;
 		
 //////////////////////////////////////////////////////////////////////////////////////
-/* 테스트 시작		
-		// === 게시판 리스트 페이지 요청 === // 
-		@RequestMapping(value="/boardList.sky")
-		public ModelAndView boardList(ModelAndView mav) {
-			mav.setViewName("/board/boardList.tiles1");
-			return mav;
-		}
-		
-		
-		// === 게시판 등록 페이지 요청 === // 
-		@RequestMapping(value="/boardRegister.sky")
-		public ModelAndView boardRegister(ModelAndView mav) {
-			mav.setViewName("/board/boardRegister.tiles1");
-			return mav;
-		}
-테스트 끝 */
-/////////////////////////////////////////////////////////////////////////////////////
 		
 		// === 게시판 리스트 페이지 요청 === // 
 		@RequestMapping(value="/boardList.sky")
@@ -206,12 +191,16 @@ public class BoardController {
 			// 게시판 번호를 입력하여 해당 게시판번호에 해당하는 카테고리들을 불러오기
 			List<CategoryVO> cateList = service.getCategoryList(Integer.parseInt(boardKindNo));
 			
-			// 리스트 페이지에서 상세페이지로 넘어간 경우만 해당 글의 조회수를 1 증가시켜야 하므로 session에 f5라는 key로 값을 넣어둔다.
+			// 리스트 페이지에서 상세페이지로 넘어간 경우만 해당 글의 조회수를 1 증가시켜야 하므로 session에 readCountPermission라는 key로 값을 넣어둔다.
 			HttpSession session = request.getSession();
-			session.setAttribute("f5", "no");
+			session.setAttribute("readCountPermission", "yes");
 			
 			// 특정 게시물의 상세 페이지로 갔다가 목록으로 버튼을 누르면 다시 돌아오기 위한 url 
 			String gobackURL = MyUtil.getCurrentURL(request);
+			
+			// 공지리스트 불러오기
+			List<NoticeVO> noticeList = service.getNoticeList(paraMap);
+			mav.addObject("noticeList", noticeList);
 			
 			mav.addObject("gobackURL", gobackURL);
 			mav.addObject("pageBar", pageBar);
@@ -278,7 +267,7 @@ public class BoardController {
 		
 		// 글 작성 페이지 완료
 		@RequestMapping(value="/boardRegister.sky", method = {RequestMethod.POST})
-		public void pointPlusOY_boardRegister(Map<String, String> paraMap, BoardVO boardvo, MultipartHttpServletRequest mrequest, HttpServletResponse response) {
+		public void pointPlusOY_boardRegister(Map<String, String> paraMap, MultipartHttpServletRequest mrequest, HttpServletResponse response, BoardVO boardvo) {
 
 			try {
 				boardvo.setWriterIp(getUserIp()); // 작성자 ip를 받아 boardvo에 저장.
@@ -338,7 +327,6 @@ public class BoardController {
 				paraMap.put("fk_memberNo", boardvo.getFk_memberNo());
 				paraMap.put("point", "3");
 			}
-			
 		}
 		
 	    
@@ -372,15 +360,15 @@ public class BoardController {
 	    	paraMap.put("boardKindNo", boardKindNo);
 	    	paraMap.put("boardNo", boardNo);
 	    	
-	    	String f5 = (String)session.getAttribute("f5"); // 세션으로부터 f5에 대한 데이터가 있는지 가져온다.
+	    	String readCountPermission = (String)session.getAttribute("readCountPermission"); // 세션으로부터 f5에 대한 데이터가 있는지 가져온다.
 
 	    	BoardVO boardvo = null;
-	    	if (f5 != null) { // 리스트 페이지를 통해 들어왔다면
+	    	if (readCountPermission != null) { // 리스트 페이지를 통해 들어왔다면
 	    		// 게시물의 조회수를 올리고 게시물을 가져온다.
 	    		paraMap.put("loginNo", String.valueOf(loginNo));
 	    		boardvo = service.getView(paraMap);
 	    		
-	    		session.removeAttribute("f5"); // 세션은 비워준다.
+	    		session.removeAttribute("readCountPermission"); // 세션은 비워준다.
 			}else { // 리스트 페이지를 통해 들어온 것이 아니라면
 				// 게시물 1개를 가져만 오고 조회수는 올리지 않는다. 
 				boardvo = service.getViewNoAddCount(paraMap);
@@ -394,12 +382,12 @@ public class BoardController {
 				mav.setViewName("msg");
 				return mav;
 			}
-	    	
 	    	mav.addObject("gobackURL", gobackURL);
 	    	mav.addObject("boardvo", boardvo);
 	    	mav.setViewName("/ohyoon/boardDetail.tiles1");
 	    	return mav;
 	    }
+	    
 	    
 	    // 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
 	    @ResponseBody
@@ -637,7 +625,7 @@ public class BoardController {
 	    		
 	    		if (loginuser == null || loginuser.getFk_memberNo() != Integer.parseInt(boardvo.getFk_memberNo())) { // 로그인을 하지 않았거나 타인의 글 수정을 눌렀다면
 	    			message = "타인의 글은 수정할 수 없습니다.";
-	    			message = "javascript:history.back();";
+	    			loc = "javascript:history.back();";
 	    			mav.addObject("message", message);
 					mav.addObject("loc", loc);
 					mav.setViewName("msg");
@@ -653,7 +641,6 @@ public class BoardController {
 				// url상으로 잘못 들어왔다면
 				message = "잘못된 형식입니다.";
 				loc = "javascript:history.back();";
-				
 				mav.addObject("message", message);
 				mav.addObject("loc", loc);
 				mav.setViewName("msg");
@@ -664,12 +651,391 @@ public class BoardController {
 	    }
 	    
 	    
+	    // 게시글 수정중 첨부파일 삭제하기(ajax로 처리)
+	    @ResponseBody
+	    @RequestMapping(value = "/deleteAttach.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	    public String deleteAttach(HttpServletRequest request) {
+	    	
+	    	String boardKindNo = request.getParameter("boardKindNo");
+	    	String boardNo = request.getParameter("boardNo");
+	    	
+	    	int n = 0;
+	    	// 해당 글의 첨부파일을 삭제하기 위해 첨부파일의 파일명과 경로를 받아온다.
+	    	String fileName = request.getParameter("fileName");
+			if ( fileName != null && !fileName.equals("") ) { // 첨부파일이 있는 게시물이라면
+				HttpSession session = request.getSession();
+				String root = session.getServletContext().getRealPath("/");
+				String path = root+"resources"+ File.separator +"files";
+				
+				try {
+					fileManager.doFileDelete(fileName, path); // 해당 파일을 삭제한다.
+					
+					// 삭제 성공시 해당 글의 첨부파일 저장명, 원본명, 파일 사이즈를 null로 update 해준다.
+					Map<String, String> paraMap = new HashMap<>();
+					paraMap.put("boardKindNo", boardKindNo);
+					paraMap.put("boardNo", boardNo);
+					n = service.deleteAttach(paraMap);
+					
+				} catch (Exception e) {}
+			}
+			
+			// 파일이 삭제되고 db에도 반영됐다면 n = 1, 아니라면 n = 0
+			JSONObject jsonObj = new JSONObject();
+	    	jsonObj.put("n", n);
+	    	
+	    	return jsonObj.toString();
+	    }
+	    
+	    
+	    // 게시글 수정 완료하기
+	    @RequestMapping(value = "/boardUpdateEnd.sky", method = {RequestMethod.POST})
+	    public ModelAndView boardUpdateEnd(BoardVO boardvo, MultipartHttpServletRequest mrequest, ModelAndView mav) {
+	    	
+	    	MultipartFile attach = boardvo.getAttach();
+			
+	    	if (!attach.isEmpty()) {
+				// 첨부파일이 비어있지 않다면
+				
+				// 1. 올리는 파일을 WAS(톰캣) 폴더에 저장해야 한다.
+				HttpSession session = mrequest.getSession();
+				String root = session.getServletContext().getRealPath("/");
+				String path = root + "resources" + File.separator + "files";
+				
+				// 2. 파일 첨부를 위해서 변수를 설정하고 파일을 올려야 한다.
+				String newFilename = ""; // 저장될 파일명
+				
+				byte[] bytes = null; // 첨부파일의 내용물
+				
+				long fileSize = 0; // 첨부파일의 크기
+				
+				try {
+					bytes = attach.getBytes(); // // 첨부파일의 내용물을 읽어옴. 첨부파일을 bytes에 넣는다.
+					
+					newFilename = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path); // getOriginalFilename()은 첨부파일의 원본 이름을 리턴한다.
+					
+					// 3. boardvo에 fileName 값과 orgFilename 값, fileSize 값을 넣어준다.
+					boardvo.setFileName(newFilename); // 저장할 파일명 boardvo에 저장.
+					boardvo.setOrgFilename(attach.getOriginalFilename()); // 원본 파일명을 boardvo에 저장.
+					
+					fileSize = attach.getSize(); // getSize()은 첨부파일의 크기를 리턴한다.
+					boardvo.setFileSize(String.valueOf(fileSize)); // 첨부파일의 크기를 boardvo에 저장한다.
+					
+				} catch (Exception e) {
+					e.printStackTrace();
+				} 
+			}
+	    	
+	    	// 작성한 글을 db에 저장.
+			int n = 0;
+			if (attach.isEmpty()) {
+				// 파일첨부가 없는 글수정
+				n = service.updateBoard(boardvo);
+			}else {
+				// 파일첨부가 있는 글수정
+				n = service.updateBoardWithFile(boardvo);
+			}
+	    	
+			String message = "";
+			if (n == 1) {
+				message = "수정이 완료되었습니다.";
+			}else {
+				message = "수정에 실패했습니다.";
+			}
+			String loc = mrequest.getContextPath()+"/boardDetail.sky?boardKindNo="+boardvo.getFk_boardKindNo()+"&boardNo="+boardvo.getBoardNo();
+	    	
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");
+	    	return mav;
+	    } 
+	    
+	    
+	    // 댓글 작성하기(ajax 사용)
+	    @ResponseBody
+	    @RequestMapping(value = "/commentRegister.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	    public String commentRegister(Map<String, String> paraMap, HttpServletRequest request, HttpServletResponse response){
+	    	
+	    	String fk_boardKindNo = request.getParameter("fk_boardKindNo");
+	    	String fk_boardNo = request.getParameter("fk_boardNo");
+	    	String cmtContent = request.getParameter("cmtContent");
+	    	
+	    	cmtContent = cmtContent.replaceAll("<", "&lt;");
+	    	cmtContent = cmtContent.replaceAll(">", "&gt;");
+	    	cmtContent = cmtContent.replaceAll("\r\n", "<br>");
+	    	cmtContent = cmtContent.replaceAll("&nbsp;", " ");
+	    	cmtContent = cmtContent.replaceAll("&ensp;", "");
+	    	cmtContent = cmtContent.replaceAll("&emsp;", "");
+	    	cmtContent = cmtContent.replaceAll("null", " ");
+	    	
+	    	// 게시판 번호, 게시글 번호, 댓글 내용, 작성자 회원번호, 작성자 ip를 commentvo에 저장한다.
+	    	CommentVO commentvo = new CommentVO();
+	    	commentvo.setFk_boardKindNo(fk_boardKindNo);
+	    	commentvo.setFk_boardNo(fk_boardNo);
+	    	commentvo.setCmtContent(cmtContent);
+	    	
+	    	HttpSession session = request.getSession();
+	    	CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
+	    	
+	    	if (loginuser != null) {
+				commentvo.setFk_memberNo(String.valueOf(loginuser.getFk_memberNo()));
+			}
+	    	
+	    	try {
+				commentvo.setWriterIp(getUserIp());
+			} catch (Exception e) {
+				commentvo.setWriterIp("");
+			}
+	    	
+			
+	    	// 작성한 댓글 저장하기
+			int n = 0;
+	    	try {
+	    		n = service.addComment(commentvo);
+
+	    		// 댓글쓰기 완료 후, 포인트 올려주기 
+	    		paraMap.put("fk_memberNo", commentvo.getFk_memberNo());
+	    		paraMap.put("point", "1");	   
+	    		
+	    		n = service.addPoint(paraMap);
+	    		
+			} catch (Exception e) {
+				n = 0;
+			}
+
+	    	
+	    	JSONObject jsonObj = new JSONObject();
+	    	
+	    	jsonObj.put("n", n);
+	    	
+	    	return jsonObj.toString();
+	    }
+	    
+	    
+	    // 댓글 리스트 가져오기(ajax 사용)
+	    @ResponseBody
+	    @RequestMapping(value = "/commentList.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	    public String commentList(HttpServletRequest request) {
+	    	
+	    	String fk_boardKindNo = request.getParameter("fk_boardKindNo");
+	    	String fk_boardNo = request.getParameter("fk_boardNo");
+	    	String startNo = request.getParameter("startNo");
+	    	String cmtLength = request.getParameter("cmtLength");
+	    	
+	    	Map<String, String> paraMap = new HashMap<String, String>();
+	    	paraMap.put("fk_boardKindNo", fk_boardKindNo);
+	    	paraMap.put("fk_boardNo", fk_boardNo);
+	    	paraMap.put("startNo", startNo);
+	    	
+	    	String endNo = String.valueOf(Integer.parseInt(startNo) + Integer.parseInt(cmtLength) - 1);
+	    	paraMap.put("endNo", endNo);
+	    	
+	    	// 요청한 순서의 댓글을 8개씩 가져오기
+	    	List<CommentVO> commentList = service.getCommentList(paraMap);
+	    	
+	    	JSONArray jsonArr = new JSONArray();
+
+	    	for (CommentVO commentvo : commentList) {
+				JSONObject jsonObj = new JSONObject();
+				jsonObj.put("commentNo", commentvo.getCommentNo());
+				jsonObj.put("fk_boardNo", commentvo.getFk_boardNo());
+				jsonObj.put("fk_memberNo", commentvo.getFk_memberNo());
+				jsonObj.put("cmtContent", commentvo.getCmtContent());
+				jsonObj.put("regDate", commentvo.getRegDate());
+				jsonObj.put("fk_nickname", commentvo.getFk_nickname());
+				jsonObj.put("levelImg", commentvo.getLevelImg());
+				jsonObj.put("totalCount", commentvo.getTotalCount());
+				jsonObj.put("cmtUpCount", commentvo.getCmtUpCount());
+				jsonObj.put("cmtDownCount", commentvo.getCmtDownCount());
+				
+				jsonArr.put(jsonObj);
+			}
+	    	return jsonArr.toString();
+	    }
+	    
+	    
+	    // 댓글 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	    @ResponseBody
+	    @RequestMapping(value="/addCommentUp.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	    public String addCommentUp(HttpServletRequest request) {
+	    	String fk_boardKindNo = request.getParameter("fk_boardKindNo");
+	    	String fk_boardNo = request.getParameter("fk_boardNo");
+	    	String fk_commentNo = request.getParameter("commentNo");
+	    	
+	    	int fk_memberNo = 0;
+	    	HttpSession session = request.getSession();
+	    	if (session.getAttribute("loginuser") != null) {
+	    		fk_memberNo = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
+	    	}
+	    	
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("fk_boardKindNo", fk_boardKindNo);
+	    	paraMap.put("fk_boardNo", fk_boardNo);
+	    	paraMap.put("fk_commentNo", fk_commentNo);
+	    	paraMap.put("fk_memberNo", String.valueOf(fk_memberNo));
+	    	
+	    	int n;
+	    	try {
+	    		n = service.addCommentUp(paraMap);
+	    	} catch (Exception e) {
+	    		n = 0;
+	    	}
+	    	
+	    	// 댓글의 추천, 비추천 수를 가져온다.
+	    	int cmtUpCount = service.getCommentGoodCount(paraMap);
+	    	int cmtDownCount = service.getCommentBadCount(paraMap);
+	    	
+	    	JSONObject jsonObj = new JSONObject();
+	    	jsonObj.put("n", n);
+	    	jsonObj.put("cmtUpCount", cmtUpCount);
+	    	jsonObj.put("cmtDownCount", cmtDownCount);
+	    	
+	    	return jsonObj.toString();
+	    }
+ 
+	    
+	    // 댓글 비추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	    @ResponseBody
+	    @RequestMapping(value="/addCommentDown.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	    public String addCommentDown(HttpServletRequest request) {
+	    	String fk_boardKindNo = request.getParameter("fk_boardKindNo");
+	    	String fk_boardNo = request.getParameter("fk_boardNo");
+	    	String fk_commentNo = request.getParameter("commentNo");
+	    	
+	    	int fk_memberNo = 0;
+	    	HttpSession session = request.getSession();
+	    	if (session.getAttribute("loginuser") != null) {
+	    		fk_memberNo = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
+	    	}
+	    	
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("fk_boardKindNo", fk_boardKindNo);
+	    	paraMap.put("fk_boardNo", fk_boardNo);
+	    	paraMap.put("fk_commentNo", fk_commentNo);
+	    	paraMap.put("fk_memberNo", String.valueOf(fk_memberNo));
+	    	
+	    	int n;
+	    	try {
+	    		n = service.addCommentDown(paraMap);
+	    	} catch (Exception e) {
+	    		n = 0;
+	    	}
+	    	
+	    	// 댓글의 추천, 비추천 수를 가져온다.
+	    	int cmtUpCount = service.getCommentGoodCount(paraMap);
+	    	int cmtDownCount = service.getCommentBadCount(paraMap);
+	    	
+	    	JSONObject jsonObj = new JSONObject();
+	    	jsonObj.put("n", n);
+	    	jsonObj.put("cmtUpCount", cmtUpCount);
+	    	jsonObj.put("cmtDownCount", cmtDownCount);
+	    	
+	    	return jsonObj.toString();
+	    }
+	    
+	    
+	    // 댓글 신고 테이블에 행을 추가해주는 메서드(ajax로 처리)
+	    @ResponseBody
+	    @RequestMapping(value="/addCommentReport.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	    public String addCommentReport(HttpServletRequest request) {
+	    	String fk_boardKindNo = request.getParameter("fk_boardKindNo");
+	    	String fk_boardNo = request.getParameter("fk_boardNo");
+	    	String fk_commentNo = request.getParameter("commentNo");
+	    	
+	    	int fk_memberNo = 0;
+	    	HttpSession session = request.getSession();
+	    	if (session.getAttribute("loginuser") != null) {
+	    		fk_memberNo = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
+	    	}
+	    	
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("fk_boardKindNo", fk_boardKindNo);
+	    	paraMap.put("fk_boardNo", fk_boardNo);
+	    	paraMap.put("fk_commentNo", fk_commentNo);
+	    	paraMap.put("fk_memberNo", String.valueOf(fk_memberNo));
+	    	
+	    	int n;
+	    	try {
+	    		n = service.addCommentReport(paraMap);
+	    	} catch (Exception e) {
+	    		n = 0;
+	    	}
+	    	
+	    	JSONObject jsonObj = new JSONObject();
+	    	jsonObj.put("n", n);
+	    	return jsonObj.toString();
+	    }
+
+	    
+	    // 댓글을 삭제해주기(ajax로 처리)
+	    @ResponseBody
+	    @RequestMapping(value="/deleteComment.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	    public String deleteComment(HttpServletRequest request) {
+	    	String fk_boardKindNo = request.getParameter("fk_boardKindNo");
+	    	String fk_boardNo = request.getParameter("fk_boardNo");
+	    	String fk_commentNo = request.getParameter("commentNo");
+	    	
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("fk_boardKindNo", fk_boardKindNo);
+	    	paraMap.put("fk_boardNo", fk_boardNo);
+	    	paraMap.put("fk_commentNo", fk_commentNo);
+
+	    	int n;
+	    	try {
+	    		n = service.deleteComment(paraMap);
+	    	} catch (Exception e) {
+	    		n = 0;
+	    	}
+	    	
+	    	JSONObject jsonObj = new JSONObject();
+	    	jsonObj.put("n", n);
+	    	return jsonObj.toString();
+	    }
+	    
+	    
+	    // 댓글을 수정해주기 (ajax로 처리)
+	    @ResponseBody
+	    @RequestMapping(value="/updateComment.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	    public String updateComment(HttpServletRequest request, CommentVO commentvo) {
+	    	String fk_boardKindNo = commentvo.getFk_boardKindNo();
+	    	String fk_boardNo = commentvo.getFk_boardNo();
+	    	String commentNo = commentvo.getCommentNo();
+	    	String cmtContent = commentvo.getCmtContent();
+	    	
+	    	cmtContent = cmtContent.replaceAll("<", "&lt;");
+	    	cmtContent = cmtContent.replaceAll(">", "&gt;");
+	    	cmtContent = cmtContent.replaceAll("\r\n", "<br>");
+	    	cmtContent = cmtContent.replaceAll("&nbsp;", " ");
+	    	cmtContent = cmtContent.replaceAll("&ensp;", "");
+	    	cmtContent = cmtContent.replaceAll("&emsp;", "");
+	    	cmtContent = cmtContent.replaceAll("null", "");
+	    	
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("fk_boardKindNo", fk_boardKindNo);
+	    	paraMap.put("fk_boardNo", fk_boardNo);
+	    	paraMap.put("commentNo", commentNo);
+	    	paraMap.put("cmtContent", cmtContent);
+
+			int n; 
+			try { 
+				n = service.updateComment(paraMap); 
+			} catch (Exception e) { 
+				n = 0; 
+			}
+			
+			JSONObject jsonObj = new JSONObject(); 
+			jsonObj.put("n", n); 
+			return jsonObj.toString();
+	    }
 	    
 	    
 	    
 	    
 	    
 	    
+	    
+	    
+	    
+	/////////////////////////////////////////////////////////////////////////////////////////////////////    
 	    // ==== #스마트에디터. 드래그앤드롭을 사용한 다중사진 파일업로드 ====
 	    @RequestMapping(value="/image/multiplePhotoUpload.sky", method={RequestMethod.POST})
 	    public void multiplePhotoUpload(HttpServletRequest req, HttpServletResponse res) {

@@ -3,7 +3,9 @@
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
+<%  String ctxPath = request.getContextPath(); %>
 <style type="text/css">
+
 table {
    border-collapse: collapse;
    border-spacing: 0;
@@ -65,10 +67,10 @@ ul.pager {
 }
 
 th.narrow {
-	width: 70px;
+	width: 75px;
 }
 
-button#register {
+button.btn {
 	width: 80px;
 	height: 30px;
 	border-radius: 5%;
@@ -85,11 +87,29 @@ button:hover {
 tr.board:hover {
 	cursor: pointer;
 	background-color: #a8d2fe;
+	font-weight: bold;
+}
+
+tr.notification:hover {
+	cursor: pointer;
+	background-color: #a8d2fe;
 }
 
 img.photo {
-	width: 20px;
-	height: 20px;
+	width: 18px;
+	height: 18px;
+}
+
+tr.notification {
+   
+   background-color: rgba(8,65,173,0.2);
+}
+
+tr.notification td:nth-child(3):hover{
+   font-weight: normal;
+}
+tr.notification td {
+   font-weight: bold;
 }
 
 </style>
@@ -139,7 +159,23 @@ img.photo {
 		 
 	}// end of function goSearch() {}-------------------------------
 	
+	// 공지쓰기를 누르면 공지쓰기 요청 들어감.
+	function allBoardAdminAdd() {
+	      var frm = document.allBoardAdminAddFrm;
+	      frm.action="<%= request.getContextPath()%>/allBoardAdminAdd.sky";
+	      frm.method="POST";
+	      frm.submit();   
+	}// end of function allBoardAdminAdd() {}----------------------
 
+	// 공지글 하나를 누르면 해당 글 상세 페이지로 넘어감.
+	function goNotice(noticeNo) {
+	      var frm = document.notificationFrm;
+	      frm.noticeNo.value = noticeNo;
+	      frm.action = "<%= request.getContextPath()%>/notificationDetail.sky";
+	      frm.method="GET";
+	      frm.submit();
+	}// end of function goNotice(noticeNo) {}-----------------------
+	
 </script>
 </head>
 
@@ -184,6 +220,42 @@ img.photo {
 	            </tr>
             </thead>
             <tbody>
+            	<c:if test="${not empty noticeList}">
+                  <c:forEach items="${noticeList}" var="notice" varStatus="status">
+                  
+                     <tr class="notification">
+                         <td>${notice.noticeNo}</td>
+                         <c:if test="${not empty cateList}">
+                         	<td>${notice.categoryName}</td>
+                  		 </c:if>
+                         <c:choose>
+                         <c:when test="${fn:length(notice.subject) > 20}">
+                               <td class="left" onclick="goNotice('${notice.noticeNo}');">${fn:substring(notice.subject, 0, 20)}...&nbsp;
+                               
+                               <c:if test="${fn:contains(notice.content, '<img src=')}">
+                               <img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
+                            </c:if>
+                               </td>
+                          </c:when>
+                          <c:otherwise>
+                               <td class="left" onclick="goNotice('${notice.noticeNo}');">${notice.subject}&nbsp;
+                               <c:if test="${fn:contains(notice.content, '<img src=')}">
+                               <img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
+                            </c:if>
+                               </td>
+                          
+                          </c:otherwise>
+                         
+                     </c:choose>
+                          
+                         <td class="left"><img src="<%= ctxPath %>/resources/images/levelimg/${notice.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${notice.nickname}</td>
+                         <td>${notice.regDate}</td>
+                         <td>/</td>
+                         <td>${notice.readCount}</td>
+                     </tr>
+                  
+                  </c:forEach>               
+                </c:if>
             	<c:if test="${not empty boardList}">
 	            	<c:forEach var="board" items="${boardList}" varStatus="status">
 		            	<tr class="board">
@@ -191,7 +263,11 @@ img.photo {
 		                	<c:if test="${board.fk_categoryName ne null}">
 		                		<td>${board.fk_categoryName}</td>
 		                	</c:if>
-		                	<td class="left">${board.subject} <c:if test="${fn:contains(board.content, '<img src=')}"><img src="/skyuniversity/resources/images/picture.png" class="photo"></c:if></td>
+		                	<td class="left"> 
+		                		${board.subject}
+		                		[<span style="color:#0841ad; font-weight: bold; ">${board.cmtCount}</span>]
+		                		<c:if test="${fn:contains(board.content, '<img src=')}"><img src="/skyuniversity/resources/images/picture.png" class="photo"></c:if>
+		                	</td>
 		                	<td class="left"><img src="<%= request.getContextPath()%>/resources/images/levelimg/${board.levelImg}" class="photo" />${board.fk_nickname}</td>
 		                	<td>${board.regDate}</td>
 		                	<td>
@@ -215,7 +291,20 @@ img.photo {
 		</table>
 	</div>
 
-	<div align="right"><button id="register">글쓰기</button></div>
+	<form name="allBoardAdminAddFrm">
+		<input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />
+    </form>
+    <form name="notificationFrm">
+        <input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />
+        <input type="hidden" name="noticeNo" />
+        <input type="hidden" name="gobackURL2" value="${gobackURL}" />
+    </form>
+	<div align="right">
+        <c:if test="${sessionScope.loginuser.fk_memberNo == 0}">
+            <button class="btn" id="marketBoardWrite" onclick="allBoardAdminAdd();">공지쓰기</button>
+		</c:if>
+		<button class="btn" id="register">글쓰기</button>
+	</div>
 	
 	${pageBar}
 
