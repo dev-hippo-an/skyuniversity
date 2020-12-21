@@ -566,7 +566,9 @@ public class EunjiBoardController {
 		   System.out.println(golvo.getStartDate() + " " + golvo.getEndDate() + " " + golvo.getFk_memberno());
 		   if(golvo.getEndTime() == null && golvo.getStartTime() == null) {
 			   int n = service.insertGirlLeave(golvo);
-			   System.out.println(n);
+		   }
+		   else {
+			   int n = service.insertGirlLeaveTime(golvo);
 		   }
 		   
 		   return mav;

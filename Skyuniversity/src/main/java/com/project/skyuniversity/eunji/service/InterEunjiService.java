@@ -63,6 +63,8 @@ public interface InterEunjiService {
 
 	int insertGirlLeave(GirlOfficialLeaveVO golvo);
 
+	int insertGirlLeaveTime(GirlOfficialLeaveVO golvo);
+
 	
 
 	

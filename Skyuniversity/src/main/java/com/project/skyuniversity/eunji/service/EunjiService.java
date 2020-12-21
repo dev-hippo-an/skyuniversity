@@ -180,6 +180,12 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public int insertGirlLeaveTime(GirlOfficialLeaveVO golvo) {
+		int n = dao.insertGirlLeaveTime(golvo);
+		return n;
+	}
+
 
 
 }

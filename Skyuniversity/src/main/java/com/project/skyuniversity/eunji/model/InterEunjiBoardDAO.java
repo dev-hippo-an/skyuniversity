@@ -59,4 +59,6 @@ public interface InterEunjiBoardDAO {
 
 	int insertGirlLeave(GirlOfficialLeaveVO golvo);
 
+	int insertGirlLeaveTime(GirlOfficialLeaveVO golvo);
+
 }
