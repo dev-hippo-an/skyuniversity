@@ -508,7 +508,7 @@ public class EunjiBoardController {
 	}
 	
 	   @RequestMapping(value="/downloadLeaveInfo.sky")
-	   public void download(HttpServletRequest request, HttpServletResponse response) {
+	   public void downloadLeaveInfo(HttpServletRequest request, HttpServletResponse response) {
 	      
 	      String seq = request.getParameter("seq");
 	     // System.out.println(seq);
@@ -544,6 +544,13 @@ public class EunjiBoardController {
 	             
 	          }
 	       }
+	   }
+	   
+	   @RequestMapping(value="/girlOfficalLeave.sky")
+	   public ModelAndView girlOfficalLeave(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		   
+		   mav.setViewName("eunji/class/girlOfficalLeave.tiles2");
+		   return mav;
 	   }
 
 }
