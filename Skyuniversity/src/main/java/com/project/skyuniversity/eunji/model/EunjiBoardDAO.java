@@ -201,5 +201,11 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public List<Map<String, String>> selectCheckList(Map<String, String> hashmap) {
+		List<Map<String, String>> checklist = sqlSession.selectList("eunji.selectCheckList", hashmap);
+		return checklist;
+	}
+
 
 }

@@ -204,6 +204,12 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public List<Map<String, String>> selectCheckList(Map<String, String> hashmap) {
+		List<Map<String, String>> selectlist = dao.selectCheckList(hashmap);
+		return selectlist;
+	}
+
 
 
 }

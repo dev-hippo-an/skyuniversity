@@ -67,4 +67,6 @@ public interface InterEunjiBoardDAO {
 
 	int delGirlOfficialLeave(String seq);
 
+	List<Map<String, String>> selectCheckList(Map<String, String> hashmap);
+
 }

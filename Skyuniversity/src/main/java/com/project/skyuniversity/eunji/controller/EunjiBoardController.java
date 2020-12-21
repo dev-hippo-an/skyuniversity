@@ -3,6 +3,7 @@ package com.project.skyuniversity.eunji.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -65,7 +66,7 @@ public class EunjiBoardController {
 
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		
-		int year = cal.get(cal.YEAR) + 1;
+		int year = cal.get(cal.YEAR);
 		
 		// 전체 학과 리스트를 조회
 		List<String> deptlist = service.selectAllDept();
@@ -215,7 +216,7 @@ public class EunjiBoardController {
 		}
 		boolean bool = true;
 		
-		if(!dept.equals(memdept)) {
+		if(!dept.equals("교양")&&!dept.equals(memdept)) {
 			bool = false;
 			unique = true;
 		}
@@ -564,7 +565,7 @@ public class EunjiBoardController {
 		   return mav;
 	   }
 	   
-	   @RequestMapping(value = "girlOfficalLeaveEnd.sky", method = {RequestMethod.POST})
+	   @RequestMapping(value = "/girlOfficalLeaveEnd.sky", method = {RequestMethod.POST})
 	   public ModelAndView girlOfficalLeaveEnd(ModelAndView mav, HttpServletRequest request, GirlOfficialLeaveVO golvo) {
 		   boolean flag = true;
 		   CommuMemberVO cmvo = new CommuMemberVO();
@@ -610,8 +611,8 @@ public class EunjiBoardController {
 	   }
 	   
 	   @ResponseBody
-		@RequestMapping(value = "/delGirlOfficialLeave.sky", method = {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
-		public String delGirlOfficialLeave(HttpServletRequest request) {
+	   @RequestMapping(value = "/delGirlOfficialLeave.sky", method = {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+	   public String delGirlOfficialLeave(HttpServletRequest request) {
 			String seq = request.getParameter("seq"); 
 			
 			boolean result = false;
@@ -624,8 +625,64 @@ public class EunjiBoardController {
 			jsonobj.put("result", result);
 			
 			return jsonobj.toString();
-		}
-
+	   }
+	    
+	   @RequestMapping(value = "/classCheck.sky", method = {RequestMethod.GET})
+	   public ModelAndView classCheck(ModelAndView mav, HttpServletRequest request) { 
+		   CommuMemberVO cmvo = new CommuMemberVO();
+		   HttpSession session2 = request.getSession();
+			
+		   cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		   int memberNo = cmvo.getFk_memberNo();
+		   
+		   java.util.Calendar cal = java.util.Calendar.getInstance();
+		   int month = cal.get(cal.MONTH)+1;
+		   int year = cal.get(cal.YEAR);
+		   int semester = 0;
+		   boolean flag = false;
+		   
+		   if(month == 6) {
+			   semester = 1;
+			   flag = true;
+		   }
+		   if(month == 12) {
+			   semester = 2;
+			   flag = true;
+		   }
+		   
+		   Map<String, String> hashmap = new HashMap<String, String>();
+		   hashmap.put("memberno", Integer.toString(memberNo));
+		   hashmap.put("year", Integer.toString(year));
+		   hashmap.put("semester", Integer.toString(semester));
+		   
+		   List<Map<String, String>> checklist = service.selectCheckList(hashmap);
+		   
+		   if(!flag) {
+			   String message = "지금은 강의평가 기간이 아닙니다.";
+		       String loc = "javascript:history.back()";
+		         
+		       mav.addObject("message", message);
+		       mav.addObject("loc", loc);
+		      
+		       mav.setViewName("msg");
+		   }
+		   else {
+			   mav.addObject("checklist", checklist);
+			   mav.setViewName("eunji/class/classCheck.tiles2");
+		   }
+		   return mav;
+	   }
+	   
+	   @RequestMapping(value = "/checkSub.sky", method = {RequestMethod.GET})
+	   public ModelAndView checkSub(ModelAndView mav, HttpServletRequest request) {
+			String no = request.getParameter("courseno"); 
+			
+			mav.addObject("no", no);
+			mav.setViewName("eunji/class/checkForm.tiles2");
+			
+			return mav;
+	   }
+	   
 }
 
 

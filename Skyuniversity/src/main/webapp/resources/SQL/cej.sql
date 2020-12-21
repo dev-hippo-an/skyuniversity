@@ -405,7 +405,7 @@ ALTER TABLE TBL_SUBJECT DROP COLUMN SUBJECTNAME;
 ALTER TABLE TBL_SUBJECT ADD SUBJECTNAME VARCHAR2(100);
 ALTER TABLE TBL_SUBJECT ADD curPeopleCnt number(5) default 0;
 COMMIT
-
+update tbl_subject set period = '07080910' where subjectname='확률과통계'
 select subjectname
 from tbl_subject S
 inner join tbl_dept D
@@ -421,6 +421,11 @@ update tbl_subject set curpeoplecnt = 2 where subjectname = '컴퓨터공학개�
 
 select *
 from tbl_subject
+
+select *
+from tbl_course
+delete from tbl_course where courseno ='73'
+commit
 ------------------------------------------------------
 
 ------------------------------------------------------
@@ -630,4 +635,9 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         inner join tbl_girl_leave G 
         on H.memberno = G.fk_memberno
 		where approve in ('승인완료','승인취소') and regyear = '2020' and regmonth in ('12')
-		
+        
+        select *
+        from tbl_course
+        
+        update tbl_member set currentsemester = '2' where memberno='102'
+		commit

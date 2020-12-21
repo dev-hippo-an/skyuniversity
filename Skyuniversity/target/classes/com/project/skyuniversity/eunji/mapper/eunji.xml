@@ -277,4 +277,26 @@
 		delete from tbl_girl_leave where girlleaveno = #{seq}
 	</delete>
 	
+	<resultMap type="HashMap" id="checkMap">
+		<result property="courseyear" column="courseyear" javaType="String"/>
+		<result property="semester" column="semester" javaType="String"/>
+		<result property="fk_subjectno" column="fk_subjectno" javaType="String"/>
+		<result property="subjectname" column="subjectname" javaType="String"/>
+		<result property="name" column="name" javaType="String"/>
+		<result property="courseno" column="courseno" javaType="String"/>
+	</resultMap>
+	<select id="selectCheckList" parameterType="HashMap" resultMap="checkMap">
+		select courseyear, semester, fk_subjectno, subjectname, name, courseno
+        from
+        (
+        select courseno, courseyear, semester, fk_subjectno, subjectname, fk_professorno
+        from tbl_course C
+        inner join tbl_subject S
+        on C.fk_subjectno = S.subjectno 
+        where C.fk_memberno = #{memberno} and courseyear=#{year} and semester = #{semester}
+        ) V
+        inner join tbl_professor p
+        on V.fk_professorno = P.professorno
+	</select>
+	
 </mapper>
