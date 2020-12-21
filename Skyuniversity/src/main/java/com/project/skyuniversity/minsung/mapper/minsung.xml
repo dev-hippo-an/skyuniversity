@@ -461,7 +461,7 @@
     </select> 
     
      <select id="popularBoardList" resultType="com.project.skyuniversity.minsung.model.MinsungBoardVO">
-		select boardNo, fk_boardKindNo, subject, readCount, boardName, status
+	select boardNo, fk_boardKindNo, subject, readCount, boardName, status
 		from
 		(
 		(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_notice b
