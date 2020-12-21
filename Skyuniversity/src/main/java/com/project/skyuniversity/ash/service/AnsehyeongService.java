@@ -13,6 +13,7 @@ import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.InterAnsehyeongDAO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.ash.common.AES256;
 
 //=== #31. Service 선언 === 
@@ -38,6 +39,16 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		List<BannerVO> bannerList = dao.getBannerList();
 		return bannerList;
 	}
+	
+	
+	// 인덱스 화면에 보여질 게시글들의 정보를 가져온다.
+	@Override
+	public List<MarketBoardVO> getIndexBoardList() {
+		List<MarketBoardVO> indexBoardList = dao.getIndexBoardList();
+		
+		return indexBoardList;
+	}
+	
 	
 	// 로그인 요청하기 입니다!!
 	@Override
@@ -254,8 +265,8 @@ public class AnsehyeongService implements InterAnsehyeongService {
 
 	// 관리자 공지쓰기맨~~
 	@Override
-	public int allBoardAdminAdd(NoticeVO boardvo) {
-		int n = dao.allBoardAdminAdd(boardvo);
+	public int allBoardAdminAdd(NoticeVO noticevo) {
+		int n = dao.allBoardAdminAdd(noticevo);
 		
 		return n;
 	}
@@ -302,6 +313,68 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		int n = dao.noticeDelete(paraMap);
 		return n;
 	}
+
+	
+	
+	
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	 @Override
+	   public List<MarketBoardVO> recentIndexBoardList() {
+	      
+	      List<MarketBoardVO> recentBoardList = dao.recentIndexBoardList();
+	      return recentBoardList;
+	      
+	   }
+
+	   @Override
+	   public List<MarketBoardVO> bestIndexBoardList() {
+	      List<MarketBoardVO> bestBoardList = dao.bestIndexBoardList();
+	      return bestBoardList;
+	   }
+
+	   @Override
+	   public List<MarketBoardVO> popularIndexBoardList() {
+	      List<MarketBoardVO> popularBoardList = dao.popularIndexBoardList();
+	      return popularBoardList;
+	   }
+
+
+	@Override
+	public List<MarketBoardVO> getSearchBoardList(Map<String, String> paraMap) {
+		List<MarketBoardVO> searchBoardList = dao.getSearchBoardList(paraMap);
+		return searchBoardList;
+	}
+
+
+	@Override
+	public int getAnTotalHitCount(Map<String, String> paraMap) {
+		
+		int totalHitCount = dao.getAnTotalHitCount(paraMap);
+		return totalHitCount;
+	}
+
+
+	   @Override
+	   public List<MinsungBoardVO> recentBoardList() {
+	      
+	      List<MinsungBoardVO> recentBoardList = dao.recentBoardList();
+	      return recentBoardList;
+	      
+	   }
+
+	   @Override
+	   public List<MinsungBoardVO> bestBoardList() {
+	      List<MinsungBoardVO> bestBoardList = dao.bestBoardList();
+	      return bestBoardList;
+	   }
+
+	   @Override
+	   public List<MinsungBoardVO> popularBoardList() {
+	      List<MinsungBoardVO> popularBoardList = dao.popularBoardList();
+	      return popularBoardList;
+	   }
+	
+
 
 	
 

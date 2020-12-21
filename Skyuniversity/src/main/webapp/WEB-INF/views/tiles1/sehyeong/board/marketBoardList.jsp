@@ -289,8 +289,6 @@ tr.notification td {
 						       
 							</c:choose>
 			           		
-			           		
-			           		
 		                	<td>0원</td>
 		                	<td><img src="<%= ctxPath %>/resources/images/levelimg/${notice.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${notice.nickname}</td>
 		                	<td>${notice.regDate}</td>
@@ -298,8 +296,6 @@ tr.notification td {
 		                	<td>${notice.readCount}</td>
 		            	</tr>
 	            	
-	            	
-		      
 	            	</c:forEach>	            
 	            </c:if>
             
@@ -320,13 +316,15 @@ tr.notification td {
 		           			<c:choose>
 						        <c:when test="${fn:length(marketBoard.subject) > 20}">
 				                	<td onclick="goview('${marketBoard.boardNo}')">${fn:substring(marketBoard.subject, 0, 20)}...&nbsp;
+				                	 [<span style="color:#0841ad; font-weight: bold; ">${marketBoard.cmtCount}</span>]
 				                	<c:if test="${fn:contains(marketBoard.content, '<img src=')}">
 			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
-			                	</c:if>
+			                		</c:if>
 				                	</td>
 						        </c:when>
 						        <c:otherwise>
 				                	<td onclick="goview('${marketBoard.boardNo}')">${marketBoard.subject}&nbsp;
+				                	 [<span style="color:#0841ad; font-weight: bold; ">${marketBoard.cmtCount}</span>]
 				                	<c:if test="${fn:contains(marketBoard.content, '<img src=')}">
 			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
 			                	</c:if>

@@ -129,14 +129,7 @@ body {
 	border: 1px solid #0843ad;
 }
 
-div#search-div {
-	clear: both;
-	height: 30px;
-	float: right;
-	/* border: solid 1px gold; */
-	width: 450px;
-	text-align: left;
-}
+
 
 #mypage-div input[name=search] {
 	float: left;
@@ -160,6 +153,6 @@ div#search-div {
 
 /* When the input field gets focus, change its width to 100% */
 #mypage-div input#search:focus {
-  width: 100%;
+  width: 75%;
 }
 

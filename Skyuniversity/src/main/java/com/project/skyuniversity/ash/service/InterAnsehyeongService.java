@@ -7,13 +7,17 @@ import com.project.skyuniversity.ash.model.CommuMemberLevelVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 
 public interface InterAnsehyeongService {
 	
 	
 	// 메인 화면에 뜨는 배너 광고를 올려준다.
 	List<BannerVO> getBannerList();
-
+	
+	// 인덱스 화면에 보여질 게시글들의 정보를 가져온다.
+	List<MarketBoardVO> getIndexBoardList();
+	
 	// 로그인 하는 경우 한명의 회원을 불러오기
 	CommuMemberVO getLoginUser(Map<String, String> paraMap);
 	
@@ -89,7 +93,7 @@ public interface InterAnsehyeongService {
 	List<Map<String, String>> getAllBoardList();
 
 	// 관리자 공지쓰기맨~~
-	int allBoardAdminAdd(NoticeVO boardvo);
+	int allBoardAdminAdd(NoticeVO noticevo);
 
 	// 공지리스트 컴컴
 	List<NoticeVO> getNoticeList(Map<String, String> paraMap);
@@ -107,7 +111,28 @@ public interface InterAnsehyeongService {
 	
 	// 공지글 삭제
 	int noticeDelete(Map<String, String> paraMap);
+	
+	
+	
 
+	List<MarketBoardVO> recentIndexBoardList();
+
+	List<MarketBoardVO> bestIndexBoardList();
+
+	List<MarketBoardVO> popularIndexBoardList();
+
+	List<MarketBoardVO> getSearchBoardList(Map<String, String> paraMap);
+
+	int getAnTotalHitCount(Map<String, String> paraMap);
+
+
+	
+	
+	   List<MinsungBoardVO> recentBoardList();
+
+	   List<MinsungBoardVO> bestBoardList();
+
+	   List<MinsungBoardVO> popularBoardList();
 
 
 

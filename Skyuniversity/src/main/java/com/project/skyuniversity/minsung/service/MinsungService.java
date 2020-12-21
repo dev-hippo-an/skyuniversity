@@ -103,6 +103,14 @@ public class MinsungService implements InterMinsungService{
 		List<MinsungBoardVO> popularBoardList = dao.popularBoardList();
 		return popularBoardList;
 	}
+
+	@Override
+	public void pointPlus(Map<String, String> paraMap) {
+		dao.pointPlus(paraMap);
+	}
 	
+
+
+   
 }
 
