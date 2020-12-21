@@ -461,74 +461,74 @@
     </select> 
     
      <select id="popularBoardList" resultType="com.project.skyuniversity.minsung.model.MinsungBoardVO">
-		select fk_boardKindNo, subject, readCount, boardName, status
-		from
-		(
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_notice b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_council b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_major b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_club b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_graduate b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_critic b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_study b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_cert b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_emp b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_joboffer b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_lost b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_informal b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_polite b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_humor b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_issue b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_mbti b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_food b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_love b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_hobby b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_health b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		union all
-		(select fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_diet b
-		join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
-		order by readCount desc
-		) V 
-		where status = 1 and
+select boardNo, fk_boardKindNo, subject, readCount, boardName, status
+from
+(
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_notice b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno)
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_council b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_major b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_club b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_graduate b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_critic b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_study b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_cert b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_emp b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_joboffer b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from TBL_BOARD_lost b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_informal b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_polite b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_humor b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_issue b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_mbti b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_food b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_love b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_hobby b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_health b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+union all
+(select boardno, fk_boardkindno, subject, readCount, k.boardname, status from tbl_board_diet b
+join tbl_boardkind k on b.fk_boardkindno = k.boardkindno )
+order by readCount desc
+) V 
+where status = 1 and 
 		<![CDATA[ rownum <= 5]]>
     </select>
     
