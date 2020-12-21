@@ -7,6 +7,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -129,8 +130,8 @@ public class JihyunController {
 	}
 	
 	// 현재 비밀번호 확인
-	@RequestMapping(value = "/checkPwd.sky")
-	public boolean checkPwd(HttpServletRequest request, HttpServletResponse response) {
+	@RequestMapping(value = "/checkPwd.sky", method = { RequestMethod.GET })
+	public String checkPwd(HttpServletRequest request, HttpServletResponse response) {
 		
 		String memberno = request.getParameter("memberno");
 		String nowPwd = request.getParameter("nowPwd");
@@ -146,7 +147,10 @@ public class JihyunController {
 		
 		System.out.println(isEqualPwd);
 		
-		return false;
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("isEqualPwd", isEqualPwd);
+		
+		return jsonObj.toString();
 	}
 
 	// 비밀번호 변경

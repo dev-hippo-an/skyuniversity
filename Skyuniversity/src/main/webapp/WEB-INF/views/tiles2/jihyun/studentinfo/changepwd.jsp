@@ -96,20 +96,23 @@
 			var nowPwd = $(this).val().trim();
 			console.log(nowPwd);
 			console.log(${loginuser.memberno});
-			if("${loginuser.pwd}" != nowPwd){
-				$.ajax({
-					url:"<%= request.getContextPath() %>/checkPwd.sky",
-					data:{"memberno":${loginuser.memberno},"nowPwd":nowPwd},
-					type:"POST",
-					dataType:"json",
-					success: function(json){
-						
-					},
-					error: function(request, status, error){
-			               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-			           }
-					
-				});
+			
+			$.ajax({
+				url:"<%= request.getContextPath() %>/checkPwd.sky",
+				data:{"memberno":${loginuser.memberno},"nowPwd":nowPwd},
+				type:"POST",
+				dataType:"json",
+				success: function(json){
+					console.log(json.isEqualPwd);
+				},
+				error: function(request, status, error){
+		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		           }
+				
+			});
+			
+			/* if("${loginuser.pwd}" != nowPwd){
+				
 				$(this).next().text("비밀번호를 확인해주세요.");
 				$(this).next().addClass("errorMessage");
 				$(this).next().show();
@@ -121,7 +124,7 @@
 			}
 			else{
 				boolNowPwd = true;
-			}
+			} */
 			
 		});
 		
