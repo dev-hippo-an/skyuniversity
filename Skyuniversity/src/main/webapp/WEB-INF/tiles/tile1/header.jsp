@@ -367,7 +367,9 @@ label#update-nickname:hover {
      
      function goViewDetailLetsGo(obj) {
     	 
-    	 
+    		<%
+		      session.setAttribute("readCountPermission", "yes");
+		      %>
     	
 		var frm = document.headerViewForm;
 		
