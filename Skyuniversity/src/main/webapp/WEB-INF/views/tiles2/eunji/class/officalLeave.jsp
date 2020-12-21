@@ -74,7 +74,6 @@ $(document).ready(function() {
 		// 시간 유효성 검사
 		if ($("#alldaychk").is(":checked") == false){
 			if($("#starttime").val().trim()=="" || $("#endtime").val().trim()==""){
-				alert(syear +" " +smonth + " "+ sday);
 				alert("시간을 입력해주세요.");
 				bool = false;
 				return;

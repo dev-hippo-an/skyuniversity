@@ -24,6 +24,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.eunji.common.EjFileManager;
+import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.service.InterEunjiService;
@@ -309,6 +310,7 @@ public class EunjiBoardController {
 		return jsonobj.toString();
 	}
 	
+	// 일반 공결 신청
 	@RequestMapping(value = "/officalLeave.sky", method = {RequestMethod.GET})
 	public ModelAndView officalLeave(ModelAndView mav, HttpServletRequest request) {
 		CommuMemberVO cmvo = new CommuMemberVO();
@@ -355,11 +357,11 @@ public class EunjiBoardController {
 		
 		boolean flag = true;
 		if(startdate != null && enddate != null) {
-		int cnt = service.checkDate(timemap);
-		if(cnt > 0) {
-			flag = false;
-			System.out.println("성공~");
-		}
+			int cnt = service.checkDate(timemap);
+			if(cnt > 0) {
+				flag = false;
+				System.out.println("성공~");
+			}
 		}
 		
  		MultipartFile attach = ocvo.getAttach();
@@ -410,7 +412,6 @@ public class EunjiBoardController {
 				}	
 			}
 		}
-		System.out.println(flag);
 
 		if(!flag) {
 			 String message = "해당기간에 공결내역이 존재합니다, '공결신청조회'에서 확인 부탁드립니다.";
@@ -546,10 +547,28 @@ public class EunjiBoardController {
 	       }
 	   }
 	   
-	   @RequestMapping(value="/girlOfficalLeave.sky")
+	   // 여학생 공결 신청
+	   @RequestMapping(value="/girlOfficalLeave.sky", method = {RequestMethod.GET})
 	   public ModelAndView girlOfficalLeave(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 		   
 		   mav.setViewName("eunji/class/girlOfficalLeave.tiles2");
+		   return mav;
+	   }
+	   
+	   @RequestMapping(value = "girlOfficalLeaveEnd.sky", method = {RequestMethod.POST})
+	   public ModelAndView girlOfficalLeaveEnd(ModelAndView mav, HttpServletRequest request, GirlOfficialLeaveVO golvo) {
+		   CommuMemberVO cmvo = new CommuMemberVO();
+		   HttpSession session2 = request.getSession();
+			
+		   cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		   int memberNo = cmvo.getFk_memberNo();
+		   golvo.setFk_memberno(memberNo);
+		   System.out.println(golvo.getStartDate() + " " + golvo.getEndDate() + " " + golvo.getFk_memberno());
+		   if(golvo.getEndTime() == null && golvo.getStartTime() == null) {
+			   int n = service.insertGirlLeave(golvo);
+			   System.out.println(n);
+		   }
+		   
 		   return mav;
 	   }
 

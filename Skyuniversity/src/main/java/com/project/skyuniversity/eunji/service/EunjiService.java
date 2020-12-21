@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
@@ -170,6 +171,12 @@ public class EunjiService implements InterEunjiService {
 	@Override
 	public int checkDate(Map<String, String> timemap) {
 		int n = dao.checkDate(timemap);
+		return n;
+	}
+
+	@Override
+	public int insertGirlLeave(GirlOfficialLeaveVO golvo) {
+		int n = dao.insertGirlLeave(golvo);
 		return n;
 	}
 

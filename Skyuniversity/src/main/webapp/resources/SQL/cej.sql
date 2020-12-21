@@ -560,7 +560,7 @@ select H.leaveno, name, memberno, grade, deptname, filename, orgfilename, filesi
 select *
 from tbl_official_leave
 
-update tbl_official_leave set approve='승인완료' where leaveno = '5'
+update tbl_official_leave set approve='승인완료' where leaveno = '10'
 commit
 
 
@@ -590,3 +590,39 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         select startDate, endDate, reason, approve, noReason, approveDate, fileName, orgFileName, fileSize, regdate, fk_memberNo
         from tbl_official_leave
         where leaveNo='5'
+ 
+ select count(*)
+ from tbl_official_leave
+ where startdate between '2020-12-01' and '2020-12-03' or enddate between '2020-12-01' and '2020-12-03'
+ 
+ desc tbl_official_leave
+
+-------------- 여학생 공결 테이블 생성 ------------------
+create table tbl_girl_leave
+(
+    girlLeaveNo         number          not null
+    ,startTime           varchar2(50)    
+    ,endTime             varchar2(50)
+    ,startDate           date        
+    ,endDate             date
+    ,approveDate         date
+    ,approve             varchar2(20)    default '승인전'
+    ,noreason            varchar2(300)
+    ,regDate             date            default sysdate
+    ,fk_memberno         number          not null
+    ,constraint PK_tbl_girl_leave_girlLeaveNo primary key(girlLeaveNo)
+    ,constraint FK_tbl_girl_leave_memberno foreign key(fk_memberno) 
+                                   references tbl_member(memberno)
+);
+
+insert into tbl_girl_leave(girlLeaveNo, startDate, endDate, fk_memberno)
+values(tbl_girl_leave_seq.nextval, '2012-01-01','2012-02-01', '102')
+rollback
+create sequence tbl_girl_leave_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+

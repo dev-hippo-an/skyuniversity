@@ -171,5 +171,11 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int insertGirlLeave(GirlOfficialLeaveVO golvo) {
+		int n = sqlSession.selectOne("eunji.insertGirlLeave", golvo);
+		return n;
+	}
+
 
 }

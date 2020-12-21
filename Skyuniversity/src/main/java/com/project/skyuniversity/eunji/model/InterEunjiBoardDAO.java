@@ -57,4 +57,6 @@ public interface InterEunjiBoardDAO {
 
 	int checkDate(Map<String, String> timemap);
 
+	int insertGirlLeave(GirlOfficialLeaveVO golvo);
+
 }

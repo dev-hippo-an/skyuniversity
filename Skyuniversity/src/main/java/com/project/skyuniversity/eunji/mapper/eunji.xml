@@ -249,4 +249,9 @@
  		 from tbl_official_leave
  		 where fk_memberno = #{memberno} and (startdate between #{startdate} and #{enddate} or enddate between #{startdate} and #{enddate})
 	</select>
+	
+	<insert id="insertGirlLeave" parameterType="com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO">
+		insert into tbl_girl_leave(girlLeaveNo, startDate, endDate, fk_memberno)
+		values(tbl_girl_leave_seq.nextval, #{startDate}, #{endDate}, #{fk_memberno})
+	</insert>
 </mapper>
