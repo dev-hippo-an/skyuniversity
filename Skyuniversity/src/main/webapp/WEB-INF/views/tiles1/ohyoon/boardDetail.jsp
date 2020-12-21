@@ -16,9 +16,10 @@
 	 	text-align : left;
 	 }
 
-	table
-	 {border: solid gray 1px;
-	 margin-bottom : 5%;}
+	 table {
+	 	border: solid gray 1px;
+	 	margin-bottom : 5%;
+	 }
 	 
 	 div.form-group{
 	 border: solid gray 1px;
@@ -785,7 +786,6 @@
 	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	        }
 		});
-		
 	}// end of function goUpdateComment(commentNo) {}------------------------------------
 	
 	
