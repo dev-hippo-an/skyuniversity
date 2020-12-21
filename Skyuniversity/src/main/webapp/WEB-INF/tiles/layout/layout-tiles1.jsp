@@ -37,11 +37,11 @@
          
       </div>
       
-      <div id="mycontent" align="center">
+      <div id="mycontent" align="center" style="">
          <tiles:insertAttribute name="content" />
       </div>
       
-      <div id="myfooter">
+      <div id="myfooter" style="clear: both;">
          <tiles:insertAttribute name="footer" />
       </div>
    </div>

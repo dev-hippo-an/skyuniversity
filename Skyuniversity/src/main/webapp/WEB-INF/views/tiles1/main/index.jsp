@@ -1,12 +1,65 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
 	pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions"%>
 <%
 	String ctxPath = request.getContextPath();
 %>
+
+<style>
+table {
+   border-collapse: collapse;
+   border-spacing: 0;
+   width: 80%;
+  /*  border: 1px solid #ddd; */
+}
+
+th, td {
+   text-align: center;
+   padding: 8px;
+   border: 1px solid #ddd;
+}
+
+thead {
+	background-color: #0841ad;
+	font-size: 10pt;
+	color: white;
+}
+
+tbody {
+	font-size: 10pt;
+}
+
+
+</style>
 <script type="text/javascript">
 	$(document).ready(function(){
 		autoSlide();
+		
+		$(".board-body tr").click(function(){
+			
+			
+			var frm = document.indexViewForm;
+			var boardKindNo = Number($(this).find(".boardKindNo").text());
+			
+			
+			if (boardKindNo <= 6 || (18 <= boardKindNo && boardKindNo <= 22)) {
+				frm.action = "<%= ctxPath%>/minsungBoardView.sky";
+			} else if (23 <= boardKindNo){
+				frm.action = "<%= ctxPath%>/marketBoardDetail.sky";
+			} else {
+				frm.action = "<%= ctxPath%>/boardDetail.sky";
+			}
+			
+			frm.boardKindNo.value = boardKindNo;
+			frm.boardNo.value = $(this).find(".boardNo").text();
+			frm.method = "GET";
+			frm.submit();
+			
+			
+			
+		});
+		
 		
 	});
 	
@@ -80,7 +133,7 @@
   				<div class="column">
     				<div class="index-board hot">
     					<div class="board-header"> 
-    						<span class="board-title">최근 게시물</span>
+    						<span style="fontweight: bold; font-size: 15pt;">최근 게시물</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -90,10 +143,20 @@
     							</tr>
     						</thead>
     						<tbody>
-    							<c:forEach begin="0" end="10" var="i" varStatus="status">
+    							<c:forEach items="${recentBoardList}" var="recent">
     								<tr>
-    									<td>${i}</td>
-    									<td>${i}</td>
+    									<td>${recent.boardName}</td>
+    									<c:choose>
+										        <c:when test="${fn:length(recent.subject) > 20}">
+								                	<td>${fn:substring(recent.subject, 0, 20)}...</td>
+										        </c:when>
+										        <c:otherwise>
+								                	<td>${recent.subject}</td>
+										        </c:otherwise>
+											</c:choose>
+    									<td style="display: none;" class="boardNo">${recent.boardNo}</td>
+    									<td style="display: none;" class="boardKindNo">${recent.fk_boardKindNo}</td>
+
     								</tr>
     							</c:forEach>
     						</tbody>
@@ -103,7 +166,7 @@
   				<div class="column">
     				<div class="index-board hot">
     					<div class="board-header"> 
-    						<span class="board-title">주간 베스트 게시물</span>
+    						<span style="fontweight: bold; font-size: 15pt;">주간 베스트 게시물</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -113,10 +176,20 @@
     							</tr>
     						</thead>
     						<tbody>
-    							<c:forEach begin="0" end="10" var="i" varStatus="status">
+    							<c:forEach items="${bestBoardList}" var="best">
     								<tr>
-    									<td>${i}</td>
-    									<td>${i}</td>
+    									<td>${best.boardName}</td>
+    									<c:choose>
+										        <c:when test="${fn:length(best.subject) > 20}">
+								                	<td>${fn:substring(best.subject, 0, 20)}...</td>
+										        </c:when>
+										        <c:otherwise>
+								                	<td>${best.subject}</td>
+										        </c:otherwise>
+											</c:choose>
+    									<td style="display: none;" class="boardNo">${best.boardNo}</td>
+    									<td style="display: none;" class="boardKindNo">${best.fk_boardKindNo}</td>
+
     								</tr>
     							</c:forEach>
     						</tbody>
@@ -126,7 +199,7 @@
   				<div class="column">
     				<div class="index-board hot">
     					<div class="board-header"> 
-    						<span class="board-title">인기 게시물</span>
+    						<span style="fontweight: bold; font-size: 15pt;">인기 게시물</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -136,10 +209,19 @@
     							</tr>
     						</thead>
     						<tbody>
-    							<c:forEach begin="0" end="10" var="i" varStatus="status">
+    							<c:forEach items="${popularBoardList}" var="popular">
     								<tr>
-    									<td>${i}</td>
-    									<td>${i}</td>
+    									<td>${popular.boardName}</td>
+    									<c:choose>
+										        <c:when test="${fn:length(popular.subject) > 20}">
+								                	<td>${fn:substring(popular.subject, 0, 20)}...</td>
+										        </c:when>
+										        <c:otherwise>
+								                	<td>${popular.subject}</td>
+										        </c:otherwise>
+											</c:choose>
+    									<td style="display: none;" class="boardNo">${popular.boardNo}</td>
+    									<td style="display: none;" class="boardKindNo">${popular.fk_boardKindNo}</td>
     								</tr>
     							</c:forEach>
     						</tbody>
@@ -156,7 +238,7 @@
 					</c:forEach>
 						
 					</a>
-					<div style="text-align:center">
+					<div style="text-align: center">
 						<c:forEach items="${bannerList}" varStatus="status">
 							<span class="dot" onclick="showSlides(${status.index})"></span>
 						</c:forEach>
@@ -170,7 +252,7 @@
   				<div class="column">
     				<div class="index-board">
     					<div class="board-header"> 
-    						<span class="board-title">자유 게시판(반말)</span>
+    						<span class="board-title" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=8'">자유 게시판(반말)</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -180,11 +262,22 @@
     							</tr>
     						</thead>
     						<tbody>
-    							<c:forEach begin="0" end="5" var="i" varStatus="status">
-    								<tr>
-    									<td>${i}</td>
-    									<td>${i}</td>
-    								</tr>
+    							<c:forEach items="${indexBoardList}" var="index">
+    								<c:if test="${index.fk_boardKindNo == '8'}">
+	    								<tr>
+	    									<td>${index.categoryName}</td>
+	    									<c:choose>
+										        <c:when test="${fn:length(index.subject) > 20}">
+								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        </c:when>
+										        <c:otherwise>
+								                	<td>${index.subject}</td>
+										        </c:otherwise>
+											</c:choose>
+	    									<td style="display: none;" class="boardNo">${index.boardNo}</td>
+    										<td style="display: none;" class="boardKindNo">${index.fk_boardKindNo}</td>
+	    								</tr>
+    								</c:if>
     							</c:forEach>
     						</tbody>
     					</table>
@@ -193,7 +286,7 @@
   				<div class="column">
     				<div class="index-board">
     					<div class="board-header"> 
-    						<span class="board-title">공지사항</span>
+    						<span class="board-title" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=1'">공지사항</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -203,11 +296,22 @@
     							</tr>
     						</thead>
     						<tbody>
-    							<c:forEach begin="0" end="5" var="i" varStatus="status">
-    								<tr>
-    									<td>${i}</td>
-    									<td>${i}</td>
-    								</tr>
+    							<c:forEach items="${indexBoardList}" var="index">
+    								<c:if test="${index.fk_boardKindNo == 1}">
+	    								<tr>
+	    									<td>${index.categoryName}</td>
+	    									<c:choose>
+										        <c:when test="${fn:length(index.subject) > 20}">
+								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        </c:when>
+										        <c:otherwise>
+								                	<td>${index.subject}</td>
+										        </c:otherwise>
+											</c:choose>
+	    									<td style="display: none;" class="boardNo">${index.boardNo}</td>
+    										<td style="display: none;" class="boardKindNo">${index.fk_boardKindNo}</td>
+	    								</tr>
+    								</c:if>
     							</c:forEach>
     						</tbody>
     					</table>
@@ -216,7 +320,7 @@
   				<div class="column">
     				<div class="index-board">
     					<div class="board-header"> 
-    						<span class="board-title">익명 게시판</span>
+    						<span class="board-title" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=10'">유머 게시판</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -226,11 +330,22 @@
     							</tr>
     						</thead>
     						<tbody>
-    							<c:forEach begin="0" end="5" var="i" varStatus="status">
-    								<tr>
-    									<td>${i}</td>
-    									<td>${i}</td>
-    								</tr>
+    							<c:forEach items="${indexBoardList}" var="index">
+    								<c:if test="${index.fk_boardKindNo == 10}">
+	    								<tr>
+	    									<td>${index.categoryName}</td>
+	    									<c:choose>
+										        <c:when test="${fn:length(index.subject) > 20}">
+								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        </c:when>
+										        <c:otherwise>
+								                	<td>${index.subject}</td>
+										        </c:otherwise>
+											</c:choose>
+	    									<td style="display: none;" class="boardNo">${index.boardNo}</td>
+    										<td style="display: none;" class="boardKindNo">${index.fk_boardKindNo}</td>
+	    								</tr>
+    								</c:if>
     							</c:forEach>
     						</tbody>
     					</table>
@@ -242,7 +357,7 @@
   				<div class="column">
     				<div class="index-board">
     					<div class="board-header"> 
-    						<span class="board-title">복덕방 게시판</span>
+    						<span class="board-title" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky?boardKindNo=23'">복덕방 게시판</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -252,11 +367,22 @@
     							</tr>
     						</thead>
     						<tbody>
-    							<c:forEach begin="0" end="5" var="i" varStatus="status">
-    								<tr>
-    									<td>${i}</td>
-    									<td>${i}</td>
-    								</tr>
+    							<c:forEach items="${indexBoardList}" var="index">
+    								<c:if test="${index.fk_boardKindNo == 23}">
+	    								<tr>
+	    									<td>${index.categoryName}</td>
+	    									<c:choose>
+										        <c:when test="${fn:length(index.subject) > 20}">
+								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        </c:when>
+										        <c:otherwise>
+								                	<td>${index.subject}</td>
+										        </c:otherwise>
+											</c:choose>
+	    									<td style="display: none;" class="boardNo">${index.boardNo}</td>
+    										<td style="display: none;" class="boardKindNo">${index.fk_boardKindNo}</td>
+	    								</tr>
+    								</c:if>
     							</c:forEach>
     						</tbody>
     					</table>
@@ -265,7 +391,7 @@
   				<div class="column">
     				<div class="index-board">
     					<div class="board-header"> 
-    						<span class="board-title">중고서적</span>
+    						<span class="board-title" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky?boardKindNo=24'">중고서적</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -275,11 +401,22 @@
     							</tr>
     						</thead>
     						<tbody>
-    							<c:forEach begin="0" end="5" var="i" varStatus="status">
-    								<tr>
-    									<td>${i}</td>
-    									<td>${i}</td>
-    								</tr>
+    							<c:forEach items="${indexBoardList}" var="index">
+    								<c:if test="${index.fk_boardKindNo == 24}">
+	    								<tr>
+	    									<td>${index.categoryName}</td>
+	    									<c:choose>
+										        <c:when test="${fn:length(index.subject) > 20}">
+								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        </c:when>
+										        <c:otherwise>
+								                	<td>${index.subject}</td>
+										        </c:otherwise>
+											</c:choose>
+	    									<td style="display: none;" class="boardNo">${index.boardNo}</td>
+    										<td style="display: none;" class="boardKindNo">${index.fk_boardKindNo}</td>
+	    								</tr>
+    								</c:if>
     							</c:forEach>
     						</tbody>
     					</table>
@@ -288,7 +425,7 @@
   				<div class="column">
     				<div class="index-board">
     					<div class="board-header"> 
-    						<span class="board-title">중고 거래</span>
+    						<span class="board-title" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky?boardKindNo=25'">중고 거래</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -298,11 +435,24 @@
     							</tr>
     						</thead>
     						<tbody>
-    							<c:forEach begin="0" end="5" var="i" varStatus="status">
-    								<tr>
-    									<td>${i}</td>
-    									<td>${i}</td>
-    								</tr>
+    							<c:forEach items="${indexBoardList}" var="index">
+    								<c:if test="${index.fk_boardKindNo == 25}">
+	    								<tr>
+	    									<td>${index.categoryName}</td>
+	    									<c:choose>
+										        <c:when test="${fn:length(index.subject) > 20}">
+								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        </c:when>
+										        <c:otherwise>
+								                	<td>${index.subject}</td>
+										        </c:otherwise>
+											</c:choose>
+	    									
+	    									
+	    									<td style="display: none;" class="boardNo">${index.boardNo}</td>
+    										<td style="display: none;" class="boardKindNo">${index.fk_boardKindNo}</td>
+	    								</tr>
+    								</c:if>
     							</c:forEach>
     						</tbody>
     					</table>
@@ -310,12 +460,15 @@
   				</div>
 			</div>
 			
+	<form name="indexViewForm">
+		<input type="hidden" name="boardKindNo" />
+		<input type="hidden" name="boardNo" />
+	</form>
 		</div>
 
 	</div>
 
 </div>
-
 
 
 

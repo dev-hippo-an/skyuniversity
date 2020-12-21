@@ -87,7 +87,7 @@ div#index-show-carousel img {
 
 
 
-
+장난똥때리나?
 
 
 
@@ -123,14 +123,30 @@ div.column {
   
 }
 div.index-board {
-	height: 200px;
+	min-height: 240px;
 	/* border: green solid 1px; */
 	border: 2px solid #cccccc;
 	border-bottom-style: outset;
 	border-right-style: outset;
 }
+
+.board-body tbody tr:nth-child(odd) {
+	background-color: rgba(8,67,173,0.1);
+}
+
+.board-body tbody tr:hover{
+	cursor: pointer;
+	font-weight: bold;
+}
+
+.board-body tbody tr{
+	height: 20px;
+}
+
+
+
 div.hot {
-	height: 300px;
+	min-height: 370px;
 }
 
 div.board-header {
@@ -138,7 +154,7 @@ div.board-header {
 	width: 100%;
 	height: 40px;
 	text-align: left;
-	background-color: #f2f2f2;
+	background-color: rgba(8,67,173,0.5);
 	padding: 5px 5px 5px 15px;
 	
 }
@@ -169,17 +185,42 @@ thead.board-body-header {
 }
 
 thead.board-body-header th:first-child{
-	width: 25%;
-	text-align: center;
+	width: 30%;
+	text-align: left;
+	padding: 5px;
+	padding-left: 10px;
 	/* border: 1px red solid; */
 }
 
 thead.board-body-header th:last-child{
-	width: 75%;
-	text-align: center;
+	width: 69%;
+	text-align: left;
+	padding: 5px;
+	padding-left: 10px;
 	/* border: 1px red solid; */
 }
 
+.hot thead.board-body-header th:first-child{
+	width: 40%;
+	text-align: left;
+	padding: 5px;
+	padding-left: 10px;
+	/* border: 1px red solid; */
+}
+
+.hot thead.board-body-header th:last-child{
+	width: 59%;
+	padding: 5px;
+	text-align: left;
+	/* border: 1px red solid; */
+}
+
+
+.board-body tbody tr>td{
+	text-align: left;
+	padding: 3px;
+	padding-left: 10px;
+}
 
 
 
