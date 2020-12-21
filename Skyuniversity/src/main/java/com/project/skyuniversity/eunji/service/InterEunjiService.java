@@ -58,6 +58,8 @@ public interface InterEunjiService {
 
 	OfficialLeaveVO getLeaveVO(String seq);
 
+	int checkDate(Map<String, String> timemap);
+
 	
 
 	

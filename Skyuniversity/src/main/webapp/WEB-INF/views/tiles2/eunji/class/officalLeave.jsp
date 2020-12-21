@@ -45,7 +45,7 @@ $(function() {
 		  });
 });
 $(document).ready(function() {
-	
+
 	$("#alldaychk").click(function() {
 		if ($("#alldaychk").is(":checked") == true){
 			$("#starttime").attr('disabled', 'disabled');
@@ -112,12 +112,12 @@ $(document).ready(function() {
 		}
 		
 		if(bool){
-			alert("공결신청이되었습니다.");
 			// 폼(form) 을 전송(submit)
 			var frm = document.addFrm;
 			frm.method = "POST";
 			frm.action = "<%= ctxPath%>/officalLeaveEnd.sky";
 			frm.submit(); 
+			
 		}
 	});
 });	

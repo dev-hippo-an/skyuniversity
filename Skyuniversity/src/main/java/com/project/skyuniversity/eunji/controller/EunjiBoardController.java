@@ -337,7 +337,7 @@ public class EunjiBoardController {
 	}
 	
 	@RequestMapping(value = "/officalLeaveEnd.sky", method = {RequestMethod.POST})
-	public String officalLeaveEnd(HttpServletRequest request, MultipartHttpServletRequest mrequest, OfficialLeaveVO ocvo) {
+	public ModelAndView officalLeaveEnd(ModelAndView mav,HttpServletRequest request, MultipartHttpServletRequest mrequest, OfficialLeaveVO ocvo) {
 
 		CommuMemberVO cmvo = new CommuMemberVO();
 		HttpSession session2 = request.getSession();
@@ -345,9 +345,22 @@ public class EunjiBoardController {
 		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
 		int memberNo = cmvo.getFk_memberNo();
 		ocvo.setFk_memberNo(memberNo);
-		System.out.println(ocvo.getEndTime());
-		System.out.println(ocvo.getStartTime());
-		MultipartFile attach = ocvo.getAttach();
+		String startdate = ocvo.getStartDate();
+		String enddate = ocvo.getEndDate();
+		
+		Map<String, String> timemap = new HashMap<String, String>();
+		timemap.put("startdate", startdate);
+		timemap.put("enddate", enddate);
+		timemap.put("memberno", Integer.toString(memberNo));
+		
+		int cnt = service.checkDate(timemap);
+		boolean flag = true;
+		if(cnt > 0) {
+			flag = false;
+			System.out.println("성공~");
+		}
+		
+ 		MultipartFile attach = ocvo.getAttach();
 		if(!attach.isEmpty()) {
 			HttpSession session = mrequest.getSession();
 			String root = session.getServletContext().getRealPath("/");
@@ -376,25 +389,47 @@ public class EunjiBoardController {
 	            e.printStackTrace();
 	         }
 		}
-
+		
 		int n = 0;
-
-		if (attach.isEmpty()) {
-			if(ocvo.getStartTime() == null && ocvo.getEndTime() == null) {
-				n = service.addNonTime(ocvo);
+		if(flag) {
+			if (attach.isEmpty()) {
+				if(ocvo.getStartTime() == null && ocvo.getEndTime() == null) {
+					n = service.addNonTime(ocvo);
+				}
+				else {
+					n = service.add(ocvo);
+				}
+			} else {
+				if(ocvo.getStartTime() == null && ocvo.getEndTime() == null) {
+					n = service.add_withFileNonTime(ocvo);
+				}
+				else {
+					n = service.add_withFile(ocvo);
+				}	
 			}
-			else {
-				n = service.add(ocvo);
-			}
-		} else {
-			if(ocvo.getStartTime() == null && ocvo.getEndTime() == null) {
-				n = service.add_withFileNonTime(ocvo);
-			}
-			else {
-				n = service.add_withFile(ocvo);
-			}	
 		}
-		return "redirect:/officalLeave.sky";
+		System.out.println(flag);
+		if(flag) {
+			
+				 String message = "공결 신청이 완료되었습니다.";
+		         String loc = "javascript:history.back()";
+		         
+		         mav.addObject("message", message);
+		         mav.addObject("loc", loc);
+		      
+		         mav.setViewName("eunji/class/officalLeave.tiles2");
+		}
+		else {
+			 String message = "해당기간에 공결내역이 존재합니다, '공결신청조회'에서 확인 부탁드립니다.";
+	         String loc = "javascript:history.back()";
+	         
+	         mav.addObject("message", message);
+	         mav.addObject("loc", loc);
+	      
+	         mav.setViewName("msg");
+		}
+		
+		return mav;
 	}
 	
 	@ResponseBody

@@ -165,5 +165,11 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return olvo;
 	}
 
+	@Override
+	public int checkDate(Map<String, String> timemap) {
+		int n = sqlSession.selectOne("eunji.checkDate", timemap);
+		return n;
+	}
+
 
 }

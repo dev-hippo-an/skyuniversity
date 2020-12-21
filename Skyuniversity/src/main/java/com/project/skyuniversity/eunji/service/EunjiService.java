@@ -167,6 +167,12 @@ public class EunjiService implements InterEunjiService {
 		return olvo;
 	}
 
+	@Override
+	public int checkDate(Map<String, String> timemap) {
+		int n = dao.checkDate(timemap);
+		return n;
+	}
+
 
 
 }

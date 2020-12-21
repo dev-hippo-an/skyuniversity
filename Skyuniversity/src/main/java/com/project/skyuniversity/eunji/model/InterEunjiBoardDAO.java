@@ -55,4 +55,6 @@ public interface InterEunjiBoardDAO {
 
 	OfficialLeaveVO getLeaveVO(String seq);
 
+	int checkDate(Map<String, String> timemap);
+
 }

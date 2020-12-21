@@ -243,4 +243,10 @@
         from tbl_official_leave
         where leaveNo=#{seq}
 	</select>
+	
+	<select id="checkDate" parameterType="HashMap" resultType="int">
+		 select count(*)
+ 		 from tbl_official_leave
+ 		 where fk_memberno = #{memberno} and (startdate between #{startdate} and #{enddate} or enddate between #{startdate} and #{enddate})
+	</select>
 </mapper>
