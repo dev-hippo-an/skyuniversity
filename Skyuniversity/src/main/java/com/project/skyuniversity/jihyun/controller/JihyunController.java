@@ -130,7 +130,7 @@ public class JihyunController {
 	}
 	
 	// 현재 비밀번호 확인
-	@RequestMapping(value = "/checkPwd.sky", method = { RequestMethod.GET })
+	@RequestMapping(value = "/checkPwd.sky", method = { RequestMethod.POST })
 	public String checkPwd(HttpServletRequest request, HttpServletResponse response) {
 		
 		String memberno = request.getParameter("memberno");
