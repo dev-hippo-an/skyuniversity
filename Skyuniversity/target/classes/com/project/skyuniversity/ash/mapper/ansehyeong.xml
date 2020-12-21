@@ -1275,7 +1275,6 @@
      where status = 1
      ) 
      where rno <![CDATA[ < ]]>= 11
-      
     </select> 
     
      <select id="indexPopularBoardList" resultType="com.project.skyuniversity.ash.model.MarketBoardVO">

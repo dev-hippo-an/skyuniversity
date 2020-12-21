@@ -1686,3 +1686,75 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
+---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------
+
+    select fk_boardKindNo, subject, regDate, boardName, boardNo
+      from
+      (
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_notice b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_council b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from TBL_BOARD_major b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from TBL_BOARD_club b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from TBL_BOARD_graduate b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_critic b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from TBL_BOARD_study b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from TBL_BOARD_cert b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from TBL_BOARD_emp b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_joboffer b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from TBL_BOARD_lost b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_informal b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_polite b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_humor b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_issue b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_mbti b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_food b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_love b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_hobby b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_health b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      order by regDate desc
+      ) V
+      where rownum <= 11
+     
