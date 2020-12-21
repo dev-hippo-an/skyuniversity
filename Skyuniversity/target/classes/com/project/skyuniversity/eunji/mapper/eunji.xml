@@ -259,9 +259,22 @@
 		insert into tbl_girl_leave(girlLeaveNo, startDate, endDate, fk_memberno, startTime, endTime)
 		values(tbl_girl_leave_seq.nextval, #{startDate}, #{endDate}, #{fk_memberno}, #{startTime}, #{endTime})
 	</insert>
-	<!-- 
+	
 	<select id="selectGirlList" parameterType="int" resultType="com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO">
-		
+		select girlLeaveNo, to_char(regDate, 'yyyy-mm-dd') as regDate, to_char(startDate, 'yyyy-mm-dd') as startDate, startTime, endTime, approve, noreason
+        from tbl_girl_leave
+        <![CDATA[where add_months(sysdate, -12) <= regdate]]> and fk_memberno = #{memberNo}	
+		order by  regdate desc
 	</select>
-	 -->
+	
+	<select id="checkGirlDate" parameterType="HashMap" resultType="int">
+		select count(*)
+        from tbl_girl_leave
+        where fk_memberno = ${memberno} and to_char(startDate,'yyyy')=${year} and to_char(startDate,'mm') = ${month}
+	</select>
+	
+	<delete id="delGirlOfficialLeave" parameterType="String">
+		delete from tbl_girl_leave where girlleaveno = #{seq}
+	</delete>
+	
 </mapper>

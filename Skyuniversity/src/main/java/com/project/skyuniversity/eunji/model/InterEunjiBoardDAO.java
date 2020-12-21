@@ -63,4 +63,8 @@ public interface InterEunjiBoardDAO {
 
 	List<GirlOfficialLeaveVO> selectGirlList(int memberNo);
 
+	int checkGirlDate(Map<String, String> checkmap);
+
+	int delGirlOfficialLeave(String seq);
+
 }

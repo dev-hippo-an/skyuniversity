@@ -192,6 +192,18 @@ public class EunjiService implements InterEunjiService {
 		return girllist;
 	}
 
+	@Override
+	public int checkGirlDate(Map<String, String> checkmap) {
+		int cnt = dao.checkGirlDate(checkmap);
+		return cnt;
+	}
+
+	@Override
+	public int delGirlOfficialLeave(String seq) {
+		int n = dao.delGirlOfficialLeave(seq);
+		return n;
+	}
+
 
 
 }

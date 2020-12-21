@@ -557,29 +557,74 @@ public class EunjiBoardController {
 		   int memberNo = cmvo.getFk_memberNo();
 		   
 		   List<GirlOfficialLeaveVO> girllist = service.selectGirlList(memberNo);
+		   //System.out.println(girllist.size());
 		   
+		   mav.addObject("girllist", girllist);
 		   mav.setViewName("eunji/class/girlOfficalLeave.tiles2");
 		   return mav;
 	   }
 	   
 	   @RequestMapping(value = "girlOfficalLeaveEnd.sky", method = {RequestMethod.POST})
 	   public ModelAndView girlOfficalLeaveEnd(ModelAndView mav, HttpServletRequest request, GirlOfficialLeaveVO golvo) {
+		   boolean flag = true;
 		   CommuMemberVO cmvo = new CommuMemberVO();
 		   HttpSession session2 = request.getSession();
 			
 		   cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
 		   int memberNo = cmvo.getFk_memberNo();
 		   golvo.setFk_memberno(memberNo);
-		   System.out.println(golvo.getStartDate() + " " + golvo.getEndDate() + " " + golvo.getFk_memberno());
-		   if(golvo.getEndTime() == null && golvo.getStartTime() == null) {
-			   int n = service.insertGirlLeave(golvo);
-		   }
-		   else {
-			   int n = service.insertGirlLeaveTime(golvo);
+		   
+		   Map<String, String> checkmap = new HashMap<String, String>();
+		   checkmap.put("memberno", Integer.toString(memberNo));
+		   checkmap.put("month", golvo.getStartDate().substring(5, 7));
+		   checkmap.put("year", golvo.getStartDate().substring(0, 4));
+		   int cnt = service.checkGirlDate(checkmap);
+		   if(cnt > 1) {
+			   flag = false;
 		   }
 		   
+		   if(flag) {
+			   if(golvo.getEndTime() == null && golvo.getStartTime() == null) {
+				   int n = service.insertGirlLeave(golvo);
+			   }
+			   else {
+				   int n = service.insertGirlLeaveTime(golvo);
+			   }
+			   
+			   List<GirlOfficialLeaveVO> girllist = service.selectGirlList(memberNo);
+			   //System.out.println(girllist.size());
+			   
+			   mav.addObject("girllist", girllist);
+			   mav.setViewName("eunji/class/girlOfficalLeave.tiles2");
+		   }
+		   else {
+				 String message = "생리공결은 월1회만 사용할 수 있습니다. 공결내역조회를 확인해주세요.";
+		         String loc = "javascript:history.back()";
+		         
+		         mav.addObject("message", message);
+		         mav.addObject("loc", loc);
+		      
+		         mav.setViewName("msg");
+			}
 		   return mav;
 	   }
+	   
+	   @ResponseBody
+		@RequestMapping(value = "/delGirlOfficialLeave.sky", method = {RequestMethod.GET}, produces="text/plain;charset=UTF-8")
+		public String delGirlOfficialLeave(HttpServletRequest request) {
+			String seq = request.getParameter("seq"); 
+			
+			boolean result = false;
+			int n = service.delGirlOfficialLeave(seq);
+			if(n == 1) {
+				result = true;
+			}
+			
+			JSONObject jsonobj = new JSONObject();
+			jsonobj.put("result", result);
+			
+			return jsonobj.toString();
+		}
 
 }
 

@@ -592,9 +592,42 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         where leaveNo='5'
         
         select *
-        from tbl_girl_leave
+        from tbl_official_leave
         
         delete from tbl_girl_leave
         commit
         
+        select girlleaveno, regdate, startDate, startTime, endTime, approve, noreason
+        from tbl_girl_leave
+        where fk_memberno = '102'
         
+            select count(*)
+            from tbl_girl_leave
+            where fk_memberno = '102' and to_char(startDate,'yyyy')='2020' and to_char(startDate,'mm') = '12'
+        
+        delete from tbl_girl_leave where firlleaveno =
+        
+        update tbl_girl_leave set approve = '승인완료'
+        commit
+        
+        
+		select name, fk_memberno, reason
+		from
+		(
+		    select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(regdate, 'yyyy') as regyear,to_char(regdate, 'mm') as regmonth, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+		    from 
+		    (
+		    select name, memberno, grade, deptname
+		    from tbl_member M
+		    inner join tbl_dept D
+		    on M.fk_deptseq = D.deptseq
+		    )V
+		    inner join tbl_official_leave O
+		    on V.memberno = O.fk_memberno
+		    where fk_memberno = '102'
+		    order by regdate desc
+		) H
+        inner join tbl_girl_leave G 
+        on H.memberno = G.fk_memberno
+		where approve in ('승인완료','승인취소') and regyear = '2020' and regmonth in ('12')
+		

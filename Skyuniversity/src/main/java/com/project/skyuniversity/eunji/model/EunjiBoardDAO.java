@@ -189,5 +189,17 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return girllist;
 	}
 
+	@Override
+	public int checkGirlDate(Map<String, String> checkmap) {
+		int cnt = sqlSession.selectOne("eunji.checkGirlDate", checkmap);
+		return cnt;
+	}
+
+	@Override
+	public int delGirlOfficialLeave(String seq) {
+		int n = sqlSession.delete("eunji.delGirlOfficialLeave", seq);
+		return n;
+	}
+
 
 }

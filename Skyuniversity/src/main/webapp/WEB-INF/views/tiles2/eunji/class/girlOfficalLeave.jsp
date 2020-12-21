@@ -10,6 +10,39 @@
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
 <style type="text/css">
+table#scroltbl {
+	border-collapse:collapse; width:200px;
+}
+
+#scrolth {
+	float:left; width:100%;
+}
+
+#bodys {
+	overflow-y:auto; overflow-x:hidden; float:left; width:100%; height:270px;
+}
+
+#subli {
+	display: table; width: 1000px;
+	padding:10px;
+}
+.sublicl {
+	display:table; width:100%;
+} 
+.sublicl > td {
+	width:100px;
+	font-size: 9pt;
+	text-align: center;	
+	padding-left:-10px;
+}
+#subli > td {
+	width:280px;
+	font-size: 9pt;
+	text-align: center;
+}
+#info {
+	color: #737373;
+}
 </style>
 <script type="text/javascript">
 $(function() {
@@ -92,9 +125,30 @@ $(document).ready(function() {
 				frm.method = "POST";
 				frm.action = "<%= ctxPath%>/girlOfficalLeaveEnd.sky";
 				frm.submit(); 
-			}ㅑ
+			}
 		});
 });
+
+function funcdel(index){
+	var result = confirm("공결 신청을 취소하시겠습니까?");
+	var seq = $("#seq"+index).val();
+	if(result){
+		$.ajax({
+			url: "<%= request.getContextPath() %>/delGirlOfficialLeave.sky",
+			data: {"seq":seq},
+			type: "GET",
+			dataType: "json",
+			success: function(json) {
+				if(json.result){
+					alert("삭제가 완료되었습니다.");
+					location.reload();
+				}
+			},error: function(request, status, error){
+	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		}); 
+	}
+}
 </script>
 <div style="padding-left: 10px; padding-right: 10px;">
 <div>
@@ -115,13 +169,64 @@ $(document).ready(function() {
 			<label>&nbsp;&nbsp;시간</label>
 			<input type="time" id="starttime" name="startTime"/> ~ <input type="time" id="endtime" name="endTime"/>
 		</li>
-		<li style="display: inline-block; margin-left: 200px;"><button id="addbtn" >신청</button></li>
+		<li style="display: inline-block; margin-left: 80px;"><button id="addbtn" >신청</button></li>
 	</ul>
 	</form>
 	</div>
 </div>
 <br/>
+<br/>
 <div>
 <span style="font-size: 12pt; font-weight: bold;">여학생 공결신청 목록</span>
+
+<div style="width: 1300px; text-align: center;">
+	<table class="table table-striped"  id="scroltbl">
+		<thead id="scrolth">
+			<tr id="subli">
+				<td>신청일자</td>
+				<td>공결일자</td>
+				<td>시간</td>
+				<td>승인여부</td>
+				<td>불가사유</td>
+				<td>취소</td>
+			</tr>
+		</thead>
+		<tbody id="bodys">
+		<c:forEach items="${girllist}" var="glvo" varStatus="status">
+			<tr class='sublicl'>
+				<td>${glvo.regDate}</td>
+				<td>${glvo.startDate}</td>
+				<c:if test="${glvo.startTime == null}">
+					<td>전일</td>
+				</c:if>
+				<c:if test="${glvo.startTime != null}">
+					<td>${glvo.startTime}~${glvo.endTime}</td>
+				</c:if>
+				<td>${glvo.approve}</td>
+				<td>${glvo.noreason}</td>
+				<c:if test="${glvo.approve=='승인전'}">
+					<td><button id="delbtn${status.index}" onclick="funcdel(${status.index})">취소</button><input id="seq${status.index}" type="text" value="${glvo.girlLeaveNo}" hidden="true"></td>
+				</c:if>
+				<c:if test="${glvo.approve=='승인완료'}">
+					<td></td>
+				</c:if>
+			</tr>
+	    </c:forEach>
+		</tbody>
+	</table>
+</div>
+</div>
+<br>
+<div id="divbtn">
+<span style="font-size: 12pt; font-weight: bold; color: #ff4000">여학생 공결신청 유의사항</span>
+</div>
+<div style="padding-top: 20px;">
+<ul id="info" >
+	<li>결석일 전후 7일 이내에만 가능하며, 반드시 결석일 이후 7일 이내에 신청을 해야 공결을 인정받을 수 있습니다.</li>
+	<li>공결 사유 선택 후 그에 해당하는 증빙서류를 업로드하여 신청해주세요.</li>
+	<li>공결 승인 여부는 최소 1일 ~ 최대 3일 소요됩니다. </li>
+	<li>3개월 이상의 공결 조회는 '공결내역조회'에서 확인 가능합니다.</li>
+	<li>승인 구분 상태가 '승인전'일 때에는 취소가 가능하지만 승인이 완료되면 취소가 불가합니다.</li>
+</ul>
 </div>
 </div>
