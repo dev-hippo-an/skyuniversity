@@ -61,4 +61,6 @@ public interface InterEunjiBoardDAO {
 
 	int insertGirlLeaveTime(GirlOfficialLeaveVO golvo);
 
+	List<GirlOfficialLeaveVO> selectGirlList(int memberNo);
+
 }

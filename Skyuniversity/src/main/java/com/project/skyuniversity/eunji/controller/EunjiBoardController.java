@@ -550,6 +550,13 @@ public class EunjiBoardController {
 	   // 여학생 공결 신청
 	   @RequestMapping(value="/girlOfficalLeave.sky", method = {RequestMethod.GET})
 	   public ModelAndView girlOfficalLeave(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		   CommuMemberVO cmvo = new CommuMemberVO();
+		   HttpSession session2 = request.getSession();
+			
+		   cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		   int memberNo = cmvo.getFk_memberNo();
+		   
+		   List<GirlOfficialLeaveVO> girllist = service.selectGirlList(memberNo);
 		   
 		   mav.setViewName("eunji/class/girlOfficalLeave.tiles2");
 		   return mav;

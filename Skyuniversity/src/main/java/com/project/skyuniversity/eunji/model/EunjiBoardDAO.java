@@ -183,5 +183,11 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public List<GirlOfficialLeaveVO> selectGirlList(int memberNo) {
+		List<GirlOfficialLeaveVO> girllist = sqlSession.selectList("eunji.selectGirlList", memberNo);
+		return girllist;
+	}
+
 
 }

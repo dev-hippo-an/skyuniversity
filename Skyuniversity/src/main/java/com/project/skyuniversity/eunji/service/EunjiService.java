@@ -186,6 +186,12 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public List<GirlOfficialLeaveVO> selectGirlList(int memberNo) {
+		List<GirlOfficialLeaveVO> girllist = dao.selectGirlList(memberNo);
+		return girllist;
+	}
+
 
 
 }

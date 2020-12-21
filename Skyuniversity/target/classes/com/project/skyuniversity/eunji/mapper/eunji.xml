@@ -259,4 +259,9 @@
 		insert into tbl_girl_leave(girlLeaveNo, startDate, endDate, fk_memberno, startTime, endTime)
 		values(tbl_girl_leave_seq.nextval, #{startDate}, #{endDate}, #{fk_memberno}, #{startTime}, #{endTime})
 	</insert>
+	<!-- 
+	<select id="selectGirlList" parameterType="int" resultType="com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO">
+		
+	</select>
+	 -->
 </mapper>
