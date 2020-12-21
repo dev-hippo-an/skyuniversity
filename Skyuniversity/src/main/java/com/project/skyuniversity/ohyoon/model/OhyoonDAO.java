@@ -562,6 +562,39 @@ public class OhyoonDAO implements InterOhyoonDAO {
     public int addComment(CommentVO commentvo) {
     	int  result = 0;
     	switch (commentvo.getFk_boardKindNo()) {
+    	case "1":
+    		result = sqlsession.insert("ohyoon.addNoticeComment", commentvo);
+    		break;
+    	case "2":
+    		result = sqlsession.insert("ohyoon.addCouncilComment", commentvo);
+    		break;
+    	case "3":
+    		result = sqlsession.insert("ohyoon.addMajorComment", commentvo);
+    		break;
+    	case "4":
+    		result = sqlsession.insert("ohyoon.addClubComment", commentvo);
+    		break;
+    	case "5":
+    		result = sqlsession.insert("ohyoon.addGraduateComment", commentvo);
+    		break;
+    	case "6":
+    		result = sqlsession.insert("ohyoon.addCriticComment", commentvo);
+    		break;
+    	case "18":
+    		result = sqlsession.insert("ohyoon.addStudyComment", commentvo);
+    		break;
+    	case "19":
+    		result = sqlsession.insert("ohyoon.addCertComment", commentvo);
+    		break;
+    	case "20":
+    		result = sqlsession.insert("ohyoon.addEmpComment", commentvo);
+    		break;
+    	case "21":
+    		result = sqlsession.insert("ohyoon.addJobofferComment", commentvo);
+    		break;
+    	case "22":
+    		result = sqlsession.insert("ohyoon.addLostComment", commentvo);
+    		break;
 		case "8":
 			result = sqlsession.insert("ohyoon.addInformalComment", commentvo);
 			break;
@@ -592,6 +625,15 @@ public class OhyoonDAO implements InterOhyoonDAO {
 		case "17":
 			result = sqlsession.insert("ohyoon.addDietComment", commentvo);
 			break;
+		case "23":
+			result = sqlsession.insert("ohyoon.addHouseMarketComment", commentvo);
+			break;
+		case "24":
+			result = sqlsession.insert("ohyoon.addBookMarketComment", commentvo);
+			break;
+		case "25":
+			result = sqlsession.insert("ohyoon.addEtcMarketComment", commentvo);
+			break;
 		}
     	return result;
     }
@@ -602,6 +644,39 @@ public class OhyoonDAO implements InterOhyoonDAO {
     public List<CommentVO> getCommentList(Map<String, String> paraMap) {
     	List<CommentVO> commentList = null;
     	switch (paraMap.get("fk_boardKindNo")) {
+    	case "1":
+    		commentList = sqlsession.selectList("ohyoon.getNoticeCommentList", paraMap);
+    		break;
+    	case "2":
+    		commentList = sqlsession.selectList("ohyoon.getCouncilCommentList", paraMap);
+    		break;
+    	case "3":
+    		commentList = sqlsession.selectList("ohyoon.getMajorCommentList", paraMap);
+    		break;
+    	case "4":
+    		commentList = sqlsession.selectList("ohyoon.getClubCommentList", paraMap);
+    		break;
+    	case "5":
+    		commentList = sqlsession.selectList("ohyoon.getGraduateCommentList", paraMap);
+    		break;
+    	case "6":
+    		commentList = sqlsession.selectList("ohyoon.getCriticCommentList", paraMap);
+    		break;
+    	case "18":
+    		commentList = sqlsession.selectList("ohyoon.getStudyCommentList", paraMap);
+    		break;
+    	case "19":
+    		commentList = sqlsession.selectList("ohyoon.getCertCommentList", paraMap);
+    		break;
+    	case "20":
+    		commentList = sqlsession.selectList("ohyoon.getEmpCommentList", paraMap);
+    		break;
+    	case "21":
+    		commentList = sqlsession.selectList("ohyoon.getJobofferCommentList", paraMap);
+    		break;
+    	case "22":
+    		commentList = sqlsession.selectList("ohyoon.getLostCommentList", paraMap);
+    		break;
 		case "8":
 			commentList = sqlsession.selectList("ohyoon.getInformalCommentList", paraMap);
 			break;
@@ -631,6 +706,15 @@ public class OhyoonDAO implements InterOhyoonDAO {
 			break;
 		case "17":
 			commentList = sqlsession.selectList("ohyoon.getDietCommentList", paraMap);
+			break;
+		case "23":
+			commentList = sqlsession.selectList("ohyoon.getHouseMarketCommentList", paraMap);
+			break;
+		case "24":
+			commentList = sqlsession.selectList("ohyoon.getBookMarketCommentList", paraMap);
+			break;
+		case "25":
+			commentList = sqlsession.selectList("ohyoon.getEtcMarketCommentList", paraMap);
 			break;
 		}
     	return commentList;
@@ -689,6 +773,39 @@ public class OhyoonDAO implements InterOhyoonDAO {
 		// 만일 해당 댓글의 신고 개수가 10이상이면 글의 상태를 0으로 변경한다.
 		if (reportCount >= 10) {
 			switch (paraMap.get("fk_boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
+			case "1":
+				sqlsession.update("ohyoon.updateNoticeCommentStatus", paraMap);
+				break;
+			case "2":
+				sqlsession.update("ohyoon.updateCouncilCommentStatus", paraMap);
+				break;
+			case "3":
+				sqlsession.update("ohyoon.updateMajorCommentStatus", paraMap);
+				break;
+			case "4":
+				sqlsession.update("ohyoon.updateClubCommentStatus", paraMap);
+				break;
+			case "5":
+				sqlsession.update("ohyoon.updateGraduateCommentStatus", paraMap);
+				break;
+			case "6":
+				sqlsession.update("ohyoon.updateCriticCommentStatus", paraMap);
+				break;
+			case "18":
+				sqlsession.update("ohyoon.updateStudyCommentStatus", paraMap);
+				break;
+			case "19":
+				sqlsession.update("ohyoon.updateCertCommentStatus", paraMap);
+				break;
+			case "20":
+				sqlsession.update("ohyoon.updateEmpCommentStatus", paraMap);
+				break;
+			case "21":
+				sqlsession.update("ohyoon.updateJobofferCommentStatus", paraMap);
+				break;
+			case "22":
+				sqlsession.update("ohyoon.updateLostCommentStatus", paraMap);
+				break;
 			case "8":
 				sqlsession.update("ohyoon.updateInformalCommentStatus", paraMap);
 				break;
@@ -719,6 +836,15 @@ public class OhyoonDAO implements InterOhyoonDAO {
 			case "17":
 				sqlsession.update("ohyoon.updateDietCommentStatus", paraMap);
 				break;
+			case "23":
+				sqlsession.update("ohyoon.updateHouseMarketCommentStatus", paraMap);
+				break;
+			case "24":
+				sqlsession.update("ohyoon.updateBookMarketCommentStatus", paraMap);
+				break;
+			case "25":
+				sqlsession.update("ohyoon.updateEtcMarketCommentStatus", paraMap);
+				break;
 			}
 		}
 		return result;
@@ -731,6 +857,39 @@ public class OhyoonDAO implements InterOhyoonDAO {
     	// 댓글을 삭제하는 것이 아닌 상태(status)를 0으로 바꿔준다 
     	int result = 0;
     	switch (paraMap.get("fk_boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
+    	case "1":
+    		result = sqlsession.update("ohyoon.updateNoticeCommentStatus", paraMap);
+    		break;
+    	case "2":
+    		result = sqlsession.update("ohyoon.updateCouncilCommentStatus", paraMap);
+    		break;
+    	case "3":
+    		result = sqlsession.update("ohyoon.updateMajorCommentStatus", paraMap);
+    		break;
+    	case "4":
+    		result = sqlsession.update("ohyoon.updateClubCommentStatus", paraMap);
+    		break;
+    	case "5":
+    		result = sqlsession.update("ohyoon.updateGraduateCommentStatus", paraMap);
+    		break;
+    	case "6":
+    		result = sqlsession.update("ohyoon.updateCriticCommentStatus", paraMap);
+    		break;
+    	case "18":
+    		result = sqlsession.update("ohyoon.updateStudyCommentStatus", paraMap);
+    		break;
+    	case "19":
+    		result = sqlsession.update("ohyoon.updateCertCommentStatus", paraMap);
+    		break;
+    	case "20":
+    		result = sqlsession.update("ohyoon.updateEmpCommentStatus", paraMap);
+    		break;
+    	case "21":
+    		result = sqlsession.update("ohyoon.updateJobofferCommentStatus", paraMap);
+    		break;
+    	case "22":
+    		result = sqlsession.update("ohyoon.updateLostCommentStatus", paraMap);
+    		break;
 		case "8":
 			result = sqlsession.update("ohyoon.updateInformalCommentStatus", paraMap);
 			break;
@@ -761,6 +920,15 @@ public class OhyoonDAO implements InterOhyoonDAO {
 		case "17":
 			result = sqlsession.update("ohyoon.updateDietCommentStatus", paraMap);
 			break;
+		case "23":
+			result = sqlsession.update("ohyoon.updateHouseMarketCommentStatus", paraMap);
+			break;
+		case "24":
+			result = sqlsession.update("ohyoon.updateBookMarketCommentStatus", paraMap);
+			break;
+		case "25":
+			result = sqlsession.update("ohyoon.updateEtcMarketCommentStatus", paraMap);
+			break;
 		}
     	return result;
     }
@@ -771,6 +939,39 @@ public class OhyoonDAO implements InterOhyoonDAO {
     public int updateComment(Map<String, String> paraMap) {
     	int result = 0;
     	switch (paraMap.get("fk_boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
+    	case "1":
+    		result = sqlsession.update("ohyoon.updateNoticeComment", paraMap);
+    		break;
+    	case "2":
+    		result = sqlsession.update("ohyoon.updateCouncilComment", paraMap);
+    		break;
+    	case "3":
+    		result = sqlsession.update("ohyoon.updateMajorComment", paraMap);
+    		break;
+    	case "4":
+    		result = sqlsession.update("ohyoon.updateClubComment", paraMap);
+    		break;
+    	case "5":
+    		result = sqlsession.update("ohyoon.updateGraduateComment", paraMap);
+    		break;
+    	case "6":
+    		result = sqlsession.update("ohyoon.updateCriticComment", paraMap);
+    		break;
+    	case "18":
+    		result = sqlsession.update("ohyoon.updateStudyComment", paraMap);
+    		break;
+    	case "19":
+    		result = sqlsession.update("ohyoon.updateCertComment", paraMap);
+    		break;
+    	case "20":
+    		result = sqlsession.update("ohyoon.updateEmpComment", paraMap);
+    		break;
+    	case "21":
+    		result = sqlsession.update("ohyoon.updateJobofferComment", paraMap);
+    		break;
+    	case "22":
+    		result = sqlsession.update("ohyoon.updateLostComment", paraMap);
+    		break;
 		case "8":
 			result = sqlsession.update("ohyoon.updateInformalComment", paraMap);
 			break;
@@ -800,6 +1001,15 @@ public class OhyoonDAO implements InterOhyoonDAO {
 			break;
 		case "17":
 			result = sqlsession.update("ohyoon.updateDietComment", paraMap);
+			break;
+		case "23":
+			result = sqlsession.update("ohyoon.updateHouseMarketComment", paraMap);
+			break;
+		case "24":
+			result = sqlsession.update("ohyoon.updateBookMarketComment", paraMap);
+			break;
+		case "25":
+			result = sqlsession.update("ohyoon.updateEtcMarketComment", paraMap);
 			break;
 		}
     	return result;
