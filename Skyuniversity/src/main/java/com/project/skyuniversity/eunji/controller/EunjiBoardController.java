@@ -353,11 +353,13 @@ public class EunjiBoardController {
 		timemap.put("enddate", enddate);
 		timemap.put("memberno", Integer.toString(memberNo));
 		
-		int cnt = service.checkDate(timemap);
 		boolean flag = true;
+		if(startdate != null && enddate != null) {
+		int cnt = service.checkDate(timemap);
 		if(cnt > 0) {
 			flag = false;
 			System.out.println("성공~");
+		}
 		}
 		
  		MultipartFile attach = ocvo.getAttach();
@@ -409,17 +411,8 @@ public class EunjiBoardController {
 			}
 		}
 		System.out.println(flag);
-		if(flag) {
-			
-				 String message = "공결 신청이 완료되었습니다.";
-		         String loc = "javascript:history.back()";
-		         
-		         mav.addObject("message", message);
-		         mav.addObject("loc", loc);
-		      
-		         mav.setViewName("eunji/class/officalLeave.tiles2");
-		}
-		else {
+
+		if(!flag) {
 			 String message = "해당기간에 공결내역이 존재합니다, '공결신청조회'에서 확인 부탁드립니다.";
 	         String loc = "javascript:history.back()";
 	         
@@ -427,6 +420,12 @@ public class EunjiBoardController {
 	         mav.addObject("loc", loc);
 	      
 	         mav.setViewName("msg");
+		}
+		else {
+			List<OfficialLeaveVO> leavelist = service.selectOfficial(Integer.toString(memberNo));
+			
+			mav.addObject("leavelist",leavelist);
+			mav.setViewName("eunji/class/officalLeave.tiles2");
 		}
 		
 		return mav;

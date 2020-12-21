@@ -67,8 +67,8 @@ table#scroltbl {
 						        "<td style='padding-left:25px;'>"+item.grade+"</td>"+
 						        "<td style='padding-left:20px;'>"+item.memberno+"</td>"+
 						        "<td style='padding-left:25px;'>"+item.name+"</td>"+
-						        "<td style='padding-left:25px;'>"+item.startDate+"</td>"+
-						        "<td style='padding-right:20px;'>"+item.endDate+"</td>"+
+						        "<td style='padding-right:10px;'>"+item.startDate+"</td>"+
+						        "<td style='padding-right:50px;'>"+item.endDate+"</td>"+
 						        "<td>"+item.reason+"</td>";
 						        if(item.filename == null){
 						        	html += "<td> </td>";

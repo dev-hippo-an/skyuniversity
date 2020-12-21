@@ -59,6 +59,7 @@ $(document).ready(function() {
 	
 	$("#addbtn").click(function() {
 		
+		
 		var date1 = $("#datepicker1").val().substring(8);
 		var date2 = $("#datepicker2").val().substring(8);
 		var min = parseInt(date2)-parseInt(date1);
@@ -73,6 +74,7 @@ $(document).ready(function() {
 		// 시간 유효성 검사
 		if ($("#alldaychk").is(":checked") == false){
 			if($("#starttime").val().trim()=="" || $("#endtime").val().trim()==""){
+				alert(syear +" " +smonth + " "+ sday);
 				alert("시간을 입력해주세요.");
 				bool = false;
 				return;
@@ -111,8 +113,27 @@ $(document).ready(function() {
 			}
 		}
 		
+		var startdate = $("#datepicker1").val();
+		var enddate = $("#datepicker2").val();
+		var syear = startdate.substring(0,4);
+		var smonth = startdate.substring(5,7);
+		var sday = startdate.substring(8);
+		var eyear = enddate.substring(0,4);
+		var emonth = enddate.substring(5,7);
+		var eday = enddate.substring(8);
+		
+		var start = syear+smonth+sday;
+		var end = eyear+emonth+eday;
+		if(parseInt(start)>parseInt(end)){
+			alert("시작일자와 종료일자를 명확히 해주세요");
+			$("#datepicker1").focus();
+			bool = false;
+			return;
+		}
+	
 		if(bool){
 			// 폼(form) 을 전송(submit)
+			confirm("공결신청하시겠습니까?");
 			var frm = document.addFrm;
 			frm.method = "POST";
 			frm.action = "<%= ctxPath%>/officalLeaveEnd.sky";
@@ -251,7 +272,7 @@ function funcdel(index){
 	<li>공결 사유 선택 후 그에 해당하는 증빙서류를 업로드하여 신청해주세요.</li>
 	<li>공결 승인 여부는 최소 1일 ~ 최대 3일 소요됩니다. </li>
 	<li>3개월 이상의 공결 조회는 '공결내역조회'에서 확인 가능합니다.</li>
-	<li>승인 구분 상태가 '승인전'일 때에는 취소가 가능합니다.</li>
+	<li>승인 구분 상태가 '승인전'일 때에는 취소가 가능하지만 승인이 완료되면 취소가 불가합니다.</li>
 </ul>
 </div>
 </div>
