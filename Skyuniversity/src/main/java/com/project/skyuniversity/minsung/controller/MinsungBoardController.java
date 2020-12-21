@@ -9,11 +9,14 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
+import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -25,6 +28,7 @@ import com.project.skyuniversity.minsung.common.MyUtil;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.minsung.model.MinsungCategoryVO;
 import com.project.skyuniversity.minsung.service.InterMinsungService;
+import com.project.skyuniversity.ohyoon.model.CommentVO;
 
 @Component
 @Controller
@@ -37,7 +41,7 @@ public class MinsungBoardController {
 	private FileManager fileManager;
 	
 	@RequestMapping(value = "minsungBoardDetail.sky")
-	public ModelAndView requiredLoginMS_minsungBoardDetail(ModelAndView mav) {
+	public ModelAndView requiredLoginMS_minsungBoardDetail(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
 
 		mav.setViewName("minsung/minsungBoardDetails.tiles1");
 
@@ -189,7 +193,7 @@ public class MinsungBoardController {
 	}
 
 	@RequestMapping(value = "/minsungBoardView.sky")
-	public ModelAndView view(HttpServletRequest request, ModelAndView mav) {
+	public ModelAndView requiredLoginMS_view(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
 		String boardNo = request.getParameter("boardNo");
 		String boardKindNo = request.getParameter("boardKindNo");
@@ -224,47 +228,27 @@ public class MinsungBoardController {
 			mav.addObject("gobackURL", gobackURL);
 		}
 
-		try {
-			Integer.parseInt(boardNo);
+    	Map<String, String> paraMap = new HashMap<>();
+    	paraMap.put("boardKindNo", boardKindNo);
+    	paraMap.put("boardNo", boardNo);
 
-	
-			// MemberVO loginuser = (MemberVO) session.getAttribute("loginuser");
+		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
 
-			/*
-			 * if (loginuser != null) { login_userid = loginuser.getUserid(); //
-			 * login_userid 는 로그인 되어진 사용자의 userid 이다. }
-			 */
-			// === #68. !!! 중요 !!!
-			// 글1개를 보여주는 페이지 요청은 select 와 함께
-			// DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
-			// 이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
-			// 매번 글조회수 증가가 발생한다.
-			// 그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
-			// 단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은
-			// 실행하지 않도록 해주어야 한다. !!! === //
+		// 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
+		if ("yes".equals(session.getAttribute("readCountPermission"))) {
+			// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
 
-			// 위의 글목록보기 #69. 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
-			if ("yes".equals(session.getAttribute("readCountPermission"))) {
-				// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+			// boardvo = service.getView(paraMap);
+			session.removeAttribute("readCountPermission");
+			// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+		} else {
 
-				// boardvo = service.getView(seq, login_userid);
-				// 글조회수 증가와 함께 글1개를 조회를 해주는 것
-
-				session.removeAttribute("readCountPermission");
-				// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
-			} else {
-				// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
-
-				// boardvo = service.getViewWithNoAddCount(seq);
-				// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
-			}
-
-			mav.addObject("boardvo", boardvo);
-
-		} catch (NumberFormatException e) {
+			// boardvo = service.getViewWithNoAddCount(paraMap);
 
 		}
-		
+
+		mav.addObject("boardvo", boardvo);
+
 		List<MinsungBoardVO> recentBoardList = service.recentBoardList();
 		List<MinsungBoardVO> bestBoardList = service.bestBoardList();
 		List<MinsungBoardVO> popularBoardList = service.popularBoardList();
@@ -280,7 +264,7 @@ public class MinsungBoardController {
 	}
 
 	@RequestMapping(value = "/minsungEdit.sky")
-	public ModelAndView edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView requiredLoginMS_edit(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 
 		// 글 수정해야 할 글번호 가져오기
 		String boardNo = request.getParameter("boardNo");
@@ -355,29 +339,39 @@ public class MinsungBoardController {
 	}
 
 	@RequestMapping(value = "/minsungAdd.sky")
-	public ModelAndView add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	public ModelAndView requiredLoginMS_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav,  String boardKindNo) {
 		// 세션 로그인 추가
 
-		String boardKindNo = "1";
-		List<MinsungCategoryVO> categoryList = service.categoryList(boardKindNo);
+		boardKindNo = String.valueOf(1);
+		List<MinsungCategoryVO> categoryList = service.categoryList(String.valueOf(boardKindNo));
+		String boardName = service.kindBoard( String.valueOf(boardKindNo) );
 
+		Map<String, String> infoMap = new HashMap<>();
+		infoMap.put("boardKindNo", boardKindNo);
+		infoMap.put("boardName", boardName);
+		
+		HttpSession session = request.getSession();
+		CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
+		if (loginuser.getNickname() == null) {
+			mav.addObject("message", "닉네임을 먼저 설정해야합니다.");
+			mav.addObject("loc", "javascript:history.back();");
+			
+			mav.setViewName("msg");
+			return mav;
+		}
+		
+		
+		mav.addObject("infoMap", infoMap);
 		mav.addObject("categoryList", categoryList);
 		mav.setViewName("minsung/minsungBoardRegister.tiles1");
 		// /WEB-INF/views/tiles1/board/add.jsp 파일을 생성한다.
 
 		return mav;
 	}
-
+	
 	@RequestMapping(value = "/minsungAddEnd.sky", method = { RequestMethod.POST })
-	public String pointPlus_addEnd(Map<String, String> paraMap, MinsungBoardVO boardvo,
-			MultipartHttpServletRequest mrequest, HttpServletRequest request) {
-		/*
-		 * 웹페이지에 요청 form이 enctype="multipart/form-data" 으로 되어있어서 Multipart 요청(파일처리 요청)이
-		 * 들어올때 컨트롤러에서는 HttpServletRequest 대신 MultipartHttpServletRequest 인터페이스를 사용해야
-		 * 한다. MultipartHttpServletRequest 인터페이스는 HttpServletRequest 인터페이스와
-		 * MultipartRequest 인터페이스를 상속받고있다. 즉, 웹 요청 정보를 얻기 위한 getParameter()와 같은 메소드와
-		 * Multipart(파일처리) 관련 메소드를 모두 사용가능하다.
-		 */
+	public void pointPlusMS_addEnd(Map<String, String> paraMap, MinsungBoardVO boardvo,
+			MultipartHttpServletRequest mrequest, HttpServletRequest request, HttpServletResponse response) {
 
 		// === 사용자가 쓴 글에 파일이 첨부되어 있는 것인지, 아니면 파일첨부가 안된것인지 구분을 지어주어야 한다. ===
 		// === #153. !!! 첨부파일이 있는 경우 작업 시작 !!! ===
@@ -478,14 +472,20 @@ public class MinsungBoardController {
 		 */
 		
 		n = service.add(boardvo);
+		
+
+		paraMap.put("fk_boardKindNo", mrequest.getParameter("fk_boardKindNo"));
+		paraMap.put("boardName", mrequest.getParameter("boardName"));
 
 		if (n == 1) {
-			return "redirect:/minsungBoardList.sky";
-			// list.action 페이지로 redirect(페이지이동)해라는 말이다.
-		} else {
-			return "redirect:/minsungAdd.sky";
-			// add.action 페이지로 redirect(페이지이동)해라는 말이다.
+			// 글쓰기 완료 후, 포인트 올려주기 - 글작성 메서드의 첫번째 파라미터로 있는 Map<String,String> paraMap은 값이 비어있지만 AfterAdvice에서 사용하기 위해 넣어놓음. 이제 값을 넣어준다.
+			paraMap.put("fk_memberNo", boardvo.getFk_memberNo());
+			paraMap.put("point", "3");
 		}
-	}  
+
+
+	}
+	
+    
 
 }

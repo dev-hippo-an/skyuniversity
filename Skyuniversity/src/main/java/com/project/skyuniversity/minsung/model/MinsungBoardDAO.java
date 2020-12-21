@@ -101,4 +101,27 @@ public class MinsungBoardDAO implements InterMinsungBoardDAO {
 		return popularBoardList;
 	}
 
+	@Override
+	public void pointPlus(Map<String, String> paraMap) {
+		String point = paraMap.get("point"); 
+		
+		Map<String, Integer> pointMap = sqlsession.selectOne("minsung.pointCheck", paraMap.get("fk_memberNo")); // 회원의 기존 포인트와 다음 레벨의 포인트들을 불러온다.
+	
+		try {
+			int currentPoint = pointMap.get("currentPoint"); 
+			int nextLevelPoint = pointMap.get("nextLevelPoint"); 
+			
+			if ( currentPoint + Integer.parseInt(point) >= nextLevelPoint ) { // 회원의 포인트가 다음 레벨의 포인트 이상이면
+				paraMap.put("nextLevelNo", String.valueOf(pointMap.get("nextLevelNo")));
+				sqlsession.update("minsung.pointPlusWithLevel", paraMap);
+			}else {
+				sqlsession.update("minsung.pointPlus", paraMap); // 회원의 포인트가 다음 레벨의 포인트 이하이면
+			}
+			
+		} catch (NullPointerException e) {
+			sqlsession.update("minsung.pointPlus", paraMap); // 회원의 레벨이 더이상 올라갈 수 없으면
+		}
+		
+	}
+
 }
