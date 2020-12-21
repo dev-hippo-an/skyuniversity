@@ -13,6 +13,7 @@ import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.InterAnsehyeongDAO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.ash.common.AES256;
 
 //=== #31. Service 선언 === 
@@ -318,22 +319,22 @@ public class AnsehyeongService implements InterAnsehyeongService {
 	
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	 @Override
-	   public List<MarketBoardVO> recentBoardList() {
+	   public List<MarketBoardVO> recentIndexBoardList() {
 	      
-	      List<MarketBoardVO> recentBoardList = dao.recentBoardList();
+	      List<MarketBoardVO> recentBoardList = dao.recentIndexBoardList();
 	      return recentBoardList;
 	      
 	   }
 
 	   @Override
-	   public List<MarketBoardVO> bestBoardList() {
-	      List<MarketBoardVO> bestBoardList = dao.bestBoardList();
+	   public List<MarketBoardVO> bestIndexBoardList() {
+	      List<MarketBoardVO> bestBoardList = dao.bestIndexBoardList();
 	      return bestBoardList;
 	   }
 
 	   @Override
-	   public List<MarketBoardVO> popularBoardList() {
-	      List<MarketBoardVO> popularBoardList = dao.popularBoardList();
+	   public List<MarketBoardVO> popularIndexBoardList() {
+	      List<MarketBoardVO> popularBoardList = dao.popularIndexBoardList();
 	      return popularBoardList;
 	   }
 
@@ -353,7 +354,25 @@ public class AnsehyeongService implements InterAnsehyeongService {
 	}
 
 
-	
+	   @Override
+	   public List<MinsungBoardVO> recentBoardList() {
+	      
+	      List<MinsungBoardVO> recentBoardList = dao.recentBoardList();
+	      return recentBoardList;
+	      
+	   }
+
+	   @Override
+	   public List<MinsungBoardVO> bestBoardList() {
+	      List<MinsungBoardVO> bestBoardList = dao.bestBoardList();
+	      return bestBoardList;
+	   }
+
+	   @Override
+	   public List<MinsungBoardVO> popularBoardList() {
+	      List<MinsungBoardVO> popularBoardList = dao.popularBoardList();
+	      return popularBoardList;
+	   }
 	
 
 

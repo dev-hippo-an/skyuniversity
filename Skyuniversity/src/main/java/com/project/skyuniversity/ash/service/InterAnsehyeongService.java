@@ -7,6 +7,7 @@ import com.project.skyuniversity.ash.model.CommuMemberLevelVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 
 public interface InterAnsehyeongService {
 	
@@ -114,11 +115,11 @@ public interface InterAnsehyeongService {
 	
 	
 
-	List<MarketBoardVO> recentBoardList();
+	List<MarketBoardVO> recentIndexBoardList();
 
-	List<MarketBoardVO> bestBoardList();
+	List<MarketBoardVO> bestIndexBoardList();
 
-	List<MarketBoardVO> popularBoardList();
+	List<MarketBoardVO> popularIndexBoardList();
 
 	List<MarketBoardVO> getSearchBoardList(Map<String, String> paraMap);
 
@@ -127,7 +128,11 @@ public interface InterAnsehyeongService {
 
 	
 	
+	   List<MinsungBoardVO> recentBoardList();
 
+	   List<MinsungBoardVO> bestBoardList();
+
+	   List<MinsungBoardVO> popularBoardList();
 
 
 

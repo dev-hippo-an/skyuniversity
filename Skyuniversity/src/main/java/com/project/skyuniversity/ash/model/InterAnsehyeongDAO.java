@@ -3,6 +3,8 @@ package com.project.skyuniversity.ash.model;
 import java.util.List;
 import java.util.Map;
 
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
+
 public interface InterAnsehyeongDAO {
 	// 메인 화면에 뜨는 배너 광고를 올려준다.
 	List<BannerVO> getBannerList();
@@ -115,18 +117,22 @@ public interface InterAnsehyeongDAO {
 	
 	
 	
-	List<MarketBoardVO> recentBoardList();
+	List<MarketBoardVO> recentIndexBoardList();
 
-	List<MarketBoardVO> bestBoardList();
+	List<MarketBoardVO> bestIndexBoardList();
 
-	List<MarketBoardVO> popularBoardList();
+	List<MarketBoardVO> popularIndexBoardList();
 
 	List<MarketBoardVO> getSearchBoardList(Map<String, String> paraMap);
 
 	int getAnTotalHitCount(Map<String, String> paraMap);
 
 	
-	
+	   List<MinsungBoardVO> recentBoardList();
+
+	   List<MinsungBoardVO> bestBoardList();
+
+	   List<MinsungBoardVO> popularBoardList();
 
 
 

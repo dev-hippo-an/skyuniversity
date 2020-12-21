@@ -7,6 +7,10 @@
 %>
 
 <style>
+
+
+
+/************************************/
 	 tbody > tr > td {
 	 	text-align : left;
 	 }
@@ -70,11 +74,6 @@
 		
 	}
 	
-	div#include {
-		border: solid gray 1px;
-		display: inline-block;
-		width: 80%;
-	}
 	
 	p3 {
 		width : 100%;
@@ -88,9 +87,7 @@
 		float : right;
 	}
 	
-	input#commentContent {
-		width : 30%;
-	}
+	
 
 	div#replyButtons {
 		float : right;
@@ -167,6 +164,176 @@
       outline: none;
    }   
 			
+		
+	
+   
+   div#reply > div:first-child {
+      text-align: left;
+   }
+   
+   div#reply > div:first-child > span {
+      margin: 10px 10px; 
+   }
+
+   div#reply > div:first-child > span:first-child {
+      font-size: 20pt;
+   }
+   
+   
+   div#reply > div:first-child > span:last-child {
+      font-size: 10pt;
+         color: #9900e6;   
+      font-weight: bold;
+      border-radius: 20px;
+      padding: 5px 5px;
+   }
+   
+   div#reply > div:last-child {
+      text-align: right;
+   }
+   
+   textarea#cmtContent {
+      height: 130px;
+      resize: none;
+   }
+   
+   button#btnComment {
+      margin: 10px 35px;
+   }
+  
+   
+    div.content2 {
+      float : left;
+      width: 60%;
+      /* height: 700px; */
+      /* max-height: 1000px; */
+      border: solid gray 1px;
+       margin-bottom : 5%;
+       margin-left : 15%;
+       padding-bottom: 40px;
+   }
+   
+   table#contentTable {
+      margin-top : 5%;
+      margin-bottom : 1%;
+      width: 100%;
+   }
+   
+   #contentTable2 {
+      margin-top : 5%;
+      margin-bottom : 1%;
+      width: 90%;
+      text-align: left; 
+      line-height: 25px; 
+      word-break: break-all; 
+      margin-bottom: 20px;
+   }
+   
+   div#sideBar {
+      float : right;
+      width: 15%;
+      border: solid gray 1px;
+      margin-right : 7%;
+      margin-bottom : 1%;
+      
+   }
+   
+ 
+   
+   p3 {
+      width : 100%;
+   }
+   
+   div#buttons1 {
+      width : 30%;
+   }
+   
+   div#buttons1 > button {
+      height: 45px;
+   }
+      
+   div#buttons2 {
+      float : right;
+      margin-right: 30px;
+      margin-bottom: 20px;
+   }
+   
+   input#commentContent {
+      width : 30%;
+   }
+
+   div#replyButtons {
+      float : right;
+   }
+   
+   button {
+      width: 60px;
+      height: 30px;
+      margin: 0 5px;
+      border-radius: 5%;
+      border: none;
+      background-color: #0841ad;
+      color: white;
+   }
+   
+   button:hover {
+      font-weight: bold;
+   }
+   
+      button#goback {
+      float : right;
+      width: 80px;
+      margin-right: 20px;
+      margin-bottom: 20px;
+   }
+   
+   table.form-group {
+      width : 100%;
+   }
+   
+   #fileAttach {
+      float : left;
+   }   
+   
+   div#content {
+      margin-top: 20px;
+      width: 95%;
+      min-height: 300px;
+   }
+         
+   div.contents {
+      text-align: left;
+      padding-left: 40px;
+      margin-bottom: 20px;
+   }
+
+
+table {
+   border-collapse: collapse;
+   border-spacing: 0;
+   width: 80%;
+  /*  border: 1px solid #ddd; */
+}
+
+th, td {
+   text-align: center;
+   padding: 8px;
+   border: 1px solid #ddd;
+}
+
+thead {
+	background-color: #0841ad;
+	font-size: 10pt;
+	color: white;
+}
+
+tbody {
+	font-size: 10pt;
+}
+
+
+
+
 </style>
 
 <script type="text/javascript">
@@ -825,6 +992,28 @@
 	      
 	   }// end of function addTag(nickname) {}----------------------------
 	
+	   
+	   function goView2(fk_boardKindNo, boardNo){
+		      
+		      console.log(boardNo);
+		      console.log(fk_boardKindNo);
+		      
+		      var frm = document.goViewFrm2;
+		      frm.boardNo.value = boardNo;
+		      frm.boardKindNo.value = fk_boardKindNo;
+		      frm.method = "GET";
+		      
+		      if (fk_boardKindNo <= 6 || (18 <= fk_boardKindNo && fk_boardKindNo <= 22)) {
+		         frm.action = "<%=request.getContextPath()%>/minsungBoardView.sky";
+		      } else if (23 <= fk_boardKindNo){
+		         frm.action = "<%=request.getContextPath()%>/marketBoardDetail.sky";
+		      } else {
+		         frm.action = "<%=request.getContextPath()%>/boardDetail.sky";
+		      }
+		      
+		      frm.submit();
+		      
+		   }
 </script>
 
 
@@ -927,6 +1116,51 @@
 	</div>
 </c:if>
 
+   <div id="sideBar">
+   
+      최근 게시판
+      <table>
+         <c:forEach var="recentBoard" items="${recentBoardList}">
+            <tr>
+               <td colspan="2">${recentBoard.boardName}</td>
+               <td colspan="2"><a class="subject" style="cursor:pointer" 
+               onclick="goView2('${recentBoard.fk_boardKindNo}', '${recentBoard.boardNo}')">
+               ${recentBoard.subject}</a></td>
+            </tr>
+         </c:forEach>
+      </table>
+   </div>
+   
+    <div id="sideBar">
+   
+      주간 베스트 게시물
+      <table>
+         <c:forEach var="bestBoard" items="${bestBoardList}">
+            <tr>
+               <td colspan="2">${bestBoard.boardName}</td>
+               <td colspan="2"><a class="subject" style="cursor:pointer" 
+               onclick="goView2('${bestBoard.fk_boardKindNo}', '${bestBoard.boardNo}')">
+               ${bestBoard.subject}</a></td>
+            </tr>
+         </c:forEach>
+      </table>
+   </div>
+   
+   <div id="sideBar">
+   
+      인기 게시물
+      <table>
+         <c:forEach var="popularBoard" items="${popularBoardList}">
+            <tr>
+               <td colspan="2">${popularBoard.boardName}</td>
+               <td colspan="2"><a class="subject" style="cursor:pointer" 
+               onclick="goView2('${popularBoard.fk_boardKindNo}', '${popularBoard.boardNo}')">
+               ${popularBoard.subject}</a></td>
+            </tr>
+         </c:forEach>
+      </table>
+   </div> 
+
 
 
    <div class="content2">
@@ -954,5 +1188,8 @@
    </div>
 	
 	
-	
+	   <form name="goViewFrm2">
+      <input type="hidden" id="boardNo" name="boardNo" value="" /> 
+      <input type="hidden" id="boardKindNo" name="boardKindNo" value="" /> 
+   </form>
 	

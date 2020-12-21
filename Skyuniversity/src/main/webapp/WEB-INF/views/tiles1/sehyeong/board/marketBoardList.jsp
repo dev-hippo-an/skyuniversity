@@ -316,13 +316,15 @@ tr.notification td {
 		           			<c:choose>
 						        <c:when test="${fn:length(marketBoard.subject) > 20}">
 				                	<td onclick="goview('${marketBoard.boardNo}')">${fn:substring(marketBoard.subject, 0, 20)}...&nbsp;
+				                	 [<span style="color:#0841ad; font-weight: bold; ">${marketBoard.cmtCount}</span>]
 				                	<c:if test="${fn:contains(marketBoard.content, '<img src=')}">
 			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
-			                	</c:if>
+			                		</c:if>
 				                	</td>
 						        </c:when>
 						        <c:otherwise>
 				                	<td onclick="goview('${marketBoard.boardNo}')">${marketBoard.subject}&nbsp;
+				                	 [<span style="color:#0841ad; font-weight: bold; ">${marketBoard.cmtCount}</span>]
 				                	<c:if test="${fn:contains(marketBoard.content, '<img src=')}">
 			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
 			                	</c:if>

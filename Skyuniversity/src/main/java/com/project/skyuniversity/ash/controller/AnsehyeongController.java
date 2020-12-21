@@ -48,6 +48,7 @@ import com.project.skyuniversity.ash.model.MarketBoardVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.ash.model.PhotoVO;
 import com.project.skyuniversity.ash.service.InterAnsehyeongService;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.ash.common.AnFileManager;
 import com.project.skyuniversity.ash.common.MyUtil;
 import com.project.skyuniversity.ash.common.Sha256;
@@ -105,7 +106,7 @@ public class AnsehyeongController {
 
 	// === #36. 메인 페이지 요청 === //
 	@RequestMapping(value = "/index.sky")
-	public ModelAndView index(ModelAndView mav) {
+	public ModelAndView index(ModelAndView mav, HttpServletRequest request) {
 
 		// 인덱스의 캐러셀에 들어갈 배너 광고를 가져오기
 		List<BannerVO> bannerList = service.getBannerList();
@@ -120,9 +121,9 @@ public class AnsehyeongController {
 		List<MarketBoardVO> indexBoardList = service.getIndexBoardList();
 		
 		
-		List<MarketBoardVO> recentBoardList = service.recentBoardList();
-		List<MarketBoardVO> bestBoardList = service.bestBoardList();
-		List<MarketBoardVO> popularBoardList = service.popularBoardList();
+		List<MarketBoardVO> recentBoardList = service.recentIndexBoardList();
+		List<MarketBoardVO> bestBoardList = service.bestIndexBoardList();
+		List<MarketBoardVO> popularBoardList = service.popularIndexBoardList();
 
 		mav.addObject("indexBoardList", indexBoardList);
 		mav.addObject("recentBoardList", recentBoardList);
@@ -130,7 +131,9 @@ public class AnsehyeongController {
 		mav.addObject("popularBoardList", popularBoardList);
 		
 		
-		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+
 		mav.addObject("bannerList", bannerList);
 		mav.setViewName("main/index.tiles1");
 		// /WEB-INF/views/tiles1/main/index.jsp 파일을 생성한다.
@@ -186,7 +189,7 @@ public class AnsehyeongController {
 
 			session.setAttribute("loginuser", loginuser);
 			// session(세션)에 로그인 되어진 사용자 정보인 loginuser 을 키이름을 "loginuser" 으로 저장시켜두는 것이다.
-
+			
 			if ("".equals(loginuser.getNickname()) || loginuser.getNickname() == null) {
 				String message = "닉네임을 설정해주세요 🌽🌽🌽🌽";
 				String loc = request.getContextPath() + "/updateNicknameStart.sky";
@@ -243,9 +246,9 @@ public class AnsehyeongController {
 		List<MarketBoardVO> indexBoardList = service.getIndexBoardList();
 		
 		
-		List<MarketBoardVO> recentBoardList = service.recentBoardList();
-		List<MarketBoardVO> bestBoardList = service.bestBoardList();
-		List<MarketBoardVO> popularBoardList = service.popularBoardList();
+		List<MarketBoardVO> recentBoardList = service.recentIndexBoardList();
+		List<MarketBoardVO> bestBoardList = service.bestIndexBoardList();
+		List<MarketBoardVO> popularBoardList = service.popularIndexBoardList();
 
 		mav.addObject("indexBoardList", indexBoardList);
 		mav.addObject("recentBoardList", recentBoardList);
@@ -786,6 +789,14 @@ public class AnsehyeongController {
 				// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
 			}
 
+  List<MinsungBoardVO> recentBoardList = service.recentBoardList();
+  List<MinsungBoardVO> bestBoardList = service.bestBoardList();
+  List<MinsungBoardVO> popularBoardList = service.popularBoardList();
+  
+  mav.addObject("recentBoardList", recentBoardList);
+  mav.addObject("bestBoardList", bestBoardList);
+  mav.addObject("popularBoardList", popularBoardList);
+			
 			mav.addObject("boardvo", boardvo);
 			mav.addObject("paraMap", paraMap);
 			mav.addObject("tableInfo", tableInfo);

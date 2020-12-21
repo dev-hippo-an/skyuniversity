@@ -368,7 +368,7 @@
                  , levelNo, levelName, levelPoint, levelImg
                  
                  , boardKindNo, boardTypeNo, boardName
-                 , upCount
+                 , upCount, cmtCount
 		from 
 			(
 			    select row_number() over(order by e.status desc, boardNo desc)  as rno, e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
@@ -385,6 +385,9 @@
 	                 , k.boardKindNo, k.boardTypeNo, k.boardName
 	                 
 	                 , nvl(g.upCount, 0) as upCount
+	                 
+	                 , (select count(*) from tbl_comment_housemarket where status = 1 and fk_boardNo = e.boardNo) as cmtCount
+	                 
 			    from tbl_board_housemarket e join tbl_category c  
 			    on e.categoryNo =  c.categoryNo
 			    join tbl_commu_member m 
@@ -423,7 +426,7 @@
                  , levelNo, levelName, levelPoint, levelImg
                  
                  , boardKindNo, boardTypeNo, boardName
-                 , upCount
+                 , upCount, cmtCount
 		from 
 			(
 			    select row_number() over(order by e.status desc, boardNo desc)  as rno, e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
@@ -440,6 +443,7 @@
 	                 , k.boardKindNo, k.boardTypeNo, k.boardName
 	                 
 	                 , nvl(g.upCount, 0) as upCount
+	                 , (select count(*) from tbl_comment_bookmarket where status = 1 and fk_boardNo = e.boardNo) as cmtCount
 			    from tbl_board_bookmarket e join tbl_category c  
 			    on e.categoryNo =  c.categoryNo
 			    join tbl_commu_member m 
@@ -478,7 +482,7 @@
                  , levelNo, levelName, levelPoint, levelImg
                  
                  , boardKindNo, boardTypeNo, boardName
-                 , upCount
+                 , upCount, cmtCount
 		from 
 			(
 			    select row_number() over(order by e.status desc, boardNo desc)  as rno, e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
@@ -494,6 +498,7 @@
 	                 
 	                 , k.boardKindNo, k.boardTypeNo, k.boardName
 	                 , nvl(g.upCount, 0) as upCount
+	                 , (select count(*) from tbl_comment_etcmarket where status = 1 and fk_boardNo = e.boardNo) as cmtCount
 			    from tbl_board_etcmarket e join tbl_category c  
 			    on e.categoryNo =  c.categoryNo
 			    join tbl_commu_member m 
