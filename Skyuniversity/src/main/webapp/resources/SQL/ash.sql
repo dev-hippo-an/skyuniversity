@@ -1758,3 +1758,5 @@ nocache;
       ) V
       where rownum <= 11
      
+    select * from tbl_notice
+    select * from tbl_comment_etcmarket;

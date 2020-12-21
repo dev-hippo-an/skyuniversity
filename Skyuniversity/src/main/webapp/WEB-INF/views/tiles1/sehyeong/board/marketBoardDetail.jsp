@@ -68,7 +68,6 @@
 	div#sideBar {
 		float : right;
 		width: 15%;
-		border: solid gray 1px;
 		margin-right : 7%;
 		margin-bottom : 1%;
 		
@@ -229,14 +228,7 @@
       margin-bottom: 20px;
    }
    
-   div#sideBar {
-      float : right;
-      width: 15%;
-      border: solid gray 1px;
-      margin-right : 7%;
-      margin-bottom : 1%;
-      
-   }
+   
    
  
    
@@ -995,6 +987,10 @@ tbody {
 	   
 	   function goView2(fk_boardKindNo, boardNo){
 		      
+		   
+		  	 <%
+		      session.setAttribute("readCountPermission", "yes");
+		      %>
 		      console.log(boardNo);
 		      console.log(fk_boardKindNo);
 		      
@@ -1116,7 +1112,9 @@ tbody {
 	</div>
 </c:if>
 
-   <div id="sideBar">
+
+<div id="sideBar">
+   <div>
    
       최근 게시판
       <table>
@@ -1131,7 +1129,7 @@ tbody {
       </table>
    </div>
    
-    <div id="sideBar">
+    <div>
    
       주간 베스트 게시물
       <table>
@@ -1146,7 +1144,7 @@ tbody {
       </table>
    </div>
    
-   <div id="sideBar">
+   <div >
    
       인기 게시물
       <table>
@@ -1160,6 +1158,7 @@ tbody {
          </c:forEach>
       </table>
    </div> 
+</div>
 
 
 
@@ -1186,7 +1185,6 @@ tbody {
       <input type="hidden" id="cmtCount" value="0"/>
       
    </div>
-	
 	
 	   <form name="goViewFrm2">
       <input type="hidden" id="boardNo" name="boardNo" value="" /> 
