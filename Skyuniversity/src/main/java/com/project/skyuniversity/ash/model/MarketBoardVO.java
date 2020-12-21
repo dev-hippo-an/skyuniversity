@@ -43,8 +43,19 @@ public class MarketBoardVO {
 	private String boardTypeNo;
 	private String boardName;
 	private String upCount;
+	private String cmtCount;      // 댓글수
 	
 	
+	
+	
+	public String getCmtCount() {
+		return cmtCount;
+	}
+
+	public void setCmtCount(String cmtCount) {
+		this.cmtCount = cmtCount;
+	}
+
 	public MarketBoardVO() {}
 
 	public MarketBoardVO(int boardNo, int fk_boardKindNo, int fk_commuMemberNo, int categoryNo, String subject,
