@@ -23,4 +23,14 @@ public class JihyunDAO implements InterJihyunDAO {
 		return n;
 	}
 
+	@Override
+	public boolean checkPwd(Map<String, String> paraMap) {
+		boolean isEqualPwd = false;
+		int checkPwd = sqlsession.selectOne("Jihyun.checkPwd", paraMap);
+		if (checkPwd == 1) {
+			isEqualPwd = true;
+		}
+		return isEqualPwd;
+	}
+
 }

@@ -83,7 +83,7 @@
 
 	$(document).ready(function(){
 		
-		console.log("${loginuser.pwd}");
+		//console.log("${loginuser.pwd}");
 		
 		$("p.error").hide();
 		
@@ -94,10 +94,12 @@
 			
 			// 현재비밀번호를 가져온다.
 			var nowPwd = $(this).val().trim();
+			console.log(nowPwd);
+			console.log(${loginuser.memberno});
 			if("${loginuser.pwd}" != nowPwd){
 				$.ajax({
 					url:"<%= request.getContextPath() %>/checkPwd.sky",
-					data:{"nowPwd":nowPwd},
+					data:{"memberno":${loginuser.memberno},"nowPwd":nowPwd},
 					type:"POST",
 					dataType:"json",
 					success: function(json){

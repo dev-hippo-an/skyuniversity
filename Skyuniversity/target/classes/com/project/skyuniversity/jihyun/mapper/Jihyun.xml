@@ -16,4 +16,10 @@
 		update tbl_member set pwd = #{pwd} 
    		where memberno = #{memberno}
 	</update>
+	
+	<select id="checkPwd" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_member
+		where memberno=#{memberno} and pwd=#{nowPwd}
+	</select>
 </mapper>

@@ -26,4 +26,10 @@ public class JihyunService implements InterJihyunService {
 		return n;
 	}
 
+	@Override
+	public boolean checkPwd(Map<String, String> paraMap) {
+		boolean isEqualPwd = dao.checkPwd(paraMap);
+		return isEqualPwd;
+	}
+
 }

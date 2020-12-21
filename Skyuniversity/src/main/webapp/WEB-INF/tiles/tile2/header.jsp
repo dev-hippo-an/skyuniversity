@@ -67,8 +67,8 @@
 	      <span class="sinfo">뫄뫄뫄뫄과 솨학년</span>
 	 </div>
 	 <div>
-	   <span class="btn">커뮤니티</span>
-	   <span class="btn">로그아웃</span>
+	   <span class="btn" onclick="location.href='<%=ctxPath%>/index.sky';">커뮤니티</span>
+	   <span class="btn" onclick="location.href='<%=ctxPath%>/logouths.sky';">로그아웃</span>
 	 </div>
 </div>
    

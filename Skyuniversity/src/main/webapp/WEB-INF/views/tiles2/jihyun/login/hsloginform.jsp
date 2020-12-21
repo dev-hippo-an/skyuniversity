@@ -136,7 +136,7 @@ function func_Login() {
 				<span class="sname">통합로그인</span>
 			</div>
 			<div id="btn" style="margin-right: 30px; margin-top: 20px;">
-				<span class="btn">커뮤니티</span>
+				<span class="btn" onclick="location.href='<%=ctxPath%>/index.sky';">커뮤니티</span>
 			</div>
 
 		</div>

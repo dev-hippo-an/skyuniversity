@@ -12,4 +12,7 @@ public interface InterJihyunService {
 	// 비밀번호 변경하기
 	int updatePwd(Map<String, String> paraMap);
 
+	// 현재 비밀번호 일치여부 확인
+	boolean checkPwd(Map<String, String> paraMap);
+
 }

@@ -93,6 +93,23 @@ public class JihyunController {
 		return mav;
 	}
 	
+	// 로그아웃
+	@RequestMapping(value = "/logouths.sky")
+	public ModelAndView logout(ModelAndView mav, HttpServletRequest request) {
+		
+		HttpSession session = request.getSession();
+		session.invalidate();
+		
+		String message = "로그아웃 되었습니다.";
+		String loc = request.getContextPath()+"/hsindex.sky";
+		
+		mav.addObject("message", message);
+		mav.addObject("loc", loc);
+		mav.setViewName("msg");
+		
+		return mav;
+	}
+	
 	// 학생정보조회
 	@RequestMapping(value = "/lookupStudentInfo.sky")
 	public ModelAndView requiredLoginhs_lookupStudentInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -101,34 +118,48 @@ public class JihyunController {
 		return mav;
 	}
 	
-asdfasdfasdfasdf	
-	// 비밀번호 변경 페이지 요청
-		@RequestMapping(value = "/checkPwd.sky")
-		public ModelAndView checkPwd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-			
-			mav.setViewName("jihyun/studentinfo/changepwd.tiles2");
-			return mav;
-		}
+
 	
 	// 비밀번호 변경 페이지 요청
 	@RequestMapping(value = "/changepwd.sky")
 	public ModelAndView requiredLoginhs_changepwd(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-		
+	
 		mav.setViewName("jihyun/studentinfo/changepwd.tiles2");
 		return mav;
 	}
 	
+	// 현재 비밀번호 확인
+	@RequestMapping(value = "/checkPwd.sky")
+	public boolean checkPwd(HttpServletRequest request, HttpServletResponse response) {
+		
+		String memberno = request.getParameter("memberno");
+		String nowPwd = request.getParameter("nowPwd");
+		
+		System.out.println("memberno :"+memberno);
+		System.out.println("nowPwd :"+nowPwd);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("memberno", memberno);
+		paraMap.put("nowPwd", Sha256.encrypt(nowPwd)); //비밀번호 암호화
+		
+		boolean isEqualPwd  = service.checkPwd(paraMap);
+		
+		System.out.println(isEqualPwd);
+		
+		return false;
+	}
+
 	// 비밀번호 변경
 	@RequestMapping(value="/pwdChangeEndhs.sky", method = {RequestMethod.POST})
 	public ModelAndView pwdChangeEndhs(ModelAndView mav, HttpServletRequest request) {
 		
-		System.out.println("들어와따");
+		//System.out.println("들어와따");
 		
 		String memberno = request.getParameter("memberno");
 		String pwd = request.getParameter("pwd");
 		
-		System.out.println("memberno :"+memberno);
-		System.out.println("pwd :"+pwd);
+		//System.out.println("memberno :"+memberno);
+		//System.out.println("pwd :"+pwd);
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("memberno", memberno);
@@ -136,7 +167,7 @@ asdfasdfasdfasdf
 		
 		int n = service.updatePwd(paraMap);
 		
-		System.out.println("n :"+n);
+		//System.out.println("n :"+n);
 		
 		String message = "";
 		String loc = request.getContextPath()+"/changepwd.sky";
