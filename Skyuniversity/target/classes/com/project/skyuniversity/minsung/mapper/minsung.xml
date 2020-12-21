@@ -560,7 +560,6 @@
 		where fk_memberNo = #{fk_memberNo}
 	</update>
 
-	
 </mapper>
 
 
