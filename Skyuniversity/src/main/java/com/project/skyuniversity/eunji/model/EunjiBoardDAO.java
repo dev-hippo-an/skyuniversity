@@ -207,5 +207,17 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return checklist;
 	}
 
+	@Override
+	public int insertClassCheck(ClassCheckVO ccvo) {
+		int n = sqlSession.insert("eunji.insertClassCheck", ccvo);
+		return n;
+	}
+
+	@Override
+	public int updateCourseCk(int fk_courseno) {
+		int n = sqlSession.update("eunji.updateCourseCk",fk_courseno);
+		return n;
+	}
+
 
 }

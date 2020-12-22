@@ -22,8 +22,11 @@
 	function funcCheck(index){
 		var no = $("input#no"+index).val();
 		var subno = $("#subno"+index).text();
-		alert(subno);
-		location.href="<%=ctxPath%>/checkSub.sky?courseno="+no+"&subno="+subno;
+		var subname = $("#subname"+index).text();
+		var proname = $("span#prname"+index).text();
+		var semester = $("#semes"+index).text(); 
+
+		location.href="<%=ctxPath%>/checkSub.sky?courseno="+no+"&subno="+subno+"&subname="+subname+"&proname="+proname+"&semester="+semester;
 	}
 </script>
 
@@ -46,13 +49,18 @@
 	<tbody>
 		<c:forEach items="${checklist}" var="map" varStatus="status">
 			<tr class="check">
-				<td>${map.courseyear}/${map.semester}</td>
-				<td>${map.subjectname}</td>
+				<td>${map.courseyear}/<span id='semes${status.index}'>${map.semester}</span></td>
+				<td><span id="subname${status.index}">${map.subjectname}</span></td>
 				<td><span id="subno${status.index}">${map.fk_subjectno}</span>
 					<input id="no${status.index}" type="text" value="${map.courseno}"/>
 				</td>
-				<td>${map.name}</td>
+				<td><span id="prname${status.index}">${map.name}</span></td>
+				<c:if test="${map.classchk == 0}">
 				<td><button id="btn${status.index}" onclick="funcCheck(${status.index})">강의평가</button></td>
+				</c:if>
+				<c:if test="${map.classchk == 1}">
+				<td><button disabled="disabled">평가완료</button></td>
+				</c:if>
 			</tr>
 		</c:forEach>
 	</tbody>

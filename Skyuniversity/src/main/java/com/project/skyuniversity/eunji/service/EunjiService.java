@@ -6,6 +6,7 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
@@ -208,6 +209,18 @@ public class EunjiService implements InterEunjiService {
 	public List<Map<String, String>> selectCheckList(Map<String, String> hashmap) {
 		List<Map<String, String>> selectlist = dao.selectCheckList(hashmap);
 		return selectlist;
+	}
+
+	@Override
+	public int insertClassCheck(ClassCheckVO ccvo) {
+		int n = dao.insertClassCheck(ccvo);
+		return n;
+	}
+
+	@Override
+	public int updateCourseCk(int fk_courseno) {
+		int n = dao.updateCourseCk(fk_courseno);
+		return n;
 	}
 
 

@@ -571,7 +571,7 @@ select H.leaveno, name, memberno, grade, deptname, filename, orgfilename, filesi
 
 select *
 from tbl_official_leave
-
+desc  tbl_official_leave
 update tbl_official_leave set approve='승인완료' where leaveno = '5'
 commit
 
@@ -605,7 +605,7 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         
         select *
         from tbl_official_leave
-        
+        desc tbl_girl_leave
         delete from tbl_girl_leave
         commit
         
@@ -649,10 +649,10 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         update tbl_member set currentsemester = '2' where memberno='102'
 		commit
         
-        select courseyear, semester, fk_subjectno, subjectname, name, courseno
+        select courseyear, semester, fk_subjectno, subjectname, name, courseno, classchk
         from
         (
-        select courseno, courseyear, semester, fk_subjectno, subjectname, fk_professorno
+        select courseno, courseyear, semester, fk_subjectno, subjectname, fk_professorno, classchk
         from tbl_course C
         inner join tbl_subject S
         on C.fk_subjectno = S.subjectno 
@@ -668,3 +668,45 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         
         select name, mobile, email, birth, jubun, grade, currentsemester, absencecnt
         from tbl_member
+        
+        select courseyear, semester, subjectname
+        from tbl_course C
+        inner join tbl_subject S
+        on C.fk_subjectno = S.subjectno
+        where courseno='20'
+        select * from tbl_course
+        
+        desc tbl_course
+        
+        create table tbl_class_check
+        ( fk_courseno   number          not null
+        , firstqs       varchar2(10)    not null
+        , secondqs      varchar2(10)    not null
+        , thirdqs       varchar2(10)    not null
+        , fourqs        varchar2(10)    not null
+        , fiveqs        varchar2(10)    not null
+        , sixqs         varchar2(10)    not null
+        , sevenqs       varchar2(10)    not null
+        , eightqs       varchar2(10)    not null
+        , etc           varchar2(300)
+        , regdate       date    default sysdate
+        , checkKind     varchar2(20)    not null
+        ,constraint PK_tbl_class_check_fk_courseno  primary key(fk_courseno)
+        ,constraint FK_tbl_class_check_fk_courseno foreign key(fk_courseno) 
+                                   references tbl_course(courseno)
+        );
+        
+        insert into tbl_class_check(fk_courseno, firstqs, secondqs, thirdqs, fourqs, fiveqs, sixqs, sevenqs, eightqs, etc, checkKind)
+        values()
+        
+        select *
+        from tbl_class_check
+          select *
+        from tbl_course
+        
+        desc tbl_course
+        delete from tbl_class_check
+        ALTER TABLE TBL_course ADD classchk number(2) default 0;
+        commit
+        
+        update tbl_course set classchk = '1' where courseno = ''

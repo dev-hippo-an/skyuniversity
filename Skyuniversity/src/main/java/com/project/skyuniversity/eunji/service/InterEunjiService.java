@@ -3,6 +3,7 @@ package com.project.skyuniversity.eunji.service;
 import java.util.List;
 import java.util.Map;
 
+import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
@@ -72,6 +73,10 @@ public interface InterEunjiService {
 	int delGirlOfficialLeave(String seq);
 
 	List<Map<String, String>> selectCheckList(Map<String, String> hashmap);
+
+	int insertClassCheck(ClassCheckVO ccvo);
+
+	int updateCourseCk(int fk_courseno);
 
 	
 

@@ -284,12 +284,13 @@
 		<result property="subjectname" column="subjectname" javaType="String"/>
 		<result property="name" column="name" javaType="String"/>
 		<result property="courseno" column="courseno" javaType="String"/>
+		<result property="classchk" column="classchk" javaType="String"/>
 	</resultMap>
 	<select id="selectCheckList" parameterType="HashMap" resultMap="checkMap">
-		select courseyear, semester, fk_subjectno, subjectname, name, courseno
+		select courseyear, semester, fk_subjectno, subjectname, name, courseno, classchk
         from
         (
-        select courseno, courseyear, semester, fk_subjectno, subjectname, fk_professorno
+        select courseno, courseyear, semester, fk_subjectno, subjectname, fk_professorno, classchk
         from tbl_course C
         inner join tbl_subject S
         on C.fk_subjectno = S.subjectno 
@@ -298,5 +299,14 @@
         inner join tbl_professor p
         on V.fk_professorno = P.professorno
 	</select>
+	
+	<insert id="insertClassCheck" parameterType="com.project.skyuniversity.eunji.model.ClassCheckVO">
+		 insert into tbl_class_check(fk_courseno, firstqs, secondqs, thirdqs, fourqs, fiveqs, sixqs, sevenqs, eightqs,checkKind<if test="#{etc} != null">, etc</if>)
+         values(#{fk_courseno}, #{firstQs},#{secondQs}, #{thirdQs}, #{fourQs}, #{fiveQs}, #{sixQs}, #{sevenQs}, #{eightQs}, #{checkKind}<if test="#{etc} != null">, #{etc}</if>)
+	</insert>
+	
+	<update id="updateCourseCk" parameterType="int">
+		update tbl_course set classchk = '1' where courseno = #{fk_courseno}
+	</update>
 	
 </mapper>

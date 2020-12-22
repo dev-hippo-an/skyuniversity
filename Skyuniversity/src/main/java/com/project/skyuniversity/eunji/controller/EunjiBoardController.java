@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.eunji.common.EjFileManager;
+import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
@@ -661,7 +662,7 @@ public class EunjiBoardController {
 			semester = 2;
 			flag = true;
 		}
-
+		
 		Map<String, String> hashmap = new HashMap<String, String>();
 		hashmap.put("memberno", Integer.toString(memberNo));
 		hashmap.put("year", Integer.toString(year));
@@ -684,18 +685,46 @@ public class EunjiBoardController {
 		return mav;
 	}
 
+	@RequestMapping(value = "/classCheckEnd.sky", method = { RequestMethod.POST })
+	public String classCheckEnd(HttpServletRequest request, ClassCheckVO ccvo) {
+
+		String semester = request.getParameter("semester");
+		
+		String classkind = "";
+		if(semester.equals("1")) {
+			classkind = "1학기강의평가";
+		}
+		else {
+			classkind = "2학기강의평가";
+		}
+		ccvo.setCheckKind(classkind);
+		int m = 0;
+		int n = service.insertClassCheck(ccvo);
+		if(n == 1) {
+			m = service.updateCourseCk(ccvo.getFk_courseno());
+		}
+		if(m==1) {
+			return "redirect:/classCheck.sky"; 
+		}
+		
+		return "";
+	}
+	
 	@RequestMapping(value = "/checkSub.sky", method = { RequestMethod.GET })
 	public ModelAndView checkSub(ModelAndView mav, HttpServletRequest request) {
 		String no = request.getParameter("courseno");
 		String subno = request.getParameter("subno");
+		String subname = request.getParameter("subname");
+		String proname = request.getParameter("proname");
+		String semester = request.getParameter("semester");
 		
+		mav.addObject("semester", semester);
 		mav.addObject("no", no);
 		mav.addObject("subno", subno);
+		mav.addObject("subname", subname);
+		mav.addObject("proname", proname);
 		mav.setViewName("eunji/class/checkForm.tiles2");
-
+		
 		return mav;
 	}
-	
-	
-
 }

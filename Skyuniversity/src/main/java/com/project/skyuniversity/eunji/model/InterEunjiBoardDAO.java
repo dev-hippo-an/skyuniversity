@@ -69,4 +69,8 @@ public interface InterEunjiBoardDAO {
 
 	List<Map<String, String>> selectCheckList(Map<String, String> hashmap);
 
+	int insertClassCheck(ClassCheckVO ccvo);
+
+	int updateCourseCk(int fk_courseno);
+
 }
