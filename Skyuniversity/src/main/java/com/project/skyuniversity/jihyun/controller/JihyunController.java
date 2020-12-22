@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.common.Sha256;
@@ -130,14 +131,15 @@ public class JihyunController {
 	}
 	
 	// 현재 비밀번호 확인
+	@ResponseBody
 	@RequestMapping(value = "/checkPwd.sky", method = { RequestMethod.POST })
 	public String checkPwd(HttpServletRequest request, HttpServletResponse response) {
 		
 		String memberno = request.getParameter("memberno");
 		String nowPwd = request.getParameter("nowPwd");
 		
-		System.out.println("memberno :"+memberno);
-		System.out.println("nowPwd :"+nowPwd);
+//		System.out.println("memberno :"+memberno);
+//		System.out.println("nowPwd :"+nowPwd);
 		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("memberno", memberno);
@@ -145,7 +147,7 @@ public class JihyunController {
 		
 		boolean isEqualPwd  = service.checkPwd(paraMap);
 		
-		System.out.println(isEqualPwd);
+//		System.out.println(isEqualPwd);
 		
 		JSONObject jsonObj = new JSONObject(); // {}
 		jsonObj.put("isEqualPwd", isEqualPwd);
@@ -153,6 +155,27 @@ public class JihyunController {
 		return jsonObj.toString();
 	}
 
+	// 입력한 새비밀번호가 현 비밀번호와 같은지 확인
+	@ResponseBody
+	@RequestMapping(value = "/checkNewPwd.sky", method = { RequestMethod.POST })
+	public String checkNewPwd(HttpServletRequest request, HttpServletResponse response) {
+		
+		String memberno = request.getParameter("memberno");
+		String newPwd = request.getParameter("newPwd");
+		
+		//System.out.println("newPwd :"+newPwd);
+		
+		Map<String, String> paraMap = new HashMap<>();
+		paraMap.put("memberno", memberno);
+		paraMap.put("nowPwd", Sha256.encrypt(newPwd)); //비밀번호 암호화
+		
+		boolean isEqualPwd  = service.checkPwd(paraMap);
+		
+		JSONObject jsonObj = new JSONObject(); // {}
+		jsonObj.put("isEqualPwd", isEqualPwd);
+		
+		return jsonObj.toString();
+	}
 	// 비밀번호 변경
 	@RequestMapping(value="/pwdChangeEndhs.sky", method = {RequestMethod.POST})
 	public ModelAndView pwdChangeEndhs(ModelAndView mav, HttpServletRequest request) {

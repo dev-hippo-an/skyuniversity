@@ -94,37 +94,39 @@
 			
 			// 현재비밀번호를 가져온다.
 			var nowPwd = $(this).val().trim();
-			console.log(nowPwd);
-			console.log(${loginuser.memberno});
+			//console.log(nowPwd);
+			//console.log(${loginuser.memberno});
 			
-			$.ajax({
-				url:"<%= request.getContextPath() %>/checkPwd.sky",
-				data:{"memberno":${loginuser.memberno},"nowPwd":nowPwd},
-				type:"POST",
-				dataType:"json",
-				success: function(json){
-					console.log(json.isEqualPwd);
-				},
-				error: function(request, status, error){
-		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		           }
-				
-			});
-			
-			/* if("${loginuser.pwd}" != nowPwd){
-				
-				$(this).next().text("비밀번호를 확인해주세요.");
-				$(this).next().addClass("errorMessage");
-				$(this).next().show();
-			}
-			else if(nowPwd == ""){
+			if (nowPwd == "") {
 				$(this).next().text("현재 비밀번호를 입력해주세요.");
 				$(this).next().addClass("errorMessage");
 				$(this).next().show();
 			}
-			else{
-				boolNowPwd = true;
-			} */
+			else {
+				$.ajax({
+					url:"<%= request.getContextPath() %>/checkPwd.sky",
+					data:{"memberno":${loginuser.memberno},"nowPwd":nowPwd},
+					type:"POST",
+					dataType:"json",
+					success: function(json){
+						//console.log(json.isEqualPwd);
+						if(!json.isEqualPwd){
+							
+							$("input#nowPwd").next().text("비밀번호를 확인해주세요.");
+							$("input#nowPwd").next().addClass("errorMessage");
+							$("input#nowPwd").next().show();
+						}
+						else { // 비밀번호가 맞을때 => json.isEqualPwd == true일때
+							boolNowPwd = true;
+						} 
+					},
+					error: function(request, status, error){
+			               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			           }
+					
+				});
+			
+			}
 			
 		});
 		
@@ -139,23 +141,37 @@
                 $(this).next().text("새비밀번호를 입력해주세요.");
                 $(this).next().addClass("errorMessage");
                 $(this).next().show();
-            } else if("${loginuser.pwd}" == newPwd) {
-            	$(this).next().text("현재와 같은 비밀번호는 사용하실 수 없습니다.");
-                $(this).next().addClass("errorMessage");
-                $(this).next().show();
             } else {
-                var regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
-                // 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
+            	$.ajax({
+            		url:"<%= request.getContextPath() %>/checkNewPwd.sky",
+					data:{"memberno":${loginuser.memberno}, "newPwd":newPwd},
+					type:"POST",
+					dataType:"JSON",
+					success: function(json){
+						//console.log(json.isEqualPwd);
+						if(json.isEqualPwd){
+							$("input#newPwd").next().text("현재와 같은 비밀번호는 사용하실 수 없습니다.");
+			                $("input#newPwd").next().addClass("errorMessage");
+			                $("input#newPwd").next().show();
+						} else { // json.isEqualPwd == false일때// 현재 사용중인 비밀번호랑 일치하지 않을 때
+							var regExp = new RegExp(/^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[^a-zA-Z0-9]).*$/g);
+			                // 숫자/문자/특수문자/ 포함 형태의 8~15자리 이내의 암호 정규표현식 객체 생성
 
-                var bool = regExp.test(newPwd);
+			                var bool = regExp.test(newPwd);
 
-                if (!bool) {
-                    $(this).next().text("비밀번호는 영문자,숫자,특수기호가 혼합된 8~15 글자로 입력하세요.");
-                    $(this).next().addClass("errorMessage");
-                    $(this).next().show();
-                } else {
-                	boolNewPwd = true;
-                }
+			                if (!bool) {
+			                    $("input#newPwd").next().text("비밀번호는 영문자,숫자,특수기호가 혼합된 8~15 글자로 입력하세요.");
+			                    $("input#newPwd").next().addClass("errorMessage");
+			                    $("input#newPwd").next().show();
+			                } else {
+			                	boolNewPwd = true;
+			                }
+						}
+					},
+					error: function(request, status, error){
+			               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+			           }
+            	});
             }
 		});
 		

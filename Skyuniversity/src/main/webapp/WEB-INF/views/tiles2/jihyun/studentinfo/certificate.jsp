@@ -147,8 +147,8 @@
 
 <div id="certificateWrapper">
 	<div class="defaultInfo">
-		<label style="width: 30px;">학번</label><input type="text" class="defaultInput"  readonly />
-		<label style="width: 30px;">성명</label><input type="text" class="defaultInput"  readonly />
+		<label style="width: 30px;">학번</label><input type="text" class="defaultInput" value="${loginuser.memberno}" readonly />
+		<label style="width: 30px;">성명</label><input type="text" class="defaultInput" value="${loginuser.name}"  readonly />
 	</div>
 	<div id="block0">
 		<div id="block1">

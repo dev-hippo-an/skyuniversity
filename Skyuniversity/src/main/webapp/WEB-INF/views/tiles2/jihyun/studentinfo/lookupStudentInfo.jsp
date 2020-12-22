@@ -129,8 +129,8 @@
 			<div id="sPhoto"><img src="<%=ctxPath%>/resources/images/studentImg/imgtest_jh.png" width="170px;"/></div>
 			<span class="detailInfo">
 				<br>
-				<label class="miniTitle">성명</label><input class="readInfo" type="text" value="" readonly/><br>
-				<label class="miniTitle">학번</label><input class="readInfo" type="text" value="" readonly/><br>
+				<label class="miniTitle">성명</label><input class="readInfo" type="text" value="${loginuser.name}" readonly/><br>
+				<label class="miniTitle">학번</label><input class="readInfo" type="text" value="${loginuser.memberno}" readonly/><br>
 				<label class="miniTitle">성별</label><input class="readInfo" type="text" value="" readonly/><br>
 				<label class="miniTitle">학년</label><input class="readInfo" type="text" value="" readonly/><br>
 				<label class="miniTitle">최종등록학년도</label><input class="readInfo" type="text" value="" readonly/><br>

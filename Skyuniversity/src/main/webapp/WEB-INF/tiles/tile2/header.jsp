@@ -60,7 +60,7 @@
 <div id="header">
 
 	<div id="logo">
-		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 100px;">
+		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 100px; cursor: pointer;" onclick="location.href='<%= ctxPath %>/hsindex.sky';">
 	</div>
 	<div id="loginStudent">
 	      <span class="sname">${sessionScope.loginuser.name}</span>
