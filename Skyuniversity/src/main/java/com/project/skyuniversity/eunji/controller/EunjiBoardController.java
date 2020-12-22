@@ -688,8 +688,9 @@ public class EunjiBoardController {
 	public ModelAndView checkSub(ModelAndView mav, HttpServletRequest request) {
 		String no = request.getParameter("courseno");
 		String subno = request.getParameter("subno");
-		System.out.println(subno);
+		
 		mav.addObject("no", no);
+		mav.addObject("subno", subno);
 		mav.setViewName("eunji/class/checkForm.tiles2");
 
 		return mav;

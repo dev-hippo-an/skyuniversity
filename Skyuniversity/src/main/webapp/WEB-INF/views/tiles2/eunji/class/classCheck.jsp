@@ -23,7 +23,7 @@
 		var no = $("input#no"+index).val();
 		var subno = $("#subno"+index).text();
 		alert(subno);
-		location.href="<%=ctxPath%>/checkSub.sky?courseno="+no+"&subno"+subno;
+		location.href="<%=ctxPath%>/checkSub.sky?courseno="+no+"&subno="+subno;
 	}
 </script>
 
