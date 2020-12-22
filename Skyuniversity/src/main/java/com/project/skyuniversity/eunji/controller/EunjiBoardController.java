@@ -687,7 +687,8 @@ public class EunjiBoardController {
 	@RequestMapping(value = "/checkSub.sky", method = { RequestMethod.GET })
 	public ModelAndView checkSub(ModelAndView mav, HttpServletRequest request) {
 		String no = request.getParameter("courseno");
-
+		String subno = request.getParameter("subno");
+		System.out.println(subno);
 		mav.addObject("no", no);
 		mav.setViewName("eunji/class/checkForm.tiles2");
 

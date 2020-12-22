@@ -21,7 +21,9 @@
 
 	function funcCheck(index){
 		var no = $("input#no"+index).val();
-		location.href="<%=ctxPath%>/checkSub.sky?courseno="+no;
+		var subno = $("#subno"+index).text();
+		alert(subno);
+		location.href="<%=ctxPath%>/checkSub.sky?courseno="+no+"&subno"+subno;
 	}
 </script>
 
@@ -46,7 +48,7 @@
 			<tr class="check">
 				<td>${map.courseyear}/${map.semester}</td>
 				<td>${map.subjectname}</td>
-				<td>${map.fk_subjectno}
+				<td><span id="subno${status.index}">${map.fk_subjectno}</span>
 					<input id="no${status.index}" type="text" value="${map.courseno}"/>
 				</td>
 				<td>${map.name}</td>
