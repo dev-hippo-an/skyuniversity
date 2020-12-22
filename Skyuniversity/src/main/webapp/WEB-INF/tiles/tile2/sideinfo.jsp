@@ -182,7 +182,7 @@
 			<li id="grade" class="menu1">성적</li>
 	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/totalGrade.sky'">기이수성적조회</li>
 	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/thisSemesterGrade.sky'">당학기성적조회</li>
-	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/printReportCard.sky'">성적표출력</li>
+	            <%-- <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/printReportCard.sky'">성적표출력</li> --%>
 	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/statusOfComplete.sky'">교양 및 전공필수 이수현황</li>
 			<li id="graduate" class="menu1">졸업</li>
 	            <li class="graduate menu2" onclick="javascript:location.href='<%=ctxPath%>/graduateDelay.sky'">졸업연기</li>
