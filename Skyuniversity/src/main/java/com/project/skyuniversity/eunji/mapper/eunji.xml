@@ -6,7 +6,7 @@
 <mapper namespace="eunji">
 
 	<select id="selectMemberInfo" parameterType="HashMap" resultType="com.project.skyuniversity.eunji.model.MemberVO">
-		select currentSemester, name, memberNo, deptName
+		select currentSemester, name, memberNo, deptName, jubun
 		from tbl_member M
 		inner join tbl_dept D
 		on M.fk_deptseq = D.deptseq

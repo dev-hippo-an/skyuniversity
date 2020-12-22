@@ -65,7 +65,7 @@ values(tbl_dept_seq.nextval, '사회복지학과');
 insert into tbl_dept(deptSeq, deptName)
 values(tbl_dept_seq.nextval, '교양');
 
-select deptname
+select *
 from tbl_dept;
 
 commit
@@ -401,6 +401,11 @@ insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peo
 values('NE115', '확률과통계', '3', '1', '화,목', '01,02,03,04','40','18203','14', '2')
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
 values('EB103', '경영수학', '3', '1', '화,목', '01,02,03,04','35','18202','11', '1')
+
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AA101', '결혼과가족', '3', '1', '금', '01,02','50','18204','41', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AA102', '독서와토론', '2', '1', '금', '07,08,09,10','25','18201','40', '23')
 ALTER TABLE TBL_SUBJECT DROP COLUMN SUBJECTNAME;
 ALTER TABLE TBL_SUBJECT ADD SUBJECTNAME VARCHAR2(100);
 ALTER TABLE TBL_SUBJECT ADD curPeopleCnt number(5) default 0;
@@ -426,6 +431,8 @@ select *
 from tbl_course
 delete from tbl_course where courseno ='73'
 commit
+
+update tbl_subject set period='11121314' where subjectname = '프로그래밍입문'
 ------------------------------------------------------
 
 ------------------------------------------------------
@@ -641,3 +648,20 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         
         update tbl_member set currentsemester = '2' where memberno='102'
 		commit
+        
+        select courseyear, semester, fk_subjectno, subjectname, name, courseno
+        from
+        (
+        select courseno, courseyear, semester, fk_subjectno, subjectname, fk_professorno
+        from tbl_course C
+        inner join tbl_subject S
+        on C.fk_subjectno = S.subjectno 
+        where C.fk_memberno = '102' and courseyear='2020' and semester = '2'
+        ) V
+        inner join tbl_professor p
+        on V.fk_professorno = P.professorno
+        
+        select *
+        from tbl_member
+        commit
+        update tbl_member set jubun='9804142445351' where name='권오윤'
