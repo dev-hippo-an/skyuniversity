@@ -8,6 +8,7 @@ import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
+import com.project.skyuniversity.ohyoon.model.CommentVO;
 
 public interface InterAnsehyeongService {
 	
@@ -133,6 +134,17 @@ public interface InterAnsehyeongService {
 	   List<MinsungBoardVO> bestBoardList();
 
 	   List<MinsungBoardVO> popularBoardList();
+
+	List<CommentVO> getNoticeCommentList(Map<String, String> paraMap);
+
+	
+	int addNoticeComment(CommentVO commentvo);
+
+	int addNoticePoint(Map<String, String> paraMap);
+
+	int deleteNoticeComment(Map<String, String> paraMap);
+
+	int updateNoticeComment(Map<String, String> paraMap);
 
 
 

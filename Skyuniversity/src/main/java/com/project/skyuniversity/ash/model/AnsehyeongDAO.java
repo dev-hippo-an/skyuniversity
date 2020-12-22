@@ -9,6 +9,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
+import com.project.skyuniversity.ohyoon.model.CommentVO;
 
 //=== #32. DAO 선언 ===
 @Repository
@@ -434,6 +435,38 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 	public List<MinsungBoardVO> popularBoardList() {
 		List<MinsungBoardVO> popularBoardList = sqlsession.selectList("minsung.popularBoardList");
 		return popularBoardList;
+	}
+
+	@Override
+	public List<CommentVO> getNoticeCommentList(Map<String, String> paraMap) {
+		List<CommentVO> commentList = sqlsession.selectList("ansehyeong.getNoticeCommentList", paraMap);
+		return commentList;
+	}
+
+	
+	
+	@Override
+	public int addNoticeComment(CommentVO commentvo) {
+		int result = sqlsession.insert("ansehyeong.addNoticeComment", commentvo);
+		return result;
+	}
+
+	@Override
+	public int addNoticePoint(Map<String, String> paraMap) {
+		return sqlsession.update("ohyoon.pointPlus", paraMap);
+	}
+
+	@Override
+	public int deleteNoticeComment(Map<String, String> paraMap) {
+		int result = sqlsession.update("ansehyeong.deleteNoticeComment", paraMap);
+		
+		return result;
+	}
+
+	@Override
+	public int updateNoticeComment(Map<String, String> paraMap) {
+		int result = sqlsession.update("ansehyeong.updateNoticeComment", paraMap);
+		return result;
 	}
 
 }

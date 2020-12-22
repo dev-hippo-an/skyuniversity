@@ -6,6 +6,9 @@ import javax.servlet.http.HttpSession;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Isolation;
+import org.springframework.transaction.annotation.Propagation;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.project.skyuniversity.ash.model.BannerVO;
 import com.project.skyuniversity.ash.model.CommuMemberLevelVO;
@@ -14,6 +17,7 @@ import com.project.skyuniversity.ash.model.InterAnsehyeongDAO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
+import com.project.skyuniversity.ohyoon.model.CommentVO;
 import com.project.skyuniversity.ash.common.AES256;
 
 //=== #31. Service 선언 === 
@@ -373,6 +377,43 @@ public class AnsehyeongService implements InterAnsehyeongService {
 	      List<MinsungBoardVO> popularBoardList = dao.popularBoardList();
 	      return popularBoardList;
 	   }
+
+
+	@Override
+	public List<CommentVO> getNoticeCommentList(Map<String, String> paraMap) {
+		// 요청한 순서의 댓글을 8개씩 가져오기
+	
+		List<CommentVO> commentList = dao.getNoticeCommentList(paraMap);
+		return commentList;
+		
+	}
+
+
+	@Override
+	public int addNoticeComment(CommentVO commentvo) {
+		int result = dao.addNoticeComment(commentvo);
+		return result;
+	}
+
+
+	@Override
+	public int addNoticePoint(Map<String, String> paraMap) {
+		return dao.addNoticePoint(paraMap);
+	}
+
+
+	@Override
+	public int deleteNoticeComment(Map<String, String> paraMap) {
+		int result = dao.deleteNoticeComment(paraMap);
+		return result;
+	}
+
+
+	@Override
+	public int updateNoticeComment(Map<String, String> paraMap) {
+		int result = dao.updateNoticeComment(paraMap);
+		return result;
+	}
 	
 
 

@@ -26,6 +26,7 @@ public class NoticeVO {
 	private String boardName;
 	private String upCount;
 	
+	private String cmtCount;      // 댓글수
 	
 	
 	
@@ -259,6 +260,16 @@ public class NoticeVO {
 
 	public void setUpCount(String upCount) {
 		this.upCount = upCount;
+	}
+
+
+	public String getCmtCount() {
+		return cmtCount;
+	}
+
+
+	public void setCmtCount(String cmtCount) {
+		this.cmtCount = cmtCount;
 	}
 	
 	
