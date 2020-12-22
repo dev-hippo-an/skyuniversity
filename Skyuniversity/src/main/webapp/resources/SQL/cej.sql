@@ -665,3 +665,6 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         from tbl_member
         commit
         update tbl_member set jubun='9804142445351' where name='권오윤'
+        
+        select name, mobile, email, birth, jubun, grade, currentsemester, absencecnt
+        from tbl_member
