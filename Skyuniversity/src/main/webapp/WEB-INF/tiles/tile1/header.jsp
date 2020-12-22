@@ -451,7 +451,7 @@ label#update-nickname:hover {
 				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky?boardKindNo=25'">중고거래</li>
 				
 			</ul>
-			<label onclick="javascript:location.href='<%=ctxPath%>>/chatting.sky'">채팅방으로</label>
+			<label onclick="javascript:location.href='<%=ctxPath%>/chatting.sky'">채팅방으로</label>
 			
 			
 		</div>
