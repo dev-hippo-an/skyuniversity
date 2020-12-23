@@ -727,4 +727,24 @@ public class EunjiBoardController {
 		
 		return mav;
 	}
+	
+	// 군 휴학 신청
+	@RequestMapping(value = "/armyLeaveSchool.sky", method = { RequestMethod.GET })
+	public ModelAndView armyLeaveSchool(ModelAndView mav, HttpServletRequest request) {
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
+
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+		System.out.println(paraMap.get("name"));
+		int grade = Integer.parseInt(paraMap.get("grade"));
+		int semester = Integer.parseInt(paraMap.get("currentSemester"));
+		semester = grade * semester;
+		paraMap.put("currentSemester", Integer.toString(semester));
+		mav.addObject("paraMap", paraMap);
+		mav.setViewName("eunji/college/armyLeaveSchool.tiles2");
+		return mav;
+	}
 }

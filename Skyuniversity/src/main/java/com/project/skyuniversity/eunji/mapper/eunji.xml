@@ -309,4 +309,32 @@
 		update tbl_course set classchk = '1' where courseno = #{fk_courseno}
 	</update>
 	
+	<resultMap type="HashMap" id="allMember">
+		<result property="currentSemester" column="currentSemester" javaType="String"/>
+		<result property="name" column="name" javaType="String"/>
+		<result property="memberNo" column="memberNo" javaType="String"/>
+		<result property="deptName" column="deptName" javaType="String"/>
+		<result property="birth" column="birth" javaType="String"/>
+		<result property="grade" column="grade" javaType="String"/>
+		<result property="mobile" column="mobile" javaType="String"/>
+		<result property="email" column="email" javaType="String"/>
+		<result property="address" column="address" javaType="String"/>
+		<result property="detailaddress" column="detailaddress" javaType="String"/>
+		<result property="extraaddress" column="extraaddress" javaType="String"/>
+		<result property="status" column="status" javaType="String"/>
+	</resultMap>
+	<select id="allMemberInfo" parameterType="int" resultMap="allMember">
+		select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, status
+        from 
+        (
+        select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, fk_regseq
+		from tbl_member M
+		inner join tbl_dept D
+		on M.fk_deptseq = D.deptseq
+        where memberNo = #{memberNo}
+        )V
+        inner join tbl_school_reg R
+        on V.fk_regseq = R.regseq
+	</select>
+	
 </mapper>

@@ -78,6 +78,8 @@ public interface InterEunjiService {
 
 	int updateCourseCk(int fk_courseno);
 
+	Map<String, String> allMembeInfo(int memberNo);
+
 	
 
 	

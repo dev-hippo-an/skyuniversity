@@ -73,4 +73,6 @@ public interface InterEunjiBoardDAO {
 
 	int updateCourseCk(int fk_courseno);
 
+	Map<String, String> allMemberInfo(int memberNo);
+
 }

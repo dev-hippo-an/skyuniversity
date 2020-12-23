@@ -223,6 +223,12 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public Map<String, String> allMembeInfo(int memberNo) {
+		Map<String, String> paraMap = dao.allMemberInfo(memberNo);
+		return paraMap;
+	}
+
 
 
 }

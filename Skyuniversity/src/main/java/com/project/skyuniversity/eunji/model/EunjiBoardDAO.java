@@ -219,5 +219,11 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public Map<String, String> allMemberInfo(int memberNo) {
+		Map<String, String> paraMap = sqlSession.selectOne("eunji.allMemberInfo", memberNo);
+		return paraMap;
+	}
+
 
 }
