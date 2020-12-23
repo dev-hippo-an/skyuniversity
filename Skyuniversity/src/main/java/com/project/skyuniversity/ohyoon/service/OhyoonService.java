@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.skyuniversity.ash.model.NoticeVO;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.ohyoon.common.OhFileManager;
 import com.project.skyuniversity.ohyoon.model.BoardVO;
 import com.project.skyuniversity.ohyoon.model.CategoryVO;
@@ -278,6 +279,24 @@ public class OhyoonService implements InterOhyoonService{
 	public int addPoint(Map<String, String> paraMap) {
 		return dao.addPoint(paraMap);
 	}
+	
+	
+	// 우측 게시판 신규글, 인기글 사이드바
+    @Override
+    public List<MinsungBoardVO> recentBoardList() {
+       List<MinsungBoardVO> recentBoardList = dao.recentBoardList();
+       return recentBoardList;
+    }
+    @Override
+    public List<MinsungBoardVO> bestBoardList() {
+       List<MinsungBoardVO> bestBoardList = dao.bestBoardList();
+       return bestBoardList;
+    }
+    @Override
+    public List<MinsungBoardVO> popularBoardList() {
+       List<MinsungBoardVO> popularBoardList = dao.popularBoardList();
+       return popularBoardList;
+    }
 	
 	
 	

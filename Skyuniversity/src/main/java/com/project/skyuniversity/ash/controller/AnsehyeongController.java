@@ -170,7 +170,7 @@ public class AnsehyeongController {
 
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("id", id);
-		paraMap.put("pwd", pwd); // <<<<<<<< 암호는 나중에 암호화 해서 맵에 넣어주야 함!
+		paraMap.put("pwd", Sha256.encrypt(pwd)); // <<<<<<<< 암호는 나중에 암호화 해서 맵에 넣어주야 함!
 
 		CommuMemberVO loginuser = service.getLoginUser(paraMap);
 
@@ -2091,4 +2091,5 @@ public class AnsehyeongController {
 		
 		return ip;
 	}
+	
 }
