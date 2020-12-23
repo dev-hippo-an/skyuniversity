@@ -747,4 +747,10 @@ public class EunjiBoardController {
 		mav.setViewName("eunji/college/armyLeaveSchool.tiles2");
 		return mav;
 	}
+	
+	@RequestMapping(value = "/armyLeaveSchoolEnd.sky", method = { RequestMethod.POST })
+	public ModelAndView armyLeaveSchoolEnd(ModelAndView mav, HttpServletRequest request) {
+		return mav;
+		
+	}
 }

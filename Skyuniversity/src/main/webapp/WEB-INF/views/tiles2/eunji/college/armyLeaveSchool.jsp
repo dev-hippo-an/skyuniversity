@@ -14,24 +14,58 @@
 </style>
 
 <script type="text/javascript">
-$(function() {
-	  $.datepicker.setDefaults({
-		    dateFormat: 'yy-mm-dd',
-		    prevText: '이전 달',
-		    nextText: '다음 달',
-		    monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-		    monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-		    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-		    dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-		    dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-		    showMonthAfterYear: true,
-		    yearSuffix: '년'
-		  });
-
-		  $(function() {
-		    $("#datepicker1, #datepicker2").datepicker();
-		  });
-});
+	$(function() {
+		  $.datepicker.setDefaults({
+			    dateFormat: 'yy-mm-dd',
+			    prevText: '이전 달',
+			    nextText: '다음 달',
+			    monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+			    monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+			    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+			    dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+			    dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+			    showMonthAfterYear: true,
+			    yearSuffix: '년'
+			  });
+	
+			  $(function() {
+			    $("#datepicker1, #datepicker2").datepicker();
+			  });
+	});
+	
+	$(document).ready(function() {
+		$("#regbtn").click(function() {
+			
+			var flag = true;
+			
+			if($('input:radio[name="armyKind"]:checked').length < 1){
+				alert("병종을 선택해주세요.");
+				flag = false;
+				return;
+			}
+			
+			// 일자 유효성 검사
+			if($("#datepicker1").val().trim()=="" || $("#datepicker2").val().trim()==""){
+				alert("일자를 입력해주세요.");
+				bool = false;
+				return;
+			}
+			if($("#armyfile") == null){
+				alert("군휴학은 파일첨부(입영통지서)가 필수입니다.");
+				bool = false;
+				return;
+			}
+			
+			if(flag){
+				// 폼(form) 을 전송(submit)
+				confirm("휴학신청을 하시겠습니까?");
+				var frm = document.addFrm;
+				frm.method = "POST";
+				frm.action = "<%= ctxPath%>/armyLeaveSchoolEnd.sky";
+				frm.submit();
+			}
+		});
+	});
 </script>
 
 <div>
@@ -83,7 +117,7 @@ $(function() {
 <br><br>
 <div>
 	<span style="font-size: 12pt; font-weight: bold;float: left;">군휴학신청 상세정보</span>
-	<button>신청</button>
+	<button id="regbtn">신청</button>
 </div>
 <br>
 <div>
@@ -118,7 +152,7 @@ $(function() {
 			</li>
 			<li>
 				<label>입영통지서</label>
-				<input type="file" name="attach"/>
+				<input type="file" name="attach" id="armyfile"/>
 			</li>
 		</ul>
 	</form>

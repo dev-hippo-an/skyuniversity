@@ -710,3 +710,20 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         commit
         
         update tbl_course set classchk = '1' where courseno = ''
+        
+        select *
+        from tbl_member
+        update tbl_member set extraaddress='안양동, 래미안 안양 메가트리아' where memberno ='102'
+        commit
+        select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress,status
+        from 
+        (
+        select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, fk_regseq
+		from tbl_member M
+		inner join tbl_dept D
+		on M.fk_deptseq = D.deptseq
+        where memberNo = '102'
+        )V
+        inner join tbl_school_reg R
+        on V.fk_regseq = R.regseq
+	
