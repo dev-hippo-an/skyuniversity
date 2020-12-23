@@ -26,7 +26,7 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return arraylist;
 	}
 	
-
+  
 	@Override
 	public List<String> selectAllSubject() {
 		List<String> arraylist = sqlSession.selectList("eunji.selectAllSubject");
@@ -223,6 +223,12 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 	public Map<String, String> allMemberInfo(int memberNo) {
 		Map<String, String> paraMap = sqlSession.selectOne("eunji.allMemberInfo", memberNo);
 		return paraMap;
+	}
+
+	@Override
+	public int insertArmyLeave(SchoolLeaveVO slvo) {
+		int n = sqlSession.insert("eunji.insertArmyLeave",slvo);
+		return n;
 	}
 
 

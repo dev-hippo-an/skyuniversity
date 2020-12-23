@@ -75,4 +75,6 @@ public interface InterEunjiBoardDAO {
 
 	Map<String, String> allMemberInfo(int memberNo);
 
+	int insertArmyLeave(SchoolLeaveVO slvo);
+
 }

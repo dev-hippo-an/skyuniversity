@@ -726,4 +726,57 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         )V
         inner join tbl_school_reg R
         on V.fk_regseq = R.regseq
-	
+        
+        select *
+        from tbl_member
+        
+        desc tbl_official_leave
+        ------------------------------------------------------------------------------------
+        -- 휴학 테이블 만들기
+        create table tbl_leave_school
+        (schoolLvNo    number
+        ,fk_regSeq     number
+        ,constraint PK_tbl_leave_school_schoolLvNo  primary key(schoolLvNo)
+        ,constraint FK_tbl_leave_school_regSeq  foreign key(fk_regSeq) 
+                                   references tbl_school_reg(regSeq)
+        );
+        create sequence tbl_leave_school_seq
+        start with 1
+        increment by 1
+        nomaxvalue
+        nominvalue
+        nocycle
+        nocache;
+        drop table tbl_leave_school
+            drop sequence tbl_leave_school_seq
+        -- 군휴학 테이블 만들기
+        create table tbl_school_leave
+        (   schoolLvNo number
+            ,armytype   varchar2(50)    
+            ,armyStartDate date         
+            ,armyEndDate date           
+            ,startSemester  varchar2(30)
+            ,endSemester    varchar2(30) 
+            , filename  varchar2(255)   
+            , orgfilename   varchar2(255)   
+            , filesize      number
+            , regdate       date    default sysdate not null 
+            , approve       varchar2(20) default '승인전'
+            , noreason      varchar2(500)
+            , reason        varchar2(800)
+            , fk_regSeq number  not null
+            ,constraint PK_tbl_school_leave_schoolLvNo  primary key(schoolLvNo)
+            ,constraint FK_tbl_school_leave_regSeq  foreign key(fk_regSeq) 
+                                   references tbl_school_reg(regSeq)
+        );
+ALTER TABLE tbl_school_leave DROP COLUMN armyNo;
+commit
+        create sequence tbl_school_leave_seq
+        start with 1
+        increment by 1
+        nomaxvalue
+        nominvalue
+        nocycle
+        nocache;
+        
+        insert into tbl_school_leave()

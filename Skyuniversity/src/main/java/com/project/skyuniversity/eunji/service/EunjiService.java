@@ -11,6 +11,7 @@ import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
+import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
 
 @Service
 public class EunjiService implements InterEunjiService {
@@ -227,6 +228,12 @@ public class EunjiService implements InterEunjiService {
 	public Map<String, String> allMembeInfo(int memberNo) {
 		Map<String, String> paraMap = dao.allMemberInfo(memberNo);
 		return paraMap;
+	}
+
+	@Override
+	public int insertArmyLeave(SchoolLeaveVO slvo) {
+		int n = dao.insertArmyLeave(slvo);
+		return n;
 	}
 
 

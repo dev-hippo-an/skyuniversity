@@ -25,6 +25,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.eunji.common.EjFileManager;
+import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
 import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
@@ -749,8 +750,68 @@ public class EunjiBoardController {
 	}
 	
 	@RequestMapping(value = "/armyLeaveSchoolEnd.sky", method = { RequestMethod.POST })
-	public ModelAndView armyLeaveSchoolEnd(ModelAndView mav, HttpServletRequest request) {
-		return mav;
+	public ModelAndView armyLeaveSchoolEnd(ModelAndView mav, HttpServletRequest request, MultipartHttpServletRequest mrequest, SchoolLeaveVO slvo) {
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
+
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
 		
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+		if("휴학".equals(paraMap.get("status"))){
+			String message = "현재 휴학상태입니다. 휴학결과조회에서 휴학상세정보를 확인해주세요.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		else {
+			String enddate = request.getParameter("armyEndDate");
+			
+			int year = Integer.parseInt(enddate.substring(0,4));
+			
+			if(0<Integer.parseInt(enddate.substring(5,7)) && Integer.parseInt(enddate.substring(5,7))<9) {
+				slvo.setComeSemester(year+" / 2학기");
+			}
+			else {
+				slvo.setComeSemester((year+1)+" / 1학기");
+			}
+			
+			
+			MultipartFile attach = slvo.getAttach();
+			if (!attach.isEmpty()) {
+				HttpSession session = mrequest.getSession();
+				String root = session.getServletContext().getRealPath("/");
+				String path = root + "resources" + File.separator + "files";
+	
+				String newFilename = "";
+				byte[] bytes = null;
+				long fileSize = 0;
+	
+				try {
+					bytes = attach.getBytes();
+	
+					newFilename = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
+	
+					slvo.setFilename(newFilename);
+					// WAS(톰캣)에 저장될 파일명(202012091040316143631028500.png)
+	
+					slvo.setOrgfilename(attach.getOriginalFilename());
+					// 게시판 페이지에서 첨부된 파일(강아지.png)을 보여줄 때 사용.
+					// 또한 사용자가 파일을 다운로드 할 때 사용되어지는 파일명으로 사용.
+	
+					fileSize = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
+					slvo.setFilesize((int)fileSize);
+	
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+			}
+			
+			int n = service.insertArmyLeave(slvo);
+		}
+		return mav;
 	}
 }

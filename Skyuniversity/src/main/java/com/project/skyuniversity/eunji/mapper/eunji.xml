@@ -337,4 +337,9 @@
         on V.fk_regseq = R.regseq
 	</select>
 	
+	<insert id="insertArmyLeave" parameterType="com.project.skyuniversity.eunji.model.SchoolLeaveVO">
+		insert into tbl_school_leave(schoolLvNo, armytype, armystartdate, armyenddate, filename, orgfilename, filesize, comeSemester, fk_regSeq, type)
+        values(tbl_school_leave_seq.nextval, #{armyType}, #{armyStartDate}, #{armyEndDate}, #{filename}, #{orgfilename}, #{filesize}, #{comeSemester},2,'군휴학')
+	</insert>
+	
 </mapper>

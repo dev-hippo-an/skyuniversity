@@ -7,6 +7,7 @@ import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
+import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
 
 public interface InterEunjiService {
 
@@ -79,6 +80,8 @@ public interface InterEunjiService {
 	int updateCourseCk(int fk_courseno);
 
 	Map<String, String> allMembeInfo(int memberNo);
+
+	int insertArmyLeave(SchoolLeaveVO slvo);
 
 	
 
