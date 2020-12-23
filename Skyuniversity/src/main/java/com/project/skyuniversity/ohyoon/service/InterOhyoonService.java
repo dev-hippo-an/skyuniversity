@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.project.skyuniversity.ash.model.NoticeVO;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.ohyoon.model.BoardVO;
 import com.project.skyuniversity.ohyoon.model.CategoryVO;
 import com.project.skyuniversity.ohyoon.model.CommentVO;
@@ -93,7 +94,11 @@ public interface InterOhyoonService {
 	// 댓글쓰기 완료 후, 포인트 올려주기 
 	int addPoint(Map<String, String> paraMap);
 
-	
-	
-	
+	// 우측 게시판 신규글, 인기글 사이드바
+    List<MinsungBoardVO> recentBoardList();
+    List<MinsungBoardVO> bestBoardList();
+    List<MinsungBoardVO> popularBoardList();
+
+    
+    
 }

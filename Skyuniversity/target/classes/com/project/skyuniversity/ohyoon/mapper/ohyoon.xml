@@ -32,7 +32,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
-		         , (select count(*) from tbl_comment_informal where fk_boardNo = V.boardNo) as cmtCount
+		         , (select count(*) from tbl_comment_informal where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_commu_member M join tbl_board_informal V  
 	    	on V.fk_memberNo = M.fk_memberNo
 	    	join tbl_commu_member_level L
@@ -55,7 +55,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
-		         , (select count(*) from tbl_comment_polite where fk_boardNo = V.boardNo) as cmtCount
+		         , (select count(*) from tbl_comment_polite where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_commu_member M join tbl_board_polite V  
 	    	on V.fk_memberNo = M.fk_memberNo
 	    	join tbl_commu_member_level L
@@ -78,7 +78,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
-		         , (select count(*) from tbl_comment_humor where fk_boardNo = V.boardNo) as cmtCount
+		         , (select count(*) from tbl_comment_humor where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_category C join tbl_board_humor V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 
@@ -106,7 +106,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
-		         , (select count(*) from tbl_comment_issue where fk_boardNo = V.boardNo) as cmtCount
+		         , (select count(*) from tbl_comment_issue where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_category C join tbl_board_issue V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 
@@ -134,7 +134,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
-		         , (select count(*) from tbl_comment_mbti where fk_boardNo = V.boardNo) as cmtCount
+		         , (select count(*) from tbl_comment_mbti where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_category C join tbl_board_mbti V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 
@@ -162,7 +162,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
-		         , (select count(*) from tbl_comment_food where fk_boardNo = V.boardNo) as cmtCount
+		         , (select count(*) from tbl_comment_food where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_category C join tbl_board_food V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 
@@ -190,7 +190,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
-		         , (select count(*) from tbl_comment_love where fk_boardNo = V.boardNo) as cmtCount
+		         , (select count(*) from tbl_comment_love where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_category C join tbl_board_love V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 
@@ -218,7 +218,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
-		         , (select count(*) from tbl_comment_hobby where fk_boardNo = V.boardNo) as cmtCount
+		         , (select count(*) from tbl_comment_hobby where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_category C join tbl_board_hobby V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 
@@ -246,7 +246,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		    	 , levelImg
-		    	 , (select count(*) from tbl_comment_health where fk_boardNo = V.boardNo) as cmtCount
+		    	 , (select count(*) from tbl_comment_health where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_category C join tbl_board_health V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 
@@ -274,7 +274,7 @@
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
-		         , (select count(*) from tbl_comment_diet where fk_boardNo = V.boardNo) as cmtCount
+		         , (select count(*) from tbl_comment_diet where fk_boardNo = V.boardNo and status = 1) as cmtCount
 		    from tbl_category C join tbl_board_diet V 
 		    on C.categoryNo = V.fk_categoryNo
 		    join tbl_commu_member M 

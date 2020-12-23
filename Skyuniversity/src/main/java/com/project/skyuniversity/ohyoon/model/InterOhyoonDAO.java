@@ -3,6 +3,7 @@ package com.project.skyuniversity.ohyoon.model;
 import java.util.*;
 
 import com.project.skyuniversity.ash.model.NoticeVO;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 
 public interface InterOhyoonDAO {
 
@@ -89,6 +90,13 @@ public interface InterOhyoonDAO {
 	// 댓글쓰기 완료 후, 포인트 올려주기 
 	int addPoint(Map<String, String> paraMap);
 
+	// 우측 게시판 신규글, 인기글 사이드바
+	List<MinsungBoardVO> recentBoardList();
+	List<MinsungBoardVO> bestBoardList();
+	List<MinsungBoardVO> popularBoardList();
+	
+	
+	
 	
 	
 	

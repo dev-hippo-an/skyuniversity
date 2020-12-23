@@ -1280,3 +1280,6 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
+select *
+from tbl_comment_humor;

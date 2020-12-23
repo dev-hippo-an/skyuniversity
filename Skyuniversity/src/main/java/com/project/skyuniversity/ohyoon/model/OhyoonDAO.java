@@ -8,6 +8,7 @@ import org.mybatis.spring.SqlSessionTemplate;
 import org.springframework.stereotype.Repository;
 
 import com.project.skyuniversity.ash.model.NoticeVO;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 
 @Repository
 public class OhyoonDAO implements InterOhyoonDAO {
@@ -1023,7 +1024,22 @@ public class OhyoonDAO implements InterOhyoonDAO {
     }
     
     
-    
+    // 우측 게시판 신규글, 인기글 사이드바
+    @Override
+    public List<MinsungBoardVO> recentBoardList() {
+       List<MinsungBoardVO> recentBoardList = sqlsession.selectList("minsung.recentBoardList");
+       return recentBoardList;
+    }
+    @Override
+    public List<MinsungBoardVO> bestBoardList() {
+       List<MinsungBoardVO> bestBoardList = sqlsession.selectList("minsung.bestBoardList"); 
+       return bestBoardList;
+    }
+    @Override
+    public List<MinsungBoardVO> popularBoardList() {
+       List<MinsungBoardVO> popularBoardList = sqlsession.selectList("minsung.popularBoardList"); 
+       return popularBoardList;
+    }
     
     
     
