@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
+import com.project.skyuniversity.ohyoon.model.CommentVO;
 
 public interface InterAnsehyeongDAO {
 	// 메인 화면에 뜨는 배너 광고를 올려준다.
@@ -133,6 +134,18 @@ public interface InterAnsehyeongDAO {
 	   List<MinsungBoardVO> bestBoardList();
 
 	   List<MinsungBoardVO> popularBoardList();
+
+	List<CommentVO> getNoticeCommentList(Map<String, String> paraMap);
+
+	
+	int addNoticeComment(CommentVO commentvo);
+
+	int addNoticePoint(Map<String, String> paraMap);
+
+	
+	int deleteNoticeComment(Map<String, String> paraMap);
+
+	int updateNoticeComment(Map<String, String> paraMap);
 
 
 

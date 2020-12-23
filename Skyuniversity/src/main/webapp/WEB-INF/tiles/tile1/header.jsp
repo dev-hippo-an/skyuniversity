@@ -39,7 +39,7 @@ label#update-nickname:hover {
 	font-weight: bold;
 }
 
-.modal {
+.modalAn {
 	display: none; /* Hidden by default */
 	position: fixed; /* Stay in place */
 	z-index: 1; /* Sit on top */
@@ -53,7 +53,7 @@ label#update-nickname:hover {
 }
     
         /* Modal Content/Box */
-.modal-content {
+.modal-contentAn {
     background-color: #fefefe;
     margin: 15% auto; /* 15% from the top and centered */
     padding: 20px;
@@ -165,7 +165,7 @@ label#update-nickname:hover {
 			dataType: "JSON",
 			success:function(json) {
 				
-				$('#myModal').show();
+				$('#myModalAn').show();
 				
 
 				$("span#totalHITCount").hide();
@@ -291,7 +291,7 @@ label#update-nickname:hover {
 	}
 	
 	 function close_pop(flag) {
-        $('#myModal').hide();
+        $('#myModalAn').hide();
 		$("input#search").val("");
      };
 
@@ -367,7 +367,9 @@ label#update-nickname:hover {
      
      function goViewDetailLetsGo(obj) {
     	 
-    	 
+    		<%
+		      session.setAttribute("readCountPermission", "yes");
+		      %>
     	
 		var frm = document.headerViewForm;
 		
@@ -449,9 +451,11 @@ label#update-nickname:hover {
 				<li class="boardList" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky?boardKindNo=25'">중고거래</li>
 				
 			</ul>
+			<label id="kakaoTalk" onclick="javascript:location.href='<%= serverName%><%=ctxPath%>/chatting.sky'">채팅방으로</label>
 			
 			
 		</div>
+		
 	
 	</div>
 
@@ -493,6 +497,7 @@ label#update-nickname:hover {
 			</c:if>
 			<c:if test="${sessionScope.loginuser != null}">
 				<li onclick="javascript:location.href='<%=ctxPath%>/logout.sky'">로그아웃</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/messageLetsGetIt.sky'">쪽지</li>
 			</c:if>
 			<li onclick="javascript:location.href='<%= ctxPath%>/hsindex.sky'">학사행정</li>
 		</ul>
@@ -500,12 +505,12 @@ label#update-nickname:hover {
 		<input type="text" style="display: none;" id="hideSearchWord">
 		<button type="button"  style="width: 40px; background-color: #0843ad; color: white; padding: 2px; border-radius: 7px; border: none;" onclick="goAnSearch();">검색</button>
 		
-		<div id="myModal" class="modal">
+		<div id="myModalAn" class="modalAn">
 			
 			
 			
 			<!-- Modal content -->
-			<div class="modal-content">
+			<div class="modal-contentAn">
 				<a href="javascript:close_pop();" class="close">&times;</a>
 				<p style="text-align: center;"><span style="font-size: 14pt;"><b><span style="font-size: 24pt;">검색결과</span></b></span></p>
 				<div id="displayHIT" style="overflow: auto; max-height: 300px;" ></div>

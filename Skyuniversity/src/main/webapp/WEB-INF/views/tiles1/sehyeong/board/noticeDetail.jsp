@@ -323,10 +323,11 @@ tbody {
 	font-size: 10pt;
 }
 
-
 img {
 	width: 100%;
 }
+
+
 
 </style>
 
@@ -357,126 +358,29 @@ img {
 	            $("span#alert").hide();
 	         }
 	      });
-	      
-	      
-		getCountComeOn();
+	  
 		
-		// 추천 버튼을 누르면 ajax로 추천수를 1증가 시킨다.
-	      $("button#verygooda").click(function() {
-	         
-	         var boardKindNo = "${boardvo.fk_boardKindNo}";
-	         var boardNo = "${boardvo.boardNo}";
-	         var loginMemberNo = "${sessionScope.loginuser.commuMemberNo}";
-	         var writeMemberNo = "${boardvo.fk_commuMemberNo}";
-	         
-	         if (loginMemberNo != writeMemberNo) {
-	        	 
-	        	 
-		         $.ajax({
-		            url: "<%= request.getContextPath()%>/addMaketBoardUp.sky",
-		            type: "POST",
-		            data: {"boardKindNo": boardKindNo, "boardNo": boardNo},
-		            dataType:"JSON",
-		            success: function(json){
-		               
-		               if (json.n == 0) {
-		                  alert("이미 추천하셨습니다.");
-		               }else{
-		                  alert("추천되었습니다.");
-		                  getCountComeOn();
-		               }
-		            },
-		            error: function(request, status, error){
-		                     alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		              }
-		         });
-	         } else {
-	        	 alert("본인 글에 추천은 양아치짘ㅋㅋㅋㅋ")
-	         }
-	      });// end of $("button#btnUp").click(function() {});-----------------------------------
-	         
-	         
-	      // 비추천 버튼을 누르면 ajax로 비추천수를 1증가 시킨다.
-	      $("button#verybadda").click(function() {
-	         
-	    	  var boardKindNo = "${boardvo.fk_boardKindNo}";
-		      var boardNo = "${boardvo.boardNo}";
-        	 
-	         $.ajax({
-	            url: "<%= request.getContextPath()%>/addMaketBoardDown.sky",
-	            type: "POST",
-	            data: {"boardKindNo":boardKindNo, "boardNo": boardNo},
-	            dataType:"JSON",
-	            success: function(json){
-	               
-	               if (json.n == 0) {
-	                  alert("이미 비추천하셨습니다.");
-	               }else{
-	                  alert("비추천되었습니다.");
-	                  getCountComeOn();
-	               }
-	            },
-	            error: function(request, status, error){
-	                     alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	              }
-	         });
-		     
-		     
-	      });// end of $("button#btnDown").click(function() {});-----------------------------------
-	      
-	      
-	      // 신고 버튼을 누르면 ajax로 신고수를 1증가 시킨다.
-	      $("button#gotopolice").click(function() {
-	    	 var boardKindNo = "${boardvo.fk_boardKindNo}";
-		     var boardNo = "${boardvo.boardNo}";
-	         
-		    
-	         $.ajax({
-	            url: "<%= request.getContextPath()%>/addMarketBoardReport.sky",
-	            type: "POST",
-	            data: {"boardKindNo":boardKindNo, "boardNo": boardNo},
-	            dataType:"JSON",
-	            success: function(json){
-	               if (json.n == 0) {
-	                  alert("이미 신고하셨습니다.");
-	               }else{
-	                  
-	                  if (json.n >= 10 ) {
-		                  alert("too much 신고!");
-	                	  tooMuchReportSoYouHaveToGoToThePoliceStation ();
-	                  } else {
-	                	  
-		                  alert("신고되었습니다.");
-	                  }
-	               }
-	            },
-	            error: function(request, status, error){
-	                     alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	              }
-	         });
-	         
-	         
-	      });// end of $("button").click(function() {});------------------------------------------
-
 	});
 	
-	function marketBoardEdit (){
+	
+	<%-- 공지 수정 및 삭제!!! 시작--%>
+	function noticedEdit (){
 		var frm = document.editAndDeleteFrm;
-		frm.action = "<%= ctxPath%>/marketBoardEdit.sky";
+		frm.action = "<%= ctxPath%>/noticeEdit.sky";
 		frm.method = "POST";
 		frm.submit();
 	}
 	
 	
 	
-	function marketBoardDelete () {
+	function noticeDelete () {
 		var frm = document.editAndDeleteFrm;
-		frm.action = "<%= ctxPath%>/marketBoardDelete.sky";
+		frm.action = "<%= ctxPath%>/noticeDelete.sky";
 		frm.method = "POST";
 		frm.submit();
 	}
 	
-	
+	<%-- 공지 수정 및 삭제!!! 끝--%>
 	
 	
 	
@@ -489,47 +393,7 @@ img {
 	
 	
 	
-	function getCountComeOn() {
-		var boardKindNo = "${boardvo.fk_boardKindNo}";
-        var boardNo = "${boardvo.boardNo}";
-        
-       
-        
-        $.ajax({
-            url: "<%= request.getContextPath()%>/getMarketBoardCount.sky",
-            type: "POST",
-            data: {"boardKindNo":boardKindNo, "boardNo": boardNo},
-            dataType:"JSON",
-            success: function(json){
-            	
-            	var upCount = json.upCount;
-                var downCount = json.downCount;
-                
-            	if (upCount == null || upCount == "") {
-                    upCount = "0";
-                 }
-            	if (downCount == null || downCount == "") {
-                    downCount = "0";
-                 }
-            	
-            
-            	
-            	$("span#verygooda-span").text(upCount);
-                $("span#verybadda-span").text(downCount);
-            },
-            error: function(request, status, error){
-                     alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-              }
-         });
-	}
 
-	
-	function tooMuchReportSoYouHaveToGoToThePoliceStation () {
-		var frm = document.editAndDeleteFrm;
-		frm.action = "<%= ctxPath%>/marketTooMuchReport.sky";
-		frm.method = "POST";
-		frm.submit();
-	}
 	
 	
 
@@ -540,20 +404,13 @@ img {
 	   function goViewComment() {
 	      
 	        var startNo = $("input#startNo").val();
-			var fk_boardKindNo = '${boardvo.fk_boardKindNo}';
-			var fk_boardNo = "${boardvo.boardNo}" ;
-			var noticeNo = "";
+			var fk_boardKindNo = '${noticevo.fk_boardKindNo}';
+			var noticeNo = "${noticevo.noticeNo}" ;
 			
-			if ("" != "${noticevo.noticeNo}") {
-				noticeNo = "${noticevo.noticeNo}";
-				
-				alert(noticeNo);
-				return;
-			}
 			
 	      $.ajax({
-	         url: "<%= ctxPath%>/commentList.sky",
-	         data: {"startNo": startNo, "cmtLength": cmtLength, "fk_boardKindNo": "${boardvo.fk_boardKindNo}", "fk_boardNo": "${boardvo.boardNo}" },
+	         url: "<%= ctxPath%>/noticeCommentList.sky",
+	         data: {"startNo": startNo, "cmtLength": cmtLength, "fk_boardKindNo": fk_boardKindNo, "noticeNo": noticeNo },
 	         type: "POST",
 	         dataType: "JSON",
 	         success: function(json){
@@ -572,13 +429,10 @@ img {
 	               $.each(json, function(index,item) {
 	                  
 	                  html += "<tr style='height:30px;'>" +
-	                           "<td style='text-align:left;'><img src=/skyuniversity/resources/images/levelimg/"+item.levelImg+" class='photo' /><span class='name' onclick='addTag()'>"+item.fk_nickname+"</span> | "+item.regDate+"<div id='replyButtons'>"+
-	                              "<span class='button' onclick='commentUp("+item.commentNo+")'>추천<span id='cmtUpCount"+item.commentNo+"'>"+item.cmtUpCount+"</span></span>&nbsp;&nbsp;"+
-	                              "<span class='button' onclick='commentDown("+item.commentNo+")'>비추천<span id='cmtDownCount"+item.commentNo+"'>"+item.cmtDownCount+"</span></span>&nbsp;&nbsp;"+
-	                              "<span class='button' style='height:30px; width: 70px; ' onclick='commentReport("+item.commentNo+")'>신고&nbsp;<img src='/skyuniversity/resources/images/report3.png' style='width: 15px; height: 15px;'/></span></div>"+
-	                           "</td>"+
-	                        "</tr>" + 
-	                        "<tr style='height:30px; border-bottom-color: black;'>"+
+	                      	"<td style='text-align:left;'><img src=/skyuniversity/resources/images/levelimg/"+item.levelImg+" class='photo' /><span class='name' onclick='addTag()'>"+item.fk_nickname+"</span> | "+item.regDate+"<div id='replyButtons'>"+
+	                  		 "</td>"+
+	                		"</tr>" + 
+	                	  "<tr style='height:30px; border-bottom-color: black;'>"+
 	                           "<td style='text-align:left;'>";
 	                  
 	                  var comment = item.cmtContent;
@@ -701,7 +555,7 @@ img {
 	      var frm = $("form[name=addWriteFrm]").serialize();
 	      
 	      $.ajax({
-	         url: "<%= request.getContextPath()%>/commentRegister.sky",
+	         url: "<%= request.getContextPath()%>/noticeCommentRegister.sky",
 	         data: frm,
 	         type: "POST",
 	         dataType:"JSON",
@@ -740,113 +594,7 @@ img {
 	      });
 	   }// end of function goAddWrite() {}----------------------------------
 	   
-	   
-	   // 댓글의 추천을 누르면 추천수가 1 증가하는 메서드
-	   function commentUp(commentNo) {
-	      
-	      var fk_boardKindNo = $("input[name=fk_boardKindNo]").val(); 
-	      var fk_boardNo = $("input[name=fk_boardNo]").val(); 
-	      
-	      $.ajax({
-	         url: "<%= ctxPath%>/addCommentUp.sky",
-	         type: "POST",
-	         data: {"fk_boardKindNo":fk_boardKindNo, "fk_boardNo":fk_boardNo, "commentNo":commentNo},
-	         dataType:"JSON",
-	         success: function(json){
-	            
-	            if (json.n == 0) {
-	               alert("이미 추천하셨습니다.");
-	            }else{
-	               alert("추천되었습니다.");
-	               var cmtUpCount = json.cmtUpCount;
-	               var cmtDownCount = json.cmtDownCount;
-
-	               if (cmtDownCount == null || cmtDownCount == "") {
-	                  cmtDownCount = "0";
-	               }
-	               $("span#cmtUpCount"+commentNo).text(cmtUpCount);
-	               $("span#cmtDownCount"+commentNo).text(cmtDownCount);
-	            }
-	         },
-	         error: function(request, status, error){
-	                  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	           }
-	      });
-
-	   }// end of function commentUp() {}-------------------------------------------
-	   
-	   
-	   // 댓글의 비추천을 누르면 비추천수가 1 증가하는 메서드
-	   function commentDown(commentNo) {
-	      
-	      var fk_boardKindNo = $("input[name=fk_boardKindNo]").val(); 
-	      var fk_boardNo = $("input[name=fk_boardNo]").val(); 
-
-	      $.ajax({
-	         url: "<%= ctxPath%>/addCommentDown.sky",
-	         type: "POST",
-	         data: {"fk_boardKindNo":fk_boardKindNo, "fk_boardNo":fk_boardNo, "commentNo":commentNo},
-	         dataType:"JSON",
-	         success: function(json){
-	            
-	            if (json.n == 0) {
-	               alert("이미 비추천하셨습니다.");
-	            }else{
-	               alert("비추천되었습니다.");
-	               var cmtUpCount = json.cmtUpCount;
-	               var cmtDownCount = json.cmtDownCount;
-
-	               if (cmtUpCount == null || cmtUpCount == "") {
-	                  cmtUpCount = "0";
-	               }
-	               $("span#cmtUpCount"+commentNo).text(cmtUpCount);
-	               $("span#cmtDownCount"+commentNo).text(cmtDownCount);
-	            }
-	         },
-	         error: function(request, status, error){
-	                  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	           }
-	      });
-
-	   }// end of function commentDown() {}-------------------------------------------
-
-	   
-	   // 댓글의 신고를 누르면 신고수가 1 증가하는 메서드
-	   function commentReport(commentNo) {
-	      
-	      var fk_boardKindNo = $("input[name=fk_boardKindNo]").val(); 
-	      var fk_boardNo = $("input[name=fk_boardNo]").val(); 
-
-	      $.ajax({
-	         url: "<%= ctxPath%>/addCommentReport.sky",
-	         type: "POST",
-	         data: {"fk_boardKindNo":fk_boardKindNo, "fk_boardNo":fk_boardNo, "commentNo":commentNo},
-	         dataType:"JSON",
-	         success: function(json){
-	            
-	            if (json.n == 0) {
-	               alert("이미 신고하셨습니다.");
-	            }else{
-	               alert("신고되었습니다.");
-	               
-	               // 댓글목록이 초기화 되도록 함.
-	               $("input#startNo").val("1");
-	               $("input#cmtCount").val("0");
-	               $("table#contentTable2").html("");
-	               $("h4.more").show();
-	               
-	               goViewComment();
-	               
-	            }
-	         },
-	         error: function(request, status, error){
-	                  alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	           }
-	      });
-
-	   }// end of function commentReport() {}-------------------------------------------
-	   
-	   
+	  
 	   // 댓글 삭제 버튼을 누르면 댓글을 삭제해주는 메서드. 
 	   function goDeleteComment(commentNo) {
 	      
@@ -854,7 +602,7 @@ img {
 	      var fk_boardNo = $("input[name=fk_boardNo]").val(); 
 
 	      $.ajax({
-	         url: "<%= ctxPath%>/deleteComment.sky",
+	         url: "<%= ctxPath%>/deleteNoticeComment.sky",
 	         type: "POST",
 	         data: {"fk_boardKindNo":fk_boardKindNo, "fk_boardNo":fk_boardNo, "commentNo":commentNo},
 	         dataType:"JSON",
@@ -911,7 +659,7 @@ img {
 	      var fk_boardNo = $("input[name=fk_boardNo]").val(); 
 
 	      $.ajax({
-	         url: "<%= ctxPath%>/updateComment.sky",
+	         url: "<%= ctxPath%>/updateNoticeComment.sky",
 	         type: "POST",
 	         data: {"fk_boardKindNo":fk_boardKindNo, "fk_boardNo":fk_boardNo, "commentNo":commentNo, "cmtContent": cmtContent},
 	         dataType:"JSON",
@@ -1005,62 +753,44 @@ img {
 
 
 
-	<div id="marketBoardMain">
-		<h1 align="left">${tableInfo.boardName}</h1>
-		<div id="marketContent" style="min-height: 600px; text-align: left; border: solid gray 1px;">
-			<div id="mainTitle" style="font-weight: bold; padding-left: 20px;">
-				<h2><span>[${boardvo.categoryName}]&nbsp;&nbsp;</span>${boardvo.subject} </h2>
-			</div>
-			
-			<div id="mainSubInfo" style=" padding-left: 20px; border-bottom: solid 1px gray;">
-				<h5><span>닉네임 : <img src="<%= ctxPath %>/resources/images/levelimg/${boardvo.levelImg}" style="width: 17px; height: 17px;" />&nbsp;${boardvo.nickname}</span>ㅣ<span>조회수 : ${boardvo.readCount}</span>ㅣ<span>작성시간 : ${boardvo.regDate}</span>
-				<c:if test="${boardvo.editDate != null}">
-					ㅣ<span>수정시간 : ${boardvo.editDate} </span>
-				</c:if>
-				&nbsp;&nbsp;&nbsp;<span style="font-size: 12pt; font-weight: bold; float: right; margin-right: 20px;"><fmt:formatNumber value="${boardvo.price}" pattern="#,###" />원</span>
-				</h5>
-			
-			</div>
-			
-			<div id="content-div" style="overflow: auto; word-break: break-all;  padding: 30px; min-height: 500px;">
-				${boardvo.content}
-			
-			</div>
-			<div id="fileDownload" style=" font-weight: bold; padding-left: 20px;">
-				<a href="javascript:fileDownloadGoGo();">${boardvo.orgFileName}</a>				
-				
-			</div>
-		</div>
-		<br>
-		<br>
-		<c:if test="${not empty paraMap.gobackURL2}">
-			<button type="button" id="letsgoback" onclick="javascript:location.href='${paraMap.gobackURL2}'">목록으로</button>
-		</c:if>
-		<c:if test="${empty paraMap.gobackURL2}">
-			<button type="button" id="letsgoback" onclick="javascript:location.href='<%= ctxPath%>/marketboardList.sky?boardKindNo=${paraMap.boardKindNo}'">목록으로</button>	
-		</c:if>
-			<div id="buttons1">
-				<button type="button" id="verygooda">추천<br><span id="verygooda-span"></span></button>
-				<button type="button" id="verybadda">반대<br><span id="verybadda-span"></span></button>
-				<button type="button" id="gotopolice">신고<br><span id="gotopolice-span"><img src="<%= request.getContextPath()%>/resources/images/sehyeong/call.png" style="width: 20px; height: 20px;"/></span></button>
-			</div>
-		
-		<br>
-		<br>
-		<div id="editAndDel-div">
-			<c:if test="${boardvo.commuMemberNo eq sessionScope.loginuser.commuMemberNo}">
-				<button type="button" onclick="marketBoardEdit();">수정</button>
-				<button type="button" onclick="marketBoardDelete();">삭제</button>
-			</c:if>
+<div id="marketBoardMain">
+	<h1 align="left">${tableInfo.boardName}</h1>
+	<div id="marketContent" style="min-height: 600px; text-align: left;  border: solid gray 1px;">
+		<div id="mainTitle" style=" font-weight: bold; padding-left: 20px;">
+			<h2><span>[${noticevo.categoryName}]&nbsp;&nbsp;</span>${noticevo.subject} </h2>
 		</div>
 		
-		<form name="editAndDeleteFrm">
-			<input type="hidden" name="boardNo" value="${boardvo.boardNo}" />
-			<input type="hidden" name="boardKindNo" value="${boardvo.fk_boardKindNo}" />
-			<input type="hidden" name="gobackURL2" value="${paraMap.gobackURL2}" />
-		</form>
+		<div id="mainSubInfo" style="padding-left: 20px; border-bottom: solid 1px gray;">
+			<h5><span>닉네임 : <img src="<%= ctxPath %>/resources/images/levelimg/${noticevo.levelImg}" style="width: 17px; height: 17px;" />&nbsp;${noticevo.nickname}</span>ㅣ<span>조회수 : ${noticevo.readCount}</span>ㅣ<span>작성시간 : ${noticevo.regDate}</span></h5>
 		
+		</div>
+		
+		<div id="content-div" style="overflow: auto; word-break: break-all; padding: 30px; min-height: 500px;">
+			${noticevo.content}
+		
+		</div>
 	</div>
+	<br>
+	<br>
+	<button type="button" id="letsgoback" onclick="javascript:location.href='${paraMap.gobackURL2}'">목록으로</button>
+	
+	<br>
+	<br>
+	<div id="editAndDel-div">
+		<c:if test="${noticevo.fk_memberNo eq sessionScope.loginuser.fk_memberNo}">
+			<button type="button" onclick="noticedEdit();">수정</button>
+			<button type="button" onclick="noticeDelete();">삭제</button>
+		</c:if>
+	</div>
+	
+	<form name="editAndDeleteFrm">
+		<input type="hidden" name="noticeNo" value="${noticevo.noticeNo}" />
+		<input type="hidden" name="boardKindNo" value="${noticevo.fk_boardKindNo}" />
+		<input type="hidden" name="gobackURL2" value="${paraMap.gobackURL2}" />
+	</form>
+	
+</div>
+
 
 
 <div id="sideBar">
@@ -1112,16 +842,15 @@ img {
 
 
 
-   <div class="content2">
-      
+ <div class="content2">
       <div id="reply" >
          <div><span>댓글쓰기</span><span><img  class="photo" src="<%= ctxPath%>/resources/images/levelimg/level${sessionScope.loginuser.fk_levelNo}.png"/>${sessionScope.loginuser.nickname}</span></div>
          <form name="addWriteFrm" style="margin-top: 5px; width: 90%; height: 125px;" class="form-group">
             <textarea id="cmtContent" name="cmtContent" class="form-control"></textarea>
             
             
-            <input type="hidden" name="fk_boardKindNo" value="${boardvo.fk_boardKindNo}"/>
-            <input type="hidden" name="fk_boardNo" value="${boardvo.boardNo}"/>
+            <input type="hidden" name="fk_boardKindNo" value="${noticevo.fk_boardKindNo}"/>
+            <input type="hidden" name="fk_boardNo" value="${noticevo.noticeNo}"/>
             
             
          </form>

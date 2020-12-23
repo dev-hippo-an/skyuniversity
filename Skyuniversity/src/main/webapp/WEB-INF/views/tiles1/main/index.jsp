@@ -7,6 +7,7 @@
 %>
 
 <style>
+
 table {
    border-collapse: collapse;
    border-spacing: 0;
@@ -26,10 +27,62 @@ thead {
 	color: white;
 }
 
-tbody {
-	font-size: 10pt;
+
+
+
+table.board-body {
+	/* border: solid 1px black; */
+	width: 100%;
+	min-height: 30%;
+	text-align: center;
+	vertical-align: middle;
+	
+	
 }
 
+thead.board-body-header {
+	border-bottom: 1px solid #0843ad;
+	
+	
+}
+
+thead.board-body-header th:first-child{
+	width: 30%;
+	text-align: left;
+	padding: 5px;
+	padding-left: 10px;
+	/* border: 1px red solid; */
+}
+
+thead.board-body-header th:last-child{
+	width: 69%;
+	text-align: left;
+	padding: 5px;
+	padding-left: 10px;
+	/* border: 1px red solid; */
+}
+
+.hot thead.board-body-header th:first-child{
+	width: 40%;
+	text-align: left;
+	padding: 5px;
+	padding-left: 10px;
+	/* border: 1px red solid; */
+}
+
+.hot thead.board-body-header th:last-child{
+	width: 59%;
+	padding: 5px;
+	text-align: left;
+	/* border: 1px red solid; */
+}
+
+
+.board-body tbody tr>td{
+	text-align: left;
+	padding: 3px;
+	padding-left: 10px;
+}
 
 </style>
 <script type="text/javascript">
@@ -37,6 +90,7 @@ tbody {
 		autoSlide();
 		
 		$(".board-body tr").click(function(){
+			
 			
 			
 			var frm = document.indexViewForm;

@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
 
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
+import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.ohyoon.common.MyUtil;
 import com.project.skyuniversity.ohyoon.common.OhFileManager;
 import com.project.skyuniversity.ohyoon.model.*;
@@ -360,7 +361,7 @@ public class BoardController {
 	    	paraMap.put("boardKindNo", boardKindNo);
 	    	paraMap.put("boardNo", boardNo);
 	    	
-	    	String readCountPermission = (String)session.getAttribute("readCountPermission"); // 세션으로부터 f5에 대한 데이터가 있는지 가져온다.
+	    	String readCountPermission = (String)session.getAttribute("readCountPermission"); // 세션으로부터 readCountPermission에 대한 데이터가 있는지 가져온다.
 
 	    	BoardVO boardvo = null;
 	    	if (readCountPermission != null) { // 리스트 페이지를 통해 들어왔다면
@@ -382,6 +383,16 @@ public class BoardController {
 				mav.setViewName("msg");
 				return mav;
 			}
+	    	
+	    	// 우측 게시판 신규글, 인기글 사이드바
+	    	List<MinsungBoardVO> recentBoardList = service.recentBoardList();
+	        List<MinsungBoardVO> bestBoardList = service.bestBoardList();
+	        List<MinsungBoardVO> popularBoardList = service.popularBoardList();
+	        
+	        mav.addObject("recentBoardList", recentBoardList);
+	        mav.addObject("bestBoardList", bestBoardList);
+	        mav.addObject("popularBoardList", popularBoardList);
+	    	
 	    	mav.addObject("gobackURL", gobackURL);
 	    	mav.addObject("boardvo", boardvo);
 	    	mav.setViewName("/ohyoon/boardDetail.tiles1");
@@ -1029,7 +1040,27 @@ public class BoardController {
 	    
 	    
 	    
+	    //=== 채팅창으로 넘어가기 ===
+	    @RequestMapping(value="/chatList.sky", method= {RequestMethod.GET}) 
+	    public String requiredLoginOY_multichat(HttpServletRequest request, HttpServletResponse response) { 
+	    	
+	    	return "ohyoon/chatList.tiles1";
+	    } 
+
 	    
+	    //=== 채팅방 등록 페이지로 넘어가기 ===
+	    @RequestMapping(value="/chatRegister.sky", method= {RequestMethod.GET}) 
+	    public String requiredLoginOY_chatRegister(HttpServletRequest request, HttpServletResponse response) { 
+	    	
+	    	return "ohyoon/chatRegister.tiles1";
+	    } 
+	    
+	    //=== 채팅창으로 페이지로 넘어가기 ===
+	    @RequestMapping(value="/chatting.sky", method= {RequestMethod.GET}) 
+	    public String requiredLoginOY_chatting(HttpServletRequest request, HttpServletResponse response) { 
+	    	
+	    	return "ohyoon/chatting.tiles1";
+	    } 
 	    
 	    
 	    

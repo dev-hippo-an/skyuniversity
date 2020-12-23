@@ -272,7 +272,7 @@ tr.notification td {
 		           			<c:choose>
 						        <c:when test="${fn:length(notice.subject) > 20}">
 				                	<td onclick="goNotice('${notice.noticeNo}');">${fn:substring(notice.subject, 0, 20)}...&nbsp;
-				                	
+				                	[<span style="color:#0841ad; font-weight: bold; ">${notice.cmtCount}</span>]
 				                	<c:if test="${fn:contains(notice.content, '<img src=')}">
 			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
 			                	</c:if>
@@ -280,6 +280,7 @@ tr.notification td {
 						        </c:when>
 						        <c:otherwise>
 				                	<td onclick="goNotice('${notice.noticeNo}');">${notice.subject}&nbsp;
+				                	[<span style="color:#0841ad; font-weight: bold; ">${notice.cmtCount}</span>]
 				                	<c:if test="${fn:contains(notice.content, '<img src=')}">
 			                		<img src="<%=ctxPath%>/resources/images/sehyeong/disk.gif" >
 			                	</c:if>

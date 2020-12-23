@@ -1758,3 +1758,32 @@ nocache;
       ) V
       where rownum <= 11
      
+    select * from tbl_notice
+    select * from tbl_comment_etcmarket;
+    
+    select * from tab;
+    
+    select * from tbl_comment_good;
+    
+    select * from tbl_notice;
+    
+    select * from tbl_comment_board_notice;
+    
+    create table tbl_comment_board_notice (
+        commentNo      NUMBER         NOT NULL,         -- 댓글번호
+        fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+        fk_memberNo    NUMBER         NOT NULL,         -- 작성회원번호
+        cmtContent        VARCHAR2(200)  NOT NULL,      -- 댓글 내용
+        regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+        status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+        writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+        CONSTRAINT PK_tbl_comment_board_notice PRIMARY KEY(commentNo)
+    );
+    
+    create sequence tbl_comment_board_notice_seq
+    start with 1
+    increment by 1
+    nomaxvalue
+    nominvalue
+    nocycle
+    nocache;
