@@ -38,6 +38,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.context.request.RequestContextHolder;
+import org.springframework.web.context.request.ServletRequestAttributes;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.multipart.MultipartHttpServletRequest;
 import org.springframework.web.servlet.ModelAndView;
@@ -49,6 +51,7 @@ import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.ash.model.PhotoVO;
 import com.project.skyuniversity.ash.service.InterAnsehyeongService;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
+import com.project.skyuniversity.ohyoon.model.CommentVO;
 import com.project.skyuniversity.ash.common.AnFileManager;
 import com.project.skyuniversity.ash.common.MyUtil;
 import com.project.skyuniversity.ash.common.Sha256;
@@ -789,13 +792,13 @@ public class AnsehyeongController {
 				// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
 			}
 
-  List<MinsungBoardVO> recentBoardList = service.recentBoardList();
-  List<MinsungBoardVO> bestBoardList = service.bestBoardList();
-  List<MinsungBoardVO> popularBoardList = service.popularBoardList();
-  
-  mav.addObject("recentBoardList", recentBoardList);
-  mav.addObject("bestBoardList", bestBoardList);
-  mav.addObject("popularBoardList", popularBoardList);
+		  List<MinsungBoardVO> recentBoardList = service.recentBoardList();
+		  List<MinsungBoardVO> bestBoardList = service.bestBoardList();
+		  List<MinsungBoardVO> popularBoardList = service.popularBoardList();
+		  
+		  mav.addObject("recentBoardList", recentBoardList);
+		  mav.addObject("bestBoardList", bestBoardList);
+		  mav.addObject("popularBoardList", popularBoardList);
 			
 			mav.addObject("boardvo", boardvo);
 			mav.addObject("paraMap", paraMap);
@@ -1618,14 +1621,19 @@ public class AnsehyeongController {
 				// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
 			}
 
-			
-			
+		
+		 List<MinsungBoardVO> recentBoardList = service.recentBoardList();
+		  List<MinsungBoardVO> bestBoardList = service.bestBoardList();
+		  List<MinsungBoardVO> popularBoardList = service.popularBoardList();
+		  mav.addObject("recentBoardList", recentBoardList);
+		  mav.addObject("bestBoardList", bestBoardList);
+		  mav.addObject("popularBoardList", popularBoardList);
 			
 			mav.addObject("noticevo", noticevo);
 			mav.addObject("paraMap", paraMap);
 			mav.addObject("tableInfo", tableInfo);
 
-			mav.setViewName("sehyeong/board/marketBoardDetail.tiles1");
+			mav.setViewName("sehyeong/board/noticeDetail.tiles1");
 
 		}
 
@@ -1884,7 +1892,203 @@ public class AnsehyeongController {
 	}
 	
 	
+	
+	// 댓글 리스트 가져오기(ajax 사용)
+    @ResponseBody
+    @RequestMapping(value = "/noticeCommentList.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+    public String noticeCommentList(HttpServletRequest request) {
+    	
+    	String fk_boardKindNo = request.getParameter("fk_boardKindNo");
+    	String noticeNo = request.getParameter("noticeNo");
+    	String startNo = request.getParameter("startNo");
+    	String cmtLength = request.getParameter("cmtLength");
+    	
+    	Map<String, String> paraMap = new HashMap<String, String>();
+    	paraMap.put("fk_boardKindNo", fk_boardKindNo);
+    	paraMap.put("noticeNo", noticeNo);
+    	paraMap.put("startNo", startNo);
+    	
+    	String endNo = String.valueOf(Integer.parseInt(startNo) + Integer.parseInt(cmtLength) - 1);
+    	paraMap.put("endNo", endNo);
+    	
+    	// 요청한 순서의 댓글을 8개씩 가져오기
+    	List<CommentVO> commentList = service.getNoticeCommentList(paraMap);
+    	
+    	JSONArray jsonArr = new JSONArray();
+
+    	for (CommentVO commentvo : commentList) {
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("commentNo", commentvo.getCommentNo());
+			jsonObj.put("fk_boardNo", commentvo.getFk_boardNo());
+			jsonObj.put("fk_memberNo", commentvo.getFk_memberNo());
+			jsonObj.put("cmtContent", commentvo.getCmtContent());
+			jsonObj.put("regDate", commentvo.getRegDate());
+			jsonObj.put("fk_nickname", commentvo.getFk_nickname());
+			jsonObj.put("levelImg", commentvo.getLevelImg());
+			jsonObj.put("totalCount", commentvo.getTotalCount());
+			
+			
+			jsonArr.put(jsonObj);
+		}
+    	return jsonArr.toString();
+    }
+	
+    // 댓글 작성하기(ajax 사용)
+    @ResponseBody
+    @RequestMapping(value = "/noticeCommentRegister.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+    public String noticeCommentRegister(Map<String, String> paraMap, HttpServletRequest request, HttpServletResponse response){
+    	
+    	String fk_boardKindNo = request.getParameter("fk_boardKindNo");
+    	String fk_boardNo = request.getParameter("fk_boardNo");
+    	String cmtContent = request.getParameter("cmtContent");
+    	
+    	cmtContent = cmtContent.replaceAll("<", "&lt;");
+    	cmtContent = cmtContent.replaceAll(">", "&gt;");
+    	cmtContent = cmtContent.replaceAll("\r\n", "<br>");
+    	cmtContent = cmtContent.replaceAll("&nbsp;", " ");
+    	cmtContent = cmtContent.replaceAll("&ensp;", "");
+    	cmtContent = cmtContent.replaceAll("&emsp;", "");
+    	cmtContent = cmtContent.replaceAll("null", " ");
+    	
+    	// 게시판 번호, 게시글 번호, 댓글 내용, 작성자 회원번호, 작성자 ip를 commentvo에 저장한다.
+    	CommentVO commentvo = new CommentVO();
+    	commentvo.setFk_boardKindNo(fk_boardKindNo);
+    	commentvo.setFk_boardNo(fk_boardNo);
+    	commentvo.setCmtContent(cmtContent);
+    	
+    	HttpSession session = request.getSession();
+    	CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
+    	
+    	if (loginuser != null) {
+			commentvo.setFk_memberNo(String.valueOf(loginuser.getFk_memberNo()));
+		}
+    	
+    	try {
+			commentvo.setWriterIp(getUserIp());
+		} catch (Exception e) {
+			commentvo.setWriterIp("");
+		}
+    	
+		
+    	// 작성한 댓글 저장하기
+		int n = 0;
+		
+    	try {
+    		n = service.addNoticeComment(commentvo);
+
+    		// 댓글쓰기 완료 후, 포인트 올려주기 
+    		paraMap.put("fk_memberNo", commentvo.getFk_memberNo());
+    		paraMap.put("point", "1");	   
+    		
+    		n = service.addNoticePoint(paraMap);
+    		
+		} catch (Exception e) {
+			n = 0;
+		}
+
+    	
+    	JSONObject jsonObj = new JSONObject();
+    	
+    	jsonObj.put("n", n);
+    	
+    	return jsonObj.toString();
+    }
     
+    // 댓글을 삭제해주기(ajax로 처리)
+    @ResponseBody
+    @RequestMapping(value="/deleteNoticeComment.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+    public String deleteNoticeComment(HttpServletRequest request) {
+    	String fk_boardKindNo = request.getParameter("fk_boardKindNo");
+    	String fk_boardNo = request.getParameter("fk_boardNo");
+    	String commentNo = request.getParameter("commentNo");
+    	
+    	Map<String, String> paraMap = new HashMap<>();
+    	paraMap.put("fk_boardKindNo", fk_boardKindNo);
+    	paraMap.put("fk_boardNo", fk_boardNo);
+    	paraMap.put("commentNo", commentNo);
+
+    	int n;
+    	try {
+    		n = service.deleteNoticeComment(paraMap);
+    	} catch (Exception e) {
+    		n = 0;
+    	}
+    	
+    	JSONObject jsonObj = new JSONObject();
+    	jsonObj.put("n", n);
+    	return jsonObj.toString();
+    }
+    
+    // 댓글을 수정해주기 (ajax로 처리)
+    @ResponseBody
+    @RequestMapping(value="/updateNoticeComment.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+    public String updateNoticeComment(HttpServletRequest request, CommentVO commentvo) {
+    	String fk_boardKindNo = commentvo.getFk_boardKindNo();
+    	String fk_boardNo = commentvo.getFk_boardNo();
+    	String commentNo = commentvo.getCommentNo();
+    	String cmtContent = commentvo.getCmtContent();
+    	
+    	cmtContent = cmtContent.replaceAll("<", "&lt;");
+    	cmtContent = cmtContent.replaceAll(">", "&gt;");
+    	cmtContent = cmtContent.replaceAll("\r\n", "<br>");
+    	cmtContent = cmtContent.replaceAll("&nbsp;", " ");
+    	cmtContent = cmtContent.replaceAll("&ensp;", "");
+    	cmtContent = cmtContent.replaceAll("&emsp;", "");
+    	cmtContent = cmtContent.replaceAll("null", "");
+    	
+    	Map<String, String> paraMap = new HashMap<>();
+    	paraMap.put("fk_boardKindNo", fk_boardKindNo);
+    	paraMap.put("fk_boardNo", fk_boardNo);
+    	paraMap.put("commentNo", commentNo);
+    	paraMap.put("cmtContent", cmtContent);
+
+		int n; 
+		try { 
+			n = service.updateNoticeComment(paraMap); 
+		} catch (Exception e) { 
+			n = 0; 
+		}
+		
+		JSONObject jsonObj = new JSONObject(); 
+		jsonObj.put("n", n); 
+		return jsonObj.toString();
+    }
 	
-	
+    // 클라이언트 ip주소를 가져오는 메소드
+	public String getUserIp() throws Exception {
+		
+        String ip = null;
+        
+        HttpServletRequest request = 
+        ((ServletRequestAttributes)RequestContextHolder.currentRequestAttributes()).getRequest();
+
+        ip = request.getHeader("X-Forwarded-For");
+        
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+            ip = request.getHeader("Proxy-Client-IP"); 
+        } 
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+            ip = request.getHeader("WL-Proxy-Client-IP"); 
+        } 
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+            ip = request.getHeader("HTTP_CLIENT_IP"); 
+        } 
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+            ip = request.getHeader("HTTP_X_FORWARDED_FOR"); 
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+            ip = request.getHeader("X-Real-IP"); 
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+            ip = request.getHeader("X-RealIP"); 
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+            ip = request.getHeader("REMOTE_ADDR");
+        }
+        if (ip == null || ip.length() == 0 || "unknown".equalsIgnoreCase(ip)) { 
+            ip = request.getRemoteAddr(); 
+        }
+		
+		return ip;
+	}
 }

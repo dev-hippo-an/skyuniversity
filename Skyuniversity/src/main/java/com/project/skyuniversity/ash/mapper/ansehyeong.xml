@@ -854,6 +854,7 @@
 		, k.boardTypeNo, k.boardName
 		
 		, nvl(g.upCount, 0) as upCount
+		, (select count(*) from tbl_comment_board_notice where status = 1 and fk_boardNo = n.noticeNo) as cmtCount
 		
 		from tbl_notice n join tbl_category c
 		on n.fk_categoryNo = c.categoryNo
@@ -1522,5 +1523,40 @@
 	
 	</select>
 	
+	
+	<select id="getNoticeCommentList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.CommentVO">
+		select rno, commentNo, fk_boardNo, fk_memberNo, fk_nickname
+		     , levelImg, cmtContent, regDate
+		     , (select count(*) from tbl_comment_board_notice where status = 1 and fk_boardNo = #{noticeNo}) AS totalCount
+		from 
+		(
+		    select row_number() over(order by commentNo desc) AS rno, V.commentNo, V.fk_boardNo
+		         , V.fk_memberNo, M.nickname AS fk_nickname, L.levelImg, cmtContent
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+			from tbl_commu_member M join tbl_comment_board_notice V  
+			on V.fk_memberNo = M.fk_memberNo
+			join tbl_commu_member_level L
+		    on M.fk_levelNo = L.levelNo
+			where V.status = 1 and fk_boardNo = #{noticeNo}
+		)T
+		where rno between #{startNo} and #{endNo}
+		order by rno asc
+	</select>
+	
+	
+	<insert id="addNoticeComment" parameterType="com.project.skyuniversity.ohyoon.model.CommentVO">
+		insert into tbl_comment_board_notice(commentNo, fk_boardNo, fk_memberNo, cmtContent, writerIp)
+		values(tbl_comment_board_notice_seq.nextval, ${fk_boardNo}, ${fk_memberNo}, #{cmtContent}, #{writerIp})
+	</insert>
+	
+	<update id="deleteNoticeComment" parameterType="HashMap">
+		update tbl_comment_board_notice set status = 0
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{commentNo}
+	</update>
+	
+	<update id="updateNoticeComment" parameterType="HashMap">
+		update tbl_comment_board_notice set cmtContent = #{cmtContent}
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{commentNo}
+	</update>
 	
 </mapper>
