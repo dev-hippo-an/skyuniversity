@@ -175,7 +175,7 @@
 	            <li class="graduate menu2" onclick="javascript:location.href='<%=ctxPath%>/graduateTest.sky'">졸업적부심사</li>
 	            <li class="graduate menu2" onclick="javascript:location.href='<%=ctxPath%>/earlyGraduate.sky'">조기졸업신청 및 결과조회</li>
 		</ul>
-	</div>
+	</div> 
 
 </div>
 
