@@ -236,6 +236,12 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public int insertLeave(Map<String, String> paraMap) {
+		int n = dao.insertLeave(paraMap);
+		return n;
+	}
+
 
 
 }

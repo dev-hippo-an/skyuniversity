@@ -83,6 +83,8 @@ public interface InterEunjiService {
 
 	int insertArmyLeave(SchoolLeaveVO slvo);
 
+	int insertLeave(Map<String, String> paraMap);
+
 	
 
 	

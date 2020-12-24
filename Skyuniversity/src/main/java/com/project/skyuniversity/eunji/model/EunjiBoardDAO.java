@@ -231,5 +231,11 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int insertLeave(Map<String, String> paraMap) {
+		int n = sqlSession.insert("eunji.insertLeave", paraMap);
+		return n;
+	}
+
 
 }

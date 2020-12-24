@@ -744,8 +744,10 @@ public class EunjiBoardController {
 		int semester = Integer.parseInt(paraMap.get("currentSemester"));
 		semester = grade * semester;
 		paraMap.put("currentSemester", Integer.toString(semester));
+		
 		mav.addObject("paraMap", paraMap);
 		mav.setViewName("eunji/college/armyLeaveSchool.tiles2");
+		
 		return mav;
 	}
 	
@@ -831,8 +833,40 @@ public class EunjiBoardController {
 		int semester = Integer.parseInt(paraMap.get("currentSemester"));
 		semester = grade * semester;
 		paraMap.put("currentSemester", Integer.toString(semester));
+		
 		mav.addObject("paraMap", paraMap);
 		mav.setViewName("eunji/college/leaveSchool.tiles2");
+		
 		return mav;
 	}
+	
+	
+	@RequestMapping(value = "/leaveSchoolEnd.sky", method = { RequestMethod.POST })
+	public ModelAndView leaveSchoolEnd(ModelAndView mav, HttpServletRequest request) {
+		String startYear = request.getParameter("startyear");
+		String startsem = request.getParameter("startsem");
+		String endYear = request.getParameter("endyear");
+		String endsem = request.getParameter("endsem");
+		String reason = request.getParameter("reason");
+		
+		String startsemester = startYear + "-" + startsem;
+		String endsemester = endYear + "-" + endsem;
+		String comesem = "";
+		if(endsem.equals("1")) {
+			comesem = endYear + " / 2학기";
+		}
+		else {
+			comesem = (Integer.parseInt(endYear)+1) + " / 1학기";
+		}
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("startsemester", startsemester);
+		paraMap.put("endsemester", endsemester);
+		paraMap.put("reason", reason);
+		paraMap.put("comesemester", comesem);
+		
+		int n = service.insertLeave(paraMap);
+		return mav;
+	}
+	
+	
 }

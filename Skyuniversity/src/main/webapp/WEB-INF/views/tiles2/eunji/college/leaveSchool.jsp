@@ -42,34 +42,86 @@
 	});
 	
 	$(document).ready(function() {
+		
+		// 학년도 날짜 구하기
+		var now = new Date();
+		var year = now.getFullYear();
+		var month = now.getMonth()+1;
+
+		var sthtml = "";
+		var html = "<option>년도</option>";
+		
+		if(month < 3 || month >= 9){
+			sthtml = "<option>"+(year+1)+"</option>";
+			stsem = "<option>1</option>";
+			$("#startyear").html(sthtml);
+			$("#startsem").html(stsem);
+		}
+		if(month < 9 && month >= 3){
+			sthtml = "<option>"+(year)+"</option>";
+			stsem = "<option>2</option>";
+			$("#startyear").html(sthtml);
+			$("#startsem").html(stsem);
+		}
+		
+		for(var i = parseInt(year); i< parseInt(year)+11; i++){
+			html += "<option>"+i+"</option>";
+		}
+		
+		$("#endyear").html(html);
+		
 		$("#regbtn").click(function() {
 		
 			var flag = true;
-			
-			if($('input:radio[name="armyType"]:checked').length < 1){
-				alert("병종을 선택해주세요.");
+	
+			// 일자 유효성 검사
+			if($("#startyear").val()=="년도" || $("#startsem").val()=="학기"){
+				alert("휴학시작학기를 입력해주세요.");
 				flag = false;
 				return;
 			}
 			
-			// 일자 유효성 검사
-			if($("#datepicker1").val().trim()=="" || $("#datepicker2").val().trim()==""){
-				alert("일자를 입력해주세요.");
-				bool = false;
+			if($("#endyear").val()=="년도" || $("#endsem").val()=="학기"){
+				alert("휴학종료학기를 입력해주세요.");
+				flag = false;
 				return;
 			}
-			if($("#armyfile").val() == ""){
-				alert("군휴학은 파일첨부(입영통지서)가 필수입니다.");
-				bool = false;
+			
+			if($("#reason").val().trim() == ""){
+				alert("휴학사유는 필수 입력값입니다.");
+				flag = false;
 				return;
+			}
+			
+			if($("#reason").val().trim().length<100){
+				alert("휴학 사유는 100자 이상 작성해주셔야 합니다.")
+			}
+			var start = $("#startyear").val() + $("#startsem").val();
+			var end = $("#endyear").val() + $("#endsem").val();
+			
+			var diff = parseInt(end) - parseInt(start);
+			
+			if($("#startsem").val()=="1"){
+				if(diff > 11){
+					alert("연속휴학 신청은 4학기(2년)까지만 허용됩니다.");
+					flag = false;
+					return;
+				}
+			}
+			else{
+				if(diff > 19){
+					alert("연속휴학 신청은 4학기(2년)까지만 허용됩니다.");
+					flag = false;
+					return;
+				}
 			}
 			
 			if(flag){
 				// 폼(form) 을 전송(submit)
 				confirm("휴학신청을 하시겠습니까?");
-				var frm = document.addFrm;
+				var frm = document.regFrm;
 				frm.method = "POST";
-				frm.action = "<%= ctxPath%>/armyLeaveSchoolEnd.sky";
+				frm.action = "<%= ctxPath%>/leaveSchoolEnd.sky";
 				frm.submit();
 			}
 		});
@@ -135,26 +187,17 @@
 </div>
 <br>
 <div style="border: solid 2px #cccccc; padding: 15px; border-radius: 6px;">
+	<form name="regFrm">
 	<ul>
 		<li>
 			<label>휴학학기:</label>
-			<select name="grades" id="grades">
-							<option>학년도</option>
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
+			<select name="startyear" id="startyear" style="border: solid 1px #cccccc;"> 
 			</select>
 			/
-			<select name="grades" id="grades">
-							<option>학기</option>
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
+			<select name="startsem" id="startsem" style="border: solid 1px #cccccc;">
 			</select>
 			&nbsp;~&nbsp;
-			<select name="grades" id="grades">
+			<select name="endyear" id="endyear" style="border: solid 1px #cccccc;">
 							<option>학년도</option>
 							<option>1</option>
 							<option>2</option>
@@ -162,20 +205,20 @@
 							<option>4</option>
 			</select>
 			/
-			<select name="grades" id="grades">
+			<select name="endsem" id="endsem" style="border: solid 1px #cccccc;">
 							<option>학기</option>
 							<option>1</option>
 							<option>2</option>
-							<option>3</option>
-							<option>4</option>
 			</select>
+			
 		</li>
 		
 		<li>
 			<label>휴학사유:</label><br>
-			<textarea rows="12" cols="150" placeholder="최소 100자 이상 작성해주세요." name="etc"></textarea>
+			<textarea rows="12" cols="150" placeholder="최소 100자 이상 작성해주세요." name="reason" style="border: solid 1px #cccccc;" id="reason"></textarea>
 		</li>
 	</ul>
+	</form>
 </div>
 <br>
 <div id="divbtn">
@@ -184,8 +227,9 @@
 <br>
 <div style="border: solid 2px #cccccc; padding: 15px; border-radius: 6px;">
 <ul id="info" >
+	<li>휴학시작학기는 해당학기를 기준으로 그 다음학기가 휴학 시작 학기로 정해집니다. 유의해주세요.</li>
     <li>휴학학기를 기준으로 복학예정학기가 자동으로 입력됩니다. (복학 예정학기에만 복학이 가능한것은 아닙니다.)</li>
-	<li>휴학은 총 8학기까지 가능합니다.</li>
+	<li>휴학은 총 8학기까지 가능하며 연속 휴학 가능학기는 최대 4개 학기(2년)로 제한됩니다. </li>
 	<li>최소 1 ~ 최대 3일 후에 휴학결과조회 페이지에서 승인여부를 확인해주세요.</li>
 	<li>휴학신청 수정이 필요할경우, (학적 >> 휴학결과조회 >> 수정)에서 가능합니다.</li>
 </ul>
