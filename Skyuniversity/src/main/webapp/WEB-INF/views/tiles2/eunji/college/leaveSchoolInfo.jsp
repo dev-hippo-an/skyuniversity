@@ -37,53 +37,7 @@ table#scroltbl {
 
 <script type="text/javascript">
 	$(document).ready(function() {
-		// 현재 년도 구하기
-		var date = new Date();
-		var year = date.getFullYear();
-		
-		var html2 = "<option>전체</option>";
-		for(var i=parseInt(year)+1;i>=1990; i--){
-			html2 += "<option>"+i+"</option>";
-		}
-		$("#year").html(html2);
-		
-		$("#searchbtn2").click(function() {
-			
-			var year = $("#year option:selected").val();
-			var semester = $("#semester option:selected").val();
-			
-			$.ajax({
-				url:"<%= request.getContextPath() %>/officalLeaveInfo_End.sky",
-				data:{"year":year,
-					   "semester":semester},
-				type:"GET",
-				dataType:"json",
-				success: function(json) {
-					var html = "";
-					$.each(json, function(index, item){
-						html += "<tr class='sublicl'>";
-						html += "<td style='width: 200px;'>"+item.deptname+"</td>"+
-						        "<td style='width: 100px;'>"+item.grade+"</td>"+
-						        "<td style='width: 100px;'>"+item.memberno+"</td>"+
-						        "<td style='width: 150px;'>"+item.name+"</td>"+
-						        "<td style='width: 200px;'>"+item.startDate+"</td>"+
-						        "<td style='width: 200px;'>"+item.endDate+"</td>"+
-						        "<td style='width: 230px;'>"+item.reason+"</td>";
-						        if(item.filename == null){
-						        	html += "<td style='width:100px;'> </td>";
-						        }
-						        else{
-						        	html +="<td style='width:100px;'><a href='<%= request.getContextPath()%>/downloadLeaveInfo.sky?seq="+item.leaveNo+"'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>"
-						        }
-						        html += "<td>"+item.approve+"</td>";
-					    html += "</tr>";
-					});
-					$("#bodys").html(html);
-				},error: function(request, status, error){
-		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		        }
-			}); 
-		});
+	
 		
 	});
 </script>

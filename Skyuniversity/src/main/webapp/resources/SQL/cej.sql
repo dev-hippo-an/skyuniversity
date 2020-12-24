@@ -11,6 +11,8 @@ regSeq      number       not null
 )
 insert into tbl_school_reg(regSeq, status)
 values(tbl_school_reg_seq.nextval, '재학');
+insert into tbl_school_reg(regSeq, status)
+values(tbl_school_reg_seq.nextval, '휴학');
 commit
 -- 학적 시퀀스 생성
 create sequence tbl_school_reg_seq
@@ -20,6 +22,9 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
+
+select *
+from tbl_school_reg
 ------------------------------------------------------
 
 ------------------------------------------------------
@@ -769,7 +774,10 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
             ,constraint FK_tbl_school_leave_regSeq  foreign key(fk_regSeq) 
                                    references tbl_school_reg(regSeq)
         );
-ALTER TABLE tbl_school_leave DROP COLUMN armyNo;
+ALTER TABLE tbl_school_leave DROP COLUMN comeSemester;
+ALTER TABLE tbl_school_leave ADD type varchar2(30) 
+ALTER TABLE tbl_school_leave ADD comeSemester varchar2(30) 
+
 commit
         create sequence tbl_school_leave_seq
         start with 1
@@ -779,4 +787,8 @@ commit
         nocycle
         nocache;
         
-        insert into tbl_school_leave()
+        select *
+        from tbl_school_leave
+        
+        insert into tbl_school_leave(schoolLvNo, armytype, armystartdate, armyenddate, filename, orgfilename, filesize, comeSemester, fk_regSeq, type)
+        values(tbl_school_leave_seq.nextval, ?, ?, ?, ?, ?, ?, ?,'2','군휴학')

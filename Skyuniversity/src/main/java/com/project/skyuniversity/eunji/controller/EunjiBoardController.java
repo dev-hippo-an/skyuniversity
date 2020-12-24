@@ -781,6 +781,7 @@ public class EunjiBoardController {
 				slvo.setComeSemester((year+1)+" / 1학기");
 			}
 			
+			String startdate = request.getParameter("armyStartDate");
 			
 			MultipartFile attach = slvo.getAttach();
 			if (!attach.isEmpty()) {
@@ -868,5 +869,12 @@ public class EunjiBoardController {
 		return mav;
 	}
 	
+	// 휴학신청 결과 조회
+	@RequestMapping(value = "/leaveSchoolInfo.sky", method = { RequestMethod.GET })
+	public ModelAndView leaveSchoolInfo(ModelAndView mav, HttpServletRequest request) {
+		
+		mav.setViewName("eunji/college/leaveSchoolInfo.tiles2");
+		return mav;
+	}
 	
 }
