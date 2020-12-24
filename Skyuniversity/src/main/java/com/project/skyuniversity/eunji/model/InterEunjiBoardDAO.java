@@ -55,4 +55,28 @@ public interface InterEunjiBoardDAO {
 
 	OfficialLeaveVO getLeaveVO(String seq);
 
+	int checkDate(Map<String, String> timemap);
+
+	int insertGirlLeave(GirlOfficialLeaveVO golvo);
+
+	int insertGirlLeaveTime(GirlOfficialLeaveVO golvo);
+
+	List<GirlOfficialLeaveVO> selectGirlList(int memberNo);
+
+	int checkGirlDate(Map<String, String> checkmap);
+
+	int delGirlOfficialLeave(String seq);
+
+	List<Map<String, String>> selectCheckList(Map<String, String> hashmap);
+
+	int insertClassCheck(ClassCheckVO ccvo);
+
+	int updateCourseCk(int fk_courseno);
+
+	Map<String, String> allMemberInfo(int memberNo);
+
+	int insertArmyLeave(SchoolLeaveVO slvo);
+
+	int insertLeave(Map<String, String> paraMap);
+
 }

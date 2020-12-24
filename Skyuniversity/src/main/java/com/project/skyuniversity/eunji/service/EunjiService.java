@@ -6,9 +6,12 @@ import java.util.Map;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import com.project.skyuniversity.eunji.model.ClassCheckVO;
+import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
+import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
 
 @Service
 public class EunjiService implements InterEunjiService {
@@ -165,6 +168,78 @@ public class EunjiService implements InterEunjiService {
 	public OfficialLeaveVO getLeaveVO(String seq) {
 		OfficialLeaveVO olvo = dao.getLeaveVO(seq);
 		return olvo;
+	}
+
+	@Override
+	public int checkDate(Map<String, String> timemap) {
+		int n = dao.checkDate(timemap);
+		return n;
+	}
+
+	@Override
+	public int insertGirlLeave(GirlOfficialLeaveVO golvo) {
+		int n = dao.insertGirlLeave(golvo);
+		return n;
+	}
+
+	@Override
+	public int insertGirlLeaveTime(GirlOfficialLeaveVO golvo) {
+		int n = dao.insertGirlLeaveTime(golvo);
+		return n;
+	}
+
+	@Override
+	public List<GirlOfficialLeaveVO> selectGirlList(int memberNo) {
+		List<GirlOfficialLeaveVO> girllist = dao.selectGirlList(memberNo);
+		return girllist;
+	}
+
+	@Override
+	public int checkGirlDate(Map<String, String> checkmap) {
+		int cnt = dao.checkGirlDate(checkmap);
+		return cnt;
+	}
+
+	@Override
+	public int delGirlOfficialLeave(String seq) {
+		int n = dao.delGirlOfficialLeave(seq);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> selectCheckList(Map<String, String> hashmap) {
+		List<Map<String, String>> selectlist = dao.selectCheckList(hashmap);
+		return selectlist;
+	}
+
+	@Override
+	public int insertClassCheck(ClassCheckVO ccvo) {
+		int n = dao.insertClassCheck(ccvo);
+		return n;
+	}
+
+	@Override
+	public int updateCourseCk(int fk_courseno) {
+		int n = dao.updateCourseCk(fk_courseno);
+		return n;
+	}
+
+	@Override
+	public Map<String, String> allMembeInfo(int memberNo) {
+		Map<String, String> paraMap = dao.allMemberInfo(memberNo);
+		return paraMap;
+	}
+
+	@Override
+	public int insertArmyLeave(SchoolLeaveVO slvo) {
+		int n = dao.insertArmyLeave(slvo);
+		return n;
+	}
+
+	@Override
+	public int insertLeave(Map<String, String> paraMap) {
+		int n = dao.insertLeave(paraMap);
+		return n;
 	}
 
 

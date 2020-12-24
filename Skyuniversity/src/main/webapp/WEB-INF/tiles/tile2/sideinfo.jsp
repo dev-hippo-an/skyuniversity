@@ -171,8 +171,8 @@
 	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/registerClass.sky'">수강신청</li>
 	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/registerSubjects.sky'">수강과목</li>
 	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/classCheck.sky'">강의평가</li>
-	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/officalLeave.sky'">공결신청</li>
 	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/girlOfficalLeave.sky'">여학생공결신청</li>
+	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/officalLeave.sky'">공결신청</li>
 	            <li class="clases menu2" onclick="javascript:location.href='<%=ctxPath%>/officalLeaveInfo.sky'">공결신청조회</li>
 			<li id="resister" class="menu1">학적관리</li>
 	            <li class="resister menu2" onclick="javascript:location.href='<%=ctxPath%>/armyLeaveSchool.sky'">군휴학</li>
@@ -189,7 +189,7 @@
 	            <li class="graduate menu2" onclick="javascript:location.href='<%=ctxPath%>/graduateTest.sky'">졸업적부심사</li>
 	            <li class="graduate menu2" onclick="javascript:location.href='<%=ctxPath%>/earlyGraduate.sky'">조기졸업신청 및 결과조회</li>
 		</ul>
-	</div>
+	</div> 
 
 </div>
 

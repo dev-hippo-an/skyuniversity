@@ -26,7 +26,7 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return arraylist;
 	}
 	
-
+  
 	@Override
 	public List<String> selectAllSubject() {
 		List<String> arraylist = sqlSession.selectList("eunji.selectAllSubject");
@@ -163,6 +163,78 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 	public OfficialLeaveVO getLeaveVO(String seq) {
 		OfficialLeaveVO olvo = sqlSession.selectOne("eunji.getLeaveVO", seq);
 		return olvo;
+	}
+
+	@Override
+	public int checkDate(Map<String, String> timemap) {
+		int n = sqlSession.selectOne("eunji.checkDate", timemap);
+		return n;
+	}
+
+	@Override
+	public int insertGirlLeave(GirlOfficialLeaveVO golvo) {
+		int n = sqlSession.insert("eunji.insertGirlLeave", golvo);
+		return n;
+	}
+
+	@Override
+	public int insertGirlLeaveTime(GirlOfficialLeaveVO golvo) {
+		int n = sqlSession.insert("eunji.insertGirlLeaveTime", golvo);
+		return n;
+	}
+
+	@Override
+	public List<GirlOfficialLeaveVO> selectGirlList(int memberNo) {
+		List<GirlOfficialLeaveVO> girllist = sqlSession.selectList("eunji.selectGirlList", memberNo);
+		return girllist;
+	}
+
+	@Override
+	public int checkGirlDate(Map<String, String> checkmap) {
+		int cnt = sqlSession.selectOne("eunji.checkGirlDate", checkmap);
+		return cnt;
+	}
+
+	@Override
+	public int delGirlOfficialLeave(String seq) {
+		int n = sqlSession.delete("eunji.delGirlOfficialLeave", seq);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> selectCheckList(Map<String, String> hashmap) {
+		List<Map<String, String>> checklist = sqlSession.selectList("eunji.selectCheckList", hashmap);
+		return checklist;
+	}
+
+	@Override
+	public int insertClassCheck(ClassCheckVO ccvo) {
+		int n = sqlSession.insert("eunji.insertClassCheck", ccvo);
+		return n;
+	}
+
+	@Override
+	public int updateCourseCk(int fk_courseno) {
+		int n = sqlSession.update("eunji.updateCourseCk",fk_courseno);
+		return n;
+	}
+
+	@Override
+	public Map<String, String> allMemberInfo(int memberNo) {
+		Map<String, String> paraMap = sqlSession.selectOne("eunji.allMemberInfo", memberNo);
+		return paraMap;
+	}
+
+	@Override
+	public int insertArmyLeave(SchoolLeaveVO slvo) {
+		int n = sqlSession.insert("eunji.insertArmyLeave",slvo);
+		return n;
+	}
+
+	@Override
+	public int insertLeave(Map<String, String> paraMap) {
+		int n = sqlSession.insert("eunji.insertLeave", paraMap);
+		return n;
 	}
 
 

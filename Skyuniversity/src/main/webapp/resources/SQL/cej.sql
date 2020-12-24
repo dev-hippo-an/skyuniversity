@@ -65,7 +65,7 @@ values(tbl_dept_seq.nextval, '사회복지학과');
 insert into tbl_dept(deptSeq, deptName)
 values(tbl_dept_seq.nextval, '교양');
 
-select deptname
+select *
 from tbl_dept;
 
 commit
@@ -401,11 +401,16 @@ insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peo
 values('NE115', '확률과통계', '3', '1', '화,목', '01,02,03,04','40','18203','14', '2')
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
 values('EB103', '경영수학', '3', '1', '화,목', '01,02,03,04','35','18202','11', '1')
+
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AA101', '결혼과가족', '3', '1', '금', '01,02','50','18204','41', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AA102', '독서와토론', '2', '1', '금', '07,08,09,10','25','18201','40', '23')
 ALTER TABLE TBL_SUBJECT DROP COLUMN SUBJECTNAME;
 ALTER TABLE TBL_SUBJECT ADD SUBJECTNAME VARCHAR2(100);
 ALTER TABLE TBL_SUBJECT ADD curPeopleCnt number(5) default 0;
 COMMIT
-
+update tbl_subject set period = '07080910' where subjectname='확률과통계'
 select subjectname
 from tbl_subject S
 inner join tbl_dept D
@@ -421,6 +426,13 @@ update tbl_subject set curpeoplecnt = 2 where subjectname = '컴퓨터공학개�
 
 select *
 from tbl_subject
+
+select *
+from tbl_course
+delete from tbl_course where courseno ='73'
+commit
+
+update tbl_subject set period='11121314' where subjectname = '프로그래밍입문'
 ------------------------------------------------------
 
 ------------------------------------------------------
@@ -559,7 +571,7 @@ select H.leaveno, name, memberno, grade, deptname, filename, orgfilename, filesi
 
 select *
 from tbl_official_leave
-
+desc  tbl_official_leave
 update tbl_official_leave set approve='승인완료' where leaveno = '5'
 commit
 
@@ -590,3 +602,181 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         select startDate, endDate, reason, approve, noReason, approveDate, fileName, orgFileName, fileSize, regdate, fk_memberNo
         from tbl_official_leave
         where leaveNo='5'
+        
+        select *
+        from tbl_official_leave
+        desc tbl_girl_leave
+        delete from tbl_girl_leave
+        commit
+        
+        select girlleaveno, regdate, startDate, startTime, endTime, approve, noreason
+        from tbl_girl_leave
+        where fk_memberno = '102'
+        
+            select count(*)
+            from tbl_girl_leave
+            where fk_memberno = '102' and to_char(startDate,'yyyy')='2020' and to_char(startDate,'mm') = '12'
+        
+        delete from tbl_girl_leave where firlleaveno =
+        
+        update tbl_girl_leave set approve = '승인완료'
+        commit
+        
+        
+		select name, fk_memberno, reason
+		from
+		(
+		    select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo, to_char(startDate, 'yyyy-mm-dd') as startDate, to_char(regdate, 'yyyy') as regyear,to_char(regdate, 'mm') as regmonth, to_char(endDate, 'yyyy-mm-dd') as endDate, reason, approve, approveDate, noReason, to_char(regdate, 'yyyy-mm-dd') as regdate
+		    from 
+		    (
+		    select name, memberno, grade, deptname
+		    from tbl_member M
+		    inner join tbl_dept D
+		    on M.fk_deptseq = D.deptseq
+		    )V
+		    inner join tbl_official_leave O
+		    on V.memberno = O.fk_memberno
+		    where fk_memberno = '102'
+		    order by regdate desc
+		) H
+        inner join tbl_girl_leave G 
+        on H.memberno = G.fk_memberno
+		where approve in ('승인완료','승인취소') and regyear = '2020' and regmonth in ('12')
+        
+        select *
+        from tbl_course
+        
+        update tbl_member set currentsemester = '2' where memberno='102'
+		commit
+        
+        select courseyear, semester, fk_subjectno, subjectname, name, courseno, classchk
+        from
+        (
+        select courseno, courseyear, semester, fk_subjectno, subjectname, fk_professorno, classchk
+        from tbl_course C
+        inner join tbl_subject S
+        on C.fk_subjectno = S.subjectno 
+        where C.fk_memberno = '102' and courseyear='2020' and semester = '2'
+        ) V
+        inner join tbl_professor p
+        on V.fk_professorno = P.professorno
+        
+        select *
+        from tbl_member
+        commit
+        update tbl_member set jubun='9804142445351' where name='권오윤'
+        
+        select name, mobile, email, birth, jubun, grade, currentsemester, absencecnt
+        from tbl_member
+        
+        select courseyear, semester, subjectname
+        from tbl_course C
+        inner join tbl_subject S
+        on C.fk_subjectno = S.subjectno
+        where courseno='20'
+        select * from tbl_course
+        
+        desc tbl_course
+        
+        create table tbl_class_check
+        ( fk_courseno   number          not null
+        , firstqs       varchar2(10)    not null
+        , secondqs      varchar2(10)    not null
+        , thirdqs       varchar2(10)    not null
+        , fourqs        varchar2(10)    not null
+        , fiveqs        varchar2(10)    not null
+        , sixqs         varchar2(10)    not null
+        , sevenqs       varchar2(10)    not null
+        , eightqs       varchar2(10)    not null
+        , etc           varchar2(300)
+        , regdate       date    default sysdate
+        , checkKind     varchar2(20)    not null
+        ,constraint PK_tbl_class_check_fk_courseno  primary key(fk_courseno)
+        ,constraint FK_tbl_class_check_fk_courseno foreign key(fk_courseno) 
+                                   references tbl_course(courseno)
+        );
+        
+        insert into tbl_class_check(fk_courseno, firstqs, secondqs, thirdqs, fourqs, fiveqs, sixqs, sevenqs, eightqs, etc, checkKind)
+        values()
+        
+        select *
+        from tbl_class_check
+          select *
+        from tbl_course
+        
+        desc tbl_course
+        delete from tbl_class_check
+        ALTER TABLE TBL_course ADD classchk number(2) default 0;
+        commit
+        
+        update tbl_course set classchk = '1' where courseno = ''
+        
+        select *
+        from tbl_member
+        update tbl_member set extraaddress='안양동, 래미안 안양 메가트리아' where memberno ='102'
+        commit
+        select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress,status
+        from 
+        (
+        select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, fk_regseq
+		from tbl_member M
+		inner join tbl_dept D
+		on M.fk_deptseq = D.deptseq
+        where memberNo = '102'
+        )V
+        inner join tbl_school_reg R
+        on V.fk_regseq = R.regseq
+        
+        select *
+        from tbl_member
+        
+        desc tbl_official_leave
+        ------------------------------------------------------------------------------------
+        -- 휴학 테이블 만들기
+        create table tbl_leave_school
+        (schoolLvNo    number
+        ,fk_regSeq     number
+        ,constraint PK_tbl_leave_school_schoolLvNo  primary key(schoolLvNo)
+        ,constraint FK_tbl_leave_school_regSeq  foreign key(fk_regSeq) 
+                                   references tbl_school_reg(regSeq)
+        );
+        create sequence tbl_leave_school_seq
+        start with 1
+        increment by 1
+        nomaxvalue
+        nominvalue
+        nocycle
+        nocache;
+        drop table tbl_leave_school
+            drop sequence tbl_leave_school_seq
+        -- 군휴학 테이블 만들기
+        create table tbl_school_leave
+        (   schoolLvNo number
+            ,armytype   varchar2(50)    
+            ,armyStartDate date         
+            ,armyEndDate date           
+            ,startSemester  varchar2(30)
+            ,endSemester    varchar2(30) 
+            , filename  varchar2(255)   
+            , orgfilename   varchar2(255)   
+            , filesize      number
+            , regdate       date    default sysdate not null 
+            , approve       varchar2(20) default '승인전'
+            , noreason      varchar2(500)
+            , reason        varchar2(800)
+            , fk_regSeq number  not null
+            ,constraint PK_tbl_school_leave_schoolLvNo  primary key(schoolLvNo)
+            ,constraint FK_tbl_school_leave_regSeq  foreign key(fk_regSeq) 
+                                   references tbl_school_reg(regSeq)
+        );
+ALTER TABLE tbl_school_leave DROP COLUMN armyNo;
+commit
+        create sequence tbl_school_leave_seq
+        start with 1
+        increment by 1
+        nomaxvalue
+        nominvalue
+        nocycle
+        nocache;
+        
+        insert into tbl_school_leave()

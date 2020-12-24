@@ -145,6 +145,10 @@ public interface InterAnsehyeongService {
 	int deleteNoticeComment(Map<String, String> paraMap);
 
 	int updateNoticeComment(Map<String, String> paraMap);
+	
+	
+
+	List<MarketBoardVO> getMyBoardList(CommuMemberVO loginuser);
 
 
 

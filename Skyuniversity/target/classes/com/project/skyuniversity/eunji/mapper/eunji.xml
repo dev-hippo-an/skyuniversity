@@ -6,7 +6,7 @@
 <mapper namespace="eunji">
 
 	<select id="selectMemberInfo" parameterType="HashMap" resultType="com.project.skyuniversity.eunji.model.MemberVO">
-		select currentSemester, name, memberNo, deptName
+		select currentSemester, name, memberNo, deptName, jubun
 		from tbl_member M
 		inner join tbl_dept D
 		on M.fk_deptseq = D.deptseq
@@ -235,7 +235,6 @@
 		)
 		where approve in ('승인완료','승인취소') and regyear = #{year} and regmonth in (${month})
 		)
-		where rno between 1 and 3
 
 	</select>
 	
@@ -244,4 +243,108 @@
         from tbl_official_leave
         where leaveNo=#{seq}
 	</select>
+	
+	<select id="checkDate" parameterType="HashMap" resultType="int">
+		 select count(*)
+ 		 from tbl_official_leave
+ 		 where fk_memberno = #{memberno} and (startdate between #{startdate} and #{enddate} or enddate between #{startdate} and #{enddate})
+	</select>
+	
+	<insert id="insertGirlLeave" parameterType="com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO">
+		insert into tbl_girl_leave(girlLeaveNo, startDate, endDate, fk_memberno)
+		values(tbl_girl_leave_seq.nextval, #{startDate}, #{endDate}, #{fk_memberno})
+	</insert>
+	
+	<insert id="insertGirlLeaveTime" parameterType="com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO">
+		insert into tbl_girl_leave(girlLeaveNo, startDate, endDate, fk_memberno, startTime, endTime)
+		values(tbl_girl_leave_seq.nextval, #{startDate}, #{endDate}, #{fk_memberno}, #{startTime}, #{endTime})
+	</insert>
+	
+	<select id="selectGirlList" parameterType="int" resultType="com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO">
+		select girlLeaveNo, to_char(regDate, 'yyyy-mm-dd') as regDate, to_char(startDate, 'yyyy-mm-dd') as startDate, startTime, endTime, approve, noreason
+        from tbl_girl_leave
+        <![CDATA[where add_months(sysdate, -12) <= regdate]]> and fk_memberno = #{memberNo}	
+		order by  regdate desc
+	</select>
+	
+	<select id="checkGirlDate" parameterType="HashMap" resultType="int">
+		select count(*)
+        from tbl_girl_leave
+        where fk_memberno = ${memberno} and to_char(startDate,'yyyy')=${year} and to_char(startDate,'mm') = ${month}
+	</select>
+	
+	<delete id="delGirlOfficialLeave" parameterType="String">
+		delete from tbl_girl_leave where girlleaveno = #{seq}
+	</delete>
+	
+	<resultMap type="HashMap" id="checkMap">
+		<result property="courseyear" column="courseyear" javaType="String"/>
+		<result property="semester" column="semester" javaType="String"/>
+		<result property="fk_subjectno" column="fk_subjectno" javaType="String"/>
+		<result property="subjectname" column="subjectname" javaType="String"/>
+		<result property="name" column="name" javaType="String"/>
+		<result property="courseno" column="courseno" javaType="String"/>
+		<result property="classchk" column="classchk" javaType="String"/>
+	</resultMap>
+	<select id="selectCheckList" parameterType="HashMap" resultMap="checkMap">
+		select courseyear, semester, fk_subjectno, subjectname, name, courseno, classchk
+        from
+        (
+        select courseno, courseyear, semester, fk_subjectno, subjectname, fk_professorno, classchk
+        from tbl_course C
+        inner join tbl_subject S
+        on C.fk_subjectno = S.subjectno 
+        where C.fk_memberno = #{memberno} and courseyear=#{year} and semester = #{semester}
+        ) V
+        inner join tbl_professor p
+        on V.fk_professorno = P.professorno
+	</select>
+	
+	<insert id="insertClassCheck" parameterType="com.project.skyuniversity.eunji.model.ClassCheckVO">
+		 insert into tbl_class_check(fk_courseno, firstqs, secondqs, thirdqs, fourqs, fiveqs, sixqs, sevenqs, eightqs,checkKind<if test="#{etc} != null">, etc</if>)
+         values(#{fk_courseno}, #{firstQs},#{secondQs}, #{thirdQs}, #{fourQs}, #{fiveQs}, #{sixQs}, #{sevenQs}, #{eightQs}, #{checkKind}<if test="#{etc} != null">, #{etc}</if>)
+	</insert>
+	
+	<update id="updateCourseCk" parameterType="int">
+		update tbl_course set classchk = '1' where courseno = #{fk_courseno}
+	</update>
+	
+	<resultMap type="HashMap" id="allMember">
+		<result property="currentSemester" column="currentSemester" javaType="String"/>
+		<result property="name" column="name" javaType="String"/>
+		<result property="memberNo" column="memberNo" javaType="String"/>
+		<result property="deptName" column="deptName" javaType="String"/>
+		<result property="birth" column="birth" javaType="String"/>
+		<result property="grade" column="grade" javaType="String"/>
+		<result property="mobile" column="mobile" javaType="String"/>
+		<result property="email" column="email" javaType="String"/>
+		<result property="address" column="address" javaType="String"/>
+		<result property="detailaddress" column="detailaddress" javaType="String"/>
+		<result property="extraaddress" column="extraaddress" javaType="String"/>
+		<result property="status" column="status" javaType="String"/>
+	</resultMap>
+	<select id="allMemberInfo" parameterType="int" resultMap="allMember">
+		select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, status
+        from 
+        (
+        select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, fk_regseq
+		from tbl_member M
+		inner join tbl_dept D
+		on M.fk_deptseq = D.deptseq
+        where memberNo = #{memberNo}
+        )V
+        inner join tbl_school_reg R
+        on V.fk_regseq = R.regseq
+	</select>
+	
+	<insert id="insertArmyLeave" parameterType="com.project.skyuniversity.eunji.model.SchoolLeaveVO">
+		insert into tbl_school_leave(schoolLvNo, armytype, armystartdate, armyenddate, filename, orgfilename, filesize, comeSemester, fk_regSeq, type)
+        values(tbl_school_leave_seq.nextval, #{armyType}, #{armyStartDate}, #{armyEndDate}, #{filename}, #{orgfilename}, #{filesize}, #{comeSemester},2,'군휴학')
+	</insert>
+	
+	<insert id="insertLeave" parameterType="HashMap">
+		insert into tbl_school_leave(schoolLvNo, startsemester, endsemester, reason, comesemester, fk_regseq, type)
+		values(tbl_school_leave_seq.nextval, #{startsemester}, #{endsemester}, #{reason}, #{comesemester}, '2', '일반휴학')
+	</insert>
+	
 </mapper>

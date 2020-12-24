@@ -32,7 +32,7 @@
 #regdiv {
 	height: 300px;
 }
-.sublicl > td {
+.sublicl > td { 
 	width:500px;
 	font-size: 9pt;
 	text-align: center;	

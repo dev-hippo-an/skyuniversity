@@ -45,7 +45,7 @@ $(function() {
 		  });
 });
 $(document).ready(function() {
-	
+
 	$("#alldaychk").click(function() {
 		if ($("#alldaychk").is(":checked") == true){
 			$("#starttime").attr('disabled', 'disabled');
@@ -58,6 +58,7 @@ $(document).ready(function() {
 	});
 	
 	$("#addbtn").click(function() {
+		
 		
 		var date1 = $("#datepicker1").val().substring(8);
 		var date2 = $("#datepicker2").val().substring(8);
@@ -111,13 +112,32 @@ $(document).ready(function() {
 			}
 		}
 		
+		var startdate = $("#datepicker1").val();
+		var enddate = $("#datepicker2").val();
+		var syear = startdate.substring(0,4);
+		var smonth = startdate.substring(5,7);
+		var sday = startdate.substring(8);
+		var eyear = enddate.substring(0,4);
+		var emonth = enddate.substring(5,7);
+		var eday = enddate.substring(8);
+		
+		var start = syear+smonth+sday;
+		var end = eyear+emonth+eday;
+		if(parseInt(start)>parseInt(end)){
+			alert("시작일자와 종료일자를 명확히 해주세요");
+			$("#datepicker1").focus();
+			bool = false;
+			return;
+		}
+	
 		if(bool){
-			alert("공결신청이되었습니다.");
 			// 폼(form) 을 전송(submit)
+			confirm("공결신청하시겠습니까?");
 			var frm = document.addFrm;
 			frm.method = "POST";
 			frm.action = "<%= ctxPath%>/officalLeaveEnd.sky";
 			frm.submit(); 
+			
 		}
 	});
 });	
@@ -247,11 +267,12 @@ function funcdel(index){
 </div>
 <div style="padding-top: 20px;">
 <ul id="info" >
+    <li>공결일자는 선택 후 전일, 또는 교시를 지정하여 신청하고 신청결과에 서 승인여부를 확인하시기를 바랍니다.</li>
 	<li>결석일 전후 7일 이내에만 가능하며, 반드시 결석일 이후 7일 이내에 신청을 해야 공결을 인정받을 수 있습니다.</li>
-	<li>공결 사유 선택 후 그에 해당하는 증빙서류를 업로드하여 신청해주세요.</li>
+	<li>여학생 공결은 월 1회 가능합니다.</li>
 	<li>공결 승인 여부는 최소 1일 ~ 최대 3일 소요됩니다. </li>
-	<li>3개월 이상의 공결 조회는 '공결내역조회'에서 확인 가능합니다.</li>
-	<li>승인 구분 상태가 '승인전'일 때에는 취소가 가능합니다.</li>
+	<li>여학생 공결내역은 현재 날짜로부터 1년 이상의 내역만 조회 가능합니다.</li>
+	<li>승인 구분 상태가 '승인전'일 때에는 취소가 가능하지만 승인이 완료되면 취소가 불가합니다.</li>
 </ul>
 </div>
 </div>
