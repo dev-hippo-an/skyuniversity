@@ -1787,3 +1787,92 @@ nocache;
     nominvalue
     nocycle
     nocache;
+    select * from tbl_commu_member;
+    select * from tbl_member;
+    
+    select * from tbl_board_notice;
+    select * from tbl_boardKind
+    
+    select fk_boardkindno, subject, readCount, boardname, boardNo, fk_memberNo, categoryName
+    from
+    (
+    (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_notice b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_council b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from TBL_BOARD_major b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from TBL_BOARD_club b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from TBL_BOARD_graduate b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_critic b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from TBL_BOARD_study b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from TBL_BOARD_cert b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from TBL_BOARD_emp b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_joboffer b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from TBL_BOARD_lost b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_informal b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_polite b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_humor b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_issue b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_mbti b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_food b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_love b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_hobby b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_health b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName from tbl_board_housemarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.categoryNo where status = 1 and fk_commuMemberNo = 1)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName from tbl_board_bookmarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.categoryNo where status = 1 and fk_commuMemberNo = 1)
+      union all
+      (select b.fk_boardkindno, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName from tbl_board_etcmarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno 
+      left join tbl_category c on c.categoryNo = b.categoryNo
+      where status = 1 and fk_commuMemberNo = 1)
+      )
+      order by 1;
+      
+      select * from tbl_category;
+      select * from tbl_board_etcmarket;
+      
+      select * from tbl_board_humor;

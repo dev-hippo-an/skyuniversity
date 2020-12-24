@@ -414,6 +414,13 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		int result = dao.updateNoticeComment(paraMap);
 		return result;
 	}
+
+
+	@Override
+	public List<MarketBoardVO> getMyBoardList(CommuMemberVO loginuser) {
+		List<MarketBoardVO> myBoardList = dao.getMyBoardList(loginuser);
+		return myBoardList;
+	}
 	
 
 

@@ -2053,6 +2053,7 @@ public class AnsehyeongController {
 		jsonObj.put("n", n); 
 		return jsonObj.toString();
     }
+    
 	
     // 클라이언트 ip주소를 가져오는 메소드
 	public String getUserIp() throws Exception {
@@ -2090,6 +2091,30 @@ public class AnsehyeongController {
         }
 		
 		return ip;
+	}
+	
+	
+	
+	// === #71. 글수정 페이지 요청 === //
+	@RequestMapping(value = "/checkMyList.sky")
+	public ModelAndView anRequiredLogin_checkMyList(HttpServletRequest request,HttpServletResponse response, ModelAndView mav) {
+
+		HttpSession session = request.getSession();
+		
+		CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
+		
+	
+		List<MarketBoardVO> myBoardList = service.getMyBoardList(loginuser);
+		
+		
+		
+		
+		mav.addObject("myBoardList", myBoardList);
+		
+		
+		mav.setViewName("sehyeong/board/myPageComeOn.tiles1");
+		
+		return mav;
 	}
 	
 }

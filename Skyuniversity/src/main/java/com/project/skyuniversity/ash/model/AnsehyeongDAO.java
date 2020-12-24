@@ -469,4 +469,10 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 		return result;
 	}
 
+	@Override
+	public List<MarketBoardVO> getMyBoardList(CommuMemberVO loginuser) {
+		List<MarketBoardVO> myBoardList = sqlsession.selectList("ansehyeong.getMyBoardList", loginuser);
+		return myBoardList;
+	}
+
 }
