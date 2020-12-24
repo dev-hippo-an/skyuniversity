@@ -40,6 +40,35 @@ table#scroltbl {
 	
 		
 	});
+	
+	function funcdel(index) {
+		var check = confirm("휴학신청을 취소하시겠습니까?");
+		if(check){
+			var no = $("#no"+index).val();
+			$.ajax({
+				url: "<%= request.getContextPath() %>/ajaxSchoolInfo.sky",
+				data: {"no":no},
+				type: "GET",
+				dataType: "json",
+				success: function(json) {
+					if(json.result){
+						alert("휴학신청이 취소되었습니다.");
+						location.reload();
+					}
+					else{
+						alert("휴학신청 취소가 취소되었습니다.");
+						location.reload();
+					}
+				},
+				error: function(request, status, error){
+		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		        }
+			});	//------------------end of ajax
+		}
+		else{
+			return;
+		}
+	}
 </script>
 <div style="padding-left: 10px; padding-right: 10px;">
 <div style="background-color: #b3d9ff; padding: 10px; border-radius: 3px;">
@@ -63,18 +92,48 @@ table#scroltbl {
 	<table class="table table-striped" id="scroltbl">
 		<thead id="scrolth">
 			<tr id="subli">
-				<td style="width: 200px;">학부(과)</td>
-				<td style="width: 100px;">학년</td>
-				<td style="width: 100px;">학번</td>
-				<td style="width: 150px;">성명</td>
-				<td style="width: 200px;">공결시작일자</td>
-				<td style="width: 200px;">공결종료일자</td>
-				<td style="width: 230px;">공결사유</td>
-				<td style="width:100px;">첨부파일</td>
-				<td style="width: 100px;">승인여부</td>
+				<td style="width: 200px;">신청학기</td>
+				<td style="width: 100px;">신청일자</td>
+				<td style="width: 100px;">휴학구분</td>
+				<td style="width: 150px;">복학예정</td>
+				<td style="width: 200px;">신청결과</td>
+				<td style="width: 200px;">반려이유</td>
+				<td style="width: 200px;">서류첨부</td>
+				<td style="width: 100px;">취소</td>
+				<td style="width: 100px;">수정</td>
 			</tr>
 		</thead>
 		<tbody id="bodys">
+			<c:forEach items="${list}" var="vo" varStatus="status">
+			<tr class='sublicl'>
+				<td style="width: 200px;">${vo.startSemester}</td>
+				<td style="width: 100px;">${vo.regdate}</td>
+				<td style="width: 100px;">${vo.type}</td>
+				<td style="width: 150px;">${vo.comeSemester}</td>
+				<td style="width: 200px;">${vo.approve}</td>
+				<td style="width: 200px;">${vo.noreason}</td>
+				<c:if test="${vo.filename == null}">
+				<td style="width: 200px;"></td>
+				</c:if>
+				<c:if test="${vo.filename != null}">
+				<td style="width: 200px;"><a href='<%= request.getContextPath()%>/downloadSchoolLeaveInfo.sky?seq=+${vo.schoolLvNo}+'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>
+				</c:if>
+				<c:if test="${vo.approve == '승인전'}">
+					<td style="width: 100px;"><button onclick="funcdel(${status.index})">취소</button>
+					<input type="text" value="${vo.schoolLvNo}" id="no${status.index}" hidden="true"/>
+					</td>
+				</c:if>
+				<c:if test="${vo.approve == '승인완료'}">
+					<td style="width: 100px;"></td>
+				</c:if>
+				<c:if test="${vo.approve == '승인전'}">
+					<td style="width: 100px;"><button>수정</button></td>
+				</c:if>
+				<c:if test="${vo.approve == '승인완료'}">
+					<td style="width: 100px;"></td>
+				</c:if>
+			</tr>
+			</c:forEach>
 		</tbody>
 	</table>
 </div>

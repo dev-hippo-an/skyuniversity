@@ -85,6 +85,12 @@ public interface InterEunjiService {
 
 	int insertLeave(Map<String, String> paraMap);
 
+	List<SchoolLeaveVO> selectSchoolLeave(int memberNo);
+
+	SchoolLeaveVO getSchoolLeaveVO(String seq);
+
+	int deleteSchoolInfo(String no);
+
 	
 
 	

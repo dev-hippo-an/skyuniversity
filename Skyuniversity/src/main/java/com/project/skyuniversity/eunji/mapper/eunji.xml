@@ -338,13 +338,29 @@
 	</select>
 	
 	<insert id="insertArmyLeave" parameterType="com.project.skyuniversity.eunji.model.SchoolLeaveVO">
-		insert into tbl_school_leave(schoolLvNo, armytype, armystartdate, armyenddate, filename, orgfilename, filesize, comeSemester, fk_regSeq, type)
-        values(tbl_school_leave_seq.nextval, #{armyType}, #{armyStartDate}, #{armyEndDate}, #{filename}, #{orgfilename}, #{filesize}, #{comeSemester},2,'군휴학')
+		insert into tbl_school_leave(startsemester, schoolLvNo, armytype, armystartdate, armyenddate, filename, orgfilename, filesize, comeSemester, type, fk_memberno)
+        values(#{startSemester}, tbl_school_leave_seq.nextval, #{armyType}, #{armyStartDate}, #{armyEndDate}, #{filename}, #{orgfilename}, #{filesize}, #{comeSemester},'군휴학', #{fk_memberNo})
 	</insert>
 	
 	<insert id="insertLeave" parameterType="HashMap">
-		insert into tbl_school_leave(schoolLvNo, startsemester, endsemester, reason, comesemester, fk_regseq, type)
-		values(tbl_school_leave_seq.nextval, #{startsemester}, #{endsemester}, #{reason}, #{comesemester}, '2', '일반휴학')
+		insert into tbl_school_leave(schoolLvNo, startsemester, endsemester, reason, comesemester, type, fk_memberno)
+		values(tbl_school_leave_seq.nextval, #{startsemester}, #{endsemester}, #{reason}, #{comesemester},'일반휴학', #{memberNo})
 	</insert>
+	
+	<select id="selectSchoolLeave" parameterType="int" resultType="com.project.skyuniversity.eunji.model.SchoolLeaveVO">
+		select schoolLvNo, startSemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comeSemester, approve, filename, orgfilename, filesize, noreason
+        from tbl_school_leave
+        where fk_memberno = #{memberNo}
+	</select>
+	
+	<select id="getSchoolLeaveVO" parameterType="String" resultType="com.project.skyuniversity.eunji.model.SchoolLeaveVO">
+		select schoolLvNo, startSemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comeSemester, approve, filename, orgfilename, filesize, noreason
+        from tbl_school_leave
+        where schoolLvNo = #{seq}
+	</select>
+	
+	<delete id="deleteSchoolInfo" parameterType="String">
+		delete from tbl_school_leave where schoolLvNo=#{no}
+	</delete>
 	
 </mapper>

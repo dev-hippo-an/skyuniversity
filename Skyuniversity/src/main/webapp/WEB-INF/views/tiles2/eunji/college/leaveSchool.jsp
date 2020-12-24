@@ -95,6 +95,8 @@
 			
 			if($("#reason").val().trim().length<100){
 				alert("휴학 사유는 100자 이상 작성해주셔야 합니다.")
+				flag = false;
+				return;
 			}
 			var start = $("#startyear").val() + $("#startsem").val();
 			var end = $("#endyear").val() + $("#endsem").val();
@@ -118,11 +120,16 @@
 			
 			if(flag){
 				// 폼(form) 을 전송(submit)
-				confirm("휴학신청을 하시겠습니까?");
-				var frm = document.regFrm;
-				frm.method = "POST";
-				frm.action = "<%= ctxPath%>/leaveSchoolEnd.sky";
-				frm.submit();
+				var check = confirm("휴학신청을 하시겠습니까?");
+				if(check){
+					var frm = document.regFrm;
+					frm.method = "POST";
+					frm.action = "<%= ctxPath%>/leaveSchoolEnd.sky";
+					frm.submit();
+				}
+				else{
+					return;
+				}
 			}
 		});
 	});

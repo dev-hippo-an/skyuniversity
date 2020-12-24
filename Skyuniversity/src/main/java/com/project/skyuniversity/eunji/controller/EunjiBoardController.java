@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -753,6 +754,8 @@ public class EunjiBoardController {
 	
 	@RequestMapping(value = "/armyLeaveSchoolEnd.sky", method = { RequestMethod.POST })
 	public ModelAndView armyLeaveSchoolEnd(ModelAndView mav, HttpServletRequest request, MultipartHttpServletRequest mrequest, SchoolLeaveVO slvo) {
+		int n  = 0;
+		
 		CommuMemberVO cmvo = new CommuMemberVO();
 		HttpSession session2 = request.getSession();
 
@@ -781,8 +784,19 @@ public class EunjiBoardController {
 				slvo.setComeSemester((year+1)+" / 1학기");
 			}
 			
-			String startdate = request.getParameter("armyStartDate");
+			Calendar cal = Calendar.getInstance();
+			int curyear = cal.get(cal.YEAR);
+			int curmonth = cal.get(cal.MONTH);
+			String cur = "";
 			
+			if(curmonth < 9 && curmonth > 3) {
+				cur = curyear + "-2"; 
+			}
+			
+			if(curmonth > 9 || curmonth < 3) {
+				cur = (curyear+1) + "-1";
+			}
+			slvo.setStartSemester(cur);
 			MultipartFile attach = slvo.getAttach();
 			if (!attach.isEmpty()) {
 				HttpSession session = mrequest.getSession();
@@ -812,8 +826,28 @@ public class EunjiBoardController {
 					e.printStackTrace();
 				}
 			}
+			slvo.setFk_memberNo(memberNo);
+			n = service.insertArmyLeave(slvo);
+		}
+		if(n == 1) {
+			Map<String, String> paraMap2 = service.allMembeInfo(memberNo);
+
+			int grade = Integer.parseInt(paraMap2.get("grade"));
+			int semester = Integer.parseInt(paraMap2.get("currentSemester"));
+			semester = grade * semester;
+			paraMap2.put("currentSemester", Integer.toString(semester));
 			
-			int n = service.insertArmyLeave(slvo);
+			mav.addObject("paraMap", paraMap2);
+			mav.setViewName("eunji/college/armyLeaveSchool.tiles2");
+		}
+		else {
+			String message = "군 휴학 신청에 실패하셨습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
 		}
 		return mav;
 	}
@@ -843,7 +877,13 @@ public class EunjiBoardController {
 	
 	
 	@RequestMapping(value = "/leaveSchoolEnd.sky", method = { RequestMethod.POST })
-	public ModelAndView leaveSchoolEnd(ModelAndView mav, HttpServletRequest request) {
+	public String leaveSchoolEnd(HttpServletRequest request) {
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
+
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		
 		String startYear = request.getParameter("startyear");
 		String startsem = request.getParameter("startsem");
 		String endYear = request.getParameter("endyear");
@@ -864,17 +904,91 @@ public class EunjiBoardController {
 		paraMap.put("endsemester", endsemester);
 		paraMap.put("reason", reason);
 		paraMap.put("comesemester", comesem);
+		paraMap.put("memberNo", Integer.toString(memberNo));
 		
 		int n = service.insertLeave(paraMap);
-		return mav;
+		if(n==1) {
+			return "redirect:/leaveSchool.sky"; 
+		}
+		return "";
+		
 	}
 	
 	// 휴학신청 결과 조회
 	@RequestMapping(value = "/leaveSchoolInfo.sky", method = { RequestMethod.GET })
 	public ModelAndView leaveSchoolInfo(ModelAndView mav, HttpServletRequest request) {
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
+
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
 		
+		List<SchoolLeaveVO> list = service.selectSchoolLeave(memberNo);
+		
+		mav.addObject("list", list);
 		mav.setViewName("eunji/college/leaveSchoolInfo.tiles2");
 		return mav;
 	}
 	
+	
+	@RequestMapping(value = "/downloadSchoolLeaveInfo.sky")
+	public void downloadSchoolLeaveInfo(HttpServletRequest request, HttpServletResponse response) {
+
+		String seq = request.getParameter("seq");
+		System.out.println(seq);
+		response.setContentType("text/html; charset=UTF-8");
+		PrintWriter writer = null;
+
+		try {
+			SchoolLeaveVO slvo = service.getSchoolLeaveVO(seq);
+			String fileName = slvo.getFilename();
+
+			String orgFilename = slvo.getOrgfilename();
+
+			HttpSession session = request.getSession();
+			String root = session.getServletContext().getRealPath("/");
+
+			String path = root + "resources" + File.separator + "files";
+
+			// **** file 다운로드 하기 **** //
+			boolean flag = false;
+			flag = fileManager.doFileDownload(fileName, orgFilename, path, response);
+			if (!flag) {
+				try {
+					writer = response.getWriter();
+
+					writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가합니다.'); history.back();</script>");
+				} 
+				catch (IOException e) {
+				}
+			}
+		} 
+		catch (NumberFormatException e) {
+			
+			try {
+				writer = response.getWriter();
+				writer.println("<script type='text/javascript'>alert('파일 다운로드가 불가합니다.'); history.back();</script>");
+			} catch (IOException e1) {
+
+			}
+		}
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/ajaxSchoolInfo.sky", method = {
+			RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
+	public String ajaxSchoolInfo(HttpServletRequest request) {
+		String no = request.getParameter("no");
+
+		boolean result = false;
+		int n = service.deleteSchoolInfo(no);
+		if (n == 1) {
+			result = true;
+		}
+
+		JSONObject jsonobj = new JSONObject();
+		jsonobj.put("result", result);
+
+		return jsonobj.toString();
+	}
 }

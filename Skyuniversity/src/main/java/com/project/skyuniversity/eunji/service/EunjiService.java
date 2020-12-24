@@ -242,6 +242,24 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public List<SchoolLeaveVO> selectSchoolLeave(int memberNo) {
+		List<SchoolLeaveVO> list = dao.selectSchoolLeave(memberNo);
+		return list;
+	}
+
+	@Override
+	public SchoolLeaveVO getSchoolLeaveVO(String seq) {
+		SchoolLeaveVO slvo = dao.getSchoolLeaveVO(seq);
+		return slvo;
+	}
+
+	@Override
+	public int deleteSchoolInfo(String no) {
+		int n = dao.deleteSchoolInfo(no);
+		return n;
+	}
+
 
 
 }

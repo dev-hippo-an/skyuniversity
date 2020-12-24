@@ -237,5 +237,23 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public List<SchoolLeaveVO> selectSchoolLeave(int memberNo) {
+		List<SchoolLeaveVO> list = sqlSession.selectList("eunji.selectSchoolLeave", memberNo);
+		return list;
+	}
+
+	@Override
+	public SchoolLeaveVO getSchoolLeaveVO(String seq) {
+		SchoolLeaveVO slvo = sqlSession.selectOne("eunji.getSchoolLeaveVO", seq);
+		return slvo;
+	}
+
+	@Override
+	public int deleteSchoolInfo(String no) {
+		int n = sqlSession.delete("eunji.deleteSchoolInfo", no);
+		return n;
+	}
+
 
 }

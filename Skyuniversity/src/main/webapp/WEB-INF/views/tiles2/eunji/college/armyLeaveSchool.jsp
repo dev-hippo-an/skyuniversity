@@ -66,11 +66,16 @@
 			
 			if(flag){
 				// 폼(form) 을 전송(submit)
-				confirm("휴학신청을 하시겠습니까?");
-				var frm = document.addFrm;
-				frm.method = "POST";
-				frm.action = "<%= ctxPath%>/armyLeaveSchoolEnd.sky";
-				frm.submit();
+				var check = confirm("휴학신청을 하시겠습니까?");
+				if(check){
+					var frm = document.addFrm;
+					frm.method = "POST";
+					frm.action = "<%= ctxPath%>/armyLeaveSchoolEnd.sky";
+					frm.submit();
+				}
+				else{
+					return;
+				}
 			}
 		});
 	});

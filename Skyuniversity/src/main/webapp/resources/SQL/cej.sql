@@ -754,6 +754,7 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
         nocache;
         drop table tbl_leave_school
             drop sequence tbl_leave_school_seq
+        drop table tbl_school_leave
         -- 군휴학 테이블 만들기
         create table tbl_school_leave
         (   schoolLvNo number
@@ -769,10 +770,10 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
             , approve       varchar2(20) default '승인전'
             , noreason      varchar2(500)
             , reason        varchar2(800)
-            , fk_regSeq number  not null
+            , fk_memberno number  not null
             ,constraint PK_tbl_school_leave_schoolLvNo  primary key(schoolLvNo)
-            ,constraint FK_tbl_school_leave_regSeq  foreign key(fk_regSeq) 
-                                   references tbl_school_reg(regSeq)
+            ,constraint FK_tbl_school_leave_memberno  foreign key(fk_memberno) 
+                                   references tbl_member(memberno)
         );
 ALTER TABLE tbl_school_leave DROP COLUMN comeSemester;
 ALTER TABLE tbl_school_leave ADD type varchar2(30) 
@@ -792,3 +793,11 @@ commit
         
         insert into tbl_school_leave(schoolLvNo, armytype, armystartdate, armyenddate, filename, orgfilename, filesize, comeSemester, fk_regSeq, type)
         values(tbl_school_leave_seq.nextval, ?, ?, ?, ?, ?, ?, ?,'2','군휴학')
+        
+        
+        select schoollvno, startsemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comesemester, approve, filename, orgfilename, filesize, noreason
+        from tbl_school_leave
+        where fk_memberno = '102'
+        
+        delete from tbl_school_leave
+        commit
