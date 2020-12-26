@@ -1088,7 +1088,6 @@ public class EunjiBoardController {
 			}
 		}
 	
-		System.out.println("DDD"+slvo.getFilename());
 		int n = service.updateArmyType(slvo);
 		
 		if(n==1){

@@ -354,7 +354,7 @@
 	</select>
 	
 	<select id="getSchoolLeaveVO" parameterType="String" resultType="com.project.skyuniversity.eunji.model.SchoolLeaveVO">
-		select to_char(armyStartDate, 'yyyy-mm-dd') as armyStartDate, to_char(armyEndDate, 'yyyy-mm-dd') as armyEndDate, armyType, schoolLvNo, startSemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comeSemester, approve, filename, orgfilename, filesize, noreason
+		select to_char(armyStartDate, 'yyyy-mm-dd') as armyStartDate, to_char(armyEndDate, 'yyyy-mm-dd') as armyEndDate, armyType, schoolLvNo, startSemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comeSemester, approve, filename, orgfilename, filesize, noreason, endSemester
         from tbl_school_leave
         where schoolLvNo = #{seq}
 	</select>
