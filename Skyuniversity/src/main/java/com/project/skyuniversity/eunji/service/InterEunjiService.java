@@ -91,6 +91,8 @@ public interface InterEunjiService {
 
 	int deleteSchoolInfo(String no);
 
+	int updateArmyType(SchoolLeaveVO slvo);
+
 	
 
 	

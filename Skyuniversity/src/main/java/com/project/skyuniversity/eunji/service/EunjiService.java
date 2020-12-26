@@ -260,6 +260,14 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public int updateArmyType(SchoolLeaveVO slvo) {
+		int n = dao.updateArmyType(slvo);
+		return n;
+	}
+
+
+
 
 
 }

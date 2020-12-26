@@ -85,4 +85,7 @@ public interface InterEunjiBoardDAO {
 
 	int deleteSchoolInfo(String no);
 
+	int updateArmyType(SchoolLeaveVO slvo);
+
+
 }

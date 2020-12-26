@@ -69,6 +69,18 @@ table#scroltbl {
 			return;
 		}
 	}
+	
+	function funcupdate(index){
+		var check = confirm("휴학신청 내역을 수정하시겠습니까?");
+		if(check){
+			var no = $("#no"+index).val();
+			var type = $("#type"+index).text();
+			location.href="<%=ctxPath%>/updateSchoolLeave.sky?seq="+no+"&type="+type;
+		}
+		else{
+			return;
+		}
+	}
 </script>
 <div style="padding-left: 10px; padding-right: 10px;">
 <div style="background-color: #b3d9ff; padding: 10px; border-radius: 3px;">
@@ -108,7 +120,7 @@ table#scroltbl {
 			<tr class='sublicl'>
 				<td style="width: 200px;">${vo.startSemester}</td>
 				<td style="width: 100px;">${vo.regdate}</td>
-				<td style="width: 100px;">${vo.type}</td>
+				<td style="width: 100px;" id="type${status.index}">${vo.type}</td>
 				<td style="width: 150px;">${vo.comeSemester}</td>
 				<td style="width: 200px;">${vo.approve}</td>
 				<td style="width: 200px;">${vo.noreason}</td>
@@ -127,7 +139,7 @@ table#scroltbl {
 					<td style="width: 100px;"></td>
 				</c:if>
 				<c:if test="${vo.approve == '승인전'}">
-					<td style="width: 100px;"><button>수정</button></td>
+					<td style="width: 100px;"><button onclick="funcupdate(${status.index})">수정</button></td>
 				</c:if>
 				<c:if test="${vo.approve == '승인완료'}">
 					<td style="width: 100px;"></td>

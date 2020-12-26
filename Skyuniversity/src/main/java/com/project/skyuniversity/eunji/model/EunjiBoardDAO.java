@@ -255,5 +255,12 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int updateArmyType(SchoolLeaveVO slvo) {
+		int n = sqlSession.update("eunji.updateArmyType", slvo);
+		return n;
+	}
+
+
 
 }
