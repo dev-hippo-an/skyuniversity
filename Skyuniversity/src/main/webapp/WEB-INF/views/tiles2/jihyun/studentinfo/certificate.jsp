@@ -1,9 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
-<script type="text/javascript">
-
-</script>
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
 <style>
 
@@ -144,10 +142,19 @@
 	}
 </style>
 
+<script type="text/javascript">
+
+	$(document).ready(function(){
+		
+		//var spinner = $( "#spinner" ).spinner();
+		
+	});
+</script>
+
 
 <div id="certificateWrapper">
 	<div class="defaultInfo">
-		<label style="width: 30px;">학번</label><input type="text" class="defaultInput" value="${loginuser.memberno}" readonly />
+		<label style="width: 30px;">학번</label><input type="text" class="defaultInput" value="${loginuser.memberNo}" readonly />
 		<label style="width: 30px;">성명</label><input type="text" class="defaultInput" value="${loginuser.name}"  readonly />
 	</div>
 	<div id="block0">
@@ -195,23 +202,43 @@
 							<th>증명서종류</th>
 							<th>수수료</th>
 							<th>국문/영문</th>
+							<th>발급부수</th>
 							<th>수령방법</th>
 							<th>금액</th>
 						</tr>
 					</thead>
 					<tbody>
-						<tr>
-							<td>n</td>
-							<td>n</td>
-							<td></td>
-							<td>
-								<select></select>
-							</td>
-							<td>
-								<select></select>
-							</td>
-							<td>n</td>
-						</tr>
+					<c:if test="${not empty certificateKindList}">
+						<c:forEach var="ck" items="${certificateKindList}" varStatus="status">
+							<tr>
+								<td>${status.count}</td>
+								<td>${ck.certificateName}</td>
+								<td>${ck.charge}</td>
+								<td>
+									<select id="lang" name="lang">
+										<c:if test="${ck.lang eq '1'}">
+				                               <option value="" selected>선택</option>
+				                               <option value="1">국문</option>
+				                               <option value="2">영문</option>
+										</c:if>
+										<c:if test="${ck.lang ne '1' }">
+											   <option value="" selected>선택</option>
+				                               <option value="1">국문</option>
+										</c:if>
+		                            </select>
+								</td>
+								<td id="spinner"><input id="spinner"/></td>
+								<td>
+									<select id="recieve" name="recieve">
+										<option value="" selected>선택</option>
+										<option value="1">직접수령</option>
+										<option value="2">등기수령</option>
+									</select>
+								</td>
+								<td></td>
+							</tr>
+						</c:forEach>
+					</c:if>
 					</tbody>
 					<tfoot>
 						<tr>

@@ -126,7 +126,7 @@
 
 <div id="thisGradeContainer">
 	<div class="defaultInfo">
-		<label style="width: 30px;">학번</label><input type="text" class="defaultInput"  value="${loginuser.memberno}" readonly />
+		<label style="width: 30px;">학번</label><input type="text" class="defaultInput"  value="${loginuser.memberNo}" readonly />
 		<label style="width: 30px;">성명</label><input type="text" class="defaultInput" value="${loginuser.name}" readonly />
 	</div>
 	<div class="totalGradeInfo" >

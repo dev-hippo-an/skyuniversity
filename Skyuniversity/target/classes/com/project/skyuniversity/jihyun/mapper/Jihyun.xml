@@ -6,10 +6,20 @@
 <!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
 <mapper namespace="Jihyun">
 	 <select id="getLoginMember" resultType="com.project.skyuniversity.jihyun.model.JihyunMemberVO" parameterType="HashMap">
-		select memberno, pwd, name, mobile, email, birth, jubun, engname, chinaname, grade, enterday, graduateday, absencecnt 
-			 , fk_regseq, fk_deptseq, address, detailaddress, extraaddress, img, graduateok, currentsemester
-		from tbl_member
-		where memberno = #{userid} and pwd = #{pwd} 
+		with v  as (
+				select name, memberNo, pwd,
+				                    func_gender_2(jubun) as gender, 
+				                    grade, enterDay, chinaName, engName, graduateDay, fk_regSeq, fk_deptSeq, totalSemester, email, img, postcode, address, detailAddress, extraAddress, birth,
+				                    8-absenceCnt as absenceCnt, mobile
+				from tbl_member
+				where memberno = #{userid} and pwd = #{pwd} 
+				) 
+				 
+		select name, memberNo, pwd,  gender, grade, enterDay, chinaName, engName, graduateDay, fk_regSeq, fk_deptSeq, totalSemester, email, mobile, img, postcode, address, detailAddress, extraAddress, birth, absenceCnt, deptName, status
+		from V JOIN tbl_dept D
+		on  V.fk_deptSeq = D.deptSeq
+		join tbl_school_reg R
+		on V.fk_regseq = r.regseq
 	</select>
 
 	<update id="updatePwd" parameterType="HashMap">
@@ -21,5 +31,17 @@
 		select count(*)
 		from tbl_member
 		where memberno=#{memberno} and pwd=#{nowPwd}
+	</select>
+	
+	<resultMap type="HashMap" id="certificateKindMap">
+		<result property="certificateKindSeq" column="certificateKindSeq" javaType="String"/>
+		<result property="certificateName" column="certificateName" javaType="String"/>
+		<result property="charge" column="charge" javaType="String"/>
+		<result property="lang" column="lang" javaType="String"/>
+	</resultMap>
+	<select id="getCertificateKindList" resultMap="certificateKindMap">
+		select certificateKindSeq, certificateName, charge, lang
+		from tbl_certificateKind
+		order by 1
 	</select>
 </mapper>

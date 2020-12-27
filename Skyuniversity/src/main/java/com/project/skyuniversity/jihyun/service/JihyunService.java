@@ -1,5 +1,6 @@
 package com.project.skyuniversity.jihyun.service;
 
+import java.util.List;
 import java.util.Map;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,6 +31,12 @@ public class JihyunService implements InterJihyunService {
 	public boolean checkPwd(Map<String, String> paraMap) {
 		boolean isEqualPwd = dao.checkPwd(paraMap);
 		return isEqualPwd;
+	}
+
+	@Override
+	public List<Map<String, String>> getCertificatekindList() {
+		List<Map<String, String>> certificatekindList = dao.getCertificateKindList();
+		return certificatekindList;
 	}
 
 }

@@ -1,38 +1,47 @@
 package com.project.skyuniversity.jihyun.model;
 
 public class JihyunMemberVO {
-
-	private String memberno;       
-	private String pwd;             
-	private String name;          
-	private String mobile;          
-	private String email;          
-	private String birth;            
-	private String jubun;          
-	private String engname;          
-	private String chinaname;        
-	private String grade;                
-	private String enterday;        
-	private String graduateday;           
-	private String absencecnt;          
-	private String fk_regseq;           
-	private String fk_deptseq;      
-	private String postcode;          
-	private String address;         
-	private String detailaddress;     
-	private String extraaddress;       
-	private String img;              
-	private String graduateok;         
-	private String currentsemester;    
+	
+	private String name;
+	private String memberNo;
+	private String pwd;
+	private String gender;
+	private String grade;
+	private String enterDay;
+	private String chinaName;
+	private String engName;
+	private String graduateDay;
+	private String fk_regSeq;
+	private String fk_deptSeq;
+	private String totalSemester;
+	private String mobile;
+	private String email;
+	private String img;
+	private String postcode;
+	private String address;
+	private String detailAddress;
+	private String extraAddress;
+	private String birth;
+	private String absenceCnt;
+	private String deptName;
+	private String status;
 	
 	public JihyunMemberVO() {	}
 
-	public String getMemberno() {
-		return memberno;
+	public String getName() {
+		return name;
 	}
 
-	public void setMemberno(String memberno) {
-		this.memberno = memberno;
+	public void setName(String name) {
+		this.name = name;
+	}
+
+	public String getMemberNo() {
+		return memberNo;
+	}
+
+	public void setMemberNo(String memberNo) {
+		this.memberNo = memberNo;
 	}
 
 	public String getPwd() {
@@ -43,12 +52,76 @@ public class JihyunMemberVO {
 		this.pwd = pwd;
 	}
 
-	public String getName() {
-		return name;
+	public String getGender() {
+		return gender;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setGender(String gender) {
+		this.gender = gender;
+	}
+
+	public String getGrade() {
+		return grade;
+	}
+
+	public void setGrade(String grade) {
+		this.grade = grade;
+	}
+
+	public String getEnterDay() {
+		return enterDay;
+	}
+
+	public void setEnterDay(String enterDay) {
+		this.enterDay = enterDay;
+	}
+
+	public String getChinaName() {
+		return chinaName;
+	}
+
+	public void setChinaName(String chinaName) {
+		this.chinaName = chinaName;
+	}
+
+	public String getEngName() {
+		return engName;
+	}
+
+	public void setEngName(String engName) {
+		this.engName = engName;
+	}
+
+	public String getGraduateDay() {
+		return graduateDay;
+	}
+
+	public void setGraduateDay(String graduateDay) {
+		this.graduateDay = graduateDay;
+	}
+
+	public String getFk_regSeq() {
+		return fk_regSeq;
+	}
+
+	public void setFk_regSeq(String fk_regSeq) {
+		this.fk_regSeq = fk_regSeq;
+	}
+
+	public String getFk_deptSeq() {
+		return fk_deptSeq;
+	}
+
+	public void setFk_deptSeq(String fk_deptSeq) {
+		this.fk_deptSeq = fk_deptSeq;
+	}
+
+	public String getTotalSemester() {
+		return totalSemester;
+	}
+
+	public void setTotalSemester(String totalSemester) {
+		this.totalSemester = totalSemester;
 	}
 
 	public String getMobile() {
@@ -67,84 +140,12 @@ public class JihyunMemberVO {
 		this.email = email;
 	}
 
-	public String getBirth() {
-		return birth;
+	public String getImg() {
+		return img;
 	}
 
-	public void setBirth(String birth) {
-		this.birth = birth;
-	}
-
-	public String getJubun() {
-		return jubun;
-	}
-
-	public void setJubun(String jubun) {
-		this.jubun = jubun;
-	}
-
-	public String getEngname() {
-		return engname;
-	}
-
-	public void setEngname(String engname) {
-		this.engname = engname;
-	}
-
-	public String getChinaname() {
-		return chinaname;
-	}
-
-	public void setChinaname(String chinaname) {
-		this.chinaname = chinaname;
-	}
-
-	public String getGrade() {
-		return grade;
-	}
-
-	public void setGrade(String grade) {
-		this.grade = grade;
-	}
-
-	public String getEnterday() {
-		return enterday;
-	}
-
-	public void setEnterday(String enterday) {
-		this.enterday = enterday;
-	}
-
-	public String getGraduateday() {
-		return graduateday;
-	}
-
-	public void setGraduateday(String graduateday) {
-		this.graduateday = graduateday;
-	}
-
-	public String getAbsencecnt() {
-		return absencecnt;
-	}
-
-	public void setAbsencecnt(String absencecnt) {
-		this.absencecnt = absencecnt;
-	}
-
-	public String getFk_regseq() {
-		return fk_regseq;
-	}
-
-	public void setFk_regseq(String fk_regseq) {
-		this.fk_regseq = fk_regseq;
-	}
-
-	public String getFk_deptseq() {
-		return fk_deptseq;
-	}
-
-	public void setFk_deptseq(String fk_deptseq) {
-		this.fk_deptseq = fk_deptseq;
+	public void setImg(String img) {
+		this.img = img;
 	}
 
 	public String getPostcode() {
@@ -163,45 +164,54 @@ public class JihyunMemberVO {
 		this.address = address;
 	}
 
-	public String getDetailaddress() {
-		return detailaddress;
+	public String getDetailAddress() {
+		return detailAddress;
 	}
 
-	public void setDetailaddress(String detailaddress) {
-		this.detailaddress = detailaddress;
+	public void setDetailAddress(String detailAddress) {
+		this.detailAddress = detailAddress;
 	}
 
-	public String getExtraaddress() {
-		return extraaddress;
+	public String getExtraAddress() {
+		return extraAddress;
 	}
 
-	public void setExtraaddress(String extraaddress) {
-		this.extraaddress = extraaddress;
+	public void setExtraAddress(String extraAddress) {
+		this.extraAddress = extraAddress;
 	}
 
-	public String getImg() {
-		return img;
+	public String getBirth() {
+		return birth;
 	}
 
-	public void setImg(String img) {
-		this.img = img;
+	public void setBirth(String birth) {
+		this.birth = birth;
 	}
 
-	public String getGraduateok() {
-		return graduateok;
+	public String getAbsenceCnt() {
+		return absenceCnt;
 	}
 
-	public void setGraduateok(String graduateok) {
-		this.graduateok = graduateok;
+	public void setAbsenceCnt(String absenceCnt) {
+		this.absenceCnt = absenceCnt;
 	}
 
-	public String getCurrentsemester() {
-		return currentsemester;
+	public String getDeptName() {
+		return deptName;
 	}
 
-	public void setCurrentsemester(String currentsemester) {
-		this.currentsemester = currentsemester;
+	public void setDeptName(String deptName) {
+		this.deptName = deptName;
 	}
+
+	public String getStatus() {
+		return status;
+	}
+
+	public void setStatus(String status) {
+		this.status = status;
+	}
+
 	
 	
 }

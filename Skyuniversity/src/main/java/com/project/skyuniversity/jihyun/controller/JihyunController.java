@@ -1,6 +1,7 @@
 package com.project.skyuniversity.jihyun.controller;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 import javax.servlet.http.HttpServletRequest;
@@ -224,6 +225,10 @@ public class JihyunController {
 	// 증명서발급
 	@RequestMapping(value = "/certificate.sky")
 	public ModelAndView requiredLoginhs_certificate (HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		List<Map<String, String>> certificateKindList = service.getCertificatekindList();
+		
+		mav.addObject("certificateKindList", certificateKindList);
 		
 		mav.setViewName("jihyun/studentinfo/certificate.tiles2");
 		return mav;

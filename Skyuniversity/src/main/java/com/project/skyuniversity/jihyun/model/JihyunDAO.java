@@ -1,5 +1,6 @@
 package com.project.skyuniversity.jihyun.model;
 
+import java.util.List;
 import java.util.Map;
 
 import javax.annotation.Resource;
@@ -32,6 +33,11 @@ public class JihyunDAO implements InterJihyunDAO {
 			isEqualPwd = true;
 		}
 		return isEqualPwd;
+	}
+
+	public List<Map<String, String>> getCertificateKindList() {
+		List<Map<String,String>> certificateKindList = sqlsession.selectList("Jihyun.getCertificateKindList");
+		return certificateKindList;
 	}
 
 }

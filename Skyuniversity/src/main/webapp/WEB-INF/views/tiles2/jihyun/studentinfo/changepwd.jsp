@@ -247,7 +247,7 @@
 <div id="pwdChageContainer">
 
 	<div class="defaultInfo">
-		<label style="width: 35px;">학번</label><input type="text" class="defaultInput" value="${loginuser.memberno}" readonly/>
+		<label style="width: 35px;">학번</label><input type="text" class="defaultInput" value="${loginuser.memberNo}" readonly/>
 		<label style="width: 35px;">이름</label><input type="text" class="defaultInput" value="${loginuser.name}" readonly/>
 	</div>
 	<form name="pwdChangeFrm" class="changeInput">

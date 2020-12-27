@@ -64,7 +64,7 @@
 	</div>
 	<div id="loginStudent">
 	      <span class="sname">${sessionScope.loginuser.name}</span>
-	      <span class="sinfo">뫄뫄뫄뫄과 솨학년</span>
+	      <span class="sinfo">${sessionScope.loginuser.deptName}과 ${loginuser.grade}학년</span>
 	 </div>
 	 <div>
 	   <span class="btn" onclick="location.href='<%=ctxPath%>/index.sky';">커뮤니티</span>
