@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.project.skyuniversity.eunji.model.ClassCheckVO;
+import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
@@ -276,6 +277,48 @@ public class EunjiService implements InterEunjiService {
 	public int checkLeave(Map<String, String> paraMap) {
 		int n = dao.checkLeave(paraMap);
 		return n;
+	}
+
+	@Override
+	public List<SchoolLeaveVO> comeSchoolInfo(Map<String, String> commap) {
+		List<SchoolLeaveVO> comelist = dao.comeSchoolInfo(commap);
+		return comelist;
+	}
+
+	@Override
+	public int insertComeSchool(Map<String, String> paraMap) {
+		int n = dao.insertComeSchool(paraMap);
+		return n;
+	}
+
+	@Override
+	public int checkComeSchool(Map<String, String> paraMap) {
+		int n = dao.checkComeSchool(paraMap);
+		return n;
+	}
+
+	@Override
+	public List<ComeSchoolVO> selectEndComeSchool(int memberNo) {
+		List<ComeSchoolVO> list = dao.selectEndComeSchool(memberNo);
+		return list;
+	}
+
+	@Override
+	public int insertComeSchoolArmy(ComeSchoolVO csvo) {
+		int n = dao.insertComeSchoolArmy(csvo);
+		return n;
+	}
+
+	@Override
+	public int deleteComeSchool(String seq) {
+		int n = dao.deleteComeSchool(seq);
+		return n;
+	}
+
+	@Override
+	public ComeSchoolVO getComeSchoolVO(String seq) {
+		ComeSchoolVO csvo = dao.getComeSchoolVO(seq);
+		return csvo;
 	}
 
 

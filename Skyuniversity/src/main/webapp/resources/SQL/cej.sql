@@ -778,7 +778,7 @@ select name, memberno, grade, deptname, filename, orgfilename, filesize, leaveNo
 ALTER TABLE tbl_school_leave DROP COLUMN comeSemester;
 ALTER TABLE tbl_school_leave ADD type varchar2(30) 
 ALTER TABLE tbl_school_leave ADD comeSemester varchar2(30) 
-
+ALTER TABLE tbl_school_leave ADD comeSchool number default 0
 commit
         create sequence tbl_school_leave_seq
         start with 1
@@ -790,10 +790,10 @@ commit
         
         select *
         from tbl_school_leave
-        
+        delete from tbl_school_leave
         insert into tbl_school_leave(schoolLvNo, armytype, armystartdate, armyenddate, filename, orgfilename, filesize, comeSemester, fk_regSeq, type)
         values(tbl_school_leave_seq.nextval, ?, ?, ?, ?, ?, ?, ?,'2','군휴학')
-        
+        update tbl_school_leave set regdate= '2019-08-17'
         
         select schoollvno, startsemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comesemester, approve, filename, orgfilename, filesize, noreason
         from tbl_school_leave
@@ -801,3 +801,60 @@ commit
         
         delete from tbl_school_leave
         commit
+        rollback
+        update tbl_school_leave set armytype = '해군', startsemester = '2021-2' where schoollvno = '13'
+        
+        select to_char(armyStartDate, 'yyyy-mm-dd') as armyStartDate, to_char(armyEndDate, 'yyyy-mm-dd') as armyEndDate, armyType, schoolLvNo, startSemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comeSemester, approve, filename, orgfilename, filesize, noreason
+        from tbl_school_leave
+        where schoolLvNo = '15'
+        
+        select *
+        from tbl_school_leave
+        where startsemester = '2021-1' and fk_memberno = '102'
+        
+        insert into tbl_school_leave(schoollvno, startsemester, endsemester, approve, reason, fk_memberno, type, comesemester)
+        values(tbl_school_leave_seq.nextval, '2020-1', '2020-2', '승인완료', '자기개발을 위해서 하고 싶었습니다.', '102', '일반휴학', '2021-1');
+        update tbl_school_leave set comesemester = '2022/2학기' where schoollvno = '17'
+        commit
+        
+        select startsemester, regdate, type, comesemester
+        from tbl_school_leave
+        where fk_memberno = '102' and comesemester = '2021/1학기'
+        
+        ---------------------------------------------------------------
+        -- 복학 테이블 만들기
+        create table tbl_come_school(
+            comeseq         number
+            ,comesemester   varchar2(30)
+            ,regdate        date    default sysdate not null
+            ,type           varchar2(30)
+            ,approve        varchar2(30) default '승인전'
+            ,approvedate    date    
+            ,filename       varchar2(255)   
+            ,orgfilename    varchar2(255)   
+            ,filesize       number
+            ,fk_memberno    number not null
+            ,constraint PK_tbl_come_school_comeseq  primary key(comeseq)
+            ,constraint FK_tbl_come_school_memberno  foreign key(fk_memberno) 
+                                   references tbl_member(memberno)
+        );
+        ALTER TABLE tbl_come_school ADD noreason varchar2(500) 
+        create sequence tbl_come_school_seq
+        start with 1
+        increment by 1
+        nomaxvalue
+        nominvalue
+        nocycle
+        nocache;
+        commit
+        
+        select *
+        from tbl_come_school
+        delete from tbl_come_school
+        select count(*)
+        from tbl_come_school
+        where comesemester = '' and fk_memberno = ''
+        
+        select comeseq, comesemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, approve, approvedate, filename, fk_memberno, noreason
+        from tbl_come_school
+        where fk_memberno = '102'

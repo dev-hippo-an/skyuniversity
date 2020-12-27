@@ -91,5 +91,19 @@ public interface InterEunjiBoardDAO {
 
 	int checkLeave(Map<String, String> paraMap);
 
+	List<SchoolLeaveVO> comeSchoolInfo(Map<String, String> commap);
+
+	int insertComeSchool(Map<String, String> paraMap);
+
+	int checkComeSchool(Map<String, String> paraMap);
+
+	List<ComeSchoolVO> selectEndComeSchool(int memberNo);
+
+	int insertComeSchoolArmy(ComeSchoolVO csvo);
+
+	int deleteComeSchool(String seq);
+
+	ComeSchoolVO getComeSchoolVO(String seq);
+
 
 }

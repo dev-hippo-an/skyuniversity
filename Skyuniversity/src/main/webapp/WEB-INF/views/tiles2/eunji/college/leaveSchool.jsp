@@ -19,6 +19,7 @@
 	color: #0066cc;
 	font-weight: bold;
 }
+
 </style>
 
 <script type="text/javascript">

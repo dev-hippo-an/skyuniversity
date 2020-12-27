@@ -273,6 +273,48 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public List<SchoolLeaveVO> comeSchoolInfo(Map<String, String> commap) {
+		List<SchoolLeaveVO> comeList = sqlSession.selectList("eunji.comeSchoolInfo", commap);
+		return comeList;
+	}
+
+	@Override
+	public int insertComeSchool(Map<String, String> paraMap) {
+		int n = sqlSession.insert("eunji.insertComeSchool", paraMap);
+		return n;
+	}
+
+	@Override
+	public int checkComeSchool(Map<String, String> paraMap) {
+		int n = sqlSession.selectOne("eunji.checkComeSchool", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<ComeSchoolVO> selectEndComeSchool(int memberNo) {
+		List<ComeSchoolVO> list = sqlSession.selectList("eunji.selectEndComeSchool", memberNo);
+		return list;
+	}
+
+	@Override
+	public int insertComeSchoolArmy(ComeSchoolVO csvo) {
+		int n = sqlSession.insert("eunji.insertComeSchoolArmy", csvo);
+		return n;
+	}
+
+	@Override
+	public int deleteComeSchool(String seq) {
+		int n = sqlSession.delete("eunji.deleteComeSchool",seq);
+		return n;
+	}
+
+	@Override
+	public ComeSchoolVO getComeSchoolVO(String seq) {
+		ComeSchoolVO csvo = sqlSession.selectOne("eunji.getComeSchoolVO",seq);
+		return csvo;
+	}
+
 
 
 }

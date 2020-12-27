@@ -380,4 +380,41 @@
         where startsemester = #{startsemester} and fk_memberno = #{memberNo}
 	</select>
 
+	<select id="comeSchoolInfo" parameterType="HashMap" resultType="com.project.skyuniversity.eunji.model.SchoolLeaveVO">
+		select startSemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comeSemester, to_char(armyStartDate, 'yyyy-mm-dd') as armyStartDate, to_char(armyEndDate, 'yyyy-mm-dd') as armyEndDate
+        from tbl_school_leave
+        where fk_memberno = #{memberno} and comesemester = #{comesem} and comeSchool = 0
+	</select>
+	
+	<insert id="insertComeSchool" parameterType="HashMap">
+		insert into tbl_come_school(comeseq, comesemester, type, fk_memberno)
+		values(tbl_come_school_seq.nextval, #{comesemester}, #{type}, #{memberno})
+	</insert>
+	
+	<select id="checkComeSchool" parameterType="HashMap" resultType="int">
+		select count(*)
+        from tbl_come_school
+        where comesemester = #{comesemester} and fk_memberno = #{memberno}
+	</select>
+	
+	<select id="selectEndComeSchool" parameterType="int" resultType="com.project.skyuniversity.eunji.model.ComeSchoolVO">
+		select comeSeq, comeSemester, to_char(regdate, 'yyyy-mm-dd') as regDate, type, approve, approveDate, fileName, orgFileName, fileSize, fk_Memberno, noReason
+        from tbl_come_school
+        where fk_memberno = #{memberNo}
+	</select>
+	
+	<insert id="insertComeSchoolArmy" parameterType="com.project.skyuniversity.eunji.model.ComeSchoolVO">
+		insert into tbl_come_school(comeseq, comesemester, type, fk_memberno, filename, orgfilename, filesize)
+		values(tbl_come_school_seq.nextval, #{comeSemester}, #{type}, #{fk_Memberno}, #{fileName}, #{orgFileName}, #{fileSize})
+	</insert>
+	
+	<delete id="deleteComeSchool" parameterType="String">
+		delete from tbl_come_school where comeseq = #{seq}
+	</delete>
+	
+	<select id="getComeSchoolVO" parameterType="String" resultType="com.project.skyuniversity.eunji.model.ComeSchoolVO">
+		select filename, orgfilename, filesize
+		from tbl_come_school
+		where comeseq = #{seq}
+	</select>
 </mapper>
