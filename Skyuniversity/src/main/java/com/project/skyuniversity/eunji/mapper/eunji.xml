@@ -354,7 +354,7 @@
 	</select>
 	
 	<select id="getSchoolLeaveVO" parameterType="String" resultType="com.project.skyuniversity.eunji.model.SchoolLeaveVO">
-		select to_char(armyStartDate, 'yyyy-mm-dd') as armyStartDate, to_char(armyEndDate, 'yyyy-mm-dd') as armyEndDate, armyType, schoolLvNo, startSemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comeSemester, approve, filename, orgfilename, filesize, noreason, endSemester
+		select to_char(armyStartDate, 'yyyy-mm-dd') as armyStartDate, to_char(armyEndDate, 'yyyy-mm-dd') as armyEndDate, armyType, schoolLvNo, startSemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, comeSemester, approve, filename, orgfilename, filesize, noreason, endSemester, reason
         from tbl_school_leave
         where schoolLvNo = #{seq}
 	</select>
@@ -368,5 +368,16 @@
 		<if test="filename != null">,filename = #{filename}, orgfilename = #{orgfilename}, filesize = #{filesize}</if>
 		where schoolLvNo = #{schoolLvNo}
 	</update>
+	
+	<update id="updateLeaveSchool" parameterType="com.project.skyuniversity.eunji.model.SchoolLeaveVO">
+		update tbl_school_leave set startsemester = #{startSemester}, endsemester = #{endSemester}, reason = #{reason}, comesemester = #{comeSemester}
+		where schoolLvNo = #{schoolLvNo}
+	</update>
+	
+	<select id="checkLeave" parameterType="HashMap" resultType="int">
+		select count(*)
+        from tbl_school_leave
+        where startsemester = #{startsemester} and fk_memberno = #{memberNo}
+	</select>
 
 </mapper>

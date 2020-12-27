@@ -753,17 +753,18 @@ public class EunjiBoardController {
 	}
 	
 	@RequestMapping(value = "/armyLeaveSchoolEnd.sky", method = { RequestMethod.POST })
-	public ModelAndView armyLeaveSchoolEnd(ModelAndView mav, HttpServletRequest request, MultipartHttpServletRequest mrequest, SchoolLeaveVO slvo) {
-		int n  = 0;
-		
+	public ModelAndView armyLeaveSchoolEnd(ModelAndView mav, HttpServletRequest request,
+			MultipartHttpServletRequest mrequest, SchoolLeaveVO slvo) {
+		int n = 0;
+
 		CommuMemberVO cmvo = new CommuMemberVO();
 		HttpSession session2 = request.getSession();
 
 		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
 		int memberNo = cmvo.getFk_memberNo();
-		
+
 		Map<String, String> paraMap = service.allMembeInfo(memberNo);
-		if("휴학".equals(paraMap.get("status"))){
+		if ("휴학".equals(paraMap.get("status"))) {
 			String message = "현재 휴학상태입니다. 휴학결과조회에서 휴학상세정보를 확인해주세요.";
 			String loc = "javascript:history.back()";
 
@@ -771,84 +772,101 @@ public class EunjiBoardController {
 			mav.addObject("loc", loc);
 
 			mav.setViewName("msg");
-		}
-		else {
+		} else {
 			String enddate = request.getParameter("armyEndDate");
-			
-			int year = Integer.parseInt(enddate.substring(0,4));
-			
-			if(0<Integer.parseInt(enddate.substring(5,7)) && Integer.parseInt(enddate.substring(5,7))<9) {
-				slvo.setComeSemester(year+" / 2학기");
+
+			int year = Integer.parseInt(enddate.substring(0, 4));
+
+			if (0 < Integer.parseInt(enddate.substring(5, 7)) && Integer.parseInt(enddate.substring(5, 7)) < 9) {
+				slvo.setComeSemester(year + " / 2학기");
+			} else {
+				slvo.setComeSemester((year + 1) + " / 1학기");
 			}
-			else {
-				slvo.setComeSemester((year+1)+" / 1학기");
-			}
-			
+
 			Calendar cal = Calendar.getInstance();
 			int curyear = cal.get(cal.YEAR);
 			int curmonth = cal.get(cal.MONTH);
 			String cur = "";
-			
-			if(curmonth < 9 && curmonth > 3) {
-				cur = curyear + "-2"; 
+
+			if (curmonth < 9 && curmonth > 3) {
+				cur = curyear + "-2";
 			}
-			
-			if(curmonth > 9 || curmonth < 3) {
-				cur = (curyear+1) + "-1";
+
+			if (curmonth > 9 || curmonth < 3) {
+				cur = (curyear + 1) + "-1";
 			}
 			slvo.setStartSemester(cur);
-			
+
 			MultipartFile attach = slvo.getAttach();
 			if (!attach.isEmpty()) {
 				HttpSession session = mrequest.getSession();
 				String root = session.getServletContext().getRealPath("/");
 				String path = root + "resources" + File.separator + "files";
-	
+
 				String newFilename = "";
 				byte[] bytes = null;
 				long fileSize = 0;
-	
+
 				try {
 					bytes = attach.getBytes();
-	
+
 					newFilename = fileManager.doFileUpload(bytes, attach.getOriginalFilename(), path);
-	
+
 					slvo.setFilename(newFilename);
 					// WAS(톰캣)에 저장될 파일명(202012091040316143631028500.png)
-	
+
 					slvo.setOrgfilename(attach.getOriginalFilename());
 					// 게시판 페이지에서 첨부된 파일(강아지.png)을 보여줄 때 사용.
 					// 또한 사용자가 파일을 다운로드 할 때 사용되어지는 파일명으로 사용.
-	
+
 					fileSize = attach.getSize(); // 첨부파일의 크기(단위는 byte임)
-					slvo.setFilesize((int)fileSize);
-	
+					slvo.setFilesize((int) fileSize);
+
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 			}
 			slvo.setFk_memberNo(memberNo);
-			n = service.insertArmyLeave(slvo);
-		}
-		if(n == 1) {
-			Map<String, String> paraMap2 = service.allMembeInfo(memberNo);
 
-			int grade = Integer.parseInt(paraMap2.get("grade"));
-			int semester = Integer.parseInt(paraMap2.get("currentSemester"));
-			semester = grade * semester;
-			paraMap2.put("currentSemester", Integer.toString(semester));
-			
-			mav.addObject("paraMap", paraMap2);
-			mav.setViewName("eunji/college/armyLeaveSchool.tiles2");
-		}
-		else {
-			String message = "군 휴학 신청에 실패하셨습니다.";
-			String loc = "javascript:history.back()";
 
-			mav.addObject("message", message);
-			mav.addObject("loc", loc);
+			Map<String, String> paraMap3 = new HashMap<String, String>();
+			paraMap3.put("startsemester", slvo.getStartSemester());
+			paraMap3.put("memberNo", Integer.toString(slvo.getFk_memberNo()));
 
-			mav.setViewName("msg");
+			int checknum = service.checkLeave(paraMap3);
+
+			if(checknum > 0) {
+				String message = "해당기간에 휴학신청 내역이 존재합니다. 휴학결과조회에서 휴학상세정보를 확인해주세요.";
+				String loc = "javascript:history.back()";
+
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+
+				mav.setViewName("msg");
+			}
+			else {
+				n = service.insertArmyLeave(slvo);
+	
+				if (n == 1) {
+					Map<String, String> paraMap2 = service.allMembeInfo(memberNo);
+	
+					int grade = Integer.parseInt(paraMap2.get("grade"));
+					int semester = Integer.parseInt(paraMap2.get("currentSemester"));
+					semester = grade * semester;
+					paraMap2.put("currentSemester", Integer.toString(semester));
+	
+					mav.addObject("paraMap", paraMap2);
+					mav.setViewName("eunji/college/armyLeaveSchool.tiles2");
+				} else {
+					String message = "군 휴학 신청에 실패하셨습니다.";
+					String loc = "javascript:history.back()";
+	
+					mav.addObject("message", message);
+					mav.addObject("loc", loc);
+	
+					mav.setViewName("msg");
+				}
+			}
 		}
 		return mav;
 	}
@@ -878,40 +896,73 @@ public class EunjiBoardController {
 	
 	
 	@RequestMapping(value = "/leaveSchoolEnd.sky", method = { RequestMethod.POST })
-	public String leaveSchoolEnd(HttpServletRequest request) {
+	public ModelAndView leaveSchoolEnd(ModelAndView mav, HttpServletRequest request) {
 		CommuMemberVO cmvo = new CommuMemberVO();
 		HttpSession session2 = request.getSession();
 
 		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
 		int memberNo = cmvo.getFk_memberNo();
 		
-		String startYear = request.getParameter("startyear");
-		String startsem = request.getParameter("startsem");
-		String endYear = request.getParameter("endyear");
-		String endsem = request.getParameter("endsem");
-		String reason = request.getParameter("reason");
+		Map<String, String> paraMap2 = service.allMembeInfo(memberNo);
 		
-		String startsemester = startYear + "-" + startsem;
-		String endsemester = endYear + "-" + endsem;
-		String comesem = "";
-		if(endsem.equals("1")) {
-			comesem = endYear + " / 2학기";
+		if("휴학".equals(paraMap2.get("status"))){
+			String message = "현재 휴학상태입니다. 휴학결과조회에서 휴학상세정보를 확인해주세요.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
 		}
 		else {
-			comesem = (Integer.parseInt(endYear)+1) + " / 1학기";
+			String startYear = request.getParameter("startyear");
+			String startsem = request.getParameter("startsem");
+			String endYear = request.getParameter("endyear");
+			String endsem = request.getParameter("endsem");
+			String reason = request.getParameter("reason");
+			
+			String startsemester = startYear + "-" + startsem;
+			String endsemester = endYear + "-" + endsem;
+			String comesem = "";
+			if(endsem.equals("1")) {
+				comesem = endYear + " / 2학기";
+			}
+			else {
+				comesem = (Integer.parseInt(endYear)+1) + " / 1학기";
+			}
+			Map<String, String> paraMap = new HashMap<String, String>();
+			paraMap.put("startsemester", startsemester);
+			paraMap.put("endsemester", endsemester);
+			paraMap.put("reason", reason);
+			paraMap.put("comesemester", comesem);
+			paraMap.put("memberNo", Integer.toString(memberNo));
+			
+			int checknum = service.checkLeave(paraMap);
+			if(checknum > 0) {
+				String message = "해당기간에 휴학신청 내역이 존재합니다. 휴학결과조회에서 휴학상세정보를 확인해주세요.";
+				String loc = "javascript:history.back()";
+
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+
+				mav.setViewName("msg");
+			}
+			else {
+				int n = service.insertLeave(paraMap);
+				if(n==1) {
+					Map<String, String> paraMap3 = service.allMembeInfo(memberNo);
+	
+					int grade = Integer.parseInt(paraMap3.get("grade"));
+					int semester = Integer.parseInt(paraMap3.get("currentSemester"));
+					semester = grade * semester;
+					paraMap3.put("currentSemester", Integer.toString(semester));
+					
+					mav.addObject("paraMap", paraMap3);
+					mav.setViewName("eunji/college/leaveSchool.tiles2");
+				}
+			}
 		}
-		Map<String, String> paraMap = new HashMap<String, String>();
-		paraMap.put("startsemester", startsemester);
-		paraMap.put("endsemester", endsemester);
-		paraMap.put("reason", reason);
-		paraMap.put("comesemester", comesem);
-		paraMap.put("memberNo", Integer.toString(memberNo));
-		
-		int n = service.insertLeave(paraMap);
-		if(n==1) {
-			return "redirect:/leaveSchool.sky"; 
-		}
-		return "";
+		return mav;
 		
 	}
 	
@@ -1019,11 +1070,13 @@ public class EunjiBoardController {
 		else {
 			SchoolLeaveVO slvo = service.getSchoolLeaveVO(no);
 			mav.addObject("slvo",slvo);
+			mav.addObject("paraMap", paraMap);
 			mav.setViewName("eunji/college/updateLeave.tiles2");
 		}
 		return mav;
 	}
 	
+	// 군휴학 수정하기
 	@RequestMapping(value = "/armyLeaveSchoolUpdate.sky", method = { RequestMethod.POST})
 	public ModelAndView armyLeaveSchoolUpdate(ModelAndView mav, HttpServletRequest request, MultipartHttpServletRequest mrequest, SchoolLeaveVO slvo) {
 		
@@ -1108,5 +1161,52 @@ public class EunjiBoardController {
 		return mav;
 	}
 	
+	// 일반 수정하기
+	@RequestMapping(value = "/leaveSchoolUpdate.sky", method = { RequestMethod.POST})
+	public ModelAndView leaveSchoolUpdate(ModelAndView mav, HttpServletRequest request, SchoolLeaveVO slvo) {
+	
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
+
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		
+		String startYear = request.getParameter("startyear");
+		String startsem = request.getParameter("startsem");
+		String endYear = request.getParameter("endyear");
+		String endsem = request.getParameter("endsem");
+		
+		String startsemester = startYear + "-" + startsem;
+		String endsemester = endYear + "-" + endsem;
+		
+		String comesem = "";
+		if(endsem.equals("1")) {
+			comesem = endYear + " / 2학기";
+		}
+		else {
+			comesem = (Integer.parseInt(endYear)+1) + " / 1학기";
+		}
+		slvo.setStartSemester(startsemester);
+		slvo.setEndSemester(endsemester);
+		slvo.setComeSemester(comesem);
+				
+		int n = service.updateLeaveSchool(slvo);
+		if(n==1){
+			List<SchoolLeaveVO> list = service.selectSchoolLeave(memberNo);
+			
+			mav.addObject("list", list); 
+			mav.setViewName("eunji/college/leaveSchoolInfo.tiles2");
+		}
+		else {
+			String message = "휴학신청 수정에 실패하셨습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		return mav;
+	}
 	
 }

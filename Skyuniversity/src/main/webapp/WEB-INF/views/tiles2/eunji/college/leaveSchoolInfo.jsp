@@ -83,21 +83,9 @@ table#scroltbl {
 	}
 </script>
 <div style="padding-left: 10px; padding-right: 10px;">
-<div style="background-color: #b3d9ff; padding: 10px; border-radius: 3px;">
-	<label style="padding-right:10px;">학년도</label>
-	<select name="year" id="year">	
-	</select>
-	<label style="padding-right:10px;">학기</label>
-	<select name="semester" id="semester">
-		<option>전체</option>
-		<option>1</option>
-		<option>2</option>
-	</select>
-	<button id="searchbtn2" style="margin-left: 70px; border: none;">조회</button>
-</div>
 <br>
 <div>
-<span style="font-size: 12pt; font-weight: bold;">공결 목록</span>
+<span style="font-size: 12pt; font-weight: bold;">휴학신청 결과조회</span>
 </div>
 <br>
 <div style="border: solid 1px #d9d9d9; height: 450px;">

@@ -266,6 +266,18 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public int updateLeaveSchool(SchoolLeaveVO slvo) {
+		int n = dao.updateLeaveSchool(slvo);
+		return n;
+	}
+
+	@Override
+	public int checkLeave(Map<String, String> paraMap) {
+		int n = dao.checkLeave(paraMap);
+		return n;
+	}
+
 
 
 

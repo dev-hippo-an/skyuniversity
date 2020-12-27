@@ -87,5 +87,9 @@ public interface InterEunjiBoardDAO {
 
 	int updateArmyType(SchoolLeaveVO slvo);
 
+	int updateLeaveSchool(SchoolLeaveVO slvo);
+
+	int checkLeave(Map<String, String> paraMap);
+
 
 }

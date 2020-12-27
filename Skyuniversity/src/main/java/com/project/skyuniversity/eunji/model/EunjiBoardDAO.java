@@ -261,6 +261,18 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int updateLeaveSchool(SchoolLeaveVO slvo) {
+		int n = sqlSession.update("eunji.updateLeaveSchool", slvo);
+		return n;
+	}
+
+	@Override
+	public int checkLeave(Map<String, String> paraMap) {
+		int n = sqlSession.selectOne("eunji.checkLeave", paraMap);
+		return n;
+	}
+
 
 
 }

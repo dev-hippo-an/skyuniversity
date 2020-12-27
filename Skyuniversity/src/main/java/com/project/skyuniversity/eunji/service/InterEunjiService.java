@@ -93,6 +93,10 @@ public interface InterEunjiService {
 
 	int updateArmyType(SchoolLeaveVO slvo);
 
+	int updateLeaveSchool(SchoolLeaveVO slvo);
+
+	int checkLeave(Map<String, String> paraMap);
+
 	
 
 	
