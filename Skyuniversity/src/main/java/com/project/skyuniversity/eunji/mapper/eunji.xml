@@ -18,17 +18,18 @@
 		from tbl_dept
 	</select>
 	
-	<select id="selectAllSubject" resultType="String" >
+	<select id="selectAllSubject" resultType="String" parameterType="int">
 		select subjectname
 		from tbl_subject
+		where subssemester = #{semester}
 	</select>
 	
 	<select id="selectDeptClass" resultType="String" parameterType="HashMap">
-		select subjectname
+		select subjectname, subssemester
 		from tbl_subject S
 		inner join tbl_dept D
 		on S.fk_deptseq = D.deptseq
-		where 1=1
+		where subssemester = #{semester}
 		<if test="dept != null">
 			and deptname = #{dept}
 		</if>
@@ -50,17 +51,17 @@
 		<result property="curpeoplecnt" column="curpeoplecnt" javaType="String"/>
 	</resultMap>
 	<select id="getSubjectList" resultMap="subjectsMap">
-		select deptname, subjectname, subjectno, name, credits, day, period, peoplecnt, grade, curpeoplecnt
+		select deptname, subjectname, subjectno, name, credits, day, period, peoplecnt, grade, curpeoplecnt, subssemester
 		from
 		(
-		select p.name, subjectno, subjectname, credits, day, period, peoplecnt, fk_deptseq, grade, curpeoplecnt
+		select p.name, subjectno, subjectname, credits, day, period, peoplecnt, fk_deptseq, grade, curpeoplecnt, subssemester
 		from tbl_subject S
 		inner join tbl_professor P
 		on S.fk_professorno = p.professorno
 		) V
 		inner join tbl_dept D
 		on V.fk_deptseq = D.deptseq
-		where 1=1 
+		where subssemester=#{semester} 
 		<if test="dept != null">
 			and deptname = #{dept}
 		</if>

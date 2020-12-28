@@ -34,8 +34,8 @@ public class EunjiService implements InterEunjiService {
 	}
 
 	@Override
-	public List<String> selectAllSubject() {
-		List<String> arraylist = dao.selectAllSubject();
+	public List<String> selectAllSubject(int semester) {
+		List<String> arraylist = dao.selectAllSubject(semester);
 		return arraylist;
 	}
 	

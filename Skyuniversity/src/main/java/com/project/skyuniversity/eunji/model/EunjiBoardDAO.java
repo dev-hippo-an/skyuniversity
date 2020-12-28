@@ -28,8 +28,8 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 	
   
 	@Override
-	public List<String> selectAllSubject() {
-		List<String> arraylist = sqlSession.selectList("eunji.selectAllSubject");
+	public List<String> selectAllSubject(int semester) {
+		List<String> arraylist = sqlSession.selectList("eunji.selectAllSubject", semester);
 		return arraylist;
 	}
 

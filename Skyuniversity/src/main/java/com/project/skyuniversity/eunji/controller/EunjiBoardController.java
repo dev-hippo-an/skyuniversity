@@ -70,12 +70,21 @@ public class EunjiBoardController {
 
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 
+		// 현재날짜 기준으로 학기 정하기
 		int year = cal.get(cal.YEAR);
-
+		int month = cal.get(cal.MONTH)+1;
+		int semesters = 0;
+		if(month >=12 || month <= 2) {
+			semesters = semesters + 1;
+		}
+		if(month >=7 && month <= 8) {
+			semesters = semesters +2;
+		}
+		System.out.println(month + " !" +semesters);
 		// 전체 학과 리스트를 조회
 		List<String> deptlist = service.selectAllDept();
 		// 전체 과목 리스트 조회
-		List<String> subjectlist = service.selectAllSubject();
+		List<String> subjectlist = service.selectAllSubject(semesters);
 
 		Map<String, String> paraMap2 = new HashMap<String, String>();
 		paraMap2.put("memberno", Integer.toString(memberNo));
@@ -101,6 +110,18 @@ public class EunjiBoardController {
 	@ResponseBody
 	@RequestMapping(value = "/deptSelect.sky", method = { RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
 	public String deptSelect(HttpServletRequest request) {
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		// 현재날짜 기준으로 학기 정하기
+		int year = cal.get(cal.YEAR);
+		int month = cal.get(cal.MONTH) + 1;
+		int semesters = 0;
+		if (month >= 12 || month <= 2) {
+			semesters = semesters + 1;
+		}
+		if (month >= 7 && month <= 8) {
+			semesters = semesters + 2;
+		}
+		
 		String dept = request.getParameter("dept");
 		String grade = request.getParameter("grade");
 		Map<String, String> paraMap = new HashMap<String, String>();
@@ -114,7 +135,8 @@ public class EunjiBoardController {
 
 		paraMap.put("dept", dept);
 		paraMap.put("grade", grade);
-
+		paraMap.put("semester", Integer.toString(semesters));
+		
 		List<String> arraylist = service.selectDeptClass(paraMap);
 		JSONArray jsonarr = new JSONArray();
 		if (arraylist != null) {
@@ -131,6 +153,19 @@ public class EunjiBoardController {
 	@ResponseBody
 	@RequestMapping(value = "/subSelect.sky", method = { RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
 	public String subSelect(HttpServletRequest request) {
+		
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+		// 현재날짜 기준으로 학기 정하기
+		int year = cal.get(cal.YEAR);
+		int month = cal.get(cal.MONTH) + 1;
+		int semesters = 0;
+		if (month >= 12 || month <= 2) {
+			semesters = semesters + 1;
+		}
+		if (month >= 7 && month <= 8) {
+			semesters = semesters + 2;
+		}
+
 		String dept = request.getParameter("dept");
 		String grade = request.getParameter("grade");
 		String subject = request.getParameter("subject");
@@ -157,6 +192,7 @@ public class EunjiBoardController {
 		paraMap.put("grade", grade);
 		paraMap.put("firstsub", firstsub);
 		paraMap.put("subject", subject);
+		paraMap.put("semester", Integer.toString(semesters));
 
 		List<Map<String, String>> subjectlist = service.getSubjectList(paraMap);
 		JSONArray jsonarr = new JSONArray();
@@ -1324,6 +1360,7 @@ public class EunjiBoardController {
 
 		return jsonobj.toString();
 	}
+	
 	@RequestMapping(value = "/armyComeSchool.sky", method = { RequestMethod.POST })
 	public String armyComeSchool(HttpServletRequest request,
 		MultipartHttpServletRequest mrequest, ComeSchoolVO csvo) {
