@@ -149,7 +149,15 @@ public interface InterAnsehyeongDAO {
 	
 	
 
-	List<MarketBoardVO> getMyBoardList(CommuMemberVO loginuser);
+	List<MarketBoardVO> getMyBoardList(Map<String, String> paraMap);
+
+	
+	// 야 총 페이지구함
+	int getTotalCountForMyPage(CommuMemberVO loginuser);
+
+	List<NoticeVO> getAllNoticeList();
+
+	List<NoticeVO> getAllNoticeListWithParam(Map<String, String> paraMap);
 
 
 

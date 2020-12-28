@@ -368,10 +368,6 @@ label#update-nickname:hover {
      
      
      function goViewDetailLetsGo(obj) {
-    	 
-    		<%
-		      session.setAttribute("readCountPermission", "yes");
-		      %>
     	
 		var frm = document.headerViewForm;
 		
@@ -391,7 +387,8 @@ label#update-nickname:hover {
 		frm.boardNo.value = $(obj).find('td.boardNo').text();
 		frm.method = "GET";
 		frm.submit();
- 		
+		
+		
      }
 	
 
@@ -482,7 +479,12 @@ label#update-nickname:hover {
 		          	</c:if>
 		          	
 		          	<c:if test="${not empty loginuser.nickname}">
-		        		<span id="nickname" style="font-size: 15pt; color: blue; cursor:pointer;" onclick="javascript:location.href='<%=ctxPath%>/checkMyList.sky'">${loginuser.nickname}</span>&nbsp;<span></span>
+			          	<c:if test="${loginuser.fk_memberNo == 0 }">
+			        		<span id="nickname" style="font-size: 15pt; color: blue; cursor:pointer;" onclick="javascript:location.href='<%=ctxPath%>/checkALlNotice.sky'">${loginuser.nickname}</span>&nbsp;<span></span>
+			          	</c:if>
+			          	<c:if test="${loginuser.fk_memberNo != 0 }">
+			        		<span id="nickname" style="font-size: 15pt; color: blue; cursor:pointer;" onclick="javascript:location.href='<%=ctxPath%>/checkMyList.sky'">${loginuser.nickname}</span>&nbsp;<span></span>
+			          	</c:if>
 		        		<br>
 		          		<label id="update-nickname" onclick="javascript:location.href='<%=ctxPath%>/updateNicknameStart.sky'">닉네임 재설정</label>
 		          	</c:if>
