@@ -238,7 +238,16 @@ insert into tbl_building(buildno, buildname)
 values(tbl_building_seq.nextval, '60주년기념관');
 insert into tbl_building(buildno, buildname)
 values(tbl_building_seq.nextval, '만우관');
+insert into tbl_building(buildno, buildname)
+values(tbl_building_seq.nextval, '송암관');
+insert into tbl_building(buildno, buildname)
+values(tbl_building_seq.nextval, '장공관');
+insert into tbl_building(buildno, buildname)
+values(tbl_building_seq.nextval, '경삼관');
 commit
+
+select *
+from tbl_building
 ------------------------------------------------------ 
 
 ------------------------------------------------------ 
@@ -263,15 +272,153 @@ values('18104', '1')
 insert into tbl_classroom(classno, fk_buildno)
 values('18105', '1')
 insert into tbl_classroom(classno, fk_buildno)
-values('18201', '1')
+values('18501', '1');
 insert into tbl_classroom(classno, fk_buildno)
-values('18202', '1')
+values('18502', '1');
 insert into tbl_classroom(classno, fk_buildno)
-values('18203', '1')
+values('18503', '1');
 insert into tbl_classroom(classno, fk_buildno)
-values('18204', '1')
+values('18504', '1');
 insert into tbl_classroom(classno, fk_buildno)
-values('18205', '1')
+values('18505', '1');
+insert into tbl_classroom(classno, fk_buildno)
+values('7101', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7102', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7103', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7104', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7105', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7201', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7202', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7203', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7204', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7205', '2')
+insert into tbl_classroom(classno, fk_buildno)
+values('7301', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7302', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7303', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7304', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7305', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7401', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7402', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7403', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7404', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7405', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7501', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7502', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7503', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7504', '2');
+insert into tbl_classroom(classno, fk_buildno)
+values('7505', '2');
+
+insert into tbl_classroom(classno, fk_buildno)
+values('4101', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4102', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4103', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4104', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4105', '3');
+
+insert into tbl_classroom(classno, fk_buildno)
+values('4201', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4202', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4203', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4204', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4205', '3');
+
+insert into tbl_classroom(classno, fk_buildno)
+values('4301', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4302', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4303', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4304', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4305', '3');
+
+insert into tbl_classroom(classno, fk_buildno)
+values('4401', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4402', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4403', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4404', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4405', '3');
+
+insert into tbl_classroom(classno, fk_buildno)
+values('4501', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4502', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4503', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4504', '3');
+insert into tbl_classroom(classno, fk_buildno)
+values('4505', '3');
+
+insert into tbl_classroom(classno, fk_buildno)
+values('1101', '4');
+insert into tbl_classroom(classno, fk_buildno)
+values('1102', '4');
+insert into tbl_classroom(classno, fk_buildno)
+values('1103', '4');
+insert into tbl_classroom(classno, fk_buildno)
+values('1104', '4');
+insert into tbl_classroom(classno, fk_buildno)
+values('1105', '4');
+
+insert into tbl_classroom(classno, fk_buildno)
+values('1201', '4');
+insert into tbl_classroom(classno, fk_buildno)
+values('1202', '4');
+insert into tbl_classroom(classno, fk_buildno)
+values('1203', '4');
+insert into tbl_classroom(classno, fk_buildno)
+values('1204', '4');
+insert into tbl_classroom(classno, fk_buildno)
+values('1205', '4');
+
+insert into tbl_classroom(classno, fk_buildno)
+values('8501', '5');
+insert into tbl_classroom(classno, fk_buildno)
+values('8502', '5');
+insert into tbl_classroom(classno, fk_buildno)
+values('8503', '5');
+insert into tbl_classroom(classno, fk_buildno)
+values('8504', '5');
+insert into tbl_classroom(classno, fk_buildno)
+values('8505', '5');
 commit
 ------------------------------------------------------
 
@@ -295,7 +442,10 @@ nomaxvalue
 nominvalue
 nocycle
 nocache;
-
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0123', '윤효석', '18310', 'yhs@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0632', '이성구', '18413', 'ksg@hs.ac.kr')
 insert into tbl_professor(professorno, phonenum, name, roomno, email) 
 values(tbl_professor_seq.nextval, '031-379-0574', '염건', '8414', 'fish@hs.ac.kr')
 insert into tbl_professor(professorno, phonenum, name, roomno, email) 
@@ -306,6 +456,12 @@ insert into tbl_professor(professorno, phonenum, name, roomno, email)
 values(tbl_professor_seq.nextval, '031-379-0639', '강영경', '18415', 'ykang@hs.ac.kr')
 insert into tbl_professor(professorno, phonenum, name, roomno, email) 
 values(tbl_professor_seq.nextval, '031-379-0635', '김성기', '18404', 'skkim@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0611', '김대수', '18410', 'daesu@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0341', '나근식', '18411', 'nsg@hs.ac.kr')
+insert into tbl_professor(professorno, phonenum, name, roomno, email) 
+values(tbl_professor_seq.nextval, '031-379-0632', '박성진', '18409', 'sj@hs.ac.kr')
 insert into tbl_professor(professorno, phonenum, name, roomno, email) 
 values(tbl_professor_seq.nextval, '031-379-0644', '류승택', '18407', 'stryoo@hs.ac.kr')
 insert into tbl_professor(professorno, phonenum, name, roomno, email) 
@@ -367,11 +523,14 @@ values(tbl_professor_seq.nextval, '031-379-0517', '장익현', '8314', 'skking@h
 commit
 
 select *
-from tbl_professor
+from tbl_subject
 ------------------------------------------------------
 
 ------------------------------------------------------
 -- 과목 테이블 생성
+commit
+ALTER TABLE TBL_subject ADD subssemester number(5) default 1;
+ALTER TABLE TBL_SUBJECT DROP COLUMN semester;
 create table tbl_subject
 (
 subjectNo           varchar2(20)    not null    -- 과목코드
@@ -393,7 +552,8 @@ subjectNo           varchar2(20)    not null    -- 과목코드
 ,constraint FK_tbl_subject_deptSeq foreign key(fk_deptSeq) 
                                    references tbl_dept(deptSeq) 
 );
-
+select *
+from tbl_course
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
 values('NE104', '컴퓨터개론', '3', '1', '월,수', '01,02,03,04','30','18101','14', '2')
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
@@ -405,12 +565,144 @@ values('NE114', '미적분학', '3', '1', '화,목', '01,02,03,04','40','18105',
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
 values('NE115', '확률과통계', '3', '1', '화,목', '01,02,03,04','40','18203','14', '2')
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
-values('EB103', '경영수학', '3', '1', '화,목', '01,02,03,04','35','18202','11', '1')
+values('NE201', '윈도우프로그래밍', '3', '2', '월', '03,04','40','18301','47', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE202', '고급프로그래밍', '3', '2', '화,수', '08,09','40','18302','47', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE203', '자료구조', '3', '2', '목', '07,08,09,10','35','18302','47', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE220', '논리회로설계', '3', '2', '월,수', '11,12,13,14','40','18303','48', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE224', '창의공학설계', '3', '2', '금', '01,02,03,04','40','18402','48', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE223', '모바일웹프로그래밍', '3', '2', '화,목', '01,02','40','18202','45', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE302', '알고리즘', '3', '3', '월,수', '01,02','40','18202','45', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE306', '인터넷프로토콜', '3', '3', '월', '03,04','38','18402','13', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE308', '오토마타', '3', '3', '수', '03,04','40','18205','42', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE317', '소프트웨어공학', '3', '3', '월,수', '01,02,03,04','40','18305','46', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE320', '정보보호론', '3', '3', '월,수', '07,08','40','18501','14', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE325', '데이터베이스프로그래밍', '3', '3', '월,수', '09,10','40','18502','45', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE329', '리눅스프로그래밍', '3', '3', '월', '11,12','40','18503','48', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE334', '빅데이터 시스템', '3', '3', '수', '11,12','40','18502','47', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE335', '네트워크보안프로젝트', '3', '3', '화,목', '01,02','35','18102','13', '2')
 
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE403', '게임프로그래밍', '3', '4', '화,목', '03,04','40','18302','47', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE406', '소프트웨어특론', '3', '4', '화', '01,02','38','18303','46', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE410', '패턴인식', '3', '4', '목', '01,02','35','18301','46', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE447', '캡스톤디자인1', '3', '4', '화', '07,08,09,10','30','18205','43', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('NE448', '캡스톤디자인2', '3', '4', '목', '07,08','30','18305','44', '2');
+
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE101', 'C프로그래밍', '3', '1', '월,수', '07,08','35','18101','42', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE103', '멀티미디어시스템', '3', '1', '수', '09,10','35','18102','43', '2', '2')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE116', '선형대수', '3', '1', '월', '09,10','40','18103','44', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE117', '이산수학', '3', '1', '월,수', '01,02','40','18104','45', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE118', '웹프로그래밍기초', '3', '1', '월,수', '03,04','40','18105','46', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE119', 'C로배우는프로그래밍', '3', '1', '월,수', '01,02,03,04','40','18201','47', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE208', '운영체제', '3', '2', '월,수', '11,12,13,14','40','18202','48', '2', '2');
+
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE209', '컴퓨터구조', '3', '2', '월,금', '07,08','40','18203','13', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE210', '데이터베이스', '3', '2', '금', '01,02','45','18204','14', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE221', '네트워크및데이터통신', '3', '2', '화,목', '01,02','40','18205','42', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE255', '보안프로그래밍', '3', '2', '화,목', '03,04','40','18301','43', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE309', '인공지능', '3', '2', '화', '07,08','40','18302','44', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE314', '네트워크프로그래밍', '3', '2', '목', '07,08','40','18303','45', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE322', '컴퓨터그래픽스', '3', '3', '화,목', '01,02,03,04','40','18304','46', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE324', 'DBMS활용및실습', '3', '3', '금', '01,02,03,04','40','18305','47', '2', '2');
+
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE327', '공학통계학', '3', '3', '화,금', '03,04','40','18401','48', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE331', '안드로이드프로그래밍', '3', '3', '월,금', '07,08,09,10','40','18402','13', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE332', 'IOT프로그래밍', '3', '3', '화,목', '11,12','40','18403','14', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE333', '빅데이터분석', '3', '3', '화,목', '13,14','40','18404','42', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE336', 'R프로젝트', '3', '3', '월,화', '01,02','40','18405','43', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE337', '가상현실과증강현실', '3', '3', '화,수', '07,08,09,10','45','18501','44', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE402', '시스템분석설계', '3', '4', '월,수', '01,02','40','18502','45', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE405', '디지털영상처리', '3', '4', '월,수', '03,04','40','18503','45', '2', '2');
+update tbl_subject set subssemester ='2' where subjectno='NE421';
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester,mustStatus)
+values('NE419', '졸업논문', '3', '4', '목', '11,12,13,14','30','18504','46', '2', '2','0');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE426', '컴퓨터애니메이션', '3', '4', '화,금', '03,04','40','18505','47', '2', '2');
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq, semester)
+values('NE421', '디지털포렌식', '3', '4', '금', '01,02,03,04','40','18101','48', '2', '2');
+commit;
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('EB103', '경영수학', '3', '1', '화,목', '01,02,03,04','35','18202','11', '1');
+select *
+from tbl_subject
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
 values('AA101', '결혼과가족', '3', '1', '금', '01,02','50','18204','41', '23')
 insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
 values('AA102', '독서와토론', '2', '1', '금', '07,08,09,10','25','18201','40', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AA103', '영화와종교문화', '2', '1', '월', '01,02','45','8101','41', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AA104', '민주시민교육', '2', '1', '월', '03,04','30','8102','10', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AA105', '미국경제론', '3', '1', '화', '11,12,13,14','35','8103','12', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AB201', '글쓰기의기초', '2', '1', '금', '01,02,03,14','15','7101','18', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AB202', '영어1', '3', '1', '수', '01,02','30','7102','19', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AB203', '다큐멘터리만들기', '2', '1', '화', '09,10','20','7103','20', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AB204', '수재수학', '2', '1', '화,목', '13,14','60','7104','21', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AB205', '생활법률', '3', '1', '금', '13,14','60','7105','22', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AC301', '연기와마음치료', '2', '1', '수', '07,08','15','4101','23', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AC302', '한국미술과문화', '3', '1', '월,수', '03,04','60','4102','24', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AC303', '오르간연주법', '3', '1', '금', '07,08,09,10','20','4103','25', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AC304', '건강과다이어트', '3', '1', '목', '11,12,13,14','30','4104','26', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AC305', '수원의역사와문화', '3', '1', '화,목', '01,02','60','4201','27', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AD401', '아시아공동체론', '2', '1', '수', '11,12','60','4202','28', '23')
+insert into tbl_subject(subjectno, subjectname, credits, grade, day, period, peoplecnt, fk_classno, fk_professorno, fk_deptseq)
+values('AD402', '물리및실험', '3', '1', '월,목', '09,10,11','35','4203','29', '23')
+
+
+
 ALTER TABLE TBL_SUBJECT DROP COLUMN SUBJECTNAME;
 ALTER TABLE TBL_SUBJECT ADD SUBJECTNAME VARCHAR2(100);
 ALTER TABLE TBL_SUBJECT ADD curPeopleCnt number(5) default 0;
@@ -427,8 +719,8 @@ where deptname = '경영학과'
 select subjectname
 from tbl_subject
 update tbl_subject set subjectname = '컴퓨터공학개론'
-update tbl_subject set curpeoplecnt = 2 where subjectname = '컴퓨터공학개론'
-
+update tbl_subject set muststatus='0' where subjectno = 'AB201'
+COMMIT
 select *
 from tbl_subject
 
@@ -858,3 +1150,6 @@ commit
         select comeseq, comesemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, approve, approvedate, filename, fk_memberno, noreason
         from tbl_come_school
         where fk_memberno = '102'
+        
+        select *
+        from tbl_course
