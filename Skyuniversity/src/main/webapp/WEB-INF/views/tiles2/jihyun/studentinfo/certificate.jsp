@@ -3,6 +3,8 @@
 
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
 
+  <link rel="stylesheet" href="//code.jquery.com/ui/1.12.1/themes/base/jquery-ui.css">
+
 <style>
 
 	div#certificateWrapper {
@@ -142,13 +144,47 @@
 	}
 </style>
 
+<script src="https://code.jquery.com/jquery-1.12.4.js"></script>
+<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js"></script>
 <script type="text/javascript">
 
-	$(document).ready(function(){
+	 $(document).ready(function(){
 		
-		//var spinner = $( "#spinner" ).spinner();
+		var charge = 0;
+		var count = 0;
+		var spinner = $("input.spinner").spinner();
 		
-	});
+		spinner.val(0);
+		spinner.spinner({
+			min:0,
+			max:10,
+			step:1,
+			spin:function(event,ui){
+				count = ui.value;
+				// 스피너가 작동한 곳의 value값을 가져온다.
+				// 스피너 이벤트가 일어난 태그의 형제 태그중 ".charge"의 값을 가져온다.
+				// 스피너 이벤트가 일어난 태그의 값 * ".charge" 값 을 
+				// 형제태그중 ".sumInput"에 넣어주기
+				
+				var charge = $(this).parent().parents("td").html();
+				console.log(charge);
+				//var sum = count*charge;
+				//console.log(sum);
+				//console.log($(this).val());
+				//var c = $(event.target).val();
+				//console.log(c);
+			}
+		});
+		
+		$('.ui-spinner-button').click(function(){
+			var c = $(this).parents().html();
+		});
+	});// end of $(document).ready(function(){});------------------------
+	 
+	function sum(charge, count){
+		
+		
+	}
 </script>
 
 
@@ -213,9 +249,9 @@
 							<tr>
 								<td>${status.count}</td>
 								<td>${ck.certificateName}</td>
-								<td>${ck.charge}</td>
+								<td class="charge">${ck.charge}</td>
 								<td>
-									<select id="lang" name="lang">
+									<select class="lang" name="lang">
 										<c:if test="${ck.lang eq '1'}">
 				                               <option value="" selected>선택</option>
 				                               <option value="1">국문</option>
@@ -227,15 +263,15 @@
 										</c:if>
 		                            </select>
 								</td>
-								<td id="spinner"><input id="spinner"/></td>
+								<td class="spinner"><input class="spinner" name="count"/></td>
 								<td>
-									<select id="recieve" name="recieve">
+									<select class="recieve" name="recieve">
 										<option value="" selected>선택</option>
 										<option value="1">직접수령</option>
 										<option value="2">등기수령</option>
 									</select>
 								</td>
-								<td></td>
+								<td class="sum"><input class="sumInput"/></td>
 							</tr>
 						</c:forEach>
 					</c:if>
