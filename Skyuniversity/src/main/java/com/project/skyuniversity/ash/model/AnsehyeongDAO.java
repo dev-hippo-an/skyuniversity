@@ -469,4 +469,28 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 		return result;
 	}
 
+	@Override
+	public List<MarketBoardVO> getMyBoardList(Map<String, String> paraMap) {
+		List<MarketBoardVO> myBoardList = sqlsession.selectList("ansehyeong.getMyBoardList", paraMap);
+		return myBoardList;
+	}
+
+	@Override
+	public int getTotalCountForMyPage(CommuMemberVO loginuser) {
+		int myPageTotalPage = sqlsession.selectOne("ansehyeong.getTotalCountForMyPage", loginuser);
+		return myPageTotalPage;
+	}
+
+	@Override
+	public List<NoticeVO> getAllNoticeList() {
+		List<NoticeVO> allNoticeList = sqlsession.selectList("ansehyeong.getAllNoticeList");
+		return allNoticeList;
+	}
+
+	@Override
+	public List<NoticeVO> getAllNoticeListWithParam(Map<String, String> paraMap) {
+		List<NoticeVO> noticeList = sqlsession.selectList("ansehyeong.getAllNoticeListWithParam", paraMap);
+		return noticeList;
+	}
+
 }

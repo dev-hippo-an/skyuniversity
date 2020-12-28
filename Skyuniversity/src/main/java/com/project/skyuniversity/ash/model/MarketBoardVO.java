@@ -43,6 +43,7 @@ public class MarketBoardVO {
 	private String boardTypeNo;
 	private String boardName;
 	private String upCount;
+	private String fk_categoryNo;
 	private String cmtCount;      // 댓글수
 	
 	
@@ -349,6 +350,14 @@ public class MarketBoardVO {
 
 	public void setUpCount(String upCount) {
 		this.upCount = upCount;
+	}
+
+	public String getFk_categoryNo() {
+		return fk_categoryNo;
+	}
+
+	public void setFk_categoryNo(String fk_categoryNo) {
+		this.fk_categoryNo = fk_categoryNo;
 	}
 	
 	

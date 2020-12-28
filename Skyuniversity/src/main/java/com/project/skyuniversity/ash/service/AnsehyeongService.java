@@ -414,6 +414,34 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		int result = dao.updateNoticeComment(paraMap);
 		return result;
 	}
+
+
+	@Override
+	public List<MarketBoardVO> getMyBoardList(Map<String, String> paraMap) {
+		List<MarketBoardVO> myBoardList = dao.getMyBoardList(paraMap);
+		return myBoardList;
+	}
+
+	// 야 총 페이지구함
+	@Override
+	public int getTotalCountForMyPage(CommuMemberVO loginuser) {
+		int myPageTotalPage = dao.getTotalCountForMyPage(loginuser);
+		return myPageTotalPage;
+	}
+
+
+	@Override
+	public List<NoticeVO> getAllNoticeList() {
+		List<NoticeVO> allNoticeList = dao.getAllNoticeList();
+		return allNoticeList;
+	}
+
+
+	@Override
+	public List<NoticeVO> getAllNoticeListWithParam(Map<String, String> paraMap) {
+		List<NoticeVO> noticeList = dao.getAllNoticeListWithParam(paraMap);
+		return noticeList;
+	}
 	
 
 

@@ -145,6 +145,19 @@ public interface InterAnsehyeongService {
 	int deleteNoticeComment(Map<String, String> paraMap);
 
 	int updateNoticeComment(Map<String, String> paraMap);
+	
+	
+
+	List<MarketBoardVO> getMyBoardList(Map<String, String> paraMap);
+
+	
+	// 야 총 페이지구함
+	int getTotalCountForMyPage(CommuMemberVO loginuser);
+
+	// 전체 공지 리스트 구하기
+	List<NoticeVO> getAllNoticeList();
+
+	List<NoticeVO> getAllNoticeListWithParam(Map<String, String> paraMap);
 
 
 
