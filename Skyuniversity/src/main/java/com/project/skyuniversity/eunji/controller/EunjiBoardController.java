@@ -356,6 +356,94 @@ public class EunjiBoardController {
 		return jsonobj.toString();
 	}
 
+	// 수강신청 과목조회
+	@RequestMapping(value = "/registerClassInfoSubs.sky", method = { RequestMethod.GET })
+	public ModelAndView registerClassInfoSubs(ModelAndView mav, HttpServletRequest request) {
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session = request.getSession();
+
+		cmvo = (CommuMemberVO) session.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("memberNo", Integer.toString(memberNo));
+
+		MemberVO mvo = new MemberVO();
+		// 로그인한 유저의 해당하는 학적 정보를 불러온다.
+		mvo = service.selectMemberInfo(paraMap);
+
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+
+		// 현재날짜 기준으로 학기 정하기
+		int year = cal.get(cal.YEAR);
+		int month = cal.get(cal.MONTH)+1;
+		int semesters = 0;
+		if(month >=12 || month <= 2) {
+			semesters = semesters + 1;
+		}
+		if(month >=7 && month <= 8) {
+			semesters = semesters +2;
+		}
+		System.out.println(month + " !" +semesters);
+		// 전체 학과 리스트를 조회
+		List<String> deptlist = service.selectAllDept();
+		// 전체 과목 리스트 조회
+		List<String> subjectlist = service.selectAllSubject(semesters);
+
+		int cursemester = mvo.getCurrentSemester();
+		if(cursemester % 2 == 0) {
+			cursemester = 2;
+		}
+		else {
+			cursemester = 1;
+		}
+		
+		Map<String, String> paraMap2 = new HashMap<String, String>();
+		paraMap2.put("memberno", Integer.toString(memberNo));
+		paraMap2.put("year", Integer.toString(year));
+		paraMap2.put("cursemester", Integer.toString(cursemester));
+
+		List<Map<String, String>> reglist = service.selectRegList(paraMap2);
+
+		int sumcredits = service.selectSumCredit(paraMap2);
+
+		mav.addObject("sumcredits", sumcredits);
+		mav.addObject("reglist", reglist);
+		mav.addObject("deptlist", deptlist);
+		mav.addObject("subjectlist", subjectlist);
+		mav.addObject("year", year);
+		mav.addObject("mvo", mvo);
+		mav.setViewName("eunji/class/registerClassInfoSubs.tiles2");
+		return mav;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/subSelectNo.sky", method = { RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
+	public String subSelectNo(HttpServletRequest request) {
+
+		String no = request.getParameter("no");
+
+		List<Map<String, String>> subjectlist = service.getSubjectListNo(no);
+		JSONArray jsonarr = new JSONArray();
+		if (subjectlist != null) {
+			for (Map<String, String> map : subjectlist) {
+				JSONObject jsonobj = new JSONObject();
+				jsonobj.put("deptname", map.get("deptname"));
+				jsonobj.put("subjectname", map.get("subjectname"));
+				jsonobj.put("subjectno", map.get("subjectno"));
+				jsonobj.put("name", map.get("name"));
+				jsonobj.put("credits", map.get("credits"));
+				jsonobj.put("day", map.get("day"));
+				jsonobj.put("period", map.get("period"));
+				jsonobj.put("peoplecnt", map.get("peoplecnt"));
+				jsonobj.put("grade", map.get("grade"));
+				jsonobj.put("curpeoplecnt", map.get("curpeoplecnt"));
+
+				jsonarr.put(jsonobj);
+			}
+		}
+		return jsonarr.toString();
+	}
+	
 	// 일반 공결 신청
 	@RequestMapping(value = "/officalLeave.sky", method = { RequestMethod.GET })
 	public ModelAndView officalLeave(ModelAndView mav, HttpServletRequest request) {
@@ -1511,6 +1599,11 @@ public class EunjiBoardController {
 			// 총 전공이수학점을 가져옴
 			int summajor = service.sumMajorCredits(memberNo);
 			
+			// 총 교양이수학점을 가져옴
+			int sumculture = service.sumCultureCredits(memberNo);
+			
+			mav.addObject("graduateok", paraMap.get("graduateok"));
+			mav.addObject("sumculture", sumculture);
 			mav.addObject("sumcredits", sumcredits);
 			mav.addObject("summajor", summajor);
 			mav.addObject("sumsems",sumsemes);

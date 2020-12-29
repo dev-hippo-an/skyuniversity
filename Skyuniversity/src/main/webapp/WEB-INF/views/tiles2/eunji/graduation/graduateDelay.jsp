@@ -56,15 +56,55 @@ table#scroltbl {
 
 $(document).ready(function() {
 	 
-	 var now = new Date();
-	 var year = now.getFullYear() + 1;
-	 var month = now.getMonth() + 1; 
-	 $("#year").text(year);
+	// 학년도 날짜 구하기
+	var now = new Date();
+	var year = now.getFullYear();
+	var month = now.getMonth()+1;
+
+	var sthtml = "";
+	var html = "<option>년도</option>";
+	
+	if(month < 3 || month >= 9){
+		sthtml = "<option>"+(year+1)+"</option>";
+		stsem = "<option>1</option>";
+		$("#startyear").html(sthtml);
+		$("#endyear").html(sthtml);
+		$("#startsem").html(stsem);
+	}
+	if(month < 9 && month >= 3){
+		sthtml = "<option>"+(year)+"</option>";
+		stsem = "<option>2</option>";
+		$("#startyear").html(sthtml);
+		$("#endyear").html(sthtml);
+		$("#startsem").html(stsem);
+	}
+	 
 });
-var cnt = 0;
 
-function funcCome(index){
+function funcreg() {
+	
+	var bool = true;
+	var graduateok = ${graduateok};
+	
+	if(graduateok == 0){
+		alert("졸업 -> 졸업적부심사에서 졸업적부심사를 먼저 심사 후, 신청부탁드립니다.");
+		bool = false;
+		return;
+	}
+	
+	if($("#reason").val().trim().length<50){
+		alert("휴학 사유는 50자 이상 작성해주셔야 합니다.")
+		bool = false;
+		return;
+	}
 
+	if(bool){
+		
+		$.ajax({
+				
+		});
+	}
+	
 }
 
 function funcdel(index){
@@ -134,22 +174,40 @@ function funcdel(index){
 	<ul style="list-style: none; padding-left: 0px; padding-right: 0px;">
 		<li>
 			<label>총 이수학기: </label>
-			<span></span>학기
+			<span style="color:#0066cc; font-weight: bold;">${sumsems}</span>학기
 		</li>
 		<li>
 			<label>교양 총 이수학점: </label>
-			<span></span>학점
+			<span style="color:#0066cc;font-weight: bold;">${sumculture}</span>학점
 			&nbsp;&nbsp;
 			<label>전공 총 이수학점: </label>
-			<span>${summajor}</span>학점
+			<span style="color:#0066cc;font-weight: bold;">${summajor}</span>학점
 			&nbsp;&nbsp;
 			<label>총 이수학점: </label>
-			<span>${sumcredits}</span>학점
+			<span style="color:#0066cc;font-weight: bold;">${sumcredits}</span>학점
 		</li>
 		<br>
 		<li>
 			<label>신청년도: </label>
-			<span id="year"></span>년도
+			<select name="startyear" id="startyear" style="border: solid 1px #cccccc;"> 
+			</select>
+			/
+			<select name="startsem" id="startsem" style="border: solid 1px #cccccc;">
+			</select>
+			&nbsp;~&nbsp;
+			<select name="endyear" id="endyear" style="border: solid 1px #cccccc;">
+							<option>학년도</option>
+							<option>1</option>
+							<option>2</option>
+							<option>3</option>
+							<option>4</option>
+			</select>
+			/
+			<select name="endsem" id="endsem" style="border: solid 1px #cccccc;">
+							<option>학기</option>
+							<option>1</option>
+							<option>2</option>
+			</select>
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span style="font-size: 5pt; color: red;">졸엽연기 신청 시, 최대 1년까지 신청가능합니다.</span>
 		</li>
@@ -158,7 +216,7 @@ function funcdel(index){
 			<textarea rows="8" cols="80" placeholder="최소 50자 이상 작성해주세요." name="reason" style="border: solid 1px #cccccc;" id="reason"></textarea>
 		</li>
 		<li>
-			<button style="margin-left: 550px;">신청</button>
+			<button style="margin-left: 550px;" onclick="funcreg();">신청</button>
 		</li>
 	</ul>
 </div>
@@ -166,11 +224,12 @@ function funcdel(index){
 	<div style="color:red; font-weight: bold;">졸업연기 신청시 유의사항</div>
 	<br>
 	<ul id="info">
-		<li>휴학시작학기는 해당학기를 기준으로 그 다음학기가 휴학 시작 학기로 정해집니다. 유의해주세요.</li>
-	    <li>휴학학기를 기준으로 복학예정학기가 자동으로 입력됩니다. (복학 예정학기에만 복학이 가능한것은 아닙니다.)</li>
-		<li>휴학은 총 8학기까지 가능하며 연속 휴학 가능학기는 최대 4개 학기(2년)로 제한됩니다. </li>
-		<li>최소 1 ~ 최대 3일 후에 휴학결과조회 페이지에서 승인여부를 확인해주세요.</li>
-		<li>휴학신청 수정이 필요할경우, (학적 >> 휴학결과조회 >> 수정)에서 가능합니다.</li>
+		<li>졸업연기는 졸업적부심사에서 졸업적부심사 완료 후, 졸업가능조건일때 신청이 가능합니다.</li>
+	    <li>졸업연기 신청은 1학기 ~ 2학기 까지 신청이 가능합니다. </li>
+		<li>졸업연기는 최대 기한 없이 연기가 가능합니다.</li>
+		<li>졸업연기 사유는 최소 50자 이상 작성해주시기 바랍니다.</li>
+		<li>졸업연기 신청 후 승인여부는 최소 1 ~ 최대 3일 후에 승인여부를 확인 부탁드립니다.</li>
+		<li>졸업연기 신청 후 취소는 승인 완료 이전에 취소가 가능합니다.</li>
 	</ul>
 </div>
 <br><br>

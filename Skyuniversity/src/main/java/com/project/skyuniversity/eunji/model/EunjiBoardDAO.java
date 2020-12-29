@@ -327,6 +327,18 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int sumCultureCredits(int memberNo) {
+		int n = sqlSession.selectOne("eunji.sumCultureCredits", memberNo);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> getSubjectListNo(String no) {
+		List<Map<String, String>> mapList = sqlSession.selectList("eunji.getSubjectListNo", no);
+		return mapList;
+	}
+
 
 
 }

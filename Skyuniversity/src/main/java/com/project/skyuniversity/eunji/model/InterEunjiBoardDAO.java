@@ -109,5 +109,9 @@ public interface InterEunjiBoardDAO {
 
 	int sumMajorCredits(int memberNo);
 
+	int sumCultureCredits(int memberNo);
+
+	List<Map<String, String>> getSubjectListNo(String no);
+
 
 }

@@ -333,6 +333,18 @@ public class EunjiService implements InterEunjiService {
 		return n;
 	}
 
+	@Override
+	public int sumCultureCredits(int memberNo) {
+		int n = dao.sumCultureCredits(memberNo);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> getSubjectListNo(String no) {
+		List<Map<String, String>> maplist = dao.getSubjectListNo(no);
+		return maplist;
+	}
+
 
 
 

@@ -116,6 +116,10 @@ public interface InterEunjiService {
 
 	int sumMajorCredits(int memberNo);
 
+	int sumCultureCredits(int memberNo);
+
+	List<Map<String, String>> getSubjectListNo(String no);
+
 	
 
 	

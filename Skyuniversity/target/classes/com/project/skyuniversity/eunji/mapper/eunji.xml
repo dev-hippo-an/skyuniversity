@@ -323,12 +323,13 @@
 		<result property="detailaddress" column="detailaddress" javaType="String"/>
 		<result property="extraaddress" column="extraaddress" javaType="String"/>
 		<result property="status" column="status" javaType="String"/>
+		<result property="graduateok" column="graduateok" javaType="String"/>
 	</resultMap>
 	<select id="allMemberInfo" parameterType="int" resultMap="allMember">
-		select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, status
+		select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, status, graduateok
         from 
         (
-        select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, fk_regseq
+        select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, fk_regseq, graduateok
 		from tbl_member M
 		inner join tbl_dept D
 		on M.fk_deptseq = D.deptseq
@@ -440,5 +441,43 @@
         inner join tbl_subject S
         on S.subjectno = V.fk_subjectno 
         where fk_deptseq != '23'
+	</select>
+	
+	<select id="sumCultureCredits" parameterType="int" resultType="int">
+		select sum(credits)
+        from(
+        select fk_subjectno
+        from tbl_course
+        where fk_memberno = #{memberNo}
+        )V
+        inner join tbl_subject S
+        on S.subjectno = V.fk_subjectno 
+        where fk_deptseq = '23'
+	</select>
+	
+	<resultMap type="HashMap" id="subjectsNoMap">
+		<result property="deptname" column="deptname" javaType="String"/>
+		<result property="subjectname" column="subjectname" javaType="String"/>
+		<result property="subjectno" column="subjectno" javaType="String"/>
+		<result property="name" column="name" javaType="String"/>
+		<result property="credits" column="credits" javaType="String"/>
+		<result property="day" column="day" javaType="String"/>
+		<result property="period" column="period" javaType="String"/>
+		<result property="peoplecnt" column="peoplecnt" javaType="String"/>
+		<result property="grade" column="grade" javaType="String"/>
+		<result property="curpeoplecnt" column="curpeoplecnt" javaType="String"/>
+	</resultMap>
+	<select id="getSubjectListNo" resultMap="subjectsNoMap">
+		select deptname, subjectname, subjectno, name, credits, day, period, peoplecnt, grade, curpeoplecnt, subssemester
+		from
+		(
+		select p.name, subjectno, subjectname, credits, day, period, peoplecnt, fk_deptseq, grade, curpeoplecnt, subssemester
+		from tbl_subject S
+		inner join tbl_professor P
+		on S.fk_professorno = p.professorno
+        where subjectno = #{no}
+		) V
+		inner join tbl_dept D
+		on V.fk_deptseq = D.deptseq
 	</select>
 </mapper>
