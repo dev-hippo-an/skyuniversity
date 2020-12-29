@@ -418,4 +418,27 @@
 		from tbl_come_school
 		where comeseq = #{seq}
 	</select>
+	
+	<select id="sumSemester" parameterType="int" resultType="int">
+		select sum(credits)
+        from(
+        select fk_subjectno
+        from tbl_course
+        where fk_memberno = #{memberNo}
+        )V
+        inner join tbl_subject S
+        on S.subjectno = V.fk_subjectno
+	</select>
+	
+	<select id="sumMajorCredits" parameterType="int" resultType="int">
+		select sum(credits)
+        from(
+        select fk_subjectno
+        from tbl_course
+        where fk_memberno = #{memberNo}
+        )V
+        inner join tbl_subject S
+        on S.subjectno = V.fk_subjectno 
+        where fk_deptseq != '23'
+	</select>
 </mapper>

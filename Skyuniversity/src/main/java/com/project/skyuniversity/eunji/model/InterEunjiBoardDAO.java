@@ -105,5 +105,9 @@ public interface InterEunjiBoardDAO {
 
 	ComeSchoolVO getComeSchoolVO(String seq);
 
+	int sumSemester(int memberNo);
+
+	int sumMajorCredits(int memberNo);
+
 
 }

@@ -86,10 +86,18 @@ public class EunjiBoardController {
 		// 전체 과목 리스트 조회
 		List<String> subjectlist = service.selectAllSubject(semesters);
 
+		int cursemester = mvo.getCurrentSemester();
+		if(cursemester % 2 == 0) {
+			cursemester = 2;
+		}
+		else {
+			cursemester = 1;
+		}
+		
 		Map<String, String> paraMap2 = new HashMap<String, String>();
 		paraMap2.put("memberno", Integer.toString(memberNo));
 		paraMap2.put("year", Integer.toString(year));
-		paraMap2.put("cursemester", Integer.toString(mvo.getCurrentSemester()));
+		paraMap2.put("cursemester", Integer.toString(cursemester));
 
 		List<Map<String, String>> reglist = service.selectRegList(paraMap2);
 
@@ -364,6 +372,7 @@ public class EunjiBoardController {
 		MemberVO mvo = new MemberVO();
 		// 로그인한 유저의 해당하는 학적 정보를 불러온다.
 		mvo = service.selectMemberInfo(paraMap);
+		
 		paraMap.put("cursemester", Integer.toString(mvo.getCurrentSemester()));
 		paraMap.put("year", Integer.toString(year));
 
@@ -1477,5 +1486,48 @@ public class EunjiBoardController {
 
 			}
 		}
+	}
+	
+	// 졸업연기
+	@RequestMapping(value = "/graduateDelay.sky", method = { RequestMethod.GET})
+	public ModelAndView graduateDelay(ModelAndView mav, HttpServletRequest request) {
+		
+		// 로그인한 유저의 학적 정보 불러오기
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
+
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+		
+		if(paraMap.get("currentSemester").equals("2") && paraMap.get("grade").equals("4") ) {
+			
+			int sumsemes = Integer.parseInt(paraMap.get("currentSemester")) * Integer.parseInt(paraMap.get("grade"));
+			
+			// 총 이수학점를 가져옴
+			int sumcredits = service.sumSemester(memberNo);
+			
+			// 총 전공이수학점을 가져옴
+			int summajor = service.sumMajorCredits(memberNo);
+			
+			mav.addObject("sumcredits", sumcredits);
+			mav.addObject("summajor", summajor);
+			mav.addObject("sumsems",sumsemes);
+			mav.addObject("paraMap", paraMap);
+			mav.setViewName("eunji/graduation/graduateDelay.tiles2");
+		}
+		
+		else {
+			String message = "4학년 2학기 학생만 신청이 가능합니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		
+		return mav;
 	}
 }

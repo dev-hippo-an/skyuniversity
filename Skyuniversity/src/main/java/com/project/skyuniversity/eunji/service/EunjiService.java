@@ -321,6 +321,18 @@ public class EunjiService implements InterEunjiService {
 		return csvo;
 	}
 
+	@Override
+	public int sumSemester(int memberNo) {
+		int n = dao.sumSemester(memberNo);
+		return n;
+	}
+
+	@Override
+	public int sumMajorCredits(int memberNo) {
+		int n = dao.sumMajorCredits(memberNo);
+		return n;
+	}
+
 
 
 

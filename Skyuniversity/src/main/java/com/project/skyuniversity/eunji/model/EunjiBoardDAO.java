@@ -315,6 +315,18 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return csvo;
 	}
 
+	@Override
+	public int sumSemester(int memberNo) {
+		int n = sqlSession.selectOne("eunji.sumSemester", memberNo);
+		return n;
+	}
+
+	@Override
+	public int sumMajorCredits(int memberNo) {
+		int n = sqlSession.selectOne("eunji.sumMajorCredits", memberNo);
+		return n;
+	}
+
 
 
 }

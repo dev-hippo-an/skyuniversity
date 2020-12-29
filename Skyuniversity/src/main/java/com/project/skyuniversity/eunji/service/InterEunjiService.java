@@ -112,6 +112,10 @@ public interface InterEunjiService {
 
 	ComeSchoolVO getComeSchoolVO(String seq);
 
+	int sumSemester(int memberNo);
+
+	int sumMajorCredits(int memberNo);
+
 	
 
 	
