@@ -94,6 +94,12 @@ public interface InterOhyoonDAO {
 	List<MinsungBoardVO> recentBoardList();
 	List<MinsungBoardVO> bestBoardList();
 	List<MinsungBoardVO> popularBoardList();
+
+	// 랜덤 닉네임 받아오기
+	String getRandomNickname(Map<String, Integer> paraMap);
+
+	// 익명 게시판 댓글 비밀번호 검사를 위해 비밀번호 가져오기
+	String getCommentOne(Map<String, String> paraMap);
 	
 	
 	

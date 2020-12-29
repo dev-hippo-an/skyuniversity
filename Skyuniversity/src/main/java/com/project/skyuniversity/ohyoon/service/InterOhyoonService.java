@@ -99,6 +99,12 @@ public interface InterOhyoonService {
     List<MinsungBoardVO> bestBoardList();
     List<MinsungBoardVO> popularBoardList();
 
+    // 랜덤 닉네임 받아오기
+	String getRandomNickname();
+
+	// 익명 게시판 댓글 비밀번호 검사하기
+	int comparePassword(Map<String, String> paraMap);
+
     
     
 }

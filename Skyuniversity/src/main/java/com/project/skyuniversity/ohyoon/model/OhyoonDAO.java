@@ -33,6 +33,9 @@ public class OhyoonDAO implements InterOhyoonDAO {
 		
 		List<BoardVO> boardList = null;
 		switch (paraMap.get("boardKindNo")) {
+		case "7":
+			boardList = sqlsession.selectList("ohyoon.getAnonymousBoardList", paraMap);
+			break;
 		case "8":
 			boardList = sqlsession.selectList("ohyoon.getInformalBoardList", paraMap);
 			break;
@@ -82,6 +85,9 @@ public class OhyoonDAO implements InterOhyoonDAO {
 		int totalCount = 0;
 		
 		switch (paraMap.get("boardKindNo")) {
+		case "7":
+			totalCount = sqlsession.selectOne("ohyoon.getAnonymousTotalCount", paraMap);
+			break;
 		case "8":
 			totalCount = sqlsession.selectOne("ohyoon.getInformalTotalCount", paraMap);
 			break;
@@ -123,6 +129,9 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	public int addBoard(BoardVO boardvo) {
 		int result = 0;
 		switch (boardvo.getFk_boardKindNo()) {
+		case "7":
+			result = sqlsession.insert("ohyoon.addAnonymousBoard", boardvo);
+			break;
 		case "8":
 			result = sqlsession.insert("ohyoon.addInformalBoard", boardvo);
 			break;
@@ -228,6 +237,9 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	public BoardVO getView(Map<String, String> paraMap) {
 		BoardVO boardvo = null;
 		switch (paraMap.get("boardKindNo")) {
+		case "7":
+			boardvo = sqlsession.selectOne("ohyoon.getViewAnonymous", paraMap.get("boardNo"));
+			break;
 		case "8":
 			boardvo = sqlsession.selectOne("ohyoon.getViewInformal", paraMap.get("boardNo"));
 			break;
@@ -267,6 +279,9 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	@Override
 	public void addReadCount(Map<String, String> paraMap) {
 		switch (paraMap.get("boardKindNo")) {
+		case "7":
+			sqlsession.update("ohyoon.addReadCountAnonymous", paraMap.get("boardNo"));
+			break;
 		case "8":
 			sqlsession.update("ohyoon.addReadCountInformal", paraMap.get("boardNo"));
 			break;
@@ -304,7 +319,12 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	// 게시글의 추천 수를 가져온다.
 	@Override
 	public int getBoardGoodCount(Map<String, String> paraMap) {
-		int upCount = sqlsession.selectOne("ohyoon.getBoardGoodCount", paraMap);
+		int upCount = 0;
+		if (paraMap.get("boardKindNo").equals("7")) { // 익명게시판일 때
+			upCount = sqlsession.selectOne("ohyoon.getAnonymousBoardGoodCount", paraMap.get("boardNo"));
+		}else { // 익명게시판을 제외한 다른 모든 게시판일 때
+			upCount = sqlsession.selectOne("ohyoon.getBoardGoodCount", paraMap);
+		}
 		return upCount;
 	}
 	
@@ -312,7 +332,12 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	// 게시글의 비추천 수를 가져온다.
 	@Override
 	public int getBoardBadCount(Map<String, String> paraMap) {
-		int downCount = sqlsession.selectOne("ohyoon.getBoardBadCount", paraMap);
+		int downCount = 0;
+		if (paraMap.get("boardKindNo").equals("7")) { // 익명게시판일 때
+			downCount = sqlsession.selectOne("ohyoon.getAnonymousBoardBoardBadCount", paraMap.get("boardNo"));
+		}else { // 익명게시판을 제외한 다른 모든 게시판일 때
+			downCount = sqlsession.selectOne("ohyoon.getBoardBadCount", paraMap);
+		}
 		return downCount;
 	}
 	
@@ -320,11 +345,17 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	// 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
 	@Override
 	public int addBoardUp(Map<String, String> paraMap) throws Exception {
-		// 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
-		sqlsession.delete("ohyoon.deleteBoardBad", paraMap);
-		
-		// 추천 테이블에 행을 추가한다.
-		int result = sqlsession.insert("ohyoon.addBoardUp", paraMap);
+		int result = 0;
+
+		if (paraMap.get("boardKindNo").equals("7")) { // 익명게시판일 때
+			// 추천컬럼의 값을 1증가시킨다.
+			result = sqlsession.update("ohyoon.addAnonymousBoardUp", paraMap.get("boardNo"));
+		}else { // 익명게시판을 제외한 다른 모든 게시판일 때
+			// 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
+			sqlsession.delete("ohyoon.deleteBoardBad", paraMap);
+			// 추천 테이블에 행을 추가한다.
+			result = sqlsession.insert("ohyoon.addBoardUp", paraMap);
+		}
 		return result;
 	}
 
@@ -332,11 +363,16 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	// 비추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
 	@Override
 	public int addBoardDown(Map<String, String> paraMap) throws Exception {
-		// 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
-		sqlsession.delete("ohyoon.deleteBoardGood", paraMap);
-		
-		// 추천 테이블에 행을 추가한다.
-		int result = sqlsession.insert("ohyoon.addBoardDown", paraMap);
+		int result = 0;
+		if (paraMap.get("boardKindNo").equals("7")) { // 익명게시판일 때
+			// 비추천컬럼의 값을 1증가시킨다.
+			result = sqlsession.update("ohyoon.addAnonymousBoardDown", paraMap.get("boardNo"));
+		}else { // 익명게시판을 제외한 다른 모든 게시판일 때
+			// 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
+			sqlsession.delete("ohyoon.deleteBoardGood", paraMap);
+			// 추천 테이블에 행을 추가한다.
+			result = sqlsession.insert("ohyoon.addBoardDown", paraMap);
+		}
 		return result;
 	}
 	
@@ -344,44 +380,56 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	// 신고 테이블에 행을 추가해주는 메서드(ajax로 처리)
 	@Override
 	public int addBoardReport(Map<String, String> paraMap) throws Exception {
-		// 신고 테이블에 행을 추가한다.
-		int result = sqlsession.insert("ohyoon.addBoardReport", paraMap);
+		int result = 0;			// 결과 상태값
+		int reportCount = 0;	// 신고 수
+
+		if (paraMap.get("boardKindNo").equals("7")) { // 익명게시판일 때
+			// 신고 컬럼을 1증가시킨다.
+			result = sqlsession.update("ohyoon.addAnonymousBoardReport", paraMap.get("boardNo"));
+			// 해당 게시물의 신고 개수를 알아온다.
+			reportCount = sqlsession.selectOne("ohyoon.getAnonymousReportCount", paraMap.get("boardNo"));
+		}else { // 익명게시판을 제외한 다른 모든 게시판일 때
+			// 신고 테이블에 행을 추가한다.
+			result = sqlsession.insert("ohyoon.addBoardReport", paraMap);
+			// 해당 게시물의 신고 개수를 알아온다.
+			reportCount = sqlsession.selectOne("ohyoon.getReportCount", paraMap);
+		}
 		
-		// 해당 게시물의 신고 개수를 알아온다.
-		int reportCount = sqlsession.selectOne("ohyoon.getReportCount", paraMap);
-		
-		// 만일 해당 게시물의 신고 개수가 10이상이면 글의 상태를 0으로 변경한다.
-		if (reportCount >= 10) {
+		// 만일 해당 게시물의 신고 개수가 10이상이면 글의 상태를 0으로 변경한다. (익명게시판의 경우는 신고수 30개 이상일 때)
+		if ( (reportCount >= 10 && !paraMap.get("boardKindNo").equals("7")) || (reportCount >= 30 && paraMap.get("boardKindNo").equals("7")) ) {
 			switch (paraMap.get("boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
+			case "7":
+				result = sqlsession.update("ohyoon.updateAnonymousBoardStatus", paraMap.get("boardNo"));
+				break;
 			case "8":
-				sqlsession.update("ohyoon.updateInformalBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updateInformalBoardStatus", paraMap.get("boardNo"));
 				break;
 			case "9":
-				sqlsession.update("ohyoon.updatePoliteBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updatePoliteBoardStatus", paraMap.get("boardNo"));
 				break;
 			case "10":
-				sqlsession.update("ohyoon.updateHumorBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updateHumorBoardStatus", paraMap.get("boardNo"));
 				break;
 			case "11":
-				sqlsession.update("ohyoon.updateIssueBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updateIssueBoardStatus", paraMap.get("boardNo"));
 				break;
 			case "12":
-				sqlsession.update("ohyoon.updateMbtiBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updateMbtiBoardStatus", paraMap.get("boardNo"));
 				break;
 			case "13":
-				sqlsession.update("ohyoon.updateFoodBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updateFoodBoardStatus", paraMap.get("boardNo"));
 				break;
 			case "14":
-				sqlsession.update("ohyoon.updateLoveBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updateLoveBoardStatus", paraMap.get("boardNo"));
 				break;
 			case "15":
-				sqlsession.update("ohyoon.updateHobbyBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updateHobbyBoardStatus", paraMap.get("boardNo"));
 				break;
 			case "16":
-				sqlsession.update("ohyoon.updateHealthBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updateHealthBoardStatus", paraMap.get("boardNo"));
 				break;
 			case "17":
-				sqlsession.update("ohyoon.updateDietBoardStatus", paraMap.get("boardNo"));
+				result = sqlsession.update("ohyoon.updateDietBoardStatus", paraMap.get("boardNo"));
 				break;
 			}
 		}
@@ -395,6 +443,9 @@ public class OhyoonDAO implements InterOhyoonDAO {
 		// 게시물을 삭제하는 것이 아닌 상태(status)를 0으로 바꿔준다 
 		int result = 0;
 		switch (paraMap.get("boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
+		case "7":
+			result = sqlsession.update("ohyoon.updateAnonymousBoardStatus", paraMap.get("boardNo"));
+			break;
 		case "8":
 			result = sqlsession.update("ohyoon.updateInformalBoardStatus", paraMap.get("boardNo"));
 			break;
@@ -475,6 +526,9 @@ public class OhyoonDAO implements InterOhyoonDAO {
 	public int updateBoard(BoardVO boardvo) {
 		int result = 0;
 		switch (boardvo.getFk_boardKindNo()) { // 게시판 번호에 따라 sql문을 다르게 한다.
+		case "7":
+			result = sqlsession.update("ohyoon.updateAnonymousBoard", boardvo);
+			break;
 		case "8":
 			result = sqlsession.update("ohyoon.updateInformalBoard", boardvo);
 			break;
@@ -581,20 +635,8 @@ public class OhyoonDAO implements InterOhyoonDAO {
     	case "6":
     		result = sqlsession.insert("ohyoon.addCriticComment", commentvo);
     		break;
-    	case "18":
-    		result = sqlsession.insert("ohyoon.addStudyComment", commentvo);
-    		break;
-    	case "19":
-    		result = sqlsession.insert("ohyoon.addCertComment", commentvo);
-    		break;
-    	case "20":
-    		result = sqlsession.insert("ohyoon.addEmpComment", commentvo);
-    		break;
-    	case "21":
-    		result = sqlsession.insert("ohyoon.addJobofferComment", commentvo);
-    		break;
-    	case "22":
-    		result = sqlsession.insert("ohyoon.addLostComment", commentvo);
+    	case "7":
+    		result = sqlsession.insert("ohyoon.addAnonymousComment", commentvo);
     		break;
 		case "8":
 			result = sqlsession.insert("ohyoon.addInformalComment", commentvo);
@@ -626,6 +668,21 @@ public class OhyoonDAO implements InterOhyoonDAO {
 		case "17":
 			result = sqlsession.insert("ohyoon.addDietComment", commentvo);
 			break;
+		case "18":
+    		result = sqlsession.insert("ohyoon.addStudyComment", commentvo);
+    		break;
+    	case "19":
+    		result = sqlsession.insert("ohyoon.addCertComment", commentvo);
+    		break;
+    	case "20":
+    		result = sqlsession.insert("ohyoon.addEmpComment", commentvo);
+    		break;
+    	case "21":
+    		result = sqlsession.insert("ohyoon.addJobofferComment", commentvo);
+    		break;
+    	case "22":
+    		result = sqlsession.insert("ohyoon.addLostComment", commentvo);
+    		break;
 		case "23":
 			result = sqlsession.insert("ohyoon.addHouseMarketComment", commentvo);
 			break;
@@ -662,6 +719,9 @@ public class OhyoonDAO implements InterOhyoonDAO {
     		break;
     	case "6":
     		commentList = sqlsession.selectList("ohyoon.getCriticCommentList", paraMap);
+    		break;
+    	case "7":
+    		commentList = sqlsession.selectList("ohyoon.getAnonymousCommentList", paraMap);
     		break;
     	case "18":
     		commentList = sqlsession.selectList("ohyoon.getStudyCommentList", paraMap);
@@ -725,7 +785,12 @@ public class OhyoonDAO implements InterOhyoonDAO {
     // 댓글의 추천 수를 가져온다.
     @Override
     public int getCommentGoodCount(Map<String, String> paraMap) {
-    	int cmtUpCount = sqlsession.selectOne("ohyoon.getCommentGoodCount", paraMap);
+    	int cmtUpCount = 0;
+    	if (paraMap.get("fk_boardKindNo").equals("7")) { // 익명게시판 댓글일 때
+    		cmtUpCount = sqlsession.selectOne("ohyoon.getAnonymousCommentGoodCount", paraMap);
+    	}else { // 익명 게시판 댓글이 아닐 때	
+    		cmtUpCount = sqlsession.selectOne("ohyoon.getCommentGoodCount", paraMap);
+    	}
     	return cmtUpCount;
     }
     
@@ -733,7 +798,12 @@ public class OhyoonDAO implements InterOhyoonDAO {
     // 댓글의 비추천 수를 가져온다.
     @Override
     public int getCommentBadCount(Map<String, String> paraMap) {
-    	int cmtDownCount = sqlsession.selectOne("ohyoon.getCommentBadCount", paraMap);
+    	int cmtDownCount = 0;
+    	if (paraMap.get("fk_boardKindNo").equals("7")) { // 익명게시판 댓글일 때
+    		cmtDownCount = sqlsession.selectOne("ohyoon.getAnonymousCommentBadCount", paraMap);
+    	}else { // 익명 게시판 댓글이 아닐 때	
+    		cmtDownCount = sqlsession.selectOne("ohyoon.getCommentBadCount", paraMap);
+    	}
     	return cmtDownCount;
     }
     
@@ -741,11 +811,16 @@ public class OhyoonDAO implements InterOhyoonDAO {
     // 댓글 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
     @Override
     public int addCommentUp(Map<String, String> paraMap) {
-    	// 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
-		sqlsession.delete("ohyoon.deleteCommentBad", paraMap);
-		
-		// 추천 테이블에 행을 추가한다.
-		int result = sqlsession.insert("ohyoon.addCommentUp", paraMap);
+    	int result = 0;
+    	if (paraMap.get("fk_boardKindNo").equals("7")) { // 익명게시판 댓글일 때
+    		// 추천 컬럼의 값을 1 증가시킨다.
+    		result = sqlsession.update("ohyoon.addAnonymousCommentUp", paraMap);
+    	}else { // 익명 게시판 댓글이 아닐 때	
+    		// 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
+    		sqlsession.delete("ohyoon.deleteCommentBad", paraMap);
+    		// 추천 테이블에 행을 추가한다.
+    		result = sqlsession.insert("ohyoon.addCommentUp", paraMap);
+    	}
 		return result;
     }
     
@@ -753,11 +828,16 @@ public class OhyoonDAO implements InterOhyoonDAO {
     // 댓글 비추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
     @Override
     public int addCommentDown(Map<String, String> paraMap) {
-    	// 댓글 추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
-		sqlsession.delete("ohyoon.deleteCommentGood", paraMap);
-		
-		// 댓글 비추천 테이블에 행을 추가한다.
-		int result = sqlsession.insert("ohyoon.addCommentDown", paraMap);
+    	int result = 0;
+    	if (paraMap.get("fk_boardKindNo").equals("7")) { // 익명게시판 댓글일 때
+    		// 비추천 컬럼의 값을 1 증가시킨다.
+    		result = sqlsession.update("ohyoon.addAnonymousCommentDown", paraMap);
+    	}else {	// 익명 게시판 댓글이 아닐 때	
+	    	// 댓글 추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다.
+			sqlsession.delete("ohyoon.deleteCommentGood", paraMap);
+			// 댓글 비추천 테이블에 행을 추가한다.
+			result = sqlsession.insert("ohyoon.addCommentDown", paraMap);
+    	}
 		return result;
     }
     
@@ -765,90 +845,109 @@ public class OhyoonDAO implements InterOhyoonDAO {
     // 댓글 신고 테이블에 행을 추가해주는 메서드(ajax로 처리)
     @Override
     public int addCommentReport(Map<String, String> paraMap) {
-    	// 신고 테이블에 행을 추가한다.
-		int result = sqlsession.insert("ohyoon.addCommentReport", paraMap);
+    	int result = 0;			// 결과 상태값
+		int reportCount = 0;	// 신고 수
+
+		if (paraMap.get("fk_boardKindNo").equals("7")) { // 익명게시판일 때
+			// 신고 컬럼을 1증가시킨다.
+			result = sqlsession.update("ohyoon.addAnonymousCommentReport", paraMap);
+			// 해당 댓글의 신고 개수를 알아온다.
+			reportCount = sqlsession.selectOne("ohyoon.getAnonymousCommentReportCount", paraMap);
+		}else { // 익명 게시판 댓글이 아닐 때	
+			// 신고 테이블에 행을 추가한다.
+			result = sqlsession.insert("ohyoon.addCommentReport", paraMap);
+			// 해당 댓글의 신고 개수를 알아온다.
+			reportCount = sqlsession.selectOne("ohyoon.getCommentReportCount", paraMap);
+		}
 		
-		// 해당 댓글의 신고 개수를 알아온다.
-		int reportCount = sqlsession.selectOne("ohyoon.getCommentReportCount", paraMap);
-		
-		// 만일 해당 댓글의 신고 개수가 10이상이면 글의 상태를 0으로 변경한다.
-		if (reportCount >= 10) {
+		// 만일 해당 댓글의 신고 개수가 10이상이면 글의 상태를 0으로 변경한다. (익명게시판 댓글의 경우 30개 이상일 때)
+		if (  (reportCount >= 10 && !paraMap.get("fk_boardKindNo").equals("7")) || (reportCount >= 30 && paraMap.get("fk_boardKindNo").equals("7"))  ) {
 			switch (paraMap.get("fk_boardKindNo")) { // 게시판 번호에 따라 sql문을 다르게 한다.
 			case "1":
-				sqlsession.update("ohyoon.updateNoticeCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateNoticeCommentStatus", paraMap);
 				break;
 			case "2":
-				sqlsession.update("ohyoon.updateCouncilCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateCouncilCommentStatus", paraMap);
 				break;
 			case "3":
-				sqlsession.update("ohyoon.updateMajorCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateMajorCommentStatus", paraMap);
 				break;
 			case "4":
-				sqlsession.update("ohyoon.updateClubCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateClubCommentStatus", paraMap);
 				break;
 			case "5":
-				sqlsession.update("ohyoon.updateGraduateCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateGraduateCommentStatus", paraMap);
 				break;
 			case "6":
-				sqlsession.update("ohyoon.updateCriticCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateCriticCommentStatus", paraMap);
 				break;
-			case "18":
-				sqlsession.update("ohyoon.updateStudyCommentStatus", paraMap);
-				break;
-			case "19":
-				sqlsession.update("ohyoon.updateCertCommentStatus", paraMap);
-				break;
-			case "20":
-				sqlsession.update("ohyoon.updateEmpCommentStatus", paraMap);
-				break;
-			case "21":
-				sqlsession.update("ohyoon.updateJobofferCommentStatus", paraMap);
-				break;
-			case "22":
-				sqlsession.update("ohyoon.updateLostCommentStatus", paraMap);
+			case "7":
+				result = sqlsession.update("ohyoon.updateAnonymousCommentStatus", paraMap);
 				break;
 			case "8":
-				sqlsession.update("ohyoon.updateInformalCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateInformalCommentStatus", paraMap);
 				break;
 			case "9":
-				sqlsession.update("ohyoon.updatePoliteCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updatePoliteCommentStatus", paraMap);
 				break;
 			case "10":
-				sqlsession.update("ohyoon.updateHumorCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateHumorCommentStatus", paraMap);
 				break;
 			case "11":
-				sqlsession.update("ohyoon.updateIssueCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateIssueCommentStatus", paraMap);
 				break;
 			case "12":
-				sqlsession.update("ohyoon.updateMbtiCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateMbtiCommentStatus", paraMap);
 				break;
 			case "13":
-				sqlsession.update("ohyoon.updateFoodCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateFoodCommentStatus", paraMap);
 				break;
 			case "14":
-				sqlsession.update("ohyoon.updateLoveCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateLoveCommentStatus", paraMap);
 				break;
 			case "15":
-				sqlsession.update("ohyoon.updateHobbyCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateHobbyCommentStatus", paraMap);
 				break;
 			case "16":
-				sqlsession.update("ohyoon.updateHealthCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateHealthCommentStatus", paraMap);
 				break;
 			case "17":
-				sqlsession.update("ohyoon.updateDietCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateDietCommentStatus", paraMap);
+				break;
+			case "18":
+				result = sqlsession.update("ohyoon.updateStudyCommentStatus", paraMap);
+				break;
+			case "19":
+				result = sqlsession.update("ohyoon.updateCertCommentStatus", paraMap);
+				break;
+			case "20":
+				result = sqlsession.update("ohyoon.updateEmpCommentStatus", paraMap);
+				break;
+			case "21":
+				result = sqlsession.update("ohyoon.updateJobofferCommentStatus", paraMap);
+				break;
+			case "22":
+				result = sqlsession.update("ohyoon.updateLostCommentStatus", paraMap);
 				break;
 			case "23":
-				sqlsession.update("ohyoon.updateHouseMarketCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateHouseMarketCommentStatus", paraMap);
 				break;
 			case "24":
-				sqlsession.update("ohyoon.updateBookMarketCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateBookMarketCommentStatus", paraMap);
 				break;
 			case "25":
-				sqlsession.update("ohyoon.updateEtcMarketCommentStatus", paraMap);
+				result = sqlsession.update("ohyoon.updateEtcMarketCommentStatus", paraMap);
 				break;
 			}
 		}
 		return result;
+    }
+    
+    
+    // 익명 게시판 댓글 비밀번호 검사를 위해 비밀번호 가져오기
+    @Override
+    public String getCommentOne(Map<String, String> paraMap) {
+    	return sqlsession.selectOne("ohyoon.getCommentOne", paraMap);
     }
     
     
@@ -876,20 +975,8 @@ public class OhyoonDAO implements InterOhyoonDAO {
     	case "6":
     		result = sqlsession.update("ohyoon.updateCriticCommentStatus", paraMap);
     		break;
-    	case "18":
-    		result = sqlsession.update("ohyoon.updateStudyCommentStatus", paraMap);
-    		break;
-    	case "19":
-    		result = sqlsession.update("ohyoon.updateCertCommentStatus", paraMap);
-    		break;
-    	case "20":
-    		result = sqlsession.update("ohyoon.updateEmpCommentStatus", paraMap);
-    		break;
-    	case "21":
-    		result = sqlsession.update("ohyoon.updateJobofferCommentStatus", paraMap);
-    		break;
-    	case "22":
-    		result = sqlsession.update("ohyoon.updateLostCommentStatus", paraMap);
+    	case "7":
+    		result = sqlsession.update("ohyoon.updateAnonymousCommentStatus", paraMap);
     		break;
 		case "8":
 			result = sqlsession.update("ohyoon.updateInformalCommentStatus", paraMap);
@@ -920,6 +1007,21 @@ public class OhyoonDAO implements InterOhyoonDAO {
 			break;
 		case "17":
 			result = sqlsession.update("ohyoon.updateDietCommentStatus", paraMap);
+			break;
+		case "18":
+			result = sqlsession.update("ohyoon.updateStudyCommentStatus", paraMap);
+			break;
+		case "19":
+			result = sqlsession.update("ohyoon.updateCertCommentStatus", paraMap);
+			break;
+		case "20":
+			result = sqlsession.update("ohyoon.updateEmpCommentStatus", paraMap);
+			break;
+		case "21":
+			result = sqlsession.update("ohyoon.updateJobofferCommentStatus", paraMap);
+			break;
+		case "22":
+			result = sqlsession.update("ohyoon.updateLostCommentStatus", paraMap);
 			break;
 		case "23":
 			result = sqlsession.update("ohyoon.updateHouseMarketCommentStatus", paraMap);
@@ -958,20 +1060,8 @@ public class OhyoonDAO implements InterOhyoonDAO {
     	case "6":
     		result = sqlsession.update("ohyoon.updateCriticComment", paraMap);
     		break;
-    	case "18":
-    		result = sqlsession.update("ohyoon.updateStudyComment", paraMap);
-    		break;
-    	case "19":
-    		result = sqlsession.update("ohyoon.updateCertComment", paraMap);
-    		break;
-    	case "20":
-    		result = sqlsession.update("ohyoon.updateEmpComment", paraMap);
-    		break;
-    	case "21":
-    		result = sqlsession.update("ohyoon.updateJobofferComment", paraMap);
-    		break;
-    	case "22":
-    		result = sqlsession.update("ohyoon.updateLostComment", paraMap);
+    	case "7":
+    		result = sqlsession.update("ohyoon.updateAnonymousComment", paraMap);
     		break;
 		case "8":
 			result = sqlsession.update("ohyoon.updateInformalComment", paraMap);
@@ -1003,6 +1093,21 @@ public class OhyoonDAO implements InterOhyoonDAO {
 		case "17":
 			result = sqlsession.update("ohyoon.updateDietComment", paraMap);
 			break;
+		case "18":
+    		result = sqlsession.update("ohyoon.updateStudyComment", paraMap);
+    		break;
+    	case "19":
+    		result = sqlsession.update("ohyoon.updateCertComment", paraMap);
+    		break;
+    	case "20":
+    		result = sqlsession.update("ohyoon.updateEmpComment", paraMap);
+    		break;
+    	case "21":
+    		result = sqlsession.update("ohyoon.updateJobofferComment", paraMap);
+    		break;
+    	case "22":
+    		result = sqlsession.update("ohyoon.updateLostComment", paraMap);
+    		break;
 		case "23":
 			result = sqlsession.update("ohyoon.updateHouseMarketComment", paraMap);
 			break;
@@ -1042,6 +1147,14 @@ public class OhyoonDAO implements InterOhyoonDAO {
     }
     
     
+    // 랜덤 닉네임 받아오기
+    @Override
+    public String getRandomNickname(Map<String, Integer> paraMap) {
+    	String firstNick = sqlsession.selectOne("ohyoon.getFirstNickname", paraMap.get("firstNo"));
+    	String secondNick = sqlsession.selectOne("ohyoon.getSecondNickname", paraMap.get("secondNo"));
+    	
+    	return firstNick+secondNick;
+    }
     
     
 }

@@ -1283,3 +1283,262 @@ nocache;
 
 select *
 from tbl_comment_humor;
+
+create table tbl_board_anonymous(
+    
+);
+------------------------------- 2020-12-17 end -------------------------------------
+------------------------------- 2020-12-24 start -----------------------------------
+-------------------- 익명 닉네임1 게시판 ---------------------------
+create table tbl_anonymous_firstnick(
+    seqNo        number         not null,       -- 닉네임 번호
+    firstNick    varchar2(20)   not null,       -- 닉네임
+    constraint PK_tbl_anonymous_firstnick primary key(seqNo)
+);
+
+create sequence tbl_anonymous_firstnick_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+-------------------- 익명 닉네임2 게시판 ---------------------------
+create table tbl_anonymous_secondnick(
+    seqNo        number         not null,       -- 닉네임 번호
+    secondNick    varchar2(20)   not null,      -- 닉네임
+    constraint PK_tbl_anonymous_secondnick primary key(seqNo)
+);
+
+create sequence tbl_anonymous_secondnick_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+-------------------------- 닉네임 테이블 데이터 삽입 ----------------------------
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '광적인 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '귀여운 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '깜찍한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '소중한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '아름다운 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '졸린 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '화난 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '분노한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '행복한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '신난 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '신기한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '망측한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '해괴한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '차가운 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '냉소적인 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '친근한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '똘똘한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '멍청한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '소심한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '시끄러운 ');
+
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '피카츄');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '내루미');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '또가스');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '고라파덕 ');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '이브이');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '꼬부기');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '단데기');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '리자드');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '뿔충이');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '버터플');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '꼬렛');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '모래두지');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '삐삐');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '푸린');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '뚜벅초');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '닥트리오');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '수륙챙이');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '알통몬');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '롱스톤');
+insert into tbl_anonymous_secondnick values(tbl_anonymous_secondnick_seq.nextval, '탕구리');
+
+commit;
+select *
+from tbl_anonymous_firstnick;
+
+select *
+from tbl_anonymous_secondnick;
+
+delete from tbl_anonymous_secondnick;
+drop sequence tbl_anonymous_secondnick_seq;
+
+
+select (firstNick + secondNick)
+from
+(
+select firstNick
+from tbl_anonymous_firstnick
+where seqno = 1
+)V join 
+(
+select secondNick
+from tbl_anonymous_secondnick
+where seqno = 20
+)T;
+
+-------------------------- 익명 게시판 테이블 생성 ------------------------------
+CREATE TABLE tbl_board_anonymous(
+    boardNo           NUMBER            NOT NULL,       -- 게시글 번호
+    fk_boardKindNo    NUMBER            NOT NULL,       -- 게시판 번호
+    nickname          VARCHAR2(50)      NOT NULL,       -- 작성자 닉네임
+    subject           VARCHAR2(200)     NOT NULL,       -- 글제목
+    password          VARCHAR2(200)     NOT NULL,       -- 글비밀번호
+    regDate           DATE              DEFAULT SYSDATE,-- 등록일자
+    editDate          DATE,                             -- 수정일자
+    content           NVARCHAR2(2000)   NOT NULL,       -- 글내용
+    readCount         NUMBER            DEFAULT 0,      -- 조회수
+    status            NUMBER(1)         DEFAULT 1,      -- 게시글 상태
+    writerIp          VARCHAR2(50)      NOT NULL,       -- 작성자 ip
+    upCount           NUMBER            DEFAULT 0,      -- 추천수
+    downCount         NUMBER            DEFAULT 0,      -- 비추천수
+    reportCount       NUMBER            DEFAULT 0,      -- 신고수
+    CONSTRAINT PK_tbl_board_anonymous PRIMARY KEY(boardNo)
+);
+
+create sequence tbl_board_anonymous_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+ALTER TABLE tbl_board_anonymous MODIFY password VARCHAR2(200);
+
+select * from TBL_MEMBER;
+
+desc TBL_MEMBER;
+
+select rno, boardNo, fk_boardKindNo, fk_nickname, subject, regDate, editDate
+         , content, readCount, status
+from 
+(
+    select row_number() over(order by boardno desc)  as rno, boardNo, fk_boardKindNo, fk_nickname, subject
+         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+         , content, readCount, status
+    from tbl_board_anonymous
+	where status = 1
+)T
+where rno between 1 and 15
+order by rno asc;
+
+alter table tbl_comment_anonymous rename column downCount to cmtDownCount;
+
+select *
+from tbl_board_anonymous;
+
+-------------------------- 익명게시판 댓글 테이블 생성 ------------------------------
+create table tbl_comment_anonymous(
+    commentNo      NUMBER         NOT NULL,         -- 댓글번호
+    fk_boardNo     NUMBER         NOT NULL,         -- 게시글 번호
+    nickname       VARCHAR2(50)   NOT NULL,         -- 작성자 닉네임  
+    password       VARCHAR2(200)  NOT NULL,         -- 글비밀번호
+    cmtContent     VARCHAR2(200)  NOT NULL,         -- 댓글 내용
+    regDate        DATE           DEFAULT SYSDATE,  -- 등록일자
+    status         NUMBER(1)      DEFAULT 1,        -- 댓글 상태
+    writerIp       VARCHAR2(50)   NOT NULL,         -- 작성자IP
+    cmtUpCount        NUMBER         DEFAULT 0,     -- 추천수
+    cmtDownCount      NUMBER         DEFAULT 0,     -- 비추천수
+    reportCount    NUMBER         DEFAULT 0,        -- 신고수
+    CONSTRAINT PK_tbl_comment_anonymous PRIMARY KEY(commentNo)
+);
+
+create sequence tbl_comment_anonymous_seq
+start with 1
+increment by 1
+nomaxvalue
+nominvalue
+nocycle
+nocache;
+
+
+ALTER TABLE tbl_comment_anonymous ADD reportCount NUMBER DEFAULT 0;
+
+desc tbl_comment_anonymous;
+
+------------------------------- 2020-12-27 end ---------------------------------------
+------------------------------- 2020-12-28 start -------------------------------------
+select * from tbl_comment_anonymous;
+
+select upCount, downCount, reportCount
+		from tbl_board_anonymous
+		where boardNo = 8;
+
+update tbl_anonymous_firstnick set firstNick = '광적인' where seqNo = 1;
+update tbl_anonymous_firstnick set firstNick = '귀여운' where seqNo = 2;
+update tbl_anonymous_firstnick set firstNick = '소중한' where seqNo = 3;
+update tbl_anonymous_firstnick set firstNick = '아름다운' where seqNo = 4;
+update tbl_anonymous_firstnick set firstNick = '졸린' where seqNo = 5;
+update tbl_anonymous_firstnick set firstNick = '화난' where seqNo = 6;
+update tbl_anonymous_firstnick set firstNick = '분노한' where seqNo = 7;
+update tbl_anonymous_firstnick set firstNick = '행복한' where seqNo = 8;
+update tbl_anonymous_firstnick set firstNick = '신난' where seqNo = 9;
+update tbl_anonymous_firstnick set firstNick = '신기한' where seqNo = 10;
+update tbl_anonymous_firstnick set firstNick = '망측한' where seqNo = 11;
+update tbl_anonymous_firstnick set firstNick = '해괴한' where seqNo = 12;
+update tbl_anonymous_firstnick set firstNick = '차가운' where seqNo = 13;
+update tbl_anonymous_firstnick set firstNick = '냉소적인' where seqNo = 14;
+update tbl_anonymous_firstnick set firstNick = '친근한' where seqNo = 15;
+update tbl_anonymous_firstnick set firstNick = '똘똘한' where seqNo = 16;
+update tbl_anonymous_firstnick set firstNick = '멍청한' where seqNo = 17;
+update tbl_anonymous_firstnick set firstNick = '소심한' where seqNo = 18;
+update tbl_anonymous_firstnick set firstNick = '깜찍한' where seqNo = 19;
+update tbl_anonymous_firstnick set firstNick = '시끄러운' where seqNo = 20;
+
+commit;
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '귀여운 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '깜찍한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '소중한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '아름다운 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '졸린 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '화난 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '분노한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '행복한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '신난 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '신기한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '망측한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '해괴한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '차가운 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '냉소적인 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '친근한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '똘똘한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '멍청한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '소심한 ');
+insert into tbl_anonymous_firstnick values(tbl_anonymous_firstnick_seq.nextval, '시끄러운 ');
+
+select *
+from tbl_comment_anonymous;
+
+
+select rno, boardNo, fk_boardKindNo, nickname as fk_nickname, subject, regDate, editDate
+     , content, readCount, status, upCount, cmtCount, writerIp
+from 
+(
+    select row_number() over(order by boardno desc)  as rno, boardNo, fk_boardKindNo, nickname, subject
+         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+         , content, readCount, status, upCount, writerIp
+         , (select count(*) from tbl_comment_anonymous where fk_boardNo = boardNo and status = 1) as cmtCount
+    from tbl_board_anonymous
+    where status = 1
+)T
+order by rno asc;
+
+select boardNo, regDate, (sysdate - regDate), to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd')
+from tbl_board_anonymous;
+------------------------------- 2020-12-28 end -------------------------------------
+
+

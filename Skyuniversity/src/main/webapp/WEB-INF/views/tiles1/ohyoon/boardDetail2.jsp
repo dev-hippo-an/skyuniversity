@@ -5,14 +5,7 @@
 <% String ctxPath = request.getContextPath();  %>
 
 <style>
-/* 
- 	body {
-		background-image: url("data:image/jpeg;base64,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");
-		background-repeat:no-repeat;
-		background-position: bottom;
-		background-size: cover;
-	} 
-*/
+
 	table {
 	   border-collapse: collapse;
 	   border-spacing: 0;
@@ -147,7 +140,6 @@
 		width: 90%;
 		margin-top: 20px;
 		border: solid 1px gray;
-		
 	}
 	
 	div#reply > div:first-child {
@@ -163,12 +155,21 @@
 	}
 	
 	
-	div#reply > div:first-child > span:last-child {
+	div#reply > div:first-child > span:nth-child(2) {
 		font-size: 10pt;
  	  	color: #9900e6;   
 		font-weight: bold;
 		border-radius: 20px;
 		padding: 5px 5px;
+	}
+	
+	div#reply > div:nth-child(2) {
+		text-align: left;
+		margin-left: 5%;
+	}
+	
+	div#reply > div:nth-child(2) > input {
+		display: inline-block;
 	}
 	
 	div#reply > div:last-child {
@@ -359,6 +360,16 @@
 		outline: none;
 	}	
 	
+	input#password {
+		margin-top: 5px;
+		width: 16%; 
+	}
+	
+	span#warning {
+		font-size: 9pt;
+		color: #0841ad;
+	}
+	
 </style>
 
 <script type="text/javascript">
@@ -463,32 +474,55 @@
 			
 		});// end of $("button").click(function() {});------------------------------------------
 		
-		
-		// 삭제버튼을 누르면 게시물이 삭제되고 다시 리스트로 넘어가도록 함.
+
+		// 삭제요청 후 글 비밀번호를 입력 한 후, 모달의 삭제버튼을 누르면 게시물이 삭제되고 다시 리스트로 넘어가도록 함.
 		$("button#btnDelete").click(function() {
-
-			var frm = document.boardInfoFrm;
-			frm.method = "POST";
-			frm.action = "<%= ctxPath%>/deleteBoard.sky";
-			frm.submit();
-		
-		});// end of $("button#btnDelete").click(function() {});---------------------------------------
-		
-		
-		// 수정버튼을 누르면 수정 페이지로 넘어감.
-		$("button#btnUpdate").click(function() {
-
-			var gobackURL = "${gobackURL}";
-			gobackURL = gobackURL.replaceAll("&", " ");
-			$("input[name=gobackURL]").val(gobackURL);
+			var password = $("input#deletePassword").val();
+			$("input[name=boardPassword]").val(password);
 			
 			var frm = document.boardInfoFrm;
-			frm.method = "GET";
-			frm.action = "<%= ctxPath%>/updateBoard.sky";
+			frm.method = "POST";
+			frm.action = "<%= ctxPath%>/deleteBoard2.sky";
 			frm.submit();
+		});// end of $("button#btnDelete").click(function() {});---------------------------------------
 		
+		// 삭제요청 후 글 비밀번호를 입력한 후, 엔터를 누르면 게시물이 삭제되고 다시 리스트로 넘어가도록 함.
+		$("input#deletePassword").keyup(function(event) {
+			if (event.keyCode == 13) {
+				var password = $("input#deletePassword").val();
+				$("input[name=boardPassword]").val(password);
+				
+				var frm = document.boardInfoFrm;
+				frm.method = "POST";
+				frm.action = "<%= ctxPath%>/deleteBoard2.sky";
+				frm.submit();
+			}
+		});// end of $("input#deletePassword").keyup(function(event) {});---------------------
+		
+		
+		// 수정버튼을 눌러 비밀번호를 입력 후, 모달의 수정 버튼을 누르면 수정 페이지로 넘어감.
+		$("button#btnUpdate").click(function() {
+			var password = $("input#updatePassword").val();
+			$("input[name=boardPassword]").val(password);
+			
+			var frm = document.boardInfoFrm;
+			frm.method = "POST";
+			frm.action = "<%= ctxPath%>/updateBoard2.sky";
+			frm.submit();
 		});// end of $("button#btnUpdate").click(function() {});---------------------------------------
 		
+		// 수정 후 글 비밀번호를 입력한 후, 엔터를 누르면 수정 페이지로 넘어감.
+		$("input#updatePassword").keyup(function(event) {
+			if (event.keyCode == 13) {
+				var password = $("input#updatePassword").val();
+				$("input[name=boardPassword]").val(password);
+				
+				var frm = document.boardInfoFrm;
+				frm.method = "POST";
+				frm.action = "<%= ctxPath%>/updateBoard2.sky";
+				frm.submit();
+			}
+		});// end of $("input#updatePassword").keyup(function(event) {});---------------------------------------
 		
 		// "더보기..." 클릭 이벤트
 		$("h4.more").click(function() {
@@ -538,7 +572,7 @@
 					$.each(json, function(index,item) {
 						
 						html += "<tr style='height:30px;'>" +
-									"<td style='text-align:left;'><img src=/skyuniversity/resources/images/levelimg/"+item.levelImg+" class='photo' /><span class='name' onclick='addTag()'>"+item.fk_nickname+"</span> | "+item.regDate+"<div id='replyButtons'>"+
+									"<td style='text-align:left;'><span class='name' onclick='addTag()'>"+item.fk_nickname+"</span> | "+item.regDate+"<div id='replyButtons'>"+
 										"<span class='button' onclick='commentUp("+item.commentNo+")'>추천<span id='cmtUpCount"+item.commentNo+"'>"+item.cmtUpCount+"</span></span>&nbsp;&nbsp;"+
 										"<span class='button' onclick='commentDown("+item.commentNo+")'>비추천<span id='cmtDownCount"+item.commentNo+"'>"+item.cmtDownCount+"</span></span>&nbsp;&nbsp;"+
 										"<span class='button' style='height:30px; width: 70px; ' onclick='commentReport("+item.commentNo+")'>신고&nbsp;<img src='/skyuniversity/resources/images/report3.png' style='width: 15px; height: 15px;'/></span></div>"+
@@ -615,19 +649,15 @@
 
 						html += comment;
 						
-						if ("${sessionScope.loginuser.fk_memberNo}" == item.fk_memberNo) { // 로그인한 유저가 댓글 작성자일 때, 수정 삭제 버튼이 나타나게 한다.
-							html += "<div><button class='myComment' onclick='goDeleteComment("+item.commentNo+")'>삭제</button>";
-							html += "<button class='myComment' value='"+item.cmtContent+"' onclick='goChangeComment("+item.commentNo+")'>수정</button></div>";
-						} 
+						html += "<div><button class='myComment' value='"+item.cmtContent+"' onclick='passwordDeleteComment("+item.commentNo+")'>삭제</button>";
+						html += "<button class='myComment' value='"+item.cmtContent+"' onclick='passwordChangeComment("+item.commentNo+")'>수정</button></div>";
 						
 						html +=     "</td>" +
 								"</tr>";
 						
 						totalCount = item.totalCount;		
 						
-						// <input type='hidden' name='cc' value='"+item.cmtContent+"' />
-						
-					});
+					});// end of $.each(json, function(index,item) {}-----------------------------
 					
 					// 불러온 댓글 데이터를 넣어줌.
 					$("table#contentTable2").append(html);
@@ -665,6 +695,26 @@
 			return false;
 		}
 		
+		var password = $("input#password").val().trim();
+		if (password == null || password == "") {
+			alert("비밀번호를 입력해 주세요.");
+			return false;
+		}
+		
+		// 비밀번호를 입력했다면 정규식 검사를 한다.
+		var regExp = /^.*(?=^.{8,15}$)(?=.*\d)(?=.*[a-zA-Z])(?=.*[!@#$%^&*+=-]).*$/g; 
+   		
+   		if (!regExp.test(password)) { // 만일 정규식 검사에 불일치하면
+   			alert("비밀번호는 영문,숫자,특수문자를 포함하여 8~15글자로 설정해주세요.");
+   			$("input#password").val("");// 비밀번호란 값을 비워준 뒤
+   			$("input#password").focus();// focus를 넣어준다.
+   			return false;
+		}
+		
+   		// 정규식 검사도 통과했다면 password를 form안에 있는 input태그에 넣어준 뒤
+   		$("input#cmtPassword").val(password);
+   		
+   		// form을 보낸다.
 		var frm = $("form[name=addWriteFrm]").serialize();
 		
 		$.ajax({
@@ -680,6 +730,7 @@
 
 					// 댓글 개수를 다시 초기화하기 위함.
 					$("textarea#cmtContent").val("");
+					$("input#password").val("");
 					$("input#startNo").val("1");
 					$("input#cmtCount").val("0");
 					$("table#contentTable2").html("");
@@ -812,33 +863,137 @@
 		});
 
 	}// end of function commentReport() {}-------------------------------------------
+
 	
+	// 댓글 삭제 버튼을 누르면 댓글 비밀번호를 입력할 수 있는 창이 나타나게 하는 메서드.
+	function passwordDeleteComment(commentNo) {
+		
+		var $target = $(event.target); // 이벤트가 발생한 선택자를 가져와 $target이라는 변수로 설정한다.
+		
+		var html = "<input type='password' name='commentPassword' placeholder='댓글 비밀번호'/>"+
+		   "<button class='myComment' value='"+$target.val()+"' onclick='goResetUpdate("+commentNo+")'>취소</button>"+
+		   "<button class='myComment' value='"+$target.val()+"' onclick='goDeleteComment("+commentNo+")'>확인</button>";
+
+		$($target).parent().parent().html(html); // 해당 선택자의 부모선택자인 td 태그안에 새로운 코드를 넣어준다.
+		
+	}
 	
 	// 댓글 삭제 버튼을 누르면 댓글을 삭제해주는 메서드. 
 	function goDeleteComment(commentNo) {
 		
-		var fk_boardKindNo = $("input[name=fk_boardKindNo]").val(); 
+		var $target = $(event.target); // 이벤트가 발생한 선택자를 가져와 $target이라는 변수로 설정한다.
+		var orgComment = $target.val();
+		
 		var fk_boardNo = $("input[name=fk_boardNo]").val(); 
-
+		var commentPassword = $("input[name=commentPassword]").val();
+		
 		$.ajax({
-			url: "<%= ctxPath%>/deleteComment.sky",
+			url: "<%= ctxPath%>/comparePassword.sky",
 			type: "POST",
-			data: {"fk_boardKindNo":fk_boardKindNo, "fk_boardNo":fk_boardNo, "commentNo":commentNo},
+			data: {"fk_boardNo":fk_boardNo, "commentNo":commentNo, "password":commentPassword},
 			dataType:"JSON",
 			success: function(json){
-				
-				if (json.n == 0) {
-					alert("삭제에 실패했습니다.");
-				}else{
-					alert("댓글이 삭제되었습니다.");
+		
+				if (json.n == 1) {
+						
+					var fk_boardKindNo = $("input[name=fk_boardKindNo]").val(); 
+			
+					$.ajax({
+						url: "<%= ctxPath%>/deleteComment.sky",
+						type: "POST",
+						data: {"fk_boardKindNo":fk_boardKindNo, "fk_boardNo":fk_boardNo, "commentNo":commentNo},
+						dataType:"JSON",
+						success: function(json){
+							
+							if (json.n == 0) {
+								alert("삭제에 실패했습니다.");
+							}else{
+								alert("댓글이 삭제되었습니다.");
+								
+								// 댓글목록이 초기화 되도록 함.
+								$("input#startNo").val("1");
+								$("input#cmtCount").val("0");
+								$("table#contentTable2").html("");
+								$("h4.more").show();
+								
+								goViewComment();
+							}
+						},
+						error: function(request, status, error){
+				               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				        }
+					});// end of inner ajax({});---------------------------------
+				}else {
+					alert("비밀번호가 틀렸습니다.");
 					
-					// 댓글목록이 초기화 되도록 함.
-					$("input#startNo").val("1");
-					$("input#cmtCount").val("0");
-					$("table#contentTable2").html("");
-					$("h4.more").show();
+					var comment = orgComment.replaceAll("\n", "<br>");
+					// 댓글 내용에 ##문자가 있으면 ##+바로 뒤에 오는 문자열이 파란색을 띄도록 함. 
+					var arrFirst = []; // "##"이 나오는 index들을 넣을 배열
+					var arrLast = []; // "##"다음의 공백(" ")이 나오는 index들을 넣을 배열
 					
-					goViewComment();
+					var first = comment.indexOf("##");
+					var last = 0;
+					
+					while (first != -1) { // "##"문자열의 index가 리턴이 되는동안  
+						
+						last = comment.indexOf(" ", first);	// 그 다음 공백(" ") index도 알아낸다.
+						
+						if (last == -1) { // 만일 공백(" ") index가 리턴되지 않았다면 comment의 마지막 index(comment의 길이)를 넣는다.
+							last = comment.length;
+						}
+
+						arrFirst.push(first); // 배열에 "##"문자열 index를 넣는다.
+						arrLast.push(last); // 배열에 공백(" ") 문자열 index를 넣는다.
+						
+						first = comment.indexOf("##", last); // 공백(" ")문자의 다음 index부터 "##" 문자가 또 있는지 찾아내어 index를 알아낸다.
+					}
+
+					var firstString = ""; // "##" 문자직전까지의 문자열.
+					var secondString = ""; // "##" 문자열에서 공백(" ") 문자열까지의 문자열.
+					var lastString = ""; // 공백(" ")이후의 문자열.
+
+					var arrFirstString = []; // "##" 문자직전까지의 문자열을 넣을 배열. 
+					var arrSecondString = []; // "##" 문자열에서 공백(" ") 문자열까지의 문자열을 넣을 배열.(span태그로 감쌀 문자열들) 
+					var arrLastString = []; // 공백(" ")이후의 문자열을 넣을 배열.
+					
+					if (arrFirst.length != 0) { // "##"가 하나라도 존재했다면
+						
+						for (var i = 0; i < arrFirst.length; i++) { // arrFirst 배열의 길이만큼 반복한다.  
+						
+							if (i == 0 && arrFirst.length == 1) { // 첫번째 순서이면서 arrFirst 배열의 길이가 1이면 한번만 진행하므로 아래처럼 한다. 
+								arrFirstString.push( comment.substring( 0, arrFirst[i] ) );
+								arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );								
+								arrLastString.push( comment.substring(arrLast[i]) );
+							}else if (i == 0 && arrFirst.length != 1) { // 첫번째 순서이면서 arrFirst 배열의 길이가 1이 아니면 여러번 진행하므로 lastString이 공백문자에서 그다음 "##"문자의 index까지이다.
+								arrFirstString.push( comment.substring( 0, arrFirst[i] ) );
+								arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );								
+								arrLastString.push( comment.substring( arrLast[i], arrFirst[i+1] ) );
+							}else if (i != 0 && i != arrFirst.length){ // 첫번째 순서가 아니면서 마지막 순서도 아니라면
+								arrFirstString.push( comment.substring( arrFirst[i], arrFirst[i] ) );
+								arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );
+								arrLastString.push( comment.substring( arrLast[i], arrFirst[i+1] ) );
+							}else{
+								arrFirstString.push( comment.substring( arrFirst[i], arrFirst[i] ) );
+								arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );
+								arrLastString.push( comment.substring(arrLast[i]) );
+							}
+						}
+
+						comment = "";
+						for (var i = 0; i < arrFirstString.length; i++) {
+							comment += arrFirstString[i];
+							comment += "<span style='color:blue;'>";
+							comment += arrSecondString[i];
+							comment += "</span>";
+							comment += arrLastString[i];
+						}
+					}
+					
+					var html = comment +
+							   "<div><button class='myComment' value='"+orgComment+"' onclick='passwordDeleteComment("+commentNo+")'>삭제</button>" +
+							   "<button class='myComment' value='"+orgComment+"' onclick='passwordChangeComment("+commentNo+")'>수정</button></div>";
+						
+					$($target).parent().html(html); // 해당 선택자의 부모선택자인 td 태그안에 새로운 코드를 넣어준다.
 				}
 			},
 			error: function(request, status, error){
@@ -846,23 +1001,124 @@
 	        }
 		});
 		
-		
 	}// end of function goDeleteComment() {}---------------------------------
 	
 	
-	// 댓글 수정 버튼을 누르면 댓글을 수정할 수 있도록 폼을 바꿔주는 메서드. 
-	function goChangeComment(commentNo) {
+	// 댓글 수정 버튼을 누르면 댓글 비밀번호를 입력할 수 있도록 폼을 바꿔주는 메서드.
+	function passwordChangeComment(commentNo) {
 		
 		var $target = $(event.target); // 이벤트가 발생한 선택자를 가져와 $target이라는 변수로 설정한다.
 		
-		var comment = $target.val();
-		comment = comment.replaceAll("<br>","\n");
-		
-		var html = "<textarea class='form-control myContent' style='resize: none;' rows='3'>"+comment+"</textarea>"+
+		var html = "<input type='password' name='commentPassword' placeholder='댓글 비밀번호'/>"+
 				   "<button class='myComment' value='"+$target.val()+"' onclick='goResetUpdate("+commentNo+")'>취소</button>"+
-				   "<button class='myComment' onclick='goUpdateComment("+commentNo+")'>수정</button>";
+		   		   "<button class='myComment' value='"+$target.val()+"' onclick='goChangeComment("+commentNo+")'>확인</button>";
 		
 		$($target).parent().parent().html(html); // 해당 선택자의 부모선택자인 td 태그안에 새로운 코드를 넣어준다.
+	}
+
+	
+	// 댓글 비밀번호 입력후 확인을 누르면 비밀번호가 일치한지 검사 후, 댓글을 수정할 수 있도록 폼을 바꿔주는 메서드. 
+	function goChangeComment(commentNo) {
+		
+		var $target = $(event.target); // 이벤트가 발생한 선택자를 가져와 $target이라는 변수로 설정한다.
+		var orgComment = $target.val();   
+		
+		var fk_boardNo = $("input[name=fk_boardNo]").val(); 
+		var commentPassword = $("input[name=commentPassword]").val();
+		
+		$.ajax({
+			url: "<%= ctxPath%>/comparePassword.sky",
+			type: "POST",
+			data: {"fk_boardNo":fk_boardNo, "commentNo":commentNo, "password":commentPassword},
+			dataType:"JSON",
+			success: function(json){
+				
+				if (json.n == 1) {
+					
+					var comment = orgComment.replaceAll("<br>","\n");
+					var html = "<textarea class='form-control myContent' style='resize: none;' rows='3'>"+comment+"</textarea>"+
+							   "<button class='myComment' value='"+$target.val()+"' onclick='goResetUpdate("+commentNo+")'>취소</button>"+
+							   "<button class='myComment' onclick='goUpdateComment("+commentNo+")'>수정</button>";
+					
+					$($target).parent().html(html); // 해당 선택자의 부모선택자인 td 태그안에 새로운 코드를 넣어준다.
+				}else{
+					alert("비밀번호가 틀렸습니다.");
+					
+					var comment = orgComment.replaceAll("\n", "<br>");
+					// 댓글 내용에 ##문자가 있으면 ##+바로 뒤에 오는 문자열이 파란색을 띄도록 함. 
+					var arrFirst = []; // "##"이 나오는 index들을 넣을 배열
+					var arrLast = []; // "##"다음의 공백(" ")이 나오는 index들을 넣을 배열
+					
+					var first = comment.indexOf("##");
+					var last = 0;
+					
+					while (first != -1) { // "##"문자열의 index가 리턴이 되는동안  
+						
+						last = comment.indexOf(" ", first);	// 그 다음 공백(" ") index도 알아낸다.
+						
+						if (last == -1) { // 만일 공백(" ") index가 리턴되지 않았다면 comment의 마지막 index(comment의 길이)를 넣는다.
+							last = comment.length;
+						}
+
+						arrFirst.push(first); // 배열에 "##"문자열 index를 넣는다.
+						arrLast.push(last); // 배열에 공백(" ") 문자열 index를 넣는다.
+						
+						first = comment.indexOf("##", last); // 공백(" ")문자의 다음 index부터 "##" 문자가 또 있는지 찾아내어 index를 알아낸다.
+					}
+
+					var firstString = ""; // "##" 문자직전까지의 문자열.
+					var secondString = ""; // "##" 문자열에서 공백(" ") 문자열까지의 문자열.
+					var lastString = ""; // 공백(" ")이후의 문자열.
+
+					var arrFirstString = []; // "##" 문자직전까지의 문자열을 넣을 배열. 
+					var arrSecondString = []; // "##" 문자열에서 공백(" ") 문자열까지의 문자열을 넣을 배열.(span태그로 감쌀 문자열들) 
+					var arrLastString = []; // 공백(" ")이후의 문자열을 넣을 배열.
+					
+					if (arrFirst.length != 0) { // "##"가 하나라도 존재했다면
+						
+						for (var i = 0; i < arrFirst.length; i++) { // arrFirst 배열의 길이만큼 반복한다.  
+						
+							if (i == 0 && arrFirst.length == 1) { // 첫번째 순서이면서 arrFirst 배열의 길이가 1이면 한번만 진행하므로 아래처럼 한다. 
+								arrFirstString.push( comment.substring( 0, arrFirst[i] ) );
+								arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );								
+								arrLastString.push( comment.substring(arrLast[i]) );
+							}else if (i == 0 && arrFirst.length != 1) { // 첫번째 순서이면서 arrFirst 배열의 길이가 1이 아니면 여러번 진행하므로 lastString이 공백문자에서 그다음 "##"문자의 index까지이다.
+								arrFirstString.push( comment.substring( 0, arrFirst[i] ) );
+								arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );								
+								arrLastString.push( comment.substring( arrLast[i], arrFirst[i+1] ) );
+							}else if (i != 0 && i != arrFirst.length){ // 첫번째 순서가 아니면서 마지막 순서도 아니라면
+								arrFirstString.push( comment.substring( arrFirst[i], arrFirst[i] ) );
+								arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );
+								arrLastString.push( comment.substring( arrLast[i], arrFirst[i+1] ) );
+							}else{
+								arrFirstString.push( comment.substring( arrFirst[i], arrFirst[i] ) );
+								arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );
+								arrLastString.push( comment.substring(arrLast[i]) );
+							}
+						}
+
+						comment = "";
+						for (var i = 0; i < arrFirstString.length; i++) {
+							comment += arrFirstString[i];
+							comment += "<span style='color:blue;'>";
+							comment += arrSecondString[i];
+							comment += "</span>";
+							comment += arrLastString[i];
+						}
+					}
+					
+					var html = comment +
+					   "<div><button class='myComment' value='"+orgComment+"' onclick='passwordDeleteComment("+commentNo+")'>삭제</button>" +
+					   "<button class='myComment' value='"+orgComment+"' onclick='passwordChangeComment("+commentNo+")'>수정</button></div>";
+				
+					$($target).parent().html(html); // 해당 선택자의 부모선택자인 td 태그안에 새로운 코드를 넣어준다.
+				}
+
+			},
+			error: function(request, status, error){
+	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+		});
 		
 	}// end of function goChangeComment() {}---------------------------------
 	
@@ -910,11 +1166,74 @@
 		
 		var $target = $(event.target); // 이벤트가 발생한 선택자를 가져와 $target이라는 변수로 설정한다.
 		
-		var comment = $target.val();
+		var orgComment = $target.val();
+		
+		var comment = orgComment.replaceAll("\n", "<br>");
+		// 댓글 내용에 ##문자가 있으면 ##+바로 뒤에 오는 문자열이 파란색을 띄도록 함. 
+		var arrFirst = []; // "##"이 나오는 index들을 넣을 배열
+		var arrLast = []; // "##"다음의 공백(" ")이 나오는 index들을 넣을 배열
+		
+		var first = comment.indexOf("##");
+		var last = 0;
+		
+		while (first != -1) { // "##"문자열의 index가 리턴이 되는동안  
+			
+			last = comment.indexOf(" ", first);	// 그 다음 공백(" ") index도 알아낸다.
+			
+			if (last == -1) { // 만일 공백(" ") index가 리턴되지 않았다면 comment의 마지막 index(comment의 길이)를 넣는다.
+				last = comment.length;
+			}
 
+			arrFirst.push(first); // 배열에 "##"문자열 index를 넣는다.
+			arrLast.push(last); // 배열에 공백(" ") 문자열 index를 넣는다.
+			
+			first = comment.indexOf("##", last); // 공백(" ")문자의 다음 index부터 "##" 문자가 또 있는지 찾아내어 index를 알아낸다.
+		}
+
+		var firstString = ""; // "##" 문자직전까지의 문자열.
+		var secondString = ""; // "##" 문자열에서 공백(" ") 문자열까지의 문자열.
+		var lastString = ""; // 공백(" ")이후의 문자열.
+
+		var arrFirstString = []; // "##" 문자직전까지의 문자열을 넣을 배열. 
+		var arrSecondString = []; // "##" 문자열에서 공백(" ") 문자열까지의 문자열을 넣을 배열.(span태그로 감쌀 문자열들) 
+		var arrLastString = []; // 공백(" ")이후의 문자열을 넣을 배열.
+		
+		if (arrFirst.length != 0) { // "##"가 하나라도 존재했다면
+			
+			for (var i = 0; i < arrFirst.length; i++) { // arrFirst 배열의 길이만큼 반복한다.  
+			
+				if (i == 0 && arrFirst.length == 1) { // 첫번째 순서이면서 arrFirst 배열의 길이가 1이면 한번만 진행하므로 아래처럼 한다. 
+					arrFirstString.push( comment.substring( 0, arrFirst[i] ) );
+					arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );								
+					arrLastString.push( comment.substring(arrLast[i]) );
+				}else if (i == 0 && arrFirst.length != 1) { // 첫번째 순서이면서 arrFirst 배열의 길이가 1이 아니면 여러번 진행하므로 lastString이 공백문자에서 그다음 "##"문자의 index까지이다.
+					arrFirstString.push( comment.substring( 0, arrFirst[i] ) );
+					arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );								
+					arrLastString.push( comment.substring( arrLast[i], arrFirst[i+1] ) );
+				}else if (i != 0 && i != arrFirst.length){ // 첫번째 순서가 아니면서 마지막 순서도 아니라면
+					arrFirstString.push( comment.substring( arrFirst[i], arrFirst[i] ) );
+					arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );
+					arrLastString.push( comment.substring( arrLast[i], arrFirst[i+1] ) );
+				}else{
+					arrFirstString.push( comment.substring( arrFirst[i], arrFirst[i] ) );
+					arrSecondString.push( comment.substring( arrFirst[i], arrLast[i] ) );
+					arrLastString.push( comment.substring(arrLast[i]) );
+				}
+			}
+
+			comment = "";
+			for (var i = 0; i < arrFirstString.length; i++) {
+				comment += arrFirstString[i];
+				comment += "<span style='color:blue;'>";
+				comment += arrSecondString[i];
+				comment += "</span>";
+				comment += arrLastString[i];
+			}
+		}
+		
 		var html = comment +
-				  "<div><button class='myComment' onclick='goDeleteComment("+commentNo+")'>삭제</button>" +
-				  "<button class='myComment' value='"+comment+"' onclick='goChangeComment("+commentNo+")'>수정</button></div>";
+				   "<div><button class='myComment' value='"+orgComment+"' onclick='passwordDeleteComment("+commentNo+")'>삭제</button>" +
+				   "<button class='myComment' value='"+orgComment+"' onclick='passwordChangeComment("+commentNo+")'>수정</button></div>";
 			
 		$($target).parent().html(html); // 해당 선택자의 부모선택자인 td 태그안에 새로운 코드를 넣어준다.
 		
@@ -969,8 +1288,8 @@
 <!-- <body> -->
 	<div class="content1">
 		<div class="contents" class="form-group">
-			<h1>${boardvo.subject} <c:if test="${not empty boardvo.fk_categoryNo}"><span>[${boardvo.fk_categoryName}]</span></c:if></h1>
-			<h5><span>작성자 : <img src="<%= ctxPath%>/resources/images/levelimg/${boardvo.levelImg}" class="photo" />${boardvo.fk_nickname}</span>ㅣ<span>조회수 : ${boardvo.readCount}</span>ㅣ<span>작성시간 :  ${boardvo.regDate}</span><c:if test="${boardvo.editDate ne null}">ㅣ<span>수정시간 : ${boardvo.editDate} </span></c:if></h5>
+			<h1>${boardvo.subject}</h1>
+			<h5><span>작성자 : ${boardvo.fk_nickname}</span>ㅣ<span>조회수 : ${boardvo.readCount}</span>ㅣ<span>작성시간 :  ${boardvo.regDate}</span><c:if test="${boardvo.editDate ne null}">ㅣ<span>수정시간 : ${boardvo.editDate} </span></c:if></h5>
 			<div id="content" style="word-break: break-all;">${boardvo.content}</div>
 			<c:if test="${boardvo.orgFilename ne null}"><h6>첨부파일 : <a href="<%= request.getContextPath()%>/download.sky?boardKindNo=${boardvo.fk_boardKindNo}&boardNo=${boardvo.boardNo}">${boardvo.orgFilename}</a></h6></c:if>
 		</div>
@@ -988,14 +1307,15 @@
 		</div>
 		
 		<div id="buttons2">
-			<button id="btnUpdate">수정</button>
+			<button data-toggle="modal" data-target="#updateModal">수정</button> <!-- 수정 버튼을 클릭하면 수정확인 모달이 뜬다. -->
 			<button data-toggle="modal" data-target="#deleteModal">삭제</button> <!-- 삭제 버튼을 클릭하면 삭제확인 모달이 뜬다. -->
 		</div>
 	
 		<form name="boardInfoFrm">
 			<input type="hidden" name="boardKindNo" value="${boardvo.fk_boardKindNo}"/>
 			<input type="hidden" name="boardNo" value="${boardvo.boardNo}"/>
-			<input type="hidden" name="gobackURL" value=""/>
+			<input type="hidden" name="boardPassword" value=""/>
+			<input type="hidden" name="gobackURL" value="${gobackURL}"/>
 		</form>
 		<c:if test="${not empty gobackURL}">
 	    	<button type="button" id="goback" onclick="javascript:location.href='${gobackURL}'" style="clear:both; margin-right: 35px;">목록으로</button>
@@ -1059,9 +1379,12 @@
 	<div class="content2">
 		
 		<div id="reply" >
-			<div><span>댓글쓰기</span><span><img  class="photo" src="<%= ctxPath%>/resources/images/levelimg/level${sessionScope.loginuser.fk_levelNo}.png"/>${sessionScope.loginuser.nickname}</span></div>
+			<div><span>댓글쓰기</span><span>${sessionScope.nickname}</span></div>
+			<div><input class="form-control" type="password" id="password" placeholder="댓글 비밀번호" />&nbsp;<span id="warning">비밀번호는 영문,숫자,특수문자를 포함하여 8~15글자로 설정해주세요.</span></div>
 			<form name="addWriteFrm" style="margin-top: 5px; width: 90%; height: 125px;" class="form-group">
 				<textarea id="cmtContent" name="cmtContent" class="form-control"></textarea>
+				<input type="hidden" id="cmtPassword" name="password" value=""/>
+				<input type="hidden" name="fk_nickname" value="${sessionScope.nickname}" />
 				<input type="hidden" name="fk_boardKindNo" value="${boardvo.fk_boardKindNo}"/>
 				<input type="hidden" name="fk_boardNo" value="${boardvo.boardNo}"/>
 			</form>
@@ -1080,13 +1403,26 @@
 		
 	</div>
 	
-<!-- 
-	<div id="include">
-		<jsp:include page="boardList.jsp" />
-	</div>
 
-</body>
-</html> -->
+
+<!-- 수정 확인 Modal -->
+	    <div class="modal" id="updateModal" role="dialog">
+	      <div class="modal-dialog">
+	    
+	        <!-- 삭제 확인 Modal 내용 -->
+	        <div class="modal-content">
+	          <div class="modal-body">
+	            <span style="font-size: 20px;">글 비밀번호 입력</span>
+	            <input type="password" id="updatePassword" class="form-control"/>
+	          </div>
+	          <div class="modal-footer">
+	            <button type="button" id="btnUpdate" class="btn" >수정</button>
+	            <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
+	          </div>
+	        </div>
+	      
+	      </div>
+	    </div>
 
 <!-- 삭제 확인 Modal -->
 	    <div class="modal" id="deleteModal" role="dialog">
@@ -1095,7 +1431,8 @@
 	        <!-- 삭제 확인 Modal 내용 -->
 	        <div class="modal-content">
 	          <div class="modal-body">
-	            <h3>정말 삭제하시겠습니까?</h3>
+	            <span style="font-size: 20px;">글 비밀번호 입력</span>
+	            <input type="password" id="deletePassword" class="form-control"/>
 	          </div>
 	          <div class="modal-footer">
 	            <button type="button" id="btnDelete" class="btn btn-danger" >삭제</button>

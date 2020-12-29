@@ -26,6 +26,7 @@ import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.ohyoon.common.MyUtil;
 import com.project.skyuniversity.ohyoon.common.OhFileManager;
+import com.project.skyuniversity.ohyoon.common.Sha256;
 import com.project.skyuniversity.ohyoon.model.*;
 import com.project.skyuniversity.ohyoon.service.InterOhyoonService;
 
@@ -81,6 +82,17 @@ public class BoardController {
 		// === 게시판 리스트 페이지 요청 === // 
 		@RequestMapping(value="/boardList.sky")
 		public ModelAndView boardList(ModelAndView mav, String boardKindNo, HttpServletRequest request) {
+			
+			// 익명게시판으로 들어오면 세션에 랜덤 닉네임이 들어가 있는지 확인 후 들어있지 않으면 닉네임을 넣어준다.
+			if (boardKindNo.equals("7")) {
+				HttpSession session = request.getSession();
+				if (session.getAttribute("nickname") == null) {
+					// 익명게시판이므로 랜덤한 숫자 2개를 받아 닉네임을 만든다.
+					String nickname = service.getRandomNickname();
+					session.setAttribute("nickname", nickname);
+				}
+			}
+			
 			
 			// 게시판 번호를 입력하여 해당 게시판번호에 해당하는 게시판 이름 불러오기
 			String boardName = service.getBoardName(Integer.parseInt(boardKindNo));
@@ -243,7 +255,6 @@ public class BoardController {
 			infoMap.put("boardKindNo", boardKindNo);
 			infoMap.put("boardName", boardName);
 			
-			
 			// 닉네임 설정을 안했으면 작성 못하도록 하기	
 			HttpSession session = request.getSession();
 			CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
@@ -330,9 +341,64 @@ public class BoardController {
 			}
 		}
 		
+		
+		// 익명게시판 글 작성 페이지 요청
+		@RequestMapping(value="/boardRegister2.sky", method = {RequestMethod.GET})
+		public ModelAndView boardRegister2(HttpServletRequest request, ModelAndView mav) {
+			
+			// 익명게시판은 게시판번호가 7. url상으로 boardKindNo를 입혀서 들어오지 않기 때문에 게시판 번호를 설정해준다.
+			String boardKindNo = "7";
+			
+			// 게시판 번호를 입력하여 해당 게시판번호에 해당하는 게시판 이름 불러오기
+			String boardName = service.getBoardName(Integer.parseInt(boardKindNo));
+			
+			if (boardName == null) { // 등록되어있지 않는 게시판 번호를 입력하고 들어온거라면
+				mav.addObject("message", "잘못된 형식입니다.");
+				mav.addObject("loc", "javascript:history.back();");
+				mav.setViewName("msg");
+				return mav;
+			}
+			
+			Map<String, String> infoMap = new HashMap<>();
+			infoMap.put("boardKindNo", boardKindNo);
+			infoMap.put("boardName", boardName);
+			
+			mav.addObject("infoMap", infoMap);
+			
+			mav.setViewName("/ohyoon/boardRegister2.tiles1");
+			return mav;
+		}
+		
+		
+		// 익명 게시판 글 작성 페이지 완료
+		@RequestMapping(value="/boardRegister2.sky", method = {RequestMethod.POST})
+		public ModelAndView boardRegister2(ModelAndView mav, HttpServletRequest request, BoardVO boardvo) {
+
+			try {
+				boardvo.setWriterIp(getUserIp()); // 작성자 ip를 받아 boardvo에 저장.
+			} catch (Exception e1) {
+				boardvo.setWriterIp(""); // 만일 getUserIp()도중 예외가 발생하면 ""으로 저장.
+			}
+			
+			// 작성한 글을 db에 저장.
+			int n = service.addBoard(boardvo);
+			
+			String message = "";
+			if (n == 1) message = "글쓰기가 완료되었습니다.";
+			else message = "글쓰기에 실패했습니다.";
+			
+			String loc = request.getContextPath()+"/boardList.sky?boardKindNo=7";
+			
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+			mav.setViewName("msg");
+			
+			return mav;
+		}
+		
 	    
 	    // 게시물 1개를 보여주는 페이지 요청
-	    @RequestMapping(value="/boardDetail.sky")
+	    @RequestMapping(value="/boardDetail.sky", method = {RequestMethod.GET})
 	    public ModelAndView requiredLoginOY_boardDetail(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	    	
 	    	String boardKindNo = request.getParameter("boardKindNo");
@@ -356,13 +422,13 @@ public class BoardController {
 	    		loginNo = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
 	    	}
 	    	
-	    	// 게시물 1개를 가져오며 로그인 회원번호와 작성자 회원번호가 일치하면 해당 게시물의 조회수를 1 올린다.
+	    	// 게시물 1개를 가져오며 로그인 회원번호와 작성자 회원번호가 일치하지 않으면 해당 게시물의 조회수를 1 올린다.
 	    	Map<String, String> paraMap = new HashMap<>();
 	    	paraMap.put("boardKindNo", boardKindNo);
 	    	paraMap.put("boardNo", boardNo);
 	    	
 	    	String readCountPermission = (String)session.getAttribute("readCountPermission"); // 세션으로부터 readCountPermission에 대한 데이터가 있는지 가져온다.
-
+	    	
 	    	BoardVO boardvo = null;
 	    	if (readCountPermission != null) { // 리스트 페이지를 통해 들어왔다면
 	    		// 게시물의 조회수를 올리고 게시물을 가져온다.
@@ -398,6 +464,130 @@ public class BoardController {
 	    	mav.setViewName("/ohyoon/boardDetail.tiles1");
 	    	return mav;
 	    }
+	    
+	    // 게시판 상세페이지에서 우측 사이드바를 타고 들어오면 조회수를 1올려준 후 다시 get방식으로 보낸다.
+	    @RequestMapping(value="/boardDetail.sky", method = {RequestMethod.POST})
+	    public String boardDetailPost(HttpServletRequest request) {
+	    	
+	    	String boardKindNo = request.getParameter("boardKindNo");
+	    	String boardNo = request.getParameter("boardNo");
+	    	
+	    	int loginNo = 0;
+	    	HttpSession session = request.getSession();
+	    	if (session.getAttribute("loginuser") != null) {
+	    		loginNo = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
+	    	}
+	    	
+	    	// 게시물 1개를 가져오며 로그인 회원번호와 작성자 회원번호가 일치하지 않으면 해당 게시물의 조회수를 1 올린다.
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("boardKindNo", boardKindNo);
+	    	paraMap.put("boardNo", boardNo);
+	    	
+	    	// 게시물의 조회수를 올린다.
+    		paraMap.put("loginNo", String.valueOf(loginNo));
+    		service.getView(paraMap);
+	    	
+	    	return "redirect:/boardDetail.sky?boardKindNo="+boardKindNo+"&boardNo="+boardNo;
+	    }
+	    
+	    
+	    // 익명게시판 게시물 1개를 보여주는 페이지 요청
+	    @RequestMapping(value="/boardDetail2.sky", method = {RequestMethod.GET})
+	    public ModelAndView boardDetail2(HttpServletRequest request, ModelAndView mav) {
+	    	
+	    	String boardKindNo = request.getParameter("boardKindNo");
+	    	String boardNo = request.getParameter("boardNo");
+	    	
+	    	try {
+	    		// url로 장난을 치고 들어오면
+				Integer.parseInt(boardKindNo);
+				Integer.parseInt(boardNo);
+			} catch (Exception e) {
+				mav.addObject("message", "잘못된 형식입니다.");
+	    		mav.addObject("loc", "javascript:history.back();");
+
+				mav.setViewName("msg");
+				return mav;
+			}
+	    	
+//	    	String currentIp = "";
+//	    	try {
+//				currentIp = getUserIp();
+//			} catch (Exception e) {
+//				currentIp = "";
+//			}
+//	    	
+	    	
+	    	// 게시물 1개를 가져오며 로그인 회원번호와 작성자 회원번호가 일치하면 해당 게시물의 조회수를 1 올린다.
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("boardKindNo", boardKindNo);
+	    	paraMap.put("boardNo", boardNo);
+	    	
+	    	HttpSession session = request.getSession();
+	    	String readCountPermission = (String)session.getAttribute("readCountPermission"); // 세션으로부터 readCountPermission에 대한 데이터가 있는지 가져온다.
+
+	    	BoardVO boardvo = null;
+	    	if (readCountPermission != null) { // 리스트 페이지를 통해 들어왔다면
+	    		// 게시물의 조회수를 올리고 게시물을 가져온다.
+	    	//	paraMap.put("currentIp", currentIp); // 현재 접속자 ip와 글 작성자 ip가 같으면 조회수를 올리지 않음.
+	    		boardvo = service.getView(paraMap);
+	    		
+	    		session.removeAttribute("readCountPermission"); // 세션은 비워준다.
+			}else { // 리스트 페이지를 통해 들어온 것이 아니라면
+				// 게시물 1개를 가져만 오고 조회수는 올리지 않는다. 
+				boardvo = service.getViewNoAddCount(paraMap);
+			}
+	    	
+	    	String gobackURL = request.getParameter("gobackURL");
+	    	if (boardvo == null) {
+	    		mav.addObject("message", "해당 게시글은 존재하지 않습니다.");
+	    		mav.addObject("loc", request.getContextPath()+"/"+gobackURL);
+
+				mav.setViewName("msg");
+				return mav;
+			}
+	    	
+	    	// 우측 게시판 신규글, 인기글 사이드바
+	    	List<MinsungBoardVO> recentBoardList = service.recentBoardList();
+	        List<MinsungBoardVO> bestBoardList = service.bestBoardList();
+	        List<MinsungBoardVO> popularBoardList = service.popularBoardList();
+	        
+	        mav.addObject("recentBoardList", recentBoardList);
+	        mav.addObject("bestBoardList", bestBoardList);
+	        mav.addObject("popularBoardList", popularBoardList);
+	    	
+	    	mav.addObject("gobackURL", gobackURL);
+	    	mav.addObject("boardvo", boardvo);
+	    	mav.setViewName("/ohyoon/boardDetail2.tiles1");
+	    	return mav;
+	    }
+	    
+	    
+	 // 게시판 상세페이지에서 우측 사이드바를 타고 들어오면 조회수를 1올려준 후 다시 get방식으로 보낸다.
+	    @RequestMapping(value="/boardDetail2.sky", method = {RequestMethod.POST})
+	    public String boardDetai2lPost(HttpServletRequest request) {
+	    	
+	    	String boardKindNo = request.getParameter("boardKindNo");
+	    	String boardNo = request.getParameter("boardNo");
+	    	
+	    	int loginNo = 0;
+	    	HttpSession session = request.getSession();
+	    	if (session.getAttribute("loginuser") != null) {
+	    		loginNo = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
+	    	}
+	    	
+	    	// 게시물 1개를 가져오며 로그인 회원번호와 작성자 회원번호가 일치하지 않으면 해당 게시물의 조회수를 1 올린다.
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("boardKindNo", boardKindNo);
+	    	paraMap.put("boardNo", boardNo);
+	    	
+	    	// 게시물의 조회수를 올린다.
+    		paraMap.put("loginNo", String.valueOf(loginNo));
+    		service.getView(paraMap);
+	    	
+	    	return "redirect:/boardDetail2.sky?boardKindNo="+boardKindNo+"&boardNo="+boardNo;
+	    }
+	    
 	    
 	    
 	    // 추천 테이블에 행을 추가해주는 메서드(ajax로 처리)
@@ -549,11 +739,44 @@ public class BoardController {
 				int result = service.deleteBoard(paraMap);
 				if (result == 1) {
 					message = "삭제되었습니다.";
-					loc = request.getContextPath()+"/boardList.sky?boardKindNo="+boardKindNo+"&boardNo="+boardNo;
+					loc = request.getContextPath()+"/boardList.sky?boardKindNo="+boardKindNo;
 				}
 				
 			}
 	    	
+	    	mav.addObject("message", message);
+	    	mav.addObject("loc", loc);
+	    	mav.setViewName("msg");
+	    	return mav;
+	    }
+	    
+	    
+	    // 익명게시판 게시글 삭제 메서드
+	    @RequestMapping(value="/deleteBoard2.sky")
+	    public ModelAndView deleteBoard2(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	    	
+	    	String boardKindNo = request.getParameter("boardKindNo");
+	    	String boardNo = request.getParameter("boardNo");
+	    	String password = request.getParameter("boardPassword");
+	    	
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("boardKindNo", boardKindNo);
+	    	paraMap.put("boardNo", boardNo);
+	    	paraMap.put("password", password);
+	    	
+	    	String message = "";
+	    	String loc = "";
+	    	
+    		// 해당 글을 삭제한다.
+    		int result = service.deleteBoard(paraMap);
+    		if (result == 1) {
+    			message = "삭제되었습니다.";
+    			loc = request.getContextPath()+"/boardList.sky?boardKindNo="+boardKindNo;
+    		}else {
+    			message = "삭제에 실패했습니다.";
+    			loc = request.getContextPath()+"/boardDetail2.sky?boardKindNo="+boardKindNo+"&boardNo="+boardNo;
+    		}
+    		
 	    	mav.addObject("message", message);
 	    	mav.addObject("loc", loc);
 	    	mav.setViewName("msg");
@@ -618,6 +841,8 @@ public class BoardController {
 	    	
 	    	String boardKindNo = request.getParameter("boardKindNo");
 	    	String boardNo = request.getParameter("boardNo");
+	    	String gobackURL = request.getParameter("gobackURL");
+	    	gobackURL = gobackURL.replaceAll(" ", "&");
 	    	
 	    	String message = "";
 	    	String loc = "";
@@ -644,6 +869,7 @@ public class BoardController {
 					// 자기글을 수정하려 들어왔다면 수정페이지를 보여준다.
 					mav.addObject("boardKindName", boardKindName);
 					mav.addObject("boardvo", boardvo);
+					mav.addObject("gobackURL", gobackURL);
 					mav.setViewName("ohyoon/boardUpdate.tiles1");
 				}
 	    		
@@ -656,10 +882,9 @@ public class BoardController {
 				mav.addObject("loc", loc);
 				mav.setViewName("msg");
 			}
-	    	
-	    	
 	    	return mav;
 	    }
+
 	    
 	    
 	    // 게시글 수정중 첨부파일 삭제하기(ajax로 처리)
@@ -701,6 +926,9 @@ public class BoardController {
 	    // 게시글 수정 완료하기
 	    @RequestMapping(value = "/boardUpdateEnd.sky", method = {RequestMethod.POST})
 	    public ModelAndView boardUpdateEnd(BoardVO boardvo, MultipartHttpServletRequest mrequest, ModelAndView mav) {
+	    	
+	    	String gobackURL = mrequest.getParameter("gobackURL");
+	    	gobackURL = gobackURL.replaceAll(" ", "&");
 	    	
 	    	MultipartFile attach = boardvo.getAttach();
 			
@@ -752,11 +980,86 @@ public class BoardController {
 			}else {
 				message = "수정에 실패했습니다.";
 			}
-			String loc = mrequest.getContextPath()+"/boardDetail.sky?boardKindNo="+boardvo.getFk_boardKindNo()+"&boardNo="+boardvo.getBoardNo();
+			String loc = mrequest.getContextPath()+"/boardDetail.sky?boardKindNo="+boardvo.getFk_boardKindNo()+"&boardNo="+boardvo.getBoardNo()+"&gobackURL="+gobackURL;
 	    	
 			mav.addObject("message", message);
 			mav.addObject("loc", loc);
 			mav.setViewName("msg");
+	    	return mav;
+	    } 
+
+	    
+	    // 익명게시판 게시물 수정하기
+	    @RequestMapping(value = "/updateBoard2.sky", method = {RequestMethod.POST})
+	    public ModelAndView updateBoard2(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+	    	
+	    	String boardKindNo = request.getParameter("boardKindNo");
+	    	String boardNo = request.getParameter("boardNo");
+	    	String password = request.getParameter("boardPassword");
+	    	String gobackURL = request.getParameter("gobackURL");
+	    	
+	    	String message = "";
+	    	String loc = "";
+	    	try {
+	    		
+	    		Integer.parseInt(boardNo);
+	    		String boardKindName = service.getBoardName(Integer.parseInt(boardKindNo)); // 게시판 이름을 알아온다.
+	    		
+	    		Map<String, String> paraMap = new HashMap<>();
+	    		paraMap.put("boardKindNo", boardKindNo);
+	    		paraMap.put("boardNo", boardNo);
+
+	    		BoardVO boardvo = service.getViewNoAddCount(paraMap); // 게시글 내용을 받아온다.
+	    		
+	    		password = Sha256.encrypt(password); // 입력한 글 비밀번호를 암호화한다.
+	    		
+	    		if ( !password.equals(boardvo.getPassword()) ) { // 글 비밀번호를 틀렸다면
+	    			message = "비밀번호가 틀렸으므로 수정할 수 없습니다.";
+	    			loc = "javascript:history.back();";
+	    			mav.addObject("message", message);
+	    			mav.addObject("loc", loc);
+	    			mav.setViewName("msg");
+	    		}else {
+	    			// 자기글을 수정하려 들어왔다면 수정페이지를 보여준다.
+	    			mav.addObject("boardKindName", boardKindName);
+	    			mav.addObject("boardvo", boardvo);
+	    			mav.addObject("gobackURL", gobackURL);
+	    			mav.setViewName("ohyoon/boardUpdate2.tiles1");
+	    		}
+	    		
+	    		
+	    	} catch (NumberFormatException e) {
+	    		// url상으로 잘못 들어왔다면
+	    		message = "잘못된 형식입니다.";
+	    		loc = "javascript:history.back();";
+	    		mav.addObject("message", message);
+	    		mav.addObject("loc", loc);
+	    		mav.setViewName("msg");
+	    	}
+	    	return mav;
+	    }
+	    
+	    
+	    // 익명 게시판 게시글 수정 완료하기
+	    @RequestMapping(value = "/boardUpdateEnd2.sky", method = {RequestMethod.POST})
+	    public ModelAndView boardUpdateEnd2(BoardVO boardvo, HttpServletRequest request, ModelAndView mav) {
+	    	
+	    	String gobackURL = request.getParameter("gobackURL");
+
+	    	// 작성한 글을 db에 저장.
+	    	int n = service.updateBoard(boardvo);
+	    	
+	    	String message = "";
+	    	if (n == 1) {
+	    		message = "수정이 완료되었습니다.";
+	    	}else {
+	    		message = "수정에 실패했습니다.";
+	    	}
+	    	String loc = request.getContextPath()+"/boardDetail2.sky?boardKindNo="+boardvo.getFk_boardKindNo()+"&boardNo="+boardvo.getBoardNo()+"&gobackURL="+gobackURL;
+	    	
+	    	mav.addObject("message", message);
+	    	mav.addObject("loc", loc);
+	    	mav.setViewName("msg");
 	    	return mav;
 	    } 
 	    
@@ -778,11 +1081,16 @@ public class BoardController {
 	    	cmtContent = cmtContent.replaceAll("&emsp;", "");
 	    	cmtContent = cmtContent.replaceAll("null", " ");
 	    	
-	    	// 게시판 번호, 게시글 번호, 댓글 내용, 작성자 회원번호, 작성자 ip를 commentvo에 저장한다.
+	    	// 게시판 번호, 게시글 번호, 댓글 내용, 작성자 회원번호, 작성자 닉네임, 작성자 ip, 댓글 비밀번호를 commentvo에 저장한다.
 	    	CommentVO commentvo = new CommentVO();
 	    	commentvo.setFk_boardKindNo(fk_boardKindNo);
 	    	commentvo.setFk_boardNo(fk_boardNo);
 	    	commentvo.setCmtContent(cmtContent);
+	    	
+	    	if (fk_boardKindNo.equals("7")) { // 익명게시판 댓글이라면 작성자 닉네임과 댓글 비밀번호를 받아와서 commentvo에 저장한다.
+	    		commentvo.setPassword(request.getParameter("password"));
+		    	commentvo.setFk_nickname(request.getParameter("fk_nickname"));
+			}
 	    	
 	    	HttpSession session = request.getSession();
 	    	CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
@@ -803,19 +1111,18 @@ public class BoardController {
 	    	try {
 	    		n = service.addComment(commentvo);
 
-	    		// 댓글쓰기 완료 후, 포인트 올려주기 
-	    		paraMap.put("fk_memberNo", commentvo.getFk_memberNo());
-	    		paraMap.put("point", "1");	   
-	    		
-	    		n = service.addPoint(paraMap);
+	    		if (!fk_boardKindNo.equals("7")) { // 익명 게시판 댓글이 아니라면
+	    			// 댓글쓰기 완료 후, 포인트 올려주기 
+	    			paraMap.put("fk_memberNo", commentvo.getFk_memberNo());
+	    			paraMap.put("point", "1");	   
+	    			n = service.addPoint(paraMap);
+				}
 	    		
 			} catch (Exception e) {
 				n = 0;
 			}
 
-	    	
 	    	JSONObject jsonObj = new JSONObject();
-	    	
 	    	jsonObj.put("n", n);
 	    	
 	    	return jsonObj.toString();
@@ -1039,21 +1346,28 @@ public class BoardController {
 	    }
 	    
 	    
-	    
-	    //=== 채팅창으로 넘어가기 ===
-	    @RequestMapping(value="/chatList.sky", method= {RequestMethod.GET}) 
-	    public String requiredLoginOY_multichat(HttpServletRequest request, HttpServletResponse response) { 
+	    // 익명게시판 댓글 비밀번호 검사하기(ajax로 처리)
+	    @ResponseBody
+	    @RequestMapping(value="/comparePassword.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
+	    public String comparePassword(HttpServletRequest request, CommentVO commentvo) {
 	    	
-	    	return "ohyoon/chatList.tiles1";
-	    } 
-
-	    
-	    //=== 채팅방 등록 페이지로 넘어가기 ===
-	    @RequestMapping(value="/chatRegister.sky", method= {RequestMethod.GET}) 
-	    public String requiredLoginOY_chatRegister(HttpServletRequest request, HttpServletResponse response) { 
+	    	Map<String, String> paraMap = new HashMap<>();
+	    	paraMap.put("fk_boardNo", commentvo.getFk_boardNo());
+	    	paraMap.put("commentNo", commentvo.getCommentNo());
+	    	paraMap.put("password", commentvo.getPassword());
 	    	
-	    	return "ohyoon/chatRegister.tiles1";
-	    } 
+	    	int n; 
+	    	try { 
+	    		n = service.comparePassword(paraMap); 
+	    	} catch (Exception e) { 
+	    		n = 0; 
+	    	}
+	    	
+	    	JSONObject jsonObj = new JSONObject(); 
+	    	jsonObj.put("n", n); 
+	    	return jsonObj.toString();
+	    }
+	    
 	    
 	    //=== 채팅창으로 페이지로 넘어가기 ===
 	    @RequestMapping(value="/chatting.sky", method= {RequestMethod.GET}) 
