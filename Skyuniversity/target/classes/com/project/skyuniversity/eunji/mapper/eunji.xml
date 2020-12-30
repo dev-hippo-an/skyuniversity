@@ -332,12 +332,13 @@
 		<result property="extraaddress" column="extraaddress" javaType="String"/>
 		<result property="status" column="status" javaType="String"/>
 		<result property="graduateok" column="graduateok" javaType="String"/>
+		<result property="deptseq" column="deptseq" javaType="String"/>
 	</resultMap>
 	<select id="allMemberInfo" parameterType="int" resultMap="allMember">
-		select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, status, graduateok
+		select deptseq, currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, status, graduateok
         from 
         (
-        select currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, fk_regseq, graduateok
+        select deptseq, currentSemester, name, memberNo, deptName, birth, grade, mobile, email, address, detailaddress, extraaddress, fk_regseq, graduateok
 		from tbl_member M
 		inner join tbl_dept D
 		on M.fk_deptseq = D.deptseq
@@ -487,5 +488,29 @@
 		) V
 		inner join tbl_dept D
 		on V.fk_deptseq = D.deptseq
+	</select>
+	
+	<select id="getMustSubject" parameterType="HashMap" resultType="String">
+		select subjectname
+        from tbl_subject
+        where muststatus = '0' and (fk_deptseq = #{deptseq} or fk_deptseq = '23')
+	</select>
+	
+	<select id="getMyMustSubejct" parameterType="HashMap" resultType="String">
+		select subjectname
+        from tbl_subject S
+        inner join tbl_course C
+        on S.subjectno = C.fk_subjectno
+        where C.fk_memberno = #{memberNo} and muststatus = '0'
+	</select>
+	
+	<select id="getMustSubjectdept" parameterType="HashMap" resultType="String">
+		select fk_deptseq
+        from tbl_subject
+        where muststatus = '0' and (fk_deptseq = '2' or fk_deptseq = '23')
+	</select>
+	
+	<select id="updateGraduateOk" parameterType="int">
+		update tbl_member set graduateok = '1' where memberno = #{memberNo}
 	</select>
 </mapper>

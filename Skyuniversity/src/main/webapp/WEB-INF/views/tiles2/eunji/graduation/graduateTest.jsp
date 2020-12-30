@@ -9,6 +9,8 @@
 <link rel="stylesheet" href="//code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 
 <style type="text/css">
 .info > td {
@@ -26,7 +28,7 @@ table#scroltbl {
 	float:left; width:100%;
 }
 #bodys {
-	overflow-y:auto; overflow-x:hidden; float:left; width:100%; height:350px;
+	overflow-y:auto; overflow-x:hidden; float:left; width:100%; height:160px;
 }
 #subli {
 	display: table; width: 1370px;
@@ -45,102 +47,13 @@ table#scroltbl {
 }
 </style>
 <script type="text/javascript">
-$(function() {
-	  $.datepicker.setDefaults({
-		    dateFormat: 'yy-mm-dd',
-		    prevText: '이전 달',
-		    nextText: '다음 달',
-		    monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-		    monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
-		    dayNames: ['일', '월', '화', '수', '목', '금', '토'],
-		    dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
-		    dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
-		    showMonthAfterYear: true,
-		    yearSuffix: '년'
-		  });
-
-		  $(function() {
-		    $("#datepicker1, #datepicker2").datepicker();
-		  });
-});
 
 $(document).ready(function() {
-	$("#infoarmy").hide();
+	var ok = ${graduok};
+	if(ok == 1){
+		$("#tfval").val("졸업가능");
+	}
 });
-var cnt = 0;
-
-function funcCome(index){
-	cnt = cnt + 1;
-	var type = $("#type"+index).text();
-	var comesemester = $("#comesemester"+index).text();
-	
-	if(type=="군휴학"){
-		var start = $("#armystart"+index).val();
-		var end = $("#armyend"+index).val();
-		
-		$("#comesem").val(comesemester);
-		$("#armytype").val(type);
-		$("#infoarmy").show();
-		
-		$("#datepicker1").prop('disabled', false);
-		$("#datepicker2").prop('disabled', false);
-		$("#armyfile").prop('disabled', false);
-		$("#armyfile").focus();
-		
-		$("#datepicker1").val(start);
-		$("#datepicker2").val(end);
-		var bool = true;
-		
-		if($("#datepicker1").val().trim()=="" || $("#datepicker2").val().trim()==""){
-			alert("일자를 입력해주세요.");
-			bool = false;
-			return;
-		}
-
-			if($("#armyfile").val() == ""){
-				alert("군복학은 파일첨부(전역증)를 해주시기 바랍니다.");
-				bool = false;
-				return;
-			}
-
-		if(bool){
-		    var check = confirm("복학신청을 하시겠습니까?");
-		    if(check){
-				var frm = document.addFrm;
-				frm.method = "POST";
-				frm.action = "<%= ctxPath%>/armyComeSchool.sky";
-				frm.submit();
-		    }
-		    else{
-		    	return;
-		    }
-		}
-		
-	}
-	if(type=="일반휴학"){
-		$.ajax({
-			url: "<%= request.getContextPath() %>/comeSchoolajax.sky",
-			data: {"type":type,
-				   "comesemester":comesemester},
-			type: "GET",
-			dataType: "json",
-			success: function(json) {
-				if(json.result){
-					alert("일반 복학신청 되었습니다.");
-					location.reload();
-				}
-				else{
-					if(json.checkbol){
-						alert("이미 복학신청이 되었습니다. 승인을 기다려주세요.");
-						return;
-					}
-				}
-			},error: function(request, status, error){
-	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	        }
-		}); 
-	}
-}
 
 function funcdel(index){
 	var no = $("#no"+index).val();
@@ -152,99 +65,148 @@ function funcdel(index){
 		return;
 	}
 }
+
+function funcmodal() {
+	var gradu = $("#gradu").text();
+	
+	$.ajax({
+		url: "<%= request.getContextPath() %>/graduateTestAjax.sky",
+		data: {"gradu":gradu},
+		type: "GET",
+		dataType: "json",
+		success: function(json) {
+			if(json.check){
+				$("#tfval").val("졸업가능");
+			}
+		},
+		error: function(request, status, error){
+               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+        }
+	});
+}
+
+function funcclose(){
+	alert("졸업적부심사가 완료되었습니다.");
+	location.reload();
+}
 </script>
 <div style="padding-left: 10px; padding-right: 10px;">
 <div>
 	<span style="font-size: 12pt; font-weight: bold;float: left;">학적정보</span>
 </div>
 <br><br>
-<div style="border: solid 2px #cccccc; padding: 20px; border-radius: 6px;">
-	<table>
-		<tr class="info">
-			<td>
-				<label>학번:</label>
-				<input type="text" value="${paraMap.deptName}" style="width: 100px;"/>
-			</td>
-			<td>
-				<label>성명:</label>
-				<input type="text" value="${paraMap.name}" style="width: 100px;"/></td>
-			<td>
-				<label>학과:</label>
-				<input type="text" value="${paraMap.deptName}"/>
-			</td>
-			<td>
-				<label>학적상태:</label>
-				<input type="text" value="${paraMap.status}"/>
-			</td>
-			<td>
-				<label>생년월일:</label>
-				<input type="text" value="${paraMap.birth}"/>
-			</td>
-		</tr>
-		<tr class="info">
-			<td>
-				<label>전화번호:</label>
-				<input type="text" value="${paraMap.mobile}"/>
-			</td>
-			<td>
-				<label>이메일:</label>
-				<input type="text" value="${paraMap.email}"/>
-			</td>
-			<td>
-				<label>학년:</label>
-				<input type="text" value="${paraMap.grade}학년"/>
-			</td>
-			<td>
-				<label>이수학기:</label>
-				<input type="text" value="${paraMap.currentSemester}학기"/></td>
-		</tr>
-		<tr class="info">
-			<td colspan="5">
-				<label>주소:</label>
-				<input type="text" value="${paraMap.address} ${paraMap.extraaddress}  ${paraMap.detailaddress}" style="width: 800px;"/>
-			</td>
-		</tr>
-	</table>
+<div style="border: solid 2px #cccccc; padding: 10px; border-radius: 6px;">
+	<ul style="list-style: none; padding-left: 0px; padding-right: 0px;">
+		<li>
+			<label>총 이수학기: </label>
+			<span style="color:#0066cc; font-weight: bold;">${sumsems}</span>학기
+		</li>
+		<li>
+			<label>교양 총 이수학점: </label>
+			<span style="color:#0066cc;font-weight: bold;">${sumculture}</span>학점
+			&nbsp;&nbsp;
+			<label>전공 총 이수학점: </label>
+			<span style="color:#0066cc;font-weight: bold;">${summajor}</span>학점
+			&nbsp;&nbsp;
+			<label>총 이수학점: </label>
+			<span style="color:#0066cc;font-weight: bold;">${sumcredits}</span>학점
+		</li>
+		<li>
+			<label>심사여부:</label>
+			<input type="text" id="tfval"/>
+			&nbsp;&nbsp;&nbsp;&nbsp;
+			<c:if test="${test == 'ok'}">
+			<div id="ex1" class="modal" style="width:500px; text-align: center;">
+				  <div style="margin: 0 auto;">
+					  <h4 style="font-weight: bold;">졸업적부심사</h4>
+					  <br>
+					  <p>귀하께서는<span><span style="color: red; font-weight: bold;">총 교양이수학점 ${sumculture}학점</span> + <span style="color: red; font-weight: bold;">총 전공이수학점 ${summajor}학점</span><br><span style="color: red; font-weight: bold;">총 이수학점 ${sumcredits}학점</span>으로 졸업학점에 충족됩니다.</span></p>
+					  <div>
+					  	<p style="font-size: 8pt; font-weight: bold;">미이수과목 조회</p>
+						<table class="table table-bordered">
+							<thead >
+								<tr>
+									<td style="font-weight: bold; font-size: 8pt;">구분</td>
+									<td style="font-weight: bold; font-size: 8pt;">과목명</td>
+									<td style="font-weight: bold; font-size: 8pt;">이수여부</td>
+								</tr>
+							</thead>
+							<tbody>
+								<c:if test="${size != 0}">
+								<c:forEach items="${nonelist}" var="map" varStatus="status">
+								<tr>
+									<c:if test="${map.deptseq == 23}">
+										<td style="width: 200px;">교양필수</td>
+									</c:if>
+									<c:if test="${map.deptseq != 23}">
+										<td style="width: 200px;">전공필수</td>
+									</c:if>
+									<td style="width: 200px;">${map.name}</td>
+									<td style="width: 200px; color:red; font-weight: bold;">미이수</td>
+								</tr>
+								</c:forEach>
+								</c:if>
+							</tbody>
+						</table>
+					  </div>
+					  <div>
+					  	<p style="color:#0066cc;font-weight: bold;">필수과목을 모두 이수하셨습니다.</p>
+					  	<p>심사결과: <span style="color:red;font-weight: bold;" id="gradu">졸업가능</span></p>
+					  </div>
+					  <a href="#" rel="modal:close" onclick="funcclose();">닫기</a>
+				  </div>
+			</div>
+ 			</c:if>
+			<c:if test="${test == 'no'}">
+			<div id="ex1" class="modal" style="width:500px;">
+				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
+				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
+				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
+				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
+				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
+				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
+				  <a href="#" rel="modal:close">닫기</a>
+			</div>
+ 			</c:if>
+ 			<c:if test="${graduok == 0}">
+			<p><a href="#ex1" rel="modal:open"  onclick="funcmodal();">졸업적부 심사하기</a></p>
+			</c:if>
+			<c:if test="${graduok == 1}">
+				<p><a>졸업적부 심사완료</a></p>
+			</c:if>
+		</li>
+	</ul>
 </div>
+
 <br><br>
 <div>
 	<span style="font-size: 12pt; font-weight: bold;float: left;">교필 및 전필과목 내역</span>
 </div>
 <br><br>
-<div style="border: solid 2px #cccccc;border-radius: 6px; height: 350px;">
-	<table class="table table-striped" id="scroltbl">
+<div style="border: solid 2px #cccccc;border-radius: 6px; height: 200px;">
+	<table class="table table-bordered" id="scroltbl">
 		<thead id="scrolth">
 			<tr id="subli">
-				<td style="width: 200px;">복학년도</td>
-				<td style="width: 100px;">신청일자</td>
-				<td style="width: 100px;">복학구분</td>
-				<td style="width: 200px;">신청결과</td>
-				<td style="width: 200px;">반려이유</td>
-				<td style="width: 200px;">서류첨부</td>
-				<td style="width: 100px;">취소</td>
+				<td style="width: 200px; font-weight: bold;">구분</td>
+				<td style="width: 200px; font-weight: bold;">과목명</td>
+				<td style="width: 200px; font-weight: bold;">이수여부</td>
 			</tr>
 		</thead>
 		<tbody id="bodys">
-			<c:forEach items="${list}" var="vo" varStatus="status">
+			<c:forEach items="${reglist}" var="map" varStatus="status">
 			<tr class='sublicl'>
-				<td style="width: 200px;">${vo.comeSemester}</td>
-				<td style="width: 100px;">${vo.regDate}</td>
-				<td style="width: 100px;" id="type${status.index}">${vo.type}</td>
-				<td style="width: 200px;">${vo.approve}</td>
-				<td style="width: 200px;">${vo.noReason}</td>
-				<c:if test="${vo.fileName == null}">
-				<td style="width: 200px;"></td>
+				<c:if test="${map.deptseq == 23}">
+					<td style="width: 200px;">교양필수</td>
 				</c:if>
-				<c:if test="${vo.fileName != null}">
-				<td style="width: 200px;"><a href='<%= request.getContextPath()%>/downloadComeSchoolInfo.sky?seq=+${vo.comeSeq}+'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>
+				<c:if test="${map.deptseq != 23}">
+					<td style="width: 200px;">전공필수</td>
 				</c:if>
-				<c:if test="${vo.approve == '승인전'}">
-					<td style="width: 100px;"><button onclick="funcdel(${status.index})">취소</button>
-					<input type="text" value="${vo.comeSeq}" id="no${status.index}" hidden="true"/>
-					</td>
+				<td style="width: 200px;">${map.name}</td>
+				<c:if test="${map.must == 'ok'}">
+					<td style="width: 200px; color:red; font-weight: bold;">이수</td>
 				</c:if>
-				<c:if test="${vo.approve == '승인완료'}">
-					<td style="width: 100px;"></td>
+				<c:if test="${map.must == 'no'}">
+					<td style="width: 200px; color:red; font-weight: bold;">미이수</td>
 				</c:if>
 			</tr>
 			</c:forEach>
@@ -253,16 +215,16 @@ function funcdel(index){
 </div>
 <br>
 <div id="divbtn">
-<span style="font-size: 12pt; font-weight: bold; color: #ff4000">일반휴학 신청시 유의사항</span>
+<span style="font-size: 12pt; font-weight: bold; color: #ff4000">졸업적부심사 유의사항</span>
 </div>
 <br>
 <div style="border: solid 2px #cccccc; padding: 15px; border-radius: 6px;">
 <ul id="info" >
-	<li>휴학시작학기는 해당학기를 기준으로 그 다음학기가 휴학 시작 학기로 정해집니다. 유의해주세요.</li>
-    <li>휴학학기를 기준으로 복학예정학기가 자동으로 입력됩니다. (복학 예정학기에만 복학이 가능한것은 아닙니다.)</li>
-	<li>휴학은 총 8학기까지 가능하며 연속 휴학 가능학기는 최대 4개 학기(2년)로 제한됩니다. </li>
-	<li>최소 1 ~ 최대 3일 후에 휴학결과조회 페이지에서 승인여부를 확인해주세요.</li>
-	<li>휴학신청 수정이 필요할경우, (학적 >> 휴학결과조회 >> 수정)에서 가능합니다.</li>
+	<li>졸업적부 심사버튼을 누른 후, '졸업가능'이 떠야 졸업이 가능합니다.</li>
+    <li>졸업적부 심사 후, 졸업연기가 가능합니다.</li>
+	<li>본인의 필수과목들의 이수 현황을 확인해주세요.</li>
+	<li>졸업학점은 교양 최소 35점 이상~ 최대 49점까지 인정  + 전공 (72점 이상)  = 총 130점 이상이여야 합니다.</li>
 </ul>
 </div>
 </div>
+

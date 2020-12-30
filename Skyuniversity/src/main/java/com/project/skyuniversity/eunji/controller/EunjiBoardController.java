@@ -1662,10 +1662,120 @@ public class EunjiBoardController {
 	}
 	
 	// 졸업적부심사
-	@RequestMapping(value = "/graduateTest.sky", method = { RequestMethod.GET})
+	@RequestMapping(value = "/graduateTest.sky", method = { RequestMethod.GET })
 	public ModelAndView graduateTest(ModelAndView mav, HttpServletRequest request) {
-	
+
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+		int sumsemes = Integer.parseInt(paraMap.get("currentSemester")) * Integer.parseInt(paraMap.get("grade"));
+		
+		// 총 이수학점를 가져옴
+		int sumcredits = service.sumSemester(memberNo);
+
+		// 총 전공이수학점을 가져옴
+		int summajor = service.sumMajorCredits(memberNo);
+
+		// 총 교양이수학점을 가져옴
+		int sumculture = service.sumCultureCredits(memberNo);
+
+		// 로그인한 유저의 학과의 필수 이수 과목 리스트 가져오기
+		List<String> sublist = service.getMustSubject(paraMap);
+		
+		// 과목의 학과 리스트 
+		List<String> deptlist = service.getMustSubjectdept(paraMap);
+		
+		// 로그인한 유저가 들은 필수 이수 과목 리스트 가져오기
+		List<String> submyslist = service.getMyMustSubject(paraMap);
+		
+		
+		List<Map<String, String>> reglist = new ArrayList<Map<String, String>>();
+		List<String> templist = new ArrayList<String>();
+		
+		
+		for(int i=0; i<sublist.size(); i++) {
+			Map<String, String> map = new HashMap<String, String>();
+			boolean flag = false;
+			for(int j=0; j<submyslist.size(); j++) {
+				if(sublist.get(i).equals(submyslist.get(j))) {
+					flag = true;
+				}
+			}
+			
+			if(flag) {
+				templist.add("ok");
+			}
+			else {
+				templist.add("no");
+			}
+			
+			map.put("name", sublist.get(i));
+			map.put("must", templist.get(i));
+			map.put("deptseq", deptlist.get(i));
+			
+			reglist.add(map);
+			
+		}
+		
+		String test = "no";
+		if(sublist.size() == submyslist.size()) {
+			if(sumcredits >= 130) {
+				test = "ok";
+			}
+		}
+		
+		List<Map<String, String>> nonelist = new ArrayList<Map<String, String>>();
+		for(int i=0; i<reglist.size(); i++) {
+			Map<String, String> map2 = new HashMap<String, String>();
+			if(reglist.get(i).get("must").equals("no")) {
+				map2.put("name", reglist.get(i).get("name"));
+				map2.put("deptseq", reglist.get(i).get("deptseq"));
+				nonelist.add(map2);
+			} 
+		}
+		System.out.println(nonelist.size());
+		mav.addObject("nonelist", nonelist);
+		mav.addObject("size", nonelist.size());
+		mav.addObject("test", test);
+		mav.addObject("reglist", reglist);
+		mav.addObject("sumculture", sumculture);
+		mav.addObject("sumcredits", sumcredits);
+		mav.addObject("summajor", summajor);
+		mav.addObject("sumsems",sumsemes);
+		mav.addObject("graduok", paraMap.get("graduateok"));
 		mav.setViewName("eunji/graduation/graduateTest.tiles2");
 		return mav;
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/graduateTestAjax.sky", method = {
+			RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
+	public String graduateTestAjax(HttpServletRequest request) {
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+		String gradu = request.getParameter("gradu");
+		
+		boolean check = false;
+		if (gradu.equals("졸업가능")) {
+			int n = service.updateGraduateOk(memberNo);
+			if(n==1) {
+				check = true;
+			}
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("check", check);
+		
+		return json.toString();
+	}
+	
 }

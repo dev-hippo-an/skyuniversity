@@ -351,6 +351,30 @@ public class EunjiService implements InterEunjiService {
 		return periodlist;
 	}
 
+	@Override
+	public List<String> getMustSubject(Map<String, String> paraMap) {
+		List<String> sublist = dao.getMustSubject(paraMap);
+		return sublist;
+	}
+
+	@Override
+	public List<String> getMyMustSubject(Map<String, String> paraMap) {
+		List<String> list = dao.getMyMustSubejct(paraMap);
+		return list;
+	}
+
+	@Override
+	public List<String> getMustSubjectdept(Map<String, String> paraMap) {
+		List<String> list = dao.getMustSubjectdept(paraMap);
+		return list;
+	}
+
+	@Override
+	public int updateGraduateOk(int memberNo) {
+		int n = dao.updateGraduateOk(memberNo);
+		return n;
+	}
+
 
 
 

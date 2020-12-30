@@ -345,6 +345,30 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return periodlist;
 	}
 
+	@Override
+	public List<String> getMustSubject(Map<String, String> paraMap) {
+		List<String> sublist = sqlSession.selectList("eunji.getMustSubject", paraMap);
+		return sublist;
+	}
+
+	@Override
+	public List<String> getMyMustSubejct(Map<String, String> paraMap) {
+		List<String> sublist = sqlSession.selectList("eunji.getMyMustSubejct", paraMap);
+		return sublist;
+	}
+
+	@Override
+	public List<String> getMustSubjectdept(Map<String, String> paraMap) {
+		List<String> list = sqlSession.selectList("eunji.getMustSubjectdept", paraMap);
+		return list;
+	}
+
+	@Override
+	public int updateGraduateOk(int memberNo) {
+		int n = sqlSession.update("eunji.updateGraduateOk", memberNo);
+		return n;
+	}
+
 
 
 }

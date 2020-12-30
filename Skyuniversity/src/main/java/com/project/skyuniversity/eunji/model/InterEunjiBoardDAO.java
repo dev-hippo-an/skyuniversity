@@ -115,5 +115,13 @@ public interface InterEunjiBoardDAO {
 
 	List<String> periodInfo(Map<String, String> paraMap);
 
+	List<String> getMustSubject(Map<String, String> paraMap);
+
+	List<String> getMyMustSubejct(Map<String, String> paraMap);
+
+	List<String> getMustSubjectdept(Map<String, String> paraMap);
+
+	int updateGraduateOk(int memberNo);
+
 
 }
