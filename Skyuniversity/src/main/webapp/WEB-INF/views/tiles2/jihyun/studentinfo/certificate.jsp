@@ -249,18 +249,19 @@
 	    var data = $('.appForm').serialize();
 	    console.log(data);
 	    
-	    var Frm = document.applicationForm;
+	    //var Frm = document.applicationForm;
 	    
 
 		/* for(var i=0; i<kindNum; i++){
 			
 		} */
 		
-		<%-- $.ajax({
+		$.ajax({
 			url:"<%=request.getContextPath%>/certificateApplicate.sky",
-			data:
+			data: data,
 			
-		}); --%>
+			
+		});
 		
 		<%-- $.ajax({
 			url:"<%= request.getContextPath() %>/requestCertificate.sky",
