@@ -33,6 +33,7 @@ import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.service.InterEunjiService;
+import com.project.skyuniversity.jihyun.model.JihyunMemberVO;
 
 @Controller
 public class EunjiBoardController {
@@ -56,11 +57,11 @@ public class EunjiBoardController {
 	// 수강신청 페이지
 	@RequestMapping(value = "registerClass.sky", method = { RequestMethod.GET })
 	public ModelAndView registerClass(ModelAndView mav, HttpServletRequest request) {
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session = request.getSession();
 
-		cmvo = (CommuMemberVO) session.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		Map<String, String> paraMap = new HashMap<String, String>();
 		paraMap.put("memberNo", Integer.toString(memberNo));
 
@@ -403,11 +404,11 @@ public class EunjiBoardController {
 	// 수강신청 과목조회
 	@RequestMapping(value = "/registerClassInfoSubs.sky", method = { RequestMethod.GET })
 	public ModelAndView registerClassInfoSubs(ModelAndView mav, HttpServletRequest request) {
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session = request.getSession();
 
-		cmvo = (CommuMemberVO) session.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		Map<String, String> paraMap = new HashMap<String, String>();
 		paraMap.put("memberNo", Integer.toString(memberNo));
 
@@ -493,11 +494,11 @@ public class EunjiBoardController {
 	// 일반 공결 신청
 	@RequestMapping(value = "/officalLeave.sky", method = { RequestMethod.GET })
 	public ModelAndView officalLeave(ModelAndView mav, HttpServletRequest request) {
-		CommuMemberVO cmvo = new CommuMemberVO();
-		HttpSession session2 = request.getSession();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		int year = cal.get(cal.YEAR) + 1;
@@ -523,11 +524,11 @@ public class EunjiBoardController {
 	public ModelAndView officalLeaveEnd(ModelAndView mav, HttpServletRequest request,
 			MultipartHttpServletRequest mrequest, OfficialLeaveVO ocvo) {
 
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		ocvo.setFk_memberNo(memberNo);
 		String startdate = ocvo.getStartDate();
 		String enddate = ocvo.getEndDate();
@@ -653,11 +654,11 @@ public class EunjiBoardController {
 			month = "03,04,05,06,09,10,11,12";
 		}
 
-		CommuMemberVO cmvo = new CommuMemberVO();
-		HttpSession session2 = request.getSession();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 
 		Map<String, String> hashmap = new HashMap<String, String>();
 		hashmap.put("year", year);
@@ -730,11 +731,11 @@ public class EunjiBoardController {
 	// 여학생 공결 신청
 	@RequestMapping(value = "/girlOfficalLeave.sky", method = { RequestMethod.GET })
 	public ModelAndView girlOfficalLeave(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
-		CommuMemberVO cmvo = new CommuMemberVO();
-		HttpSession session2 = request.getSession();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		Map<String, String> paraMap = new HashMap<String, String>();
 		paraMap.put("memberNo", Integer.toString(memberNo));
 		
@@ -763,11 +764,11 @@ public class EunjiBoardController {
 	@RequestMapping(value = "/girlOfficalLeaveEnd.sky", method = { RequestMethod.POST })
 	public ModelAndView girlOfficalLeaveEnd(ModelAndView mav, HttpServletRequest request, GirlOfficialLeaveVO golvo) {
 		boolean flag = true;
-		CommuMemberVO cmvo = new CommuMemberVO();
-		HttpSession session2 = request.getSession();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		golvo.setFk_memberno(memberNo);
 
 		Map<String, String> checkmap = new HashMap<String, String>();
@@ -824,11 +825,11 @@ public class EunjiBoardController {
 	// 강의 평가
 	@RequestMapping(value = "/classCheck.sky", method = { RequestMethod.GET })
 	public ModelAndView classCheck(ModelAndView mav, HttpServletRequest request) {
-		CommuMemberVO cmvo = new CommuMemberVO();
-		HttpSession session2 = request.getSession();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 
 		java.util.Calendar cal = java.util.Calendar.getInstance();
 		int month = cal.get(cal.MONTH) + 1;
@@ -913,11 +914,11 @@ public class EunjiBoardController {
 	// 군 휴학 신청
 	@RequestMapping(value = "/armyLeaveSchool.sky", method = { RequestMethod.GET })
 	public ModelAndView armyLeaveSchool(ModelAndView mav, HttpServletRequest request) {
-		CommuMemberVO cmvo = new CommuMemberVO();
-		HttpSession session2 = request.getSession();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		Map<String, String> paraMap = service.allMembeInfo(memberNo);
 
@@ -937,11 +938,11 @@ public class EunjiBoardController {
 		MultipartHttpServletRequest mrequest, SchoolLeaveVO slvo) {
 		int n = 0;
 
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 
 		Map<String, String> paraMap = service.allMembeInfo(memberNo);
 		if ("휴학".equals(paraMap.get("status"))) {
@@ -1061,11 +1062,11 @@ public class EunjiBoardController {
 	@RequestMapping(value = "/leaveSchool.sky", method = { RequestMethod.GET })
 	public ModelAndView leaveSchool(ModelAndView mav, HttpServletRequest request) {
 		
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		Map<String, String> paraMap = service.allMembeInfo(memberNo);
 
@@ -1083,11 +1084,11 @@ public class EunjiBoardController {
 	
 	@RequestMapping(value = "/leaveSchoolEnd.sky", method = { RequestMethod.POST })
 	public ModelAndView leaveSchoolEnd(ModelAndView mav, HttpServletRequest request) {
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		Map<String, String> paraMap2 = service.allMembeInfo(memberNo);
 		
@@ -1155,11 +1156,11 @@ public class EunjiBoardController {
 	// 휴학신청 결과 조회
 	@RequestMapping(value = "/leaveSchoolInfo.sky", method = { RequestMethod.GET })
 	public ModelAndView leaveSchoolInfo(ModelAndView mav, HttpServletRequest request) {
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		List<SchoolLeaveVO> list = service.selectSchoolLeave(memberNo);
 		
@@ -1231,11 +1232,11 @@ public class EunjiBoardController {
 	
 	@RequestMapping(value = "/updateSchoolLeave.sky", method = { RequestMethod.GET })
 	public ModelAndView updateSchoolLeave(ModelAndView mav, HttpServletRequest request) {
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		Map<String, String> paraMap = service.allMembeInfo(memberNo);
 
@@ -1266,11 +1267,11 @@ public class EunjiBoardController {
 	@RequestMapping(value = "/armyLeaveSchoolUpdate.sky", method = { RequestMethod.POST})
 	public ModelAndView armyLeaveSchoolUpdate(ModelAndView mav, HttpServletRequest request, MultipartHttpServletRequest mrequest, SchoolLeaveVO slvo) {
 		
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		String enddate = slvo.getArmyEndDate();
 		
@@ -1356,11 +1357,11 @@ public class EunjiBoardController {
 	@RequestMapping(value = "/leaveSchoolUpdate.sky", method = { RequestMethod.POST})
 	public ModelAndView leaveSchoolUpdate(ModelAndView mav, HttpServletRequest request, SchoolLeaveVO slvo) {
 	
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		String startYear = request.getParameter("startyear");
 		String startsem = request.getParameter("startsem");
@@ -1417,11 +1418,11 @@ public class EunjiBoardController {
 	public ModelAndView comeSchool(ModelAndView mav, HttpServletRequest request) {
 		
 		// 학적 정보 가져오기
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		String seq = request.getParameter("seq");
 		if(seq != null) {
@@ -1470,11 +1471,11 @@ public class EunjiBoardController {
 	@RequestMapping(value = "/comeSchoolajax.sky", method = {RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
 	public String comeSchoolajax(HttpServletRequest request) {
 	
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		String type = request.getParameter("type");
 		String comesemester = request.getParameter("comesemester");
@@ -1508,11 +1509,11 @@ public class EunjiBoardController {
 	public String armyComeSchool(HttpServletRequest request,
 		MultipartHttpServletRequest mrequest, ComeSchoolVO csvo) {
 		
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		String type = csvo.getType();
 		String comesemester = csvo.getComeSemester();
@@ -1627,11 +1628,11 @@ public class EunjiBoardController {
 	public ModelAndView graduateDelay(ModelAndView mav, HttpServletRequest request) {
 		
 		// 로그인한 유저의 학적 정보 불러오기
-		CommuMemberVO cmvo = new CommuMemberVO();
+		JihyunMemberVO jmvo = new JihyunMemberVO();
 		HttpSession session2 = request.getSession();
 
-		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
-		int memberNo = cmvo.getFk_memberNo();
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		
 		Map<String, String> paraMap = service.allMembeInfo(memberNo);
 		
