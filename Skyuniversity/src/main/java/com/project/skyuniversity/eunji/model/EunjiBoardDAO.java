@@ -339,6 +339,12 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return mapList;
 	}
 
+	@Override
+	public List<String> periodInfo(Map<String, String> paraMap) {
+		List<String> periodlist = sqlSession.selectList("eunji.periodInfo",paraMap);
+		return periodlist;
+	}
+
 
 
 }

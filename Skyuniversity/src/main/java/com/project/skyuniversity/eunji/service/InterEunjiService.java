@@ -120,6 +120,8 @@ public interface InterEunjiService {
 
 	List<Map<String, String>> getSubjectListNo(String no);
 
+	List<String> periodInfo(Map<String, String> paraMap);
+
 	
 
 	

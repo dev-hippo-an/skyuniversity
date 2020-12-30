@@ -200,7 +200,7 @@ table#scroltbl {
 				   "memberno":memberno,
 				   "day":days,
 				   "period":period},
-			type: "POST",
+			type: "GET",
 			dataType: "json",
 			success: function(json) {
 				if(!json.dayre && json.unique && json.bool){

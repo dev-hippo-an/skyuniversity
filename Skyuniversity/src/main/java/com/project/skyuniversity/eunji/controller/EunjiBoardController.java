@@ -228,7 +228,7 @@ public class EunjiBoardController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/insertSub.sky", method = { RequestMethod.POST }, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/insertSub.sky", method = { RequestMethod.GET}, produces = "text/plain;charset=UTF-8")
 	public String insertSub(HttpServletRequest request) {
 
 		boolean ok = true;
@@ -270,18 +270,60 @@ public class EunjiBoardController {
 		}
 		boolean end = false;
 
+		String[] arr = null;
+		
+		if(day.length() > 1) {
+			arr = day.split(",");
+		}
+		
+		String[] arr2 = null;
+		
+		if(period.length() > 1) {
+			arr2 = period.split(",");
+		}
+		
 		List<String> daylist = service.dayInfo(paraMap);
+		List<String> periodlist = service.periodInfo(paraMap);
 
 		boolean dayre = true;
 		for(int i=0; i<daylist.size(); i++) {
-			System.out.println(daylist.get(i));
+			if(arr == null) {
+				if(daylist.get(i).contains(day)) {
+					dayre = false;
+				}
+			}
+			else {
+				for(int j=0; j<arr.length;j++) {
+					if(daylist.get(i).contains(arr[j])) {
+						dayre = false;
+					}
+				}
+			}
 		}
+		boolean periodre = true;
 
+		if(!dayre) {
+			for(int i=0; i<periodlist.size(); i++) {
+				if(arr2 == null) {
+					if(periodlist.get(i).contains(period)) {
+						periodre = false;
+					}
+				}
+				else {
+					for(int j=0; j<arr2.length;j++) {
+						if(periodlist.get(i).contains(arr2[j])) {
+							periodre = false;
+						}
+					}
+				}
+			}
+		}
+		
 		int uniqueinfo = service.uniqueInfo(paraMap);
 		if (uniqueinfo >= 1) {
 			unique = false;
 		}
-		if (!recourse && bool && dayre) {
+		if (!recourse && bool && periodre) {
 			try {
 				int n = service.insertCourse(paraMap);
 				if (n == 1) {
@@ -296,7 +338,7 @@ public class EunjiBoardController {
 		}
 
 		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("dayre", dayre);
+		jsonobj.put("dayre", periodre);
 		jsonobj.put("bool", bool);
 		jsonobj.put("unique", unique);
 		jsonobj.put("recourse", recourse);

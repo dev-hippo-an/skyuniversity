@@ -345,6 +345,12 @@ public class EunjiService implements InterEunjiService {
 		return maplist;
 	}
 
+	@Override
+	public List<String> periodInfo(Map<String, String> paraMap) {
+		List<String> periodlist = dao.periodInfo(paraMap);
+		return periodlist;
+	}
+
 
 
 

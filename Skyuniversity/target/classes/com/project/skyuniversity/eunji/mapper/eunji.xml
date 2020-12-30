@@ -159,6 +159,14 @@
 		where fk_memberno = #{memberNo} and courseyear = #{year} and semester = #{currentsemester}
 	</select>
 	
+	<select id="periodInfo" parameterType="HashMap" resultType="String">
+		select period
+		from tbl_course C
+		inner join tbl_subject S
+		on c.fk_subjectno = S.subjectno
+		where fk_memberno = #{memberNo} and courseyear = #{year} and semester = #{currentsemester}
+	</select>
+	
 	<select id="uniqueInfo" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_course C
