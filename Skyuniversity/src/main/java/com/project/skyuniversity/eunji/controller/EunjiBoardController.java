@@ -289,31 +289,21 @@ public class EunjiBoardController {
 		boolean dayre = true;
 		for(int i=0; i<daylist.size(); i++) {
 			if(arr == null) {
-				if(daylist.get(i).contains(day)) {
+				if(daylist.get(i).contains(day) && periodlist.get(i).contains(period)) {
 					dayre = false;
 				}
 			}
 			else {
 				for(int j=0; j<arr.length;j++) {
+					boolean ch = true;
 					if(daylist.get(i).contains(arr[j])) {
-						dayre = false;
+						ch = false;
 					}
-				}
-			}
-		}
-		boolean periodre = true;
-
-		if(!dayre) {
-			for(int i=0; i<periodlist.size(); i++) {
-				if(arr2 == null) {
-					if(periodlist.get(i).contains(period)) {
-						periodre = false;
-					}
-				}
-				else {
-					for(int j=0; j<arr2.length;j++) {
-						if(periodlist.get(i).contains(arr2[j])) {
-							periodre = false;
+					if(!ch) {
+						for(int k=0; k<arr2.length;k++) {
+							if(periodlist.get(i).contains(arr2[k])) {
+								dayre = false;
+							}
 						}
 					}
 				}
@@ -324,7 +314,7 @@ public class EunjiBoardController {
 		if (uniqueinfo >= 1) {
 			unique = false;
 		}
-		if (!recourse && bool && periodre) {
+		if (!recourse && bool && dayre) {
 			try {
 				int n = service.insertCourse(paraMap);
 				if (n == 1) {
@@ -339,7 +329,7 @@ public class EunjiBoardController {
 		}
 
 		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("dayre", periodre);
+		jsonobj.put("dayre", dayre);
 		jsonobj.put("bool", bool);
 		jsonobj.put("unique", unique);
 		jsonobj.put("recourse", recourse);
