@@ -2284,4 +2284,18 @@ select row_number () over (order by fk_boardKindNo, regDate) as rno, fk_boardKin
       from (
       select row_number() over (order by regDate desc) as rno, boardNo, fk_boardKindNo, subject, '일반' as categoryName from TBL_BOARD_ANONYMOUS
       where status = 1) aa
-      where rno between 1 and 6
+      where rno between 1 and 6;
+      
+      
+      
+      
+      
+      
+      select commuMemberNo, fk_memberNo, fk_levelNo, nickname, point, m.name, m.email
+		from tbl_commu_member c
+		join
+			(select memberno, name, email
+			from tbl_member
+		) m
+		on c.fk_memberNo = m.memberno
+        where fk_memberNo = 102

@@ -50,6 +50,7 @@ import com.project.skyuniversity.ash.model.MarketBoardVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.ash.model.PhotoVO;
 import com.project.skyuniversity.ash.service.InterAnsehyeongService;
+import com.project.skyuniversity.jihyun.model.JihyunMemberVO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.ohyoon.model.CommentVO;
 import com.project.skyuniversity.ash.common.AnFileManager;
@@ -114,7 +115,21 @@ public class AnsehyeongController {
 		// 인덱스의 캐러셀에 들어갈 배너 광고를 가져오기
 		List<BannerVO> bannerList = service.getBannerList();
 
+		HttpSession session = request.getSession();
 		
+		
+		try {
+			if(!"CommuMemberVO".equals(session.getAttribute("loginuser").getClass().getSimpleName())) {
+				String fk_memberNo = ((JihyunMemberVO)session.getAttribute("loginuser")).getMemberNo();
+				
+				CommuMemberVO loginuser = service.getLoginuserFromHs(fk_memberNo);	
+				
+				session.setAttribute("loginuser", loginuser);
+				
+			}
+		} catch (NullPointerException e) {
+			
+		}
 		
 		
 		
@@ -134,7 +149,6 @@ public class AnsehyeongController {
 		mav.addObject("popularBoardList", popularBoardList);
 		
 		
-		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
 		mav.addObject("bannerList", bannerList);
 		mav.setViewName("main/index.tiles1");

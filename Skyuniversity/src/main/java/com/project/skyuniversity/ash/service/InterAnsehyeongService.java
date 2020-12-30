@@ -161,6 +161,8 @@ public interface InterAnsehyeongService {
 
 	NoticeVO getNoticeView(Map<String, String> paraMap);
 
+	CommuMemberVO getLoginuserFromHs(String fk_memberNo);
+
 
 
 
