@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import javax.servlet.http.HttpSession;
 
+import org.json.JSONArray;
 import org.json.JSONObject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -30,6 +31,15 @@ public class JihyunController {
 	@RequestMapping(value="/hsindex.sky")
 	public ModelAndView requiredLoginhs_index(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	
+		// 공지사항 불러오기
+		List<Map<String,String>> hsNoticeList = service.getNoticeList(); 
+		List<Map<String,String>> deptNoticeList = service.getDeptNoticeList(); 
+		List<Map<String,String>> subjectNoticeList = service.getSubjectNoticeList(); 
+		
+		mav.addObject("hsNoticeList", hsNoticeList);
+		mav.addObject("deptNoticeList", deptNoticeList);
+		mav.addObject("subjectNoticeList", subjectNoticeList);
+		
 		mav.setViewName("jihyun/index.tiles2");
 		//   /WEB-INF/views/tiles1/jihyun/index.jsp 파일을 생성한다.
 		
@@ -133,7 +143,7 @@ public class JihyunController {
 	
 	// 현재 비밀번호 확인
 	@ResponseBody
-	@RequestMapping(value = "/checkPwd.sky", method = { RequestMethod.POST })
+	@RequestMapping(value = "/checkPwd.sky", method = { RequestMethod.POST }, produces = "text/plain;charset=UTF-8")
 	public String checkPwd(HttpServletRequest request, HttpServletResponse response) {
 		
 		String memberno = request.getParameter("memberno");
@@ -158,7 +168,7 @@ public class JihyunController {
 
 	// 입력한 새비밀번호가 현 비밀번호와 같은지 확인
 	@ResponseBody
-	@RequestMapping(value = "/checkNewPwd.sky", method = { RequestMethod.POST })
+	@RequestMapping(value = "/checkNewPwd.sky", method = { RequestMethod.POST }, produces = "text/plain;charset=UTF-8")
 	public String checkNewPwd(HttpServletRequest request, HttpServletResponse response) {
 		
 		String memberno = request.getParameter("memberno");
@@ -177,6 +187,7 @@ public class JihyunController {
 		
 		return jsonObj.toString();
 	}
+	
 	// 비밀번호 변경
 	@RequestMapping(value="/pwdChangeEndhs.sky", method = {RequestMethod.POST})
 	public ModelAndView pwdChangeEndhs(ModelAndView mav, HttpServletRequest request) {
@@ -222,17 +233,56 @@ public class JihyunController {
 		mav.setViewName("jihyun/studentinfo/schedule.tiles2");
 		return mav;
 	}
+	
 	// 증명서발급
 	@RequestMapping(value = "/certificate.sky")
 	public ModelAndView requiredLoginhs_certificate (HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
+		// 발급가능한 증명서 리스트 조회
 		List<Map<String, String>> certificateKindList = service.getCertificatekindList();
 		
 		mav.addObject("certificateKindList", certificateKindList);
 		
 		mav.setViewName("jihyun/studentinfo/certificate.tiles2");
+		
 		return mav;
 	}
+	
+	// 해당 학생 증명서 발급신청 리스트 조회
+	@ResponseBody
+	@RequestMapping(value = "/lookupApplicationList.sky", produces = "text/plain;charset=UTF-8")
+	public String lookupApplicationList (HttpServletRequest request, HttpServletResponse response) {
+		
+		String memberNo = request.getParameter("memberNo");
+		
+		System.out.println(memberNo);
+		
+		// 해당 학생의 증명서 신청리스트 조회
+		List<Map<String,String>> lookupApplicationList = service.getApplicationList(memberNo);
+		
+		JSONArray jsonArr = new JSONArray();	//[]
+		
+		if(lookupApplicationList.size() > 0) {
+			for(Map<String, String> aplist :lookupApplicationList) {
+				JSONObject jsonObj = new JSONObject(); // {}
+				
+				jsonObj.put("rno", aplist.get("rno"));
+				jsonObj.put("name", aplist.get("name"));
+				jsonObj.put("certificateName", aplist.get("certificateName"));
+				jsonObj.put("lang", aplist.get("lang"));
+				jsonObj.put("count", aplist.get("count"));
+				jsonObj.put("applicationDate", aplist.get("applicationDate"));
+				jsonObj.put("grantStatus", aplist.get("grantStatus"));
+				jsonObj.put("grantDate", aplist.get("grantDate"));
+				jsonObj.put("recieveWay", aplist.get("recieveWay"));
+				
+				jsonArr.put(jsonObj);
+			}
+		}
+		
+		return jsonArr.toString();
+	}
+	
 	// 기이수성적조회
 	@RequestMapping(value = "/totalGrade.sky")
 	public ModelAndView requiredLoginhs_totalGrade(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {

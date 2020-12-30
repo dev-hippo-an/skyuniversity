@@ -19,4 +19,12 @@ public interface InterJihyunService {
 	// 증명서 종류 가져오기
 	List<Map<String, String>> getCertificatekindList();
 
+	// 증명서 신청 리스트 가져오기
+	List<Map<String, String>> getApplicationList(String memberNo);
+
+	// 공지사항 리스트 가져오기
+	List<Map<String, String>> getNoticeList(); // 전체
+	List<Map<String, String>> getDeptNoticeList(); // 학과별
+	List<Map<String, String>> getSubjectNoticeList(); // 과목별
+
 }

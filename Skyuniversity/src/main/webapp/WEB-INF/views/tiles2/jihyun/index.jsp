@@ -254,6 +254,7 @@ $(function(){
 					<table class="table" style="text-align: center;">
 						<thead>
 							<tr>
+								<th>구분</th>
 								<th>제목</th>
 								<th>게시일</th>
 							</tr>

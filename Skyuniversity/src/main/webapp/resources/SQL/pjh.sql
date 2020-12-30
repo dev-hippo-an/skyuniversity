@@ -46,16 +46,23 @@ certificateSeq                  number                                         n
 ,fk_memberNo                  number                                         not null                    -- 신청자 : 학번
 ,applicationDate                date                default sysdate   not null                      -- 신청일자
 ,count                                number                                         not null                     -- 발급부수
-,grantDate                          date                default sysdate                                      --  승인일자
+,grantDate                          date                                                                                  --  승인일자
 ,grantStatus                       number          default 0                                                 -- 0 신청, 1 승인, 2 반려, 3보류
 ,returnreason                     varchar2(200)                                                                 -- 반려사유
+,lang                              number(1)                                      not null                   -- 국문/영문 구분
+,recieveWay                 number(1)                                       not null                    -- 수령방법 0:직접수령 1:등기수령
 ,constraint PK_tbl_certificate_seq primary key(certificateSeq)
 ,constraint FK_tbl_certificate_kindSeq foreign key(fk_certificateKindSeq) references tbl_certificateKind(certificateKindSeq)
 ,constraint FK_tbl_certificate_memberNo foreign key(fk_memberNo) references tbl_member(memberno)
+,constraint CK_tbl_certificate_lang check( lang in(1,0) )
+,constraint CK_tbl_certificate_recieveWay check( recieveWay in(1,0) )
 ,constraint CK_tbl_certificate_grantStatus check( grantStatus in(0,1,2,3) )
 );
 
+delete tbl_certificate;
+drop table tbl_certificate purge;
 
+drop sequence certificateSeq;
 -- 증명서 테이블 시퀀스 생성
 create sequence certificateSeq
 start with 1
@@ -266,7 +273,64 @@ order by 1;
 desc tbl_certificate;
 select * from tbl_certificate;
 
-insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus) values(1,);
+0,1,2,3 0 신청, 1 승인, 2 반려, 3보류
+
+delete tbl_certificate;
+insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate) values(certificateSeq.nextval,4,108,2,3,0,0, sysdate-7);
+insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate) values(certificateSeq.nextval,3,108,2,2,1,0, sysdate-5);
+insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate) values(certificateSeq.nextval,2,108,2,1,1,1, sysdate-3);
+insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate) values(certificateSeq.nextval,1,108,2,0,0,1, sysdate);
+
+update tbl_certificate set grantdate = sysdate-6 where certificateSeq = 9;
+update tbl_certificate set grantdate = sysdate-4 where certificateSeq = 10;
+update tbl_certificate set grantdate = sysdate-2 where certificateSeq =11;
  commit;
  
- select 
+ select * from tbl_certificate;
+ 
+ desc tbl_certificateKind;
+ 
+ select case when grantStatus = 0 then '신청' when grantStatus = 1 then '승인' when grantStatus = 2 then '반려' else '보류' end AS grantStatus
+ from tbl_certificate
+ 
+ select   row_number() over(order by certificateSeq desc) as rno,
+                m.name, certificateName
+                , to_char(applicationDate, 'yyyy-mm-dd')as applicationDate
+                , count
+                ,to_char(grantDate, 'yyyy-mm-dd' as grantDate
+            , case when grantStatus = 0 then '신청' when grantStatus = 1 then '승인' when grantStatus = 2 then '반려' else '보류' end AS grantStatus
+            , case when c.lang = 0 then '국문' else '영문' end as lang
+            , case when c.recieveWay = 0 then '직접수령' else '등기수령' end as recieveWay
+ from tbl_certificate C join tbl_certificateKind K
+ on K.certificateKindSeq  = C.fk_certificateKindSeq
+ join tbl_member M
+ on c.fk_memberno = m.memberno
+ where fk_memberno = 108
+ 
+ commit;
+ 
+ select * from tbl_dept --컴공 2
+ select * from tbl_subject;
+ desc tbl_hsnotice;
+ select * from tbl_hsnotice;
+
+insert into tbl_hsnotice (noticeno, subject, contents, status) values(hsNoticeSeq.nextval, '이것은 전체공지입니다.', '전체공지테스트입니다.', 0);
+insert into tbl_hsnotice (noticeno, fk_deptSeq, subject, contents, status) values(hsNoticeSeq.nextval, 2,'이것은 학과공지입니다.', '학과공지테스트입니다.', 1);
+insert into tbl_hsnotice (noticeno, fk_subjectNo, subject, contents, status) values(hsNoticeSeq.nextval, 'NE118', '이것은 전체공지입니다.', '전체공지테스트입니다.', 2);
+
+update tbl_hsnotice set subject='이것은 과목공지입니다.', contents='과목공지테스트입니다.' where noticeno = 3
+
+select noticeNo, subject, contents, writeday, readcount, filename, orgfilename, filesize 
+from tbl_hsnotice where status = 0 ;
+
+select noticeNo, fk_deptSeq, deptName, subject, contents, writeday, readcount, filename, orgfilename, filesize 
+from tbl_hsnotice H join tbl_dept D
+on H.fk_deptSeq = D.deptSeq
+where H.status = 1;
+
+select noticeNo, fk_subjectNo, subjectName, subject, contents, writeday, readcount, filename, orgfilename, filesize 
+from tbl_hsnotice H join tbl_subject S
+on H.fk_subjectNo = S.subjectNo
+where H.status = 2;
+
+commit;
