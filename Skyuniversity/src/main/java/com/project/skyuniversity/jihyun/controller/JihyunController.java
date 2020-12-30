@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.common.Sha256;
 import com.project.skyuniversity.jihyun.model.JihyunMemberVO;
 import com.project.skyuniversity.jihyun.service.InterJihyunService;
@@ -31,8 +32,21 @@ public class JihyunController {
 	@RequestMapping(value="/hsindex.sky")
 	public ModelAndView requiredLoginhs_index(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	
+		HttpSession session = request.getSession();
 		
+	try {
+		if(!"JihyunMemberVO".equals(session.getAttribute("loginuser").getClass().getSimpleName())) {
+			int memberno = ((CommuMemberVO)session.getAttribute("loginuser")).getFk_memberNo();
+			
+			String memberNo = String.valueOf(memberno);
+			
+			JihyunMemberVO loginuser = service.getLoginuserFromCommu(memberNo);
+			
+			session.setAttribute("loginuser", loginuser);
+		}
+	}catch (NullPointerException e){
 		
+	}
 		// 공지사항 불러오기
 		List<Map<String,String>> hsNoticeList = service.getNoticeList(); 
 		List<Map<String,String>> deptNoticeList = service.getDeptNoticeList(); 

@@ -27,4 +27,7 @@ public interface InterJihyunService {
 	List<Map<String, String>> getDeptNoticeList(); // 학과별
 	List<Map<String, String>> getSubjectNoticeList(); // 과목별
 
+	// 학번으로 멤버 정보 가져오기
+	JihyunMemberVO getLoginuserFromCommu(String memberNo);
+
 }

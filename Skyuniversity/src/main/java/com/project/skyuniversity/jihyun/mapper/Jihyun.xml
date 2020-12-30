@@ -21,6 +21,23 @@
 		join tbl_school_reg R
 		on V.fk_regseq = r.regseq
 	</select>
+	
+	 <select id="getLoginuserFromCommu" resultType="com.project.skyuniversity.jihyun.model.JihyunMemberVO" parameterType="String">
+		with v  as (
+				select name, memberNo, pwd,
+				                    func_gender_2(jubun) as gender, 
+				                    grade, enterDay, chinaName, engName, graduateDay, fk_regSeq, fk_deptSeq, totalSemester, email, img, postcode, address, detailAddress, extraAddress, birth,
+				                    8-absenceCnt as absenceCnt, mobile
+				from tbl_member
+				where memberno = #{memberNo} 
+				) 
+				 
+		select name, memberNo, pwd,  gender, grade, enterDay, chinaName, engName, graduateDay, fk_regSeq, fk_deptSeq, totalSemester, email, mobile, img, postcode, address, detailAddress, extraAddress, birth, absenceCnt, deptName, status
+		from V JOIN tbl_dept D
+		on  V.fk_deptSeq = D.deptSeq
+		join tbl_school_reg R
+		on V.fk_regseq = r.regseq
+	</select>
 
 	<update id="updatePwd" parameterType="HashMap">
 		update tbl_member set pwd = #{pwd} 

@@ -255,13 +255,13 @@
 		/* for(var i=0; i<kindNum; i++){
 			
 		} */
-		
+		<%-- 
 		$.ajax({
 			url:"<%=request.getContextPath%>/certificateApplicate.sky",
 			data: data,
 			
 			
-		});
+		}); --%>
 		
 		<%-- $.ajax({
 			url:"<%= request.getContextPath() %>/requestCertificate.sky",

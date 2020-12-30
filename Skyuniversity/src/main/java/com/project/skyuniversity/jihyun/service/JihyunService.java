@@ -68,4 +68,11 @@ public class JihyunService implements InterJihyunService {
 		return subjectnoticeList;
 	}
 
+	// 학번으로 학생정보가져오기
+	@Override
+	public JihyunMemberVO getLoginuserFromCommu(String memberNo) {
+		JihyunMemberVO loginuser = dao.getLoginuserFromCommu(memberNo);
+		return loginuser;
+	}
+
 }

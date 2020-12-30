@@ -70,4 +70,9 @@ public class JihyunDAO implements InterJihyunDAO {
 		return subjectNoticeList;
 	}
 
+	public JihyunMemberVO getLoginuserFromCommu(String memberNo) {
+		JihyunMemberVO loginuser = sqlsession.selectOne("Jihyun.getLoginuserFromCommu", memberNo);
+		return loginuser;
+	}
+
 }
