@@ -1081,7 +1081,7 @@ commit
         nocache;
         
         select *
-        from tbl_school_leave
+        from tbl_course
         delete from tbl_school_leave
         insert into tbl_school_leave(schoolLvNo, armytype, armystartdate, armyenddate, filename, orgfilename, filesize, comeSemester, fk_regSeq, type)
         values(tbl_school_leave_seq.nextval, ?, ?, ?, ?, ?, ?, ?,'2','군휴학')
@@ -1141,15 +1141,17 @@ commit
         commit
         
         select *
-        from tbl_come_school
+        from tbl_course
         delete from tbl_come_school
         select count(*)
         from tbl_come_school
         where comesemester = '' and fk_memberno = ''
-        
+         
         select comeseq, comesemester, to_char(regdate, 'yyyy-mm-dd') as regdate, type, approve, approvedate, filename, fk_memberno, noreason
         from tbl_come_school
         where fk_memberno = '102'
         
         select *
         from tbl_course
+        
+        

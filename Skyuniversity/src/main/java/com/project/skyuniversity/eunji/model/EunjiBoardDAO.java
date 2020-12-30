@@ -106,9 +106,9 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 	}
 
 	@Override
-	public int dayInfo(Map<String, String> paraMap) {
-		int dayinfo = sqlSession.selectOne("eunji.dayInfo",paraMap);
-		return dayinfo;
+	public List<String> dayInfo(Map<String, String> paraMap) {
+		List<String> daylist = sqlSession.selectList("eunji.dayInfo",paraMap);
+		return daylist;
 	}
 
 	@Override
@@ -313,6 +313,36 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 	public ComeSchoolVO getComeSchoolVO(String seq) {
 		ComeSchoolVO csvo = sqlSession.selectOne("eunji.getComeSchoolVO",seq);
 		return csvo;
+	}
+
+	@Override
+	public int sumSemester(int memberNo) {
+		int n = sqlSession.selectOne("eunji.sumSemester", memberNo);
+		return n;
+	}
+
+	@Override
+	public int sumMajorCredits(int memberNo) {
+		int n = sqlSession.selectOne("eunji.sumMajorCredits", memberNo);
+		return n;
+	}
+
+	@Override
+	public int sumCultureCredits(int memberNo) {
+		int n = sqlSession.selectOne("eunji.sumCultureCredits", memberNo);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> getSubjectListNo(String no) {
+		List<Map<String, String>> mapList = sqlSession.selectList("eunji.getSubjectListNo", no);
+		return mapList;
+	}
+
+	@Override
+	public List<String> periodInfo(Map<String, String> paraMap) {
+		List<String> periodlist = sqlSession.selectList("eunji.periodInfo",paraMap);
+		return periodlist;
 	}
 
 

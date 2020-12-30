@@ -35,22 +35,22 @@
 }
 
 table#scroltbl {
-	border-collapse:collapse; width:100%;
+	border-collapse:collapse; width:1000px;
 }
 #scrolth {
-	float:left; width:100%;
+	float:left; width:100px;
 }
 #tb {
-	overflow-y:auto; overflow-x:hidden; float:left; width:100%; height:190px;
+	overflow-y:auto; overflow-x:hidden; float:left; width:100%; height:250px;
 }
 .sublicl {
-	display:table; width: 1400px;
+	display:table; width: 1375px;
 } 
 .sublicl > td {
 	text-align: center;
 }
 #subli {
-	display: table; width: 1400px;
+	display: table; width: 1375px;
 }
 #subli > td {
 	text-align: center;
@@ -60,6 +60,10 @@ table#scroltbl {
 }
 .forboottr > td {
 	text-align: center;
+}
+
+#info {
+	color: #737373;
 }
 
 </style>
@@ -153,10 +157,8 @@ table#scroltbl {
 							   +"<td style='width:200px;' id='td2"+index+"'>"+item.subjectname+"</td>"
 							   +"<td style='width:100px;' id='td3"+index+"'>"+item.credits+"</td>"
 							   +"<td style='width:100px;' id='td4"+index+"'>"+item.name+"</td>"
-							   +"<td style='width:300px;'> <span id='dayspan"+index+"'>"+item.day+"</span>" 
-							   + " /  <span id='span2"+index+"'>" + item.period+"</span></td>"
+							   +"<td style='width:300px;> <span id='span1"+index+"'>"+item.day+"</span> /  <span id='span2"+index+"'>" + item.period+"</span></td>"
 							   +"<td style='width:150px; id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
-							   +"<td style='width:100px;'><button onclick='funcClassReg("+index+");'>신청</button></td>";
 						html += "</tr>";
 					});
 					$("#tb").html(html);
@@ -171,106 +173,36 @@ table#scroltbl {
 		});	// ---------------- end of button click func
 		
 	});	//-------------------------------- end of document.ready()
-	
-	function funcClassReg(index){
-		var addcredit = $("#td3"+index).text();
-		var sumcredits = ${sumcredits};
-		
-		var $target = $(event.target);
-	//	var days = $("#td3"+index).text();
-		
-		var days = $("#dayspan"+index).text();
-		var period = $("#span2"+index).text();
- 		alert(days);
-		var total = "19";
-		if(parseInt(sumcredits)+parseInt(addcredit) > parseInt(total)){
-			alert("신청가능한 학점이 초과되어 신청이 불가합니다.");
-			return;
-		}
-		var subjectno = $("#td1"+index).text();
-		var year = ${year};
-		var cursemester = ${mvo.currentSemester};
-		var memberno = ${mvo.memberNo};
+	function nosearch() {
+		var no = $("#subnos").val();
 		
 		$.ajax({
-			url: "<%= request.getContextPath() %>/insertSub.sky",
-			data: {"subjectno":subjectno,
-				   "year":year,
-				   "cursemester":cursemester,
-				   "memberno":memberno,
-				   "day":days,
-				   "period":period},
+			url: "<%= request.getContextPath() %>/subSelectNo.sky",
+			data: {"no":no},
 			type: "GET",
 			dataType: "json",
 			success: function(json) {
-				if(!json.dayre && json.unique && json.bool){
-					alert("해당 요일,교시에 해당하는 과목이 존재합니다");
-				}
-				if(!json.bool){
-					alert("자신의 학과의 과목을 수강신청해주세요.");
-				}
-				if(!json.unique){
-					alert("이미 수강신청한 과목입니다.");
-				}
-				if(json.recourse){
-					var result = confirm("재수강 하시겠습니까?");
-					if(result){
-						<%-- location.href="<%=ctxPath%>/insertSub.sky?bool="+result+"&subjectno="+subjectno+"&cursemester="+cursemester; --%>
-						$.ajax({
-							url: "<%= request.getContextPath() %>/insertReSub.sky",
-							data: {"bool":result,
-								   "subjectno":subjectno,
-								   "cursemester":cursemester,
-								   "year":year,
-								   "memberno":memberno},
-							type: "GET",
-							dataType: "json",
-							success: function(json) {
-								if(json.boolre){
-									alert("재수강 신청이 되었습니다.");
-									location.reload();
-								}
-							},error: function(request, status, error){
-					               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-					        }
-						}); 
-					}
-				} 
-				if(json.end){
-					alert("수강신청 되었습니다.");
-					location.reload();
-				}
+				var html="";
+				$.each(json, function(index, item){						
+					html += "<tr class='sublicl'>";
+					html += "<td style='width:150px;' id='td1"+index+"'>"+item.subjectno+"</td>"
+						   +"<td style='width:200px;' id='td2"+index+"'>"+item.subjectname+"</td>"
+						   +"<td style='width:100px;' id='td3"+index+"'>"+item.credits+"</td>"
+						   +"<td style='width:100px;' id='td4"+index+"'>"+item.name+"</td>"
+						   +"<td style='width:300px;> <span id='span1"+index+"'>"+item.day+"</span> /  <span id='span2"+index+"'>" + item.period+"</span></td>"
+						   +"<td style='width:150px; id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
+					html += "</tr>";
+				});
+				$("#tb").html(html);
 			},
 			error: function(request, status, error){
 	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	        }
 			
 		});	//------------------end of ajax
-		
-		
 	}
 	
-	function funcdelbtn(index) {
-		var no = $("#no"+index).val();
-		var subno = $("#subno"+index).text();
-		$.ajax({
-			url: "<%= request.getContextPath() %>/delCourse.sky",
-			data: {"no":no,
-				   "subno":subno},
-			type: "POST",
-			dataType: "json",
-			success: function(json) {
-				if(json.result){
-					alert("해당 과목이 삭제되었습니다.");
-					location.reload();
-				}
-			},
-			error: function(request, status, error){
-	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	        }
-			
-		});	//------------------end of ajax
-	}
+
 </script>
 
 <div id="container">
@@ -284,20 +216,19 @@ table#scroltbl {
 			</tr>
 		</table>
 	</div>
+	<br>
 	<div>
-		<table class="table table-striped">
-			<tr id="credittbl">
-				<td style="width:120px; font-weight: bold;">수강가능학점:</td>
-				<td style="width:120px; color: #0066cc; font-weight: bold;">19학점</td>
-				<td style="width:160px; font-weight: bold;">총 수강신청 학점:</td>
-				<td style="color: #0066cc; font-weight: bold;">${sumcredits}학점</td>
-			</tr>
-		</table>
-		<div style="margin-left: 10px;">
-			<label style="display: inline-block;">과목코드 검색:</label>
-			<input type="text" style="display: inline-block; width: 120px; border: solid 1px #cccccc;" id="subnos"/>
-			<button onclick="nosearch();">검색</button>
-		</div>
+				<ul id="credittbl" style="list-style: none; width: 600px;">
+					<li>
+						<label>수강가능학점: </label>
+						<span style="color: #0066cc;font-weight: bold;">19학점</span>
+					</li>
+					<li>
+						<label style="display: inline-block;">과목코드 검색:</label>
+						<input type="text" style="display: inline-block; width: 120px; border: solid 1px #cccccc;" id="subnos"/>
+						<button onclick="nosearch();">검색</button>
+					</li>
+				</ul>
 	</div>
 	
 	<div id="regdiv">
@@ -340,7 +271,7 @@ table#scroltbl {
 				</tr>
 			</table>
 		</div>
-		<div>
+		<div style="border: solid 2px #cccccc;border-radius: 6px; margin-left: 10px; margin-right: 10px;">
 			<table id="scroltbl" class="table">
 			<thead id="scrolth">
 				<tr id="subli">
@@ -350,7 +281,6 @@ table#scroltbl {
 					<td style="width:100px;">교수님</td>
 					<td style="width:300px;">요일 / 교시</td>
 					<td style="width:150px;">수강가능인원</td>
-					<td style="width:100px;">수강신청</td>
 				</tr>
 			</thead>
 			<tbody id="tb">
@@ -359,39 +289,19 @@ table#scroltbl {
 			</table>
 		</div>
 	</div>
-	<br><br>
-	<br>
-	<div><span style="font-size: 12pt; font-weight: bold; padding: 10px; color:red;">[수강신청 내역]</span></div>
-	<br>
-	<div>
-		<table class="table table-bordered">
-			<thead>
-				<tr id="boottr">
-					<td>과목코드</td>
-					<td>과목명</td>
-					<td>학점</td>
-					<td>교수님</td>
-					<td>요일 / 교시</td>
-					<td>수강가능인원</td>
-					<td>취소</td>
-				</tr>
-			</thead>
-			<tbody>
-				<form name="regform">
-				<c:forEach items="${reglist}" var ="reg" varStatus="status">
-					<tr class="forboottr">
-						<td id="subno${status.index}">${reg.subjectno}</td>
-						<td>${reg.subjectname}</td>
-						<td>${reg.credits}</td>
-						<td>${reg.name}</td>
-						<td>${reg.day}/${reg.period}</td>
-						<td>${reg.curpeoplecnt}/${reg.peoplecnt}</td>
-						<td><button onclick="funcdelbtn(${status.index});">취소</button></td>
-					</tr>
-					<input id="no${status.index}" value="${reg.courseno}" hidden="true"/>
-				</c:forEach>
-				</form>
-			</tbody>
-		</table>
+	<br><br> <br><br><br>
+	<div id="divbtn" style="margin-left: 10px;">
+	<span style="font-size: 12pt; font-weight: bold; color: #ff4000">수강신청 안내</span>
+	</div>
+	<br/>
+	<div style="padding-top: 20px; border: solid 2px #cccccc;border-radius: 6px; margin-left: 10px; margin-right: 10px;">
+	<ul id="info" >
+	    <li>시간표가 학부(과) 사정으로 부득이하게 변경될 경우 전산상에 실시간으로 변경사항이 입력되므로 수강신청 시 담당교수, 강의요일 및 시간, 강의실 등내용을 반드시 확인한다.</li>
+		<li>상급학년의 과목은 신청할 수 없다.</li>
+		<li>4학년은 전체성적을 확인하고 졸업이 가능하도록 수강신청 한다. (특히 필수과목 이수여부, 중복수강, 교양, 전공, 졸업학점 취득여부를 확인한다.)</li>
+		<li>강의시간이 1시간이라도 중복되는 과목은 신청할 수 없다. </li>
+		<li>수강신청을 하지 않은 교과목의 성적은 인정하지 않는다.</li>
+		<li>본인의 과실로 수강신청 오류가 생길 경우 책임은 본인에게 있다.</li>
+	</ul>
 	</div>
 </div>

@@ -75,24 +75,29 @@ public class EunjiBoardController {
 		int month = cal.get(cal.MONTH)+1;
 		int semesters = 0;
 		if(month >=12 || month <= 2) {
+			if(month == 12) {
+				year = year + 1;
+			}
 			semesters = semesters + 1;
 		}
 		if(month >=7 && month <= 8) {
 			semesters = semesters +2;
 		}
-		System.out.println(month + " !" +semesters);
+		System.out.println(year + " !" +semesters);
 		// 전체 학과 리스트를 조회
 		List<String> deptlist = service.selectAllDept();
 		// 전체 과목 리스트 조회
 		List<String> subjectlist = service.selectAllSubject(semesters);
 
+		int cursemester = mvo.getCurrentSemester();
+		
 		Map<String, String> paraMap2 = new HashMap<String, String>();
 		paraMap2.put("memberno", Integer.toString(memberNo));
 		paraMap2.put("year", Integer.toString(year));
-		paraMap2.put("cursemester", Integer.toString(mvo.getCurrentSemester()));
+		paraMap2.put("cursemester", Integer.toString(cursemester));
 
 		List<Map<String, String>> reglist = service.selectRegList(paraMap2);
-
+		
 		int sumcredits = service.selectSumCredit(paraMap2);
 
 		mav.addObject("sumcredits", sumcredits);
@@ -115,11 +120,14 @@ public class EunjiBoardController {
 		int year = cal.get(cal.YEAR);
 		int month = cal.get(cal.MONTH) + 1;
 		int semesters = 0;
-		if (month >= 12 || month <= 2) {
+		if(month >=12 || month <= 2) {
+			if(month == 12) {
+				year = year + 1;
+			}
 			semesters = semesters + 1;
 		}
-		if (month >= 7 && month <= 8) {
-			semesters = semesters + 2;
+		if(month >=7 && month <= 8) {
+			semesters = semesters +2;
 		}
 		
 		String dept = request.getParameter("dept");
@@ -159,11 +167,14 @@ public class EunjiBoardController {
 		int year = cal.get(cal.YEAR);
 		int month = cal.get(cal.MONTH) + 1;
 		int semesters = 0;
-		if (month >= 12 || month <= 2) {
+		if(month >=12 || month <= 2) {
+			if(month == 12) {
+				year = year + 1;
+			}
 			semesters = semesters + 1;
 		}
-		if (month >= 7 && month <= 8) {
-			semesters = semesters + 2;
+		if(month >=7 && month <= 8) {
+			semesters = semesters +2;
 		}
 
 		String dept = request.getParameter("dept");
@@ -217,7 +228,7 @@ public class EunjiBoardController {
 	}
 
 	@ResponseBody
-	@RequestMapping(value = "/insertSub.sky", method = { RequestMethod.POST }, produces = "text/plain;charset=UTF-8")
+	@RequestMapping(value = "/insertSub.sky", method = { RequestMethod.GET}, produces = "text/plain;charset=UTF-8")
 	public String insertSub(HttpServletRequest request) {
 
 		boolean ok = true;
@@ -259,19 +270,60 @@ public class EunjiBoardController {
 		}
 		boolean end = false;
 
-		int dayinfo = service.dayInfo(paraMap);
+		String[] arr = null;
+		
+		if(day.length() > 1) {
+			arr = day.split(",");
+		}
+		
+		String[] arr2 = null;
+		
+		if(period.length() > 1) {
+			arr2 = period.split(",");
+		}
+		
+		List<String> daylist = service.dayInfo(paraMap);
+		List<String> periodlist = service.periodInfo(paraMap);
 
 		boolean dayre = true;
-		if (dayinfo >= 1) {
-			dayre = false;
-			unique = true;
+		for(int i=0; i<daylist.size(); i++) {
+			if(arr == null) {
+				if(daylist.get(i).contains(day)) {
+					dayre = false;
+				}
+			}
+			else {
+				for(int j=0; j<arr.length;j++) {
+					if(daylist.get(i).contains(arr[j])) {
+						dayre = false;
+					}
+				}
+			}
 		}
+		boolean periodre = true;
 
+		if(!dayre) {
+			for(int i=0; i<periodlist.size(); i++) {
+				if(arr2 == null) {
+					if(periodlist.get(i).contains(period)) {
+						periodre = false;
+					}
+				}
+				else {
+					for(int j=0; j<arr2.length;j++) {
+						if(periodlist.get(i).contains(arr2[j])) {
+							periodre = false;
+						}
+					}
+				}
+			}
+		}
+		
 		int uniqueinfo = service.uniqueInfo(paraMap);
 		if (uniqueinfo >= 1) {
 			unique = false;
 		}
-		if (!recourse && bool && dayre) {
+		if (!recourse && bool && periodre) {
 			try {
 				int n = service.insertCourse(paraMap);
 				if (n == 1) {
@@ -286,7 +338,7 @@ public class EunjiBoardController {
 		}
 
 		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("dayre", dayre);
+		jsonobj.put("dayre", periodre);
 		jsonobj.put("bool", bool);
 		jsonobj.put("unique", unique);
 		jsonobj.put("recourse", recourse);
@@ -348,6 +400,96 @@ public class EunjiBoardController {
 		return jsonobj.toString();
 	}
 
+	// 수강신청 과목조회
+	@RequestMapping(value = "/registerClassInfoSubs.sky", method = { RequestMethod.GET })
+	public ModelAndView registerClassInfoSubs(ModelAndView mav, HttpServletRequest request) {
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session = request.getSession();
+
+		cmvo = (CommuMemberVO) session.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("memberNo", Integer.toString(memberNo));
+
+		MemberVO mvo = new MemberVO();
+		// 로그인한 유저의 해당하는 학적 정보를 불러온다.
+		mvo = service.selectMemberInfo(paraMap);
+
+		java.util.Calendar cal = java.util.Calendar.getInstance();
+
+		// 현재날짜 기준으로 학기 정하기
+		int year = cal.get(cal.YEAR);
+		int month = cal.get(cal.MONTH)+1;
+		int semesters = 0;
+		if(month >=12 || month <= 2) {
+			if(month == 12) {
+				year = year + 1;
+			}
+			semesters = semesters + 1;
+		}
+		if(month >=7 && month <= 8) {
+			semesters = semesters +2;
+		}		System.out.println(month + " !" +semesters);
+		// 전체 학과 리스트를 조회
+		List<String> deptlist = service.selectAllDept();
+		// 전체 과목 리스트 조회
+		List<String> subjectlist = service.selectAllSubject(semesters);
+
+		int cursemester = mvo.getCurrentSemester();
+		if(cursemester % 2 == 0) {
+			cursemester = 2;
+		}
+		else {
+			cursemester = 1;
+		}
+		
+		Map<String, String> paraMap2 = new HashMap<String, String>();
+		paraMap2.put("memberno", Integer.toString(memberNo));
+		paraMap2.put("year", Integer.toString(year));
+		paraMap2.put("cursemester", Integer.toString(cursemester));
+
+		List<Map<String, String>> reglist = service.selectRegList(paraMap2);
+
+		int sumcredits = service.selectSumCredit(paraMap2);
+
+		mav.addObject("sumcredits", sumcredits);
+		mav.addObject("reglist", reglist);
+		mav.addObject("deptlist", deptlist);
+		mav.addObject("subjectlist", subjectlist);
+		mav.addObject("year", year);
+		mav.addObject("mvo", mvo);
+		mav.setViewName("eunji/class/registerClassInfoSubs.tiles2");
+		return mav;
+	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/subSelectNo.sky", method = { RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
+	public String subSelectNo(HttpServletRequest request) {
+
+		String no = request.getParameter("no");
+
+		List<Map<String, String>> subjectlist = service.getSubjectListNo(no);
+		JSONArray jsonarr = new JSONArray();
+		if (subjectlist != null) {
+			for (Map<String, String> map : subjectlist) {
+				JSONObject jsonobj = new JSONObject();
+				jsonobj.put("deptname", map.get("deptname"));
+				jsonobj.put("subjectname", map.get("subjectname"));
+				jsonobj.put("subjectno", map.get("subjectno"));
+				jsonobj.put("name", map.get("name"));
+				jsonobj.put("credits", map.get("credits"));
+				jsonobj.put("day", map.get("day"));
+				jsonobj.put("period", map.get("period"));
+				jsonobj.put("peoplecnt", map.get("peoplecnt"));
+				jsonobj.put("grade", map.get("grade"));
+				jsonobj.put("curpeoplecnt", map.get("curpeoplecnt"));
+
+				jsonarr.put(jsonobj);
+			}
+		}
+		return jsonarr.toString();
+	}
+	
 	// 일반 공결 신청
 	@RequestMapping(value = "/officalLeave.sky", method = { RequestMethod.GET })
 	public ModelAndView officalLeave(ModelAndView mav, HttpServletRequest request) {
@@ -364,6 +506,7 @@ public class EunjiBoardController {
 		MemberVO mvo = new MemberVO();
 		// 로그인한 유저의 해당하는 학적 정보를 불러온다.
 		mvo = service.selectMemberInfo(paraMap);
+		
 		paraMap.put("cursemester", Integer.toString(mvo.getCurrentSemester()));
 		paraMap.put("year", Integer.toString(year));
 
@@ -1477,5 +1620,61 @@ public class EunjiBoardController {
 
 			}
 		}
+	}
+	
+	// 졸업연기
+	@RequestMapping(value = "/graduateDelay.sky", method = { RequestMethod.GET})
+	public ModelAndView graduateDelay(ModelAndView mav, HttpServletRequest request) {
+		
+		// 로그인한 유저의 학적 정보 불러오기
+		CommuMemberVO cmvo = new CommuMemberVO();
+		HttpSession session2 = request.getSession();
+
+		cmvo = (CommuMemberVO) session2.getAttribute("loginuser");
+		int memberNo = cmvo.getFk_memberNo();
+		
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+		
+		if(paraMap.get("currentSemester").equals("2") && paraMap.get("grade").equals("4") ) {
+			
+			int sumsemes = Integer.parseInt(paraMap.get("currentSemester")) * Integer.parseInt(paraMap.get("grade"));
+			
+			// 총 이수학점를 가져옴
+			int sumcredits = service.sumSemester(memberNo);
+			
+			// 총 전공이수학점을 가져옴
+			int summajor = service.sumMajorCredits(memberNo);
+			
+			// 총 교양이수학점을 가져옴
+			int sumculture = service.sumCultureCredits(memberNo);
+			
+			mav.addObject("graduateok", paraMap.get("graduateok"));
+			mav.addObject("sumculture", sumculture);
+			mav.addObject("sumcredits", sumcredits);
+			mav.addObject("summajor", summajor);
+			mav.addObject("sumsems",sumsemes);
+			mav.addObject("paraMap", paraMap);
+			mav.setViewName("eunji/graduation/graduateDelay.tiles2");
+		}
+		
+		else {
+			String message = "4학년 2학기 학생만 신청이 가능합니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		
+		return mav;
+	}
+	
+	// 졸업적부심사
+	@RequestMapping(value = "/graduateTest.sky", method = { RequestMethod.GET})
+	public ModelAndView graduateTest(ModelAndView mav, HttpServletRequest request) {
+	
+		mav.setViewName("eunji/graduation/graduateTest.tiles2");
+		return mav;
 	}
 }

@@ -42,7 +42,7 @@ public interface InterEunjiService {
 
 	int selectSumCredit(Map<String, String> paraMap2);
 
-	int dayInfo(Map<String, String> paraMap);
+	List<String> dayInfo(Map<String, String> paraMap);
 
 	int uniqueInfo(Map<String, String> paraMap);
 
@@ -111,6 +111,16 @@ public interface InterEunjiService {
 	int deleteComeSchool(String seq);
 
 	ComeSchoolVO getComeSchoolVO(String seq);
+
+	int sumSemester(int memberNo);
+
+	int sumMajorCredits(int memberNo);
+
+	int sumCultureCredits(int memberNo);
+
+	List<Map<String, String>> getSubjectListNo(String no);
+
+	List<String> periodInfo(Map<String, String> paraMap);
 
 	
 

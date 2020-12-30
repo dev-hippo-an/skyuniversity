@@ -112,9 +112,9 @@ public class EunjiService implements InterEunjiService {
 	}
 
 	@Override
-	public int dayInfo(Map<String, String> paraMap) {
-		int dayinfo = dao.dayInfo(paraMap);
-		return dayinfo;
+	public List<String> dayInfo(Map<String, String> paraMap) {
+		List<String> daylist = dao.dayInfo(paraMap);
+		return daylist;
 	}
 
 	@Override
@@ -319,6 +319,36 @@ public class EunjiService implements InterEunjiService {
 	public ComeSchoolVO getComeSchoolVO(String seq) {
 		ComeSchoolVO csvo = dao.getComeSchoolVO(seq);
 		return csvo;
+	}
+
+	@Override
+	public int sumSemester(int memberNo) {
+		int n = dao.sumSemester(memberNo);
+		return n;
+	}
+
+	@Override
+	public int sumMajorCredits(int memberNo) {
+		int n = dao.sumMajorCredits(memberNo);
+		return n;
+	}
+
+	@Override
+	public int sumCultureCredits(int memberNo) {
+		int n = dao.sumCultureCredits(memberNo);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> getSubjectListNo(String no) {
+		List<Map<String, String>> maplist = dao.getSubjectListNo(no);
+		return maplist;
+	}
+
+	@Override
+	public List<String> periodInfo(Map<String, String> paraMap) {
+		List<String> periodlist = dao.periodInfo(paraMap);
+		return periodlist;
 	}
 
 
