@@ -355,10 +355,7 @@ label#update-nickname:hover {
 					}
 					else if (Number($("span#countHIT").text()) >= totototal) {
 						$("button#btnMoreHIT").hide();
-					}	
-					
-					
-					
+					}
 				},  error: function(request, status, error){
 	                alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 	            }
@@ -379,9 +376,11 @@ label#update-nickname:hover {
 			frm.action = "<%= ctxPath%>/minsungBoardView.sky";
 		} else if (23 <= boardKindNo){
 			frm.action = "<%= ctxPath%>/marketBoardDetail.sky";
-		} else {
-			frm.action = "<%= ctxPath%>/boardDetail.sky";
-		}
+		} else if (boardKindNo != 7){
+	          frm.action = "<%=request.getContextPath()%>/boardDetail.sky";
+	       } else{
+	          frm.action = "<%=request.getContextPath()%>/boardDetail2.sky";
+	       }
 		
 		frm.boardKindNo.value = boardKindNo;
 		frm.boardNo.value = $(obj).find('td.boardNo').text();
@@ -464,6 +463,7 @@ label#update-nickname:hover {
 			<c:if test="${sessionScope.loginuser == null}">
 				<form name="loginFrm" style="margin-top: 30px; text-align: left; line">
 					<label style="width: 30px; margin-bottom: 5px;" >ID</label><input type="text" name="id" id="id" maxlength="20" placeholder="아이디" style="width: 70%; margin-bottom: 5px;" />
+					<br>
 					<label style="width: 30px;" >PW</label><input type="password" name="pwd" id="pwd" maxlength="20" placeholder="비밀번호" style="width: 70%;" />	
 				</form>
 			</c:if>

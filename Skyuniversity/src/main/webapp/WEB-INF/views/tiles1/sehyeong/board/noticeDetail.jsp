@@ -727,24 +727,21 @@ img {
 	   function goView2(fk_boardKindNo, boardNo){
 		      
 		   
-		  	 <%
-		      session.setAttribute("readCountPermission", "yes");
-		      %>
-		      console.log(boardNo);
-		      console.log(fk_boardKindNo);
 		      
 		      var frm = document.goViewFrm2;
 		      frm.boardNo.value = boardNo;
 		      frm.boardKindNo.value = fk_boardKindNo;
-		      frm.method = "GET";
+		      frm.method = "POST";
 		      
 		      if (fk_boardKindNo <= 6 || (18 <= fk_boardKindNo && fk_boardKindNo <= 22)) {
-		         frm.action = "<%=request.getContextPath()%>/minsungBoardView.sky";
-		      } else if (23 <= fk_boardKindNo){
-		         frm.action = "<%=request.getContextPath()%>/marketBoardDetail.sky";
-		      } else {
-		         frm.action = "<%=request.getContextPath()%>/boardDetail.sky";
-		      }
+		          frm.action = "<%=request.getContextPath()%>/minsungBoardView.sky";
+		       } else if (23 <= fk_boardKindNo){
+		          frm.action = "<%=request.getContextPath()%>/marketBoardDetail.sky";
+		       } else if (fk_boardKindNo != 7){
+		          frm.action = "<%=request.getContextPath()%>/boardDetail.sky";
+		       } else{
+		          frm.action = "<%=request.getContextPath()%>/boardDetail2.sky";
+		       }
 		      
 		      frm.submit();
 		      

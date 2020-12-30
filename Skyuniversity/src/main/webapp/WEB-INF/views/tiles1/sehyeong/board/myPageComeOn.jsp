@@ -210,6 +210,8 @@ button:hover {
 		                	
 					});
 					
+					
+					
 					$("tbody#displayMyPage").append(html);
 					
 					// displayMyPage에 지금까지 출력된 상품의 개수를 누적해서 기록한다!!!
@@ -250,9 +252,11 @@ button:hover {
 			frm.action = "<%= ctxPath%>/minsungBoardView.sky";
 		} else if (23 <= boardKindNo){
 			frm.action = "<%= ctxPath%>/marketBoardDetail.sky";
-		} else {
-			frm.action = "<%= ctxPath%>/boardDetail.sky";
-		}
+		} else if (boardKindNo != 7){
+	          frm.action = "<%=request.getContextPath()%>/boardDetail.sky";
+	       } else{
+	          frm.action = "<%=request.getContextPath()%>/boardDetail2.sky";
+	       }
 		
 		
 		frm.boardKindNo.value= boardKindNo;

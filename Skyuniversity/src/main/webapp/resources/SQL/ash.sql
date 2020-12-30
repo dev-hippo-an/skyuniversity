@@ -2085,4 +2085,203 @@ select row_number () over (order by fk_boardKindNo, regDate) as rno, fk_boardKin
       
       select *
       from tbl_comment_board_notice;
+      
+      select * from tab;
+      
+       desc tbl_member;
+       desc TBL_COMMU_MEMBER_LEVEL;
+       select *
+       from TBL_COMMU_MEMBER;
        
+       select *
+       from tbl_subject
+       order by grade, subssemester;
+       
+       select *
+       from tbl_member;
+       
+       select *
+       from tbl_dept;
+       
+       select * from tbl_course;
+       
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'A', '108', 'NE113');
+
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'B', '108', 'NE106');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'B', '108', 'EB103');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'C+', '108', 'AA101');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'B+', '108', 'AA102');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'B', '108', 'AA105');
+       
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'A', '108', 'NE101');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'B+', '108', 'NE119');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'D+', '108', 'NE103');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'A', '108', 'NE116');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'B', '108', 'AC305');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'B+', '108', 'AB203');
+        
+        commit;
+        -----------------------------------------------------------------------------
+        
+        delete from tbl_course
+        where fk_memberNo = 108
+        
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'A', '108', 'NE220');
+
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'B', '108', 'NE203');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'B+', '108', 'NE201');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'C+', '108', 'NE202');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'C', '108', 'AC304');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'A', '108', 'AB201');
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'C+', '108', 'NE255');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'D+', '108', 'NE309');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'A+', '108', 'NE314');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'F', '108', 'NE210');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'A+', '108', 'NE221');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'B+', '108', 'AB202');
+        
+        commit;
+        ----------------------------------
+        
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'B+', '108', 'NE302');
+
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'B+', '108', 'NE329');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'B', '108', 'NE334');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'B', '108', 'NE308');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'C+', '108', 'NE335');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'A', '108', 'AC303');
+        
+        
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'A', '108', 'NE331');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'A+', '108', 'NE332');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'C+', '108', 'NE333');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'F', '108', 'NE336');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'B', '108', 'NE324');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'B+', '108', 'AB205');
+        
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'B+', '108', 'NE447');
+
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'B+', '108', 'NE448');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'B+', '108', 'NE410');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'A', '108', 'AC302');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'C', '108', 'AC301');
+       
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'A', '108', 'NE419');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'A+', '108', 'AD401');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'A', '108', 'AA103');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'B', '108', 'AA104');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'B+', '108', 'NE421');
+        
+        commit;
+        
+        select * from tbl_course;
+        
+       select * from tab;
+       
+       select * from TBL_BOARD_ANONYMOUS;
+        
+        
+    select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, boardNo, fk_boardKindNo, subject, '일반' as categoryName from TBL_BOARD_ANONYMOUS
+      where status = 1) aa
+      where rno between 1 and 6

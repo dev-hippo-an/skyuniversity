@@ -159,6 +159,8 @@ public interface InterAnsehyeongService {
 
 	List<NoticeVO> getAllNoticeListWithParam(Map<String, String> paraMap);
 
+	NoticeVO getNoticeView(Map<String, String> paraMap);
+
 
 
 

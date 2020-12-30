@@ -170,6 +170,7 @@ public class AnsehyeongService implements InterAnsehyeongService {
 
 	
 	// 조회수를 1 올려주면 한개의 글의 디테일을 가지고 오는 것!
+	
 	@Override
 	public MarketBoardVO getMarketView(Map<String, String> paraMap, CommuMemberVO loginuser) {
 		
@@ -441,6 +442,18 @@ public class AnsehyeongService implements InterAnsehyeongService {
 	public List<NoticeVO> getAllNoticeListWithParam(Map<String, String> paraMap) {
 		List<NoticeVO> noticeList = dao.getAllNoticeListWithParam(paraMap);
 		return noticeList;
+	}
+
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
+	public NoticeVO getNoticeView(Map<String, String> paraMap) {
+		NoticeVO noticevo = dao.getNoticeView(paraMap);	
+		dao.setNoticeReadCount(paraMap);   // 글조회수 1증가 하기 
+			
+		noticevo = dao.getNoticeView(paraMap);
+		
+		return noticevo;
 	}
 	
 
