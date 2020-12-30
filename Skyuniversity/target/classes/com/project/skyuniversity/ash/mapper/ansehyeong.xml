@@ -230,6 +230,15 @@
       select row_number() over (order by regDate desc) as rno, b.boardNo, b.fk_boardKindNo, b.subject, nvl(c.categoryName, '일반') as categoryName from tbl_board_etcmarket b left join tbl_category c
       on b.categoryNo = c.categoryNo
       where status = 1) aa
+      where rno between 1 and 6
+      
+      
+      union all 
+      
+      select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, boardNo, fk_boardKindNo, subject, '일반' as categoryName from TBL_BOARD_ANONYMOUS
+      where status = 1) aa
       where rno between 1 and 6)
       order by fk_boardKindNo
 	
@@ -374,7 +383,10 @@
 			    select row_number() over(order by e.status desc, boardNo desc)  as rno, e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
 	                 , e.categoryNo, e.subject, e.price
 	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
-	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+                , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 	                 
 	                 , c.categoryName
 	                 
@@ -432,7 +444,10 @@
 			    select row_number() over(order by e.status desc, boardNo desc)  as rno, e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
 	                 , e.categoryNo, e.subject, e.price
 	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
-	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+                , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 	                 
 	                 , c.categoryName
 	                 
@@ -488,7 +503,10 @@
 			    select row_number() over(order by e.status desc, boardNo desc)  as rno, e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
 	                 , e.categoryNo, e.subject, e.price
 	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
-	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+                , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 	                 
 	                 , c.categoryName
 	                 
@@ -607,12 +625,14 @@
 	
 	
 	<!-- //======= 한개의 글의 디테일을 가지고 오는 것! ============// -->
-	
 	<select id="getHouseMarketView" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.MarketBoardVO">
 		select e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
 	                 , e.categoryNo, e.subject, e.price
 	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
-	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                 , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+                , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 	                 
 	                 , c.categoryName
 	                 
@@ -638,7 +658,10 @@
 		select e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
 	                 , e.categoryNo, e.subject, e.price
 	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
-	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+                , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 	                 
 	                 , c.categoryName
 	                 
@@ -664,7 +687,10 @@
 		select e.boardNo, e.fk_boardKindNo, e.fk_commuMemberNo
 	                 , e.categoryNo, e.subject, e.price
 	                 , e.content, e.readCount, e.status, e.writerIp, e.fileName, e.orgFileName, e.fileSize
-	                 , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+	                , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+                , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 	                 
 	                 , c.categoryName
 	                 
@@ -843,7 +869,9 @@
 	<!-- 	// 공지리스트 컴컴 -->
 	<select id="getNoticeList" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.NoticeVO">
 		select n.noticeNo, n.fk_boardKindNo, n.fk_memberNo, n.fk_categoryNo
-		, n.subject, to_char(n.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, n.content, n.readCount, n.status, n.writerIp
+		, n.subject, case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate, n.content, n.readCount, n.status, n.writerIp
 		
 		, c.categoryName
 		
@@ -975,6 +1003,9 @@
       join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
       union all
       (select fk_boardkindno, subject, regDate, k.boardname, boardNo from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, regDate, k.boardname, boardNo from TBL_BOARD_ANONYMOUS b
       join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
       order by regDate desc
       ) V
@@ -1265,7 +1296,9 @@
      on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
      join tbl_boardkind k
      on b.fk_boardkindno = k.boardkindno
+     
      union all
+     
      select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, nvl(v.upCount, 0) as upCount, b.status, k.boardName
      from TBL_BOARD_LOST b
      left join 
@@ -1275,6 +1308,13 @@
          group by fk_boardKindNo, fk_boardNo
      ) v 
      on b.fk_boardKindNo = v.fk_boardKindNo and b.boardNo = v.fk_boardNo
+     join tbl_boardkind k
+     on b.fk_boardkindno = k.boardkindno
+     
+     union all
+     
+     select b.boardNo, b.fk_boardKindNo, b.subject, b.readCount, b.upCount, b.status, k.boardName
+     from TBL_BOARD_ANONYMOUS b
      join tbl_boardkind k
      on b.fk_boardkindno = k.boardkindno
      ) ee
@@ -1348,6 +1388,9 @@
       join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
       union all
       (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_ANONYMOUS b
       join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
       order by readCount desc
       ) V
@@ -1434,6 +1477,9 @@
       union all
       (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_etcmarket b
       join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_ANONYMOUS b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
       ) V
     where lower(subject) like '%' || lower(#{searchWord}) || '%'
     ) tt
@@ -1518,6 +1564,9 @@
       union all
       (select fk_boardkindno, subject, readCount, k.boardname, boardNo from tbl_board_etcmarket b
       join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
+      union all
+      (select fk_boardkindno, subject, readCount, k.boardname, boardNo from TBL_BOARD_ANONYMOUS b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno where status = 1)
       ) V
     where lower(subject) like '%' || lower(#{searchWord}) || '%'
 	
@@ -1532,7 +1581,9 @@
 		(
 		    select row_number() over(order by commentNo desc) AS rno, V.commentNo, V.fk_boardNo
 		         , V.fk_memberNo, M.nickname AS fk_nickname, L.levelImg, cmtContent
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
 			from tbl_commu_member M join tbl_comment_board_notice V  
 			on V.fk_memberNo = M.fk_memberNo
 			join tbl_commu_member_level L
@@ -1559,4 +1610,392 @@
 		where fk_boardNo = #{fk_boardNo} and commentNo = #{commentNo}
 	</update>
 	
+	
+	
+	
+	
+	<select id="getMyBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.MarketBoardVO" >
+	select fk_boardKindNo, subject, readCount, boardName, boardNo, fk_memberNo, categoryName, cmtCount
+	, case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+	, upCount, content
+from
+(
+select row_number() over (order by ${colName} <if test="colName != 'fk_boardKindNo'">desc</if><if test="colName == 'fk_boardKindNo'">asc, regDate </if>) as rno, fk_boardKindNo, subject, readCount, boardName, boardNo, fk_memberNo, categoryName, cmtCount, regDate, upCount, content
+    from
+    (
+    (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+    	, (select count(*) from tbl_comment_notice where status = 1 and fk_boardNo = b.boardNo) as cmtCount, b.regDate
+    	, (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+    	from tbl_board_notice b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_council where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_council b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_major where status = 1 and fk_boardNo = b.boardNo) as cmtCount, b.regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_major b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_club where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_club b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all 
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_graduate where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_graduate b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo =#{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_critic where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_critic b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_study where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_study b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_cert where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_cert b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo =#{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_emp where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_emp b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_joboffer where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_joboffer b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_lost where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_lost b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_informal where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_informal b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_polite where status = 1 and fk_boardNo = b.boardNo) as cmtCount,  regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_polite b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_humor where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_humor b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_issue where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_issue b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_mbti where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_mbti b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_food where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_food b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_love where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_love b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_hobby where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_hobby b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_health where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_health b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_diet where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_housemarket where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_housemarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.categoryNo where status = 1 and fk_commuMemberNo = #{commuMemberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_bookmarket where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_bookmarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.categoryNo where status = 1 and fk_commuMemberNo = #{commuMemberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_etcmarket where status = 1 and fk_boardNo = b.boardNo) as cmtCount, regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_etcmarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno 
+      left join tbl_category c on c.categoryNo = b.categoryNo
+      where status = 1 and fk_commuMemberNo = #{commuMemberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      )
+      ) w
+      where rno between #{start} and #{end}
+	</select>
+	
+	
+	
+	<select id="getTotalCountForMyPage" parameterType="com.project.skyuniversity.ash.model.CommuMemberVO" resultType="int"  >
+	select count(*)
+    from
+    (
+    (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+    	from tbl_board_notice b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      from tbl_board_council b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from TBL_BOARD_major b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from TBL_BOARD_club b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all 
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from TBL_BOARD_graduate b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo =#{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_critic b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from TBL_BOARD_study b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      from TBL_BOARD_cert b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo =#{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      from TBL_BOARD_emp b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      from tbl_board_joboffer b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from TBL_BOARD_lost b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_informal b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_polite b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_humor b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_issue b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_mbti b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_food b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      from tbl_board_love b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      from tbl_board_hobby b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_health b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = #{fk_memberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      from tbl_board_housemarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.categoryNo where status = 1 and fk_commuMemberNo = #{commuMemberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_bookmarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.categoryNo where status = 1 and fk_commuMemberNo = #{commuMemberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      from tbl_board_etcmarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.categoryNo where status = 1 and fk_commuMemberNo = #{commuMemberNo} and regDate <![CDATA[ >]]>= sysdate - 13)
+      )
+	</select>
+	
+	
+	<select id="getAllNoticeList" resultType="com.project.skyuniversity.ash.model.NoticeVO">
+		select n.noticeNo, n.fk_boardKindNo, n.fk_memberNo, n.fk_categoryNo
+		, n.subject
+		, case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		, n.content, n.readCount, n.status, n.writerIp
+		
+		, c.categoryName
+		
+		, m.commuMemberNo, m.fk_levelNo, m.nickname, m.point
+		
+		, l.levelName, l.levelPoint, l.levelImg
+		
+		, k.boardTypeNo, k.boardName
+		
+		, (select count(*) from tbl_comment_board_notice where status = 1 and fk_boardNo = n.noticeNo) as cmtCount
+		
+		from tbl_notice n join tbl_category c
+		on n.fk_categoryNo = c.categoryNo
+		join tbl_commu_member m 
+		on n.fk_memberNo = m.fk_memberNo
+		join tbl_commu_member_level l
+		on m.fk_levelNo = l.levelNo
+		join tbl_boardkind k
+		on n.fk_boardKindNo = k.boardKindNo
+		where n.status = 1
+		
+	</select>
+	
+	<select id="getAllNoticeListWithParam" parameterType="HashMap" resultType="com.project.skyuniversity.ash.model.NoticeVO">
+		select noticeNo, fk_boardKindNo, fk_memberNo, fk_categoryNo
+		, subject
+		, case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		, content, readCount, status, writerIp
+		, categoryName
+		, commuMemberNo, fk_levelNo, nickname, point
+		, levelName, levelPoint, levelImg
+		, boardTypeNo, boardName
+		,cmtCount
+		from
+		(
+		select n.noticeNo, n.fk_boardKindNo, n.fk_memberNo, n.fk_categoryNo
+		, n.subject, n.regDate, n.content, n.readCount, n.status, n.writerIp
+		
+		, c.categoryName
+		
+		, m.commuMemberNo, m.fk_levelNo, m.nickname, m.point
+		
+		, l.levelName, l.levelPoint, l.levelImg
+		
+		, k.boardTypeNo, k.boardName
+		
+		, (select count(*) from tbl_comment_board_notice where status = 1 and fk_boardNo = n.noticeNo) as cmtCount
+		
+		from tbl_notice n join tbl_category c
+		on n.fk_categoryNo = c.categoryNo
+		join tbl_commu_member m 
+		on n.fk_memberNo = m.fk_memberNo
+		join tbl_commu_member_level l
+		on m.fk_levelNo = l.levelNo
+		join tbl_boardkind k
+		on n.fk_boardKindNo = k.boardKindNo
+		where n.status = 1
+		<if test="colName == 'fk_boardKindNo'">order by ${colName} asc</if>
+		<if test="colName != 'fk_boardKindNo'">order by ${colName} desc</if>
+		)
+	</select>
 </mapper>

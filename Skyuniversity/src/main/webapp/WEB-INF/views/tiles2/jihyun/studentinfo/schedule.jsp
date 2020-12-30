@@ -1,62 +1,35 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
-
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.2.4/css/dx.common.css" />
 <link rel="stylesheet" type="text/css" href="https://cdn3.devexpress.com/jslib/20.2.4/css/dx.light.css" />
 
-<style>
 
-	#noticeBlock, #mysubjectsBlock, #scheduleBlock {
-		/* border: solid 1px gray; */
-		width: 100%;
-	}
-	
-	#notice, #mysubjects, #schedule {
-		border: solid 1px gray;
-		width: 100%; 
-	}
-	
-	div#indexContainer {
-		/* border: solid 1px red; */
-	}
-	
-	div#block1 {
-		/* border: solid 1px blue; */
-		display: flex;
-		padding: 20px;
-		justify-content: space-between;
-	}
-	
-	div#block2 {
-		display: flex;
-		flex-direction: column;
-		width: 40%;
-	}
-	
-	#noticeBlock {
-		/* border: solid 1px gray; */
-		height: 400px;
-	}
-	
-	#mysubjectsBlock {
-		/* border: solid 1px gray; */
-		height: 300px;		
-		
-	}
-	
-	#scheduleBlock {
-		width: 50%;
-	}
+<style type="text/css">
 
-	
+#scContainer {
+	width: 80%;
+}
+
+th, td {
+	width: 150px;
+	height: 50px;
+}
+
+div#scWrapper {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+}
 
 </style>
+
 <script src="https://cdn3.devexpress.com/jslib/20.2.4/js/dx.all.js"></script>
 <script type="text/javascript" src="https://unpkg.com/frozor-hybrid@2.0.4/index.js"></script>
 <script type="text/javascript">
+
 var data = [
     {
         text: "Google AdWords Strategy",
@@ -244,44 +217,32 @@ $(function(){
 });
 </script>
 
-<div id="indexContainer">
-
-	<div id="block1">
-		<div id="block2">
-			<div id="noticeBlock">
-				<h3>공지사항</h3>
-				<div id="notice">
-					<table class="table" style="text-align: center;">
-						<thead>
-							<tr>
-								<th>구분</th>
-								<th>제목</th>
-								<th>게시일</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</div>
-			<div id="mysubjectsBlock">
-				<h3>수강과목</h3>
-				<div id="mysubjects">
-					<table class="table" style="text-align: center;">
-						<thead>
-							<tr>
-								<th>학기</th>
-								<th>과목명</th>
-								<th>진도</th>
-							</tr>
-						</thead>
-					</table>
-				</div>
-			</div>
-		</div>
-		
-		<div id="scheduleBlock" class="dx-viewport demo-container">
-			<h3>학사일정</h3>
-			<div id="scheduler"></div>
-		</div>
-		
+<div id="scWrapper">
+    <div class="dx-viewport demo-container" id="scContainer">
+        <div id="scheduler"></div>
+    </div>
+	<div style="width: 80%;">
+		<h2>일정상세</h2>
+		<table class="table">
+			<thead>
+				<tr>
+					<th>No</th>
+					<th>일자</th>
+					<th>구분</th>
+					<th>일정명</th>
+					<th>일정내용</th>
+				</tr>
+			</thead>
+			<tbody>
+				<tr>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+					<td></td>
+				</tr>
+			</tbody>
+		</table>
 	</div>
 </div>
+</html>

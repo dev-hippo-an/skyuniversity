@@ -54,6 +54,10 @@
  	outline: none;
  }
  
+ span#searchbtn {
+	cursor: pointer;
+ }
+ 
  .choice {
  	font-weight: bold;
  	background-color: #0843ad;
@@ -104,38 +108,48 @@
 			$("li.graduate").toggle();
 		});
 		
+		// 검색기능
 		$("input#searchInput").keyup(function(){
-			 var input, filter, ul, li, a, i;
-			  input = $(this).val();
-			  /* filter = input.value.toUpperCase(); */
-			  ul = $("ul#myMenu");
-			  //console.log(li);
-
-			  li = $("li.menu2");
-			  len = $("li.menu2").length;
-			  
-			  for(i=0; i<len; i++) {
-				  
-			  }
-			  
-			  console.log("len==>"+len);
-			  console.log(li);
-			  for (i = 0; i < len; i++) {
-		/* 	    a = li[i]; */
-			   /*  console.log(li[i].text()); */
-			    /* if (a.innerHTML.indexOf(input) > -1) {
-			      li[i].style.display = "";
-			    } else {
-			      li[i].style.display = "none";
-			    } */
-			  }
+			if(event.keyCode == 13){
+				goSearchMenu();
+			}
 		});
 		
-	});
+	}); // end of $(document).ready(function(){})-------------------------
 
-	 	function myFunction() {
-		 
-		}
+ 	function goSearchMenu() {
+ 		
+ 		var input = $("input#searchInput").val();
+		  
+		  if(input != ""){
+			  
+			var arrMenuList = [];
+			  
+			// arrMenuList => menu2 텍스트값의 배열 
+			$("li.menu2").each(function(){
+			  arrMenuList.push($(this).text());
+			});
+			
+			$("li.menu2").hide();
+			// arrMenuList 반복문 돌리기
+			$.each(arrMenuList, function(index, item){
+			  // 해당요소에 input 텍스트 값이 있다면
+			  if(item.indexOf(input) > -1) {
+				$("li.menu2").each(function(){ // li.menu2 반복문
+					if($(this).text() == item){ // li.menu2의 텍스트 값이 item과 일치할경우
+						 $(this).show(); //해당 li태그를 보여줌
+					}
+				});
+		 	}
+				 
+			 });
+		  }
+		  else {
+			  $("li.menu2").each(function(){ // li.menu2 반복문
+					$(this).hide();
+			  });
+		  }// end of if()  
+	}// end of goSearchMenu() ------------------------
 </script>
  
 
@@ -143,7 +157,7 @@
 
 	<div id="search">
 		<input id="searchInput"/>
-		<span><img src="<%= ctxPath %>/resources/images/searchicon_jh.png" style="width: 20px; height: 20px;"/></span>
+		<span id="searchbtn" onclick="goSearchMenu();"><img src="<%= ctxPath %>/resources/images/searchicon_jh.png" style="width: 20px; height: 20px;"/></span>
 	</div>
 	
 	<div id="menu">
@@ -169,7 +183,7 @@
 			<li id="grade" class="menu1">성적</li>
 	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/totalGrade.sky'">기이수성적조회</li>
 	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/thisSemesterGrade.sky'">당학기성적조회</li>
-	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/printReportCard.sky'">성적표출력</li>
+	            <%-- <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/printReportCard.sky'">성적표출력</li> --%>
 	            <li class="grade menu2" onclick="javascript:location.href='<%=ctxPath%>/statusOfComplete.sky'">교양 및 전공필수 이수현황</li>
 			<li id="graduate" class="menu1">졸업</li>
 	            <li class="graduate menu2" onclick="javascript:location.href='<%=ctxPath%>/graduateDelay.sky'">졸업연기</li>

@@ -1,0 +1,147 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<!-- ==== #29. mapper 기본설정 ==== -->
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<!-- ==== #29. 루트 엘리먼트 & 네임스페이스 설정(프로젝트 전체내에서 유일해야 한다.) ==== -->
+<mapper namespace="Jihyun">
+	 <select id="getLoginMember" resultType="com.project.skyuniversity.jihyun.model.JihyunMemberVO" parameterType="HashMap">
+		with v  as (
+				select name, memberNo, pwd,
+				                    func_gender_2(jubun) as gender, 
+				                    grade, enterDay, chinaName, engName, graduateDay, fk_regSeq, fk_deptSeq, totalSemester, email, img, postcode, address, detailAddress, extraAddress, birth,
+				                    8-absenceCnt as absenceCnt, mobile
+				from tbl_member
+				where memberno = #{userid} and pwd = #{pwd} 
+				) 
+				 
+		select name, memberNo, pwd,  gender, grade, enterDay, chinaName, engName, graduateDay, fk_regSeq, fk_deptSeq, totalSemester, email, mobile, img, postcode, address, detailAddress, extraAddress, birth, absenceCnt, deptName, status
+		from V JOIN tbl_dept D
+		on  V.fk_deptSeq = D.deptSeq
+		join tbl_school_reg R
+		on V.fk_regseq = r.regseq
+	</select>
+	
+	 <select id="getLoginuserFromCommu" resultType="com.project.skyuniversity.jihyun.model.JihyunMemberVO" parameterType="String">
+		with v  as (
+				select name, memberNo, pwd,
+				                    func_gender_2(jubun) as gender, 
+				                    grade, enterDay, chinaName, engName, graduateDay, fk_regSeq, fk_deptSeq, totalSemester, email, img, postcode, address, detailAddress, extraAddress, birth,
+				                    8-absenceCnt as absenceCnt, mobile
+				from tbl_member
+				where memberno = #{memberNo} 
+				) 
+				 
+		select name, memberNo, pwd,  gender, grade, enterDay, chinaName, engName, graduateDay, fk_regSeq, fk_deptSeq, totalSemester, email, mobile, img, postcode, address, detailAddress, extraAddress, birth, absenceCnt, deptName, status
+		from V JOIN tbl_dept D
+		on  V.fk_deptSeq = D.deptSeq
+		join tbl_school_reg R
+		on V.fk_regseq = r.regseq
+	</select>
+
+	<update id="updatePwd" parameterType="HashMap">
+		update tbl_member set pwd = #{pwd} 
+   		where memberno = #{memberNo}
+	</update>
+	
+	<select id="checkPwd" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_member
+		where memberno=#{memberNo} and pwd=#{nowPwd}
+	</select>
+	
+	<resultMap type="HashMap" id="certificateKindMap">
+		<result property="certificateKindSeq" column="certificateKindSeq" javaType="String"/>
+		<result property="certificateName" column="certificateName" javaType="String"/>
+		<result property="charge" column="charge" javaType="String"/>
+		<result property="lang" column="lang" javaType="String"/>
+	</resultMap>
+	<select id="getCertificateKindList" resultMap="certificateKindMap">
+		select certificateKindSeq, certificateName, charge, lang
+		from tbl_certificateKind
+		order by 1
+	</select>
+	
+	<resultMap type="HashMap" id="getApplicationListMap">
+		<result property="rno" column="rno" javaType="String"/>
+		<result property="name" column="name" javaType="String"/>
+		<result property="certificateName" column="certificateName" javaType="String"/>
+		<result property="applicationDate" column="applicationDate" javaType="String"/>
+		<result property="count" column="count" javaType="String"/>
+		<result property="grantDate" column="grantDate" javaType="String"/>
+		<result property="grantStatus" column="grantStatus" javaType="String"/>
+		<result property="lang" column="lang" javaType="String"/>
+		<result property="recieveWay" column="recieveWay" javaType="String"/>
+	</resultMap>
+	<select id="getApplicationList" parameterType="String" resultMap="getApplicationListMap">
+			 select   row_number() over(order by certificateSeq desc) as rno,
+                name
+                , certificateName
+                , to_char(applicationDate, 'yyyy-mm-dd')as applicationDate
+                , count
+                , to_char(grantDate, 'yyyy-mm-dd') as grantDate
+	            , case when grantStatus = 0 then '신청' when grantStatus = 1 then '승인' when grantStatus = 2 then '반려' else '보류' end AS grantStatus
+	            , case when c.lang = 0 then '국문' else '영문' end as lang
+	            , case when c.recieveWay = 0 then '직접수령' else '등기수령' end as recieveWay
+			 from tbl_certificate C join tbl_certificateKind K
+			 on K.certificateKindSeq  = C.fk_certificateKindSeq
+			 join tbl_member M
+			 on c.fk_memberno = m.memberno
+			 where fk_memberno = #{memberNo}
+	</select>
+	
+	<resultMap type="HashMap" id="getNoticeListMap">
+		<result property="noticeNo" column="noticeNo" javaType="String"/>
+		<result property="subject" column="subject" javaType="String"/>
+		<result property="contents" column="contents" javaType="String"/>
+		<result property="writeday" column="writeday" javaType="String"/>
+		<result property="readcount" column="readcount" javaType="String"/>
+		<result property="filename" column="filename" javaType="String"/>
+		<result property="orgfilename" column="orgfilename" javaType="String"/>
+		<result property="filesize" column="filesize" javaType="String"/>
+	</resultMap>
+	<select id="getNoticeList" resultMap="getNoticeListMap">
+		select noticeNo, subject, contents, writeday, readcount, filename, orgfilename, filesize 
+		from tbl_hsnotice where status = 0
+	</select>
+	
+	<resultMap type="HashMap" id="getdeptNoticeListMap">
+		<result property="noticeNo" column="noticeNo" javaType="String"/>
+		<result property="fk_deptSeq" column="fk_deptSeq" javaType="String"/>
+		<result property="deptName" column="deptName" javaType="String"/>
+		<result property="subject" column="subject" javaType="String"/>
+		<result property="contents" column="contents" javaType="String"/>
+		<result property="writeday" column="writeday" javaType="String"/>
+		<result property="readcount" column="readcount" javaType="String"/>
+		<result property="filename" column="filename" javaType="String"/>
+		<result property="orgfilename" column="orgfilename" javaType="String"/>
+		<result property="filesize" column="filesize" javaType="String"/>
+	</resultMap>
+	<select id="getdeptNoticeList" resultMap="getdeptNoticeListMap">
+		select noticeNo, fk_deptSeq, deptName, subject, contents, writeday, readcount, filename, orgfilename, filesize 
+		from tbl_hsnotice H join tbl_dept D
+		on H.fk_deptSeq = D.deptSeq
+		where H.status = 1
+	</select>
+	
+	<resultMap type="HashMap" id="getsubjectNoticeListMap">
+		<result property="noticeNo" column="noticeNo" javaType="String"/>
+		<result property="fk_subjectNo" column="fk_subjectNo" javaType="String"/>
+		<result property="subjectName" column="subjectName" javaType="String"/>
+		<result property="subject" column="subject" javaType="String"/>
+		<result property="contents" column="contents" javaType="String"/>
+		<result property="writeday" column="writeday" javaType="String"/>
+		<result property="readcount" column="readcount" javaType="String"/>
+		<result property="filename" column="filename" javaType="String"/>
+		<result property="orgfilename" column="orgfilename" javaType="String"/>
+		<result property="filesize" column="filesize" javaType="String"/>
+	</resultMap>
+	<select id="getsubjectNoticeList" resultMap="getsubjectNoticeListMap">
+		select noticeNo, fk_subjectNo, subjectName, subject, contents, writeday, readcount, filename, orgfilename, filesize 
+		from tbl_hsnotice H join tbl_subject S
+		on H.fk_subjectNo = S.subjectNo
+		where H.status = 2
+	</select>
+	
+	
+</mapper>

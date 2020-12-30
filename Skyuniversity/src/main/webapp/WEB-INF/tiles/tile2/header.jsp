@@ -60,15 +60,15 @@
 <div id="header">
 
 	<div id="logo">
-		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 100px;">
+		<img src="<%= ctxPath %>/resources/images/logo_size.jpg" style="width: 250px; height: 100px; cursor: pointer;" onclick="location.href='<%= ctxPath %>/hsindex.sky';">
 	</div>
 	<div id="loginStudent">
-	      <span class="sname">${sessionScope.loginuser.name}김뫄뫄</span>
-	      <span class="sinfo">롸롸롸롸롸과 솨학년</span>
+	      <span class="sname">${sessionScope.loginuser.name}</span>
+	      <span class="sinfo">${sessionScope.loginuser.deptName} ${loginuser.grade}학년</span>
 	 </div>
 	 <div>
-	   <span class="btn">커뮤니티</span>
-	   <span class="btn">로그아웃</span>
+	   <span class="btn" onclick="location.href='<%=ctxPath%>/index.sky';">커뮤니티</span>
+	   <span class="btn" onclick="location.href='<%=ctxPath%>/logouths.sky';">로그아웃</span>
 	 </div>
 </div>
    
