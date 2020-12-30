@@ -29,14 +29,20 @@ public class MinsungBoardVO {
 	
 	private String boardName;
 	private String goodCount;
+	private String levelImg;		// 작성회원 레벨 이미지
+	private String cmtCount;		// 댓글수
 	
 	private MultipartFile attach;
 	
+	
+	public MinsungBoardVO() {}
+
+
 	public MinsungBoardVO(String boardNo, String fk_boardKindNo, String fk_memberNo, String fk_nickname,
 			String fk_categoryNo, String fk_categoryName, String subject, String regDate, String editDate,
 			String content, String readCount, String status, String writerIp, String fileName, String orgFilename,
 			String fileSize, String upCount, String downCount, String reportCount, String fileCount, String boardName,
-			String goodCount, MultipartFile attach) {
+			String goodCount, String levelImg, String cmtCount, MultipartFile attach) {
 		super();
 		this.boardNo = boardNo;
 		this.fk_boardKindNo = fk_boardKindNo;
@@ -60,11 +66,10 @@ public class MinsungBoardVO {
 		this.fileCount = fileCount;
 		this.boardName = boardName;
 		this.goodCount = goodCount;
+		this.levelImg = levelImg;
+		this.cmtCount = cmtCount;
 		this.attach = attach;
 	}
-
-
-	public MinsungBoardVO() {}
 
 
 	public String getBoardNo() {
@@ -287,6 +292,26 @@ public class MinsungBoardVO {
 	}
 
 
+	public String getLevelImg() {
+		return levelImg;
+	}
+
+
+	public void setLevelImg(String levelImg) {
+		this.levelImg = levelImg;
+	}
+
+
+	public String getCmtCount() {
+		return cmtCount;
+	}
+
+
+	public void setCmtCount(String cmtCount) {
+		this.cmtCount = cmtCount;
+	}
+
+
 	public MultipartFile getAttach() {
 		return attach;
 	}
@@ -295,7 +320,6 @@ public class MinsungBoardVO {
 	public void setAttach(MultipartFile attach) {
 		this.attach = attach;
 	}
-
 
 	
 	

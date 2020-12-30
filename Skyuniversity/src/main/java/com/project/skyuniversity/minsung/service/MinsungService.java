@@ -11,6 +11,7 @@ import com.project.skyuniversity.common.AES256;
 import com.project.skyuniversity.minsung.model.InterMinsungBoardDAO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.minsung.model.MinsungCategoryVO;
+import com.project.skyuniversity.minsung.model.MinsungMsgVO;
 
 @Service
 public class MinsungService implements InterMinsungService{
@@ -108,6 +109,99 @@ public class MinsungService implements InterMinsungService{
 	public void pointPlus(Map<String, String> paraMap) {
 		dao.pointPlus(paraMap);
 	}
+
+	@Override
+	public MinsungBoardVO getView(Map<String, String> paraMap) {
+		MinsungBoardVO boardvo = dao.getView(paraMap);
+
+		// 로그인한 유저의 회원번호와 게시물의 작성자 회원번호가 다르다면 
+		if ( !boardvo.getFk_memberNo().equals(paraMap.get("loginNo")) ) { 
+			// 해당 게시물의 조회수를 1증가시킨다.
+			dao.addReadCount(paraMap);
+			boardvo = dao.getView(paraMap);
+		}
+		return boardvo;
+	}
+	
+	@Override
+	public MinsungBoardVO getViewWithNoAddCount(Map<String, String> paraMap) {
+		MinsungBoardVO boardvo = dao.getView(paraMap);
+		return boardvo;
+	}
+
+	@Override
+	public int addBoardUp(Map<String, String> paraMap) {
+		int result = dao.addBoardUp(paraMap);
+		return result;
+	}
+
+	@Override
+	public int getBoardGoodCount(Map<String, String> paraMap) {
+		int upCount = dao.getBoardGoodCount(paraMap);
+		return upCount;
+	}
+
+	@Override
+	public int addBoardDown(Map<String, String> paraMap) {
+		int result = dao.addBoardDown(paraMap);
+		return result;
+	}
+
+	@Override
+	public int getBoardBadCount(Map<String, String> paraMap) {
+		int downCount = dao.getBoardBadCount(paraMap);
+		return downCount;
+	}
+
+	@Override
+	public int addCommentReport(Map<String, String> paraMap) {
+		int n = dao.addCommentReport(paraMap);
+		return n;
+	}
+
+	@Override
+	public MinsungBoardVO getViewNoAddCount(Map<String, String> paraMap) {
+		MinsungBoardVO boardvo = dao.getView(paraMap);
+		return boardvo;
+	}
+
+	@Override
+	public int add_withFile(MinsungBoardVO boardvo) {
+		int n = dao.addBoardWithFile(boardvo);
+		return n;
+	}
+
+	@Override
+	public List<MinsungMsgVO> getMsgList(int loginNo) {
+		List<MinsungMsgVO> getMsgList = dao.getMsgList(loginNo);
+		return getMsgList;
+	}
+
+	@Override
+	public List<MinsungMsgVO> sendMsgList(int loginNo) {
+		List<MinsungMsgVO> sendMsgList = dao.sendMsgList(loginNo);
+		return sendMsgList;
+	}
+
+	@Override
+	public MinsungMsgVO oneMsg(String msgNo) {
+		 MinsungMsgVO oneMsg = dao.oneMsg(msgNo);
+		 return oneMsg;
+	}
+
+	@Override
+	public int getToMemberNo(String nickName) {
+		int getToMemberNo = dao.getToMemberNo(nickName);
+		return getToMemberNo;
+	}
+
+	@Override
+	public int insertMsg(Map<String, String> paraMap) {
+		int n = dao.insertMsg(paraMap);
+		return n;
+	}
+	
+
 	
 
 

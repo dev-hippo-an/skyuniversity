@@ -23,8 +23,9 @@ th, td {
 }
 
 thead {
-	background-color: white;
+	background-color: #0841ad;
 	font-size: 10pt;
+	color: white;
 }
 
 tbody {
@@ -91,6 +92,11 @@ tr.notification td:nth-child(3):hover{
 }
 tr.notification td {
    font-weight: bold;
+}
+
+img.photo {
+	width: 18px;
+	height: 18px;
 }
 </style>
 
@@ -218,10 +224,10 @@ tr.notification td {
                           <c:choose>
                           <c:when test="${fn:length(notice.subject) > 20}">
                                <td onclick="goNotice('${notice.noticeNo}');">${fn:substring(notice.subject, 0, 20)}...&nbsp;
-                               
+                               [<span style="color:#0841ad; font-weight: bold; ">${notice.cmtCount}</span>]
                                <c:if test="${fn:contains(notice.content, '<img src=')}">
                                <img src="<%=request.getContextPath()%>/resources/images/sehyeong/disk.gif" >
-                            </c:if>
+                            	</c:if>
                                </td>
                           </c:when>
                           <c:otherwise>
@@ -248,10 +254,20 @@ tr.notification td {
 					<tr class="board">
 						<td class="boardNo">${boardvo.boardNo}</td>
 						<td>${boardvo.fk_categoryName}</td>
-						<td><a class="subject" style="cursor:pointer" onclick="goView('${boardvo.boardNo}')">${boardvo.subject}</a></td>
-						<td>${boardvo.fk_nickname}</td>
+						<td><a class="subject" style="cursor:pointer" onclick="goView('${boardvo.boardNo}')">${boardvo.subject}</a>
+						[<span style="color:#0841ad; font-weight: bold; ">${boardvo.cmtCount}</span>]
+		                		<c:if test="${fn:contains(boardvo.content, '<img src=')}"><img src="/skyuniversity/resources/images/picture.png" class="photo"></c:if>
+						</td>
+		                <td class="left"><img src="<%= request.getContextPath()%>/resources/images/levelimg/${boardvo.levelImg}" class="photo" />${boardvo.fk_nickname}</td>
 						<td>${boardvo.regDate}</td>
-						<td>추천</td>
+						<td>
+	                		<c:if test="${empty boardvo.upCount}">
+	                			0
+	                		</c:if>
+	                		<c:if test="${not empty boardvo.upCount}">
+								${boardvo.upCount}
+	                		</c:if>
+	                	</td>
 						<td>${boardvo.readCount}</td>
 						
 					</tr>
@@ -267,8 +283,6 @@ tr.notification td {
 		</div>
 	</c:if>
 	
-
-	
 	<div align="center"
 		style="width: 70%; border: solid 0px gray; margin: 20px auto;">
 		${pageBar}</div>
@@ -279,7 +293,7 @@ tr.notification td {
 		<input type="hidden" name="gobackURL" value="${gobackURL}" />
 	</form>
 	<form name="registerFrm">
-
+	    <input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />
 	</form>
 	
 	<form name="allBoardAdminAddFrm">
@@ -291,6 +305,6 @@ tr.notification td {
       <input type="hidden" name="noticeNo" />
       <input type="hidden" name="gobackURL2" value="${gobackURL}" />
    </form>
-	
+
 
 </div>
