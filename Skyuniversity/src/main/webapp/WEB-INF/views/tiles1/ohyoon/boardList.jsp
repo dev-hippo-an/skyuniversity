@@ -130,7 +130,11 @@ tr.notification td {
    		
    		// 글쓰기 버튼을 누르면 파라미터 값으로 게시판 번호를 가지고 작성 페이지로 넘어간다.
       	$("button#register").click(function() {
-      		location.href="<%= request.getContextPath()%>/boardRegister.sky?boardKindNo=${paraMap.boardKindNo}";
+      		if ("${paraMap.boardKindNo}" != "7") {
+	      		location.href="<%= request.getContextPath()%>/boardRegister.sky?boardKindNo=${paraMap.boardKindNo}";
+			}else{
+	      		location.href="<%= request.getContextPath()%>/boardRegister2.sky";
+			}
       	});
       
 
@@ -141,7 +145,11 @@ tr.notification td {
    			
    			var frm = document.urlFrm;
    			frm.method = "get";
-   			frm.action = "<%= request.getContextPath()%>/boardDetail.sky"; 
+   			if ("${paraMap.boardKindNo}" != "7") {
+	   			frm.action = "<%= request.getContextPath()%>/boardDetail.sky"; 
+			}else{
+	   			frm.action = "<%= request.getContextPath()%>/boardDetail2.sky"; 
+			}
    			frm.submit();
    			
 		});
@@ -264,8 +272,14 @@ tr.notification td {
 		                		[<span style="color:#0841ad; font-weight: bold; ">${board.cmtCount}</span>]
 		                		<c:if test="${fn:contains(board.content, '<img src=')}"><img src="/skyuniversity/resources/images/picture.png" class="photo"></c:if>
 		                	</td>
-		                	<td class="left"><img src="<%= request.getContextPath()%>/resources/images/levelimg/${board.levelImg}" class="photo" />${board.fk_nickname}</td>
-		                	<td>${board.regDate}</td>
+		                	<td class="left">
+		                		<c:if test="${not empty board.levelImg}"><img src="<%= request.getContextPath()%>/resources/images/levelimg/${board.levelImg}" class="photo" /></c:if>
+		                		${board.fk_nickname}
+		                	</td>
+		                	<td>
+		                		<c:if test="${fn:contains(board.regDate, '분 전')}"><span style="color:blue;">${board.regDate}</span></c:if>
+		                		<c:if test="${not fn:contains(board.regDate, '분 전')}">${board.regDate}</c:if>
+		                	</td>
 		                	<td>
 		                		<c:if test="${empty board.upCount}">
 		                			0

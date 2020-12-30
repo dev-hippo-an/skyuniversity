@@ -7,9 +7,10 @@ public class BoardVO {
 	private String boardNo;			// 게시글 번호
 	private String fk_boardKindNo;  // 게시판 번호
 	private String fk_memberNo;		// 작성회원번호
-	private String fk_nickname;		// 작성회원닉네임
+	private String fk_nickname;		// 작성자 닉네임
 	private String fk_categoryNo;	// 카테고리번호
 	private String fk_categoryName;	// 카테고리이름
+	private String password;		// 작성글 비밀번호
 	private String subject;			// 글 제목
 	private String regDate;			// 등록일자
 	private String editDate;		// 수정일자
@@ -266,6 +267,14 @@ public class BoardVO {
 
 	public void setCmtCount(String cmtCount) {
 		this.cmtCount = cmtCount;
+	}
+
+	public String getPassword() {
+		return password;
+	}
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	

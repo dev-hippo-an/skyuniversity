@@ -32,16 +32,7 @@
 #regdiv {
 	height: 300px;
 }
-.sublicl > td { 
-	width:500px;
-	font-size: 9pt;
-	text-align: center;	
-}
-#subli > td {
-	width:280px;
-	font-size: 9pt;
-	text-align: center;
-}
+
 table#scroltbl {
 	border-collapse:collapse; width:100%;
 }
@@ -52,11 +43,16 @@ table#scroltbl {
 	overflow-y:auto; overflow-x:hidden; float:left; width:100%; height:190px;
 }
 .sublicl {
-	display:table; width:100%;
+	display:table; width: 1400px;
 } 
-
+.sublicl > td {
+	text-align: center;
+}
 #subli {
-	display: table; width: 1550px;
+	display: table; width: 1400px;
+}
+#subli > td {
+	text-align: center;
 }
 #boottr > td {
 	text-align: center;
@@ -152,13 +148,13 @@ table#scroltbl {
 					var html="";
 					$.each(json, function(index, item){						
 						html += "<tr class='sublicl'>";
-						html += "<td id='td1"+index+"'>"+item.subjectno+"</td>"
-							   +"<td id='td2"+index+"'>"+item.subjectname+"</td>"
-							   +"<td id='td3"+index+"'>"+item.credits+"</td>"
-							   +"<td id='td4"+index+"'>"+item.name+"</td>"
-							   +"<td> <span id='span1"+index+"'>"+item.day+"</span> /  <span id='span2"+index+"'>" + item.period+"</span></td>"
-							   +"<td id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
-							   +"<td><button onclick='funcClassReg("+index+");'>신청</button></td>";
+						html += "<td style='width:150px;' id='td1"+index+"'>"+item.subjectno+"</td>"
+							   +"<td style='width:200px;' id='td2"+index+"'>"+item.subjectname+"</td>"
+							   +"<td style='width:100px;' id='td3"+index+"'>"+item.credits+"</td>"
+							   +"<td style='width:100px;' id='td4"+index+"'>"+item.name+"</td>"
+							   +"<td style='width:300px;> <span id='span1"+index+"'>"+item.day+"</span> /  <span id='span2"+index+"'>" + item.period+"</span></td>"
+							   +"<td style='width:150px; id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
+							   +"<td style='width:100px;'><button onclick='funcClassReg("+index+");'>신청</button></td>";
 						html += "</tr>";
 					});
 					$("#tb").html(html);
@@ -337,13 +333,13 @@ table#scroltbl {
 			<table id="scroltbl" class="table">
 			<thead id="scrolth">
 				<tr id="subli">
-					<td style="padding-left: 20px;">과목코드</td>
-					<td>과목명</td>
-					<td>학점</td>
-					<td style="padding-right: 35px;">교수님</td>
-					<td style="padding-right: 40px;">요일 / 교시</td>
-					<td>수강가능인원</td>
-					<td>수강신청</td>
+					<td style="width:150px;">과목코드</td>
+					<td style="width:200px;">과목명</td>
+					<td style="width:100px;">학점</td>
+					<td style="width:100px;">교수님</td>
+					<td style="width:300px;">요일 / 교시</td>
+					<td style="width:150px;">수강가능인원</td>
+					<td style="width:100px;">수강신청</td>
 				</tr>
 			</thead>
 			<tbody id="tb">

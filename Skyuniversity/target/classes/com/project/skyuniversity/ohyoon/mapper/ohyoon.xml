@@ -22,13 +22,37 @@
 	
 	
 	<!-- 각 테이블마다 게시글들을 받아오기 -->
+	<select id="getAnonymousBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select rno, boardNo, fk_boardKindNo, nickname as fk_nickname, subject, regDate, editDate
+         	 , content, readCount, status, upCount, cmtCount, writerIp
+		from 
+		(
+		    select row_number() over(order by boardno desc)  as rno, boardNo, fk_boardKindNo, nickname, subject
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , content, readCount, status, upCount, writerIp
+		         , (select count(*) from tbl_comment_anonymous where fk_boardNo = boardNo and status = 1) as cmtCount
+		    from tbl_board_anonymous
+			where status = 1
+		    <if test='searchWord != "" '>
+            and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+	        </if>
+		)T
+		where rno between #{startRno} and #{endRno}
+		order by rno asc
+	</select>
 	<select id="getInformalBoardList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
 		select rno, boardNo, fk_boardKindNo, fk_memberNo, nickname as fk_nickname, subject, regDate, editDate
 		         , content, readCount, status, upCount, levelImg, cmtCount
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
@@ -51,7 +75,10 @@
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
@@ -74,7 +101,10 @@
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
@@ -102,7 +132,10 @@
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
@@ -130,7 +163,10 @@
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
@@ -158,7 +194,10 @@
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
@@ -186,7 +225,10 @@
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
@@ -214,7 +256,10 @@
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
@@ -242,7 +287,10 @@
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		    	 , levelImg
@@ -270,7 +318,10 @@
 		from 
 		(
 		    select row_number() over(order by boardno desc)  as rno, boardNo, V.fk_boardKindNo, V.fk_memberNo, M.nickname, C.categoryName, subject
-		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+		         , case when to_char(sysdate , 'yyyymmdd') - to_char(regDate , 'yyyymmdd') >= 1 then to_char(regDate, 'yyyy-mm-dd')
+		                when to_char(sysdate, 'hh24') - to_char(regDate, 'hh24') >= 1 then to_char(to_char(sysdate, 'hh24') - to_char(regDate, 'hh24'))||'시간 전'
+		                else to_char(to_char(sysdate, 'mi') - to_char(regDate, 'mi'))||'분 전' end as regDate
+		         , to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
 		         , content, readCount, status
 		         , (select count(*) from tbl_board_good where fk_boardKindNo = V.fk_boardKindNo and fk_boardNo = boardNo) as upCount
 		         , levelImg
@@ -295,6 +346,14 @@
 	
 	
 	<!-- 총 게시물 건수 알아오기 -->
+	<select id="getAnonymousTotalCount" parameterType="HashMap" resultType="int">
+		select count(*)
+		from tbl_board_anonymous
+		where status = 1
+		<if test='searchWord != "" '>
+        and lower(${searchType}) like '%' || lower(#{searchWord}) || '%'
+        </if>
+	</select>
 	<select id="getInformalTotalCount" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_board_informal V join tbl_commu_member M
@@ -412,6 +471,10 @@
 	
 	
 	<!-- 파일 첨부가 없는 글쓰기 -->
+	<insert id="addAnonymousBoard" parameterType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		insert into tbl_board_anonymous(boardNo, fk_boardKindNo, nickname, subject, password, content, writerIp)
+		values(tbl_board_anonymous_seq.nextval, ${fk_boardKindNo}, #{fk_nickname}, #{subject}, #{password}, #{content}, #{writerIp})
+	</insert>
 	<insert id="addInformalBoard" parameterType="com.project.skyuniversity.ohyoon.model.BoardVO">
 		insert into tbl_board_informal(boardNo, fk_boardKindNo, fk_memberNo, subject, content, writerIp)
 		values(tbl_board_informal_seq.nextval, ${fk_boardKindNo}, ${fk_memberNo}, #{subject}, #{content}, #{writerIp})
@@ -527,6 +590,14 @@
 	
 	
 	<!-- 게시물 1개 조회하기 -->
+	<select id="getViewAnonymous" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		select boardNo, fk_boardKindNo, nickname as fk_nickname, subject, password
+		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
+			 , content, readCount, status, upCount, downCount
+			 , (select count(*) from tbl_comment_anonymous where fk_boardNo = boardNo and status = 1) as cmtCount
+		from tbl_board_anonymous V  
+		where status = 1 and boardNo = #{boardNo}
+	</select>
 	<select id="getViewInformal" parameterType="String" resultType="com.project.skyuniversity.ohyoon.model.BoardVO">
 		select boardNo, V.fk_boardKindNo, V.fk_memberNo, nickname as fk_nickname, subject
 		     , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, to_char(editDate, 'yyyy-mm-dd hh24:mi:ss') as editDate
@@ -676,6 +747,10 @@
 	
 	
 	<!-- 게시물 조회수 증가시키기 -->
+	<update id="addReadCountAnonymous" parameterType="String">
+		update tbl_board_anonymous set readCount = readCount + 1
+		where boardNo = #{boardNo}
+	</update>
 	<update id="addReadCountInformal" parameterType="String">
 		update tbl_board_informal set readCount = readCount + 1
 		where boardNo = #{boardNo}
@@ -724,6 +799,11 @@
 		from tbl_board_good
 		where fk_boardKindNo = ${boardKindNo} and fk_boardNo = ${boardNo}
 	</select>
+	<select id="getAnonymousBoardGoodCount" parameterType="String" resultType="int">
+		select upCount
+		from tbl_board_anonymous
+		where boardNo = #{boardNo}
+	</select>
 	
 	<!-- 게시글의 비추천수를 가져온다. -->
 	<select id="getBoardBadCount" parameterType="HashMap" resultType="int">
@@ -731,7 +811,18 @@
 		from tbl_board_bad
 		where fk_boardKindNo = ${boardKindNo} and fk_boardNo = ${boardNo}
 	</select>
+	<select id="getAnonymousBoardBoardBadCount" parameterType="String" resultType="int">
+		select downCount
+		from tbl_board_anonymous
+		where boardNo = #{boardNo}
+	</select>
 	
+	
+	<!-- 익명게시판의 추천 컬럼을 1증가시킨다. -->
+	<update id="addAnonymousBoardUp" parameterType="String">
+		update tbl_board_anonymous set upCount = upCount + 1
+		where boardNo = #{boardNo}
+	</update>
 	
 	<!-- 게시글 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다. -->
 	<delete id="deleteBoardBad" parameterType="HashMap">
@@ -745,6 +836,11 @@
 		values(${boardKindNo}, ${boardNo}, ${memberNo})
 	</insert>
 	
+	<!-- 익명게시판의 비추천 컬럼을 1증가시킨다. -->
+	<update id="addAnonymousBoardDown" parameterType="String">
+		update tbl_board_anonymous set downCount = downCount + 1
+		where boardNo = #{boardNo}
+	</update>
 	
 	<!-- 게시글 추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다. -->
 	<delete id="deleteBoardGood" parameterType="HashMap">
@@ -758,6 +854,11 @@
 		values(${boardKindNo}, ${boardNo}, ${memberNo})
 	</insert>
 	
+	<!-- 익명게시판의 신고수 컬럼을 1증가시킨다. -->
+	<update id="addAnonymousBoardReport" parameterType="String">
+		update tbl_board_anonymous set reportCount = reportCount + 1
+		where boardNo = #{boardNo}
+	</update>
 	
 	<!-- 게시글 신고 테이블에 행을 추가한다. -->
 	<insert id="addBoardReport" parameterType="HashMap">
@@ -771,8 +872,17 @@
 		from tbl_board_report
 		where fk_boardKindNo = ${boardKindNo} and fk_boardNo = ${boardNo}
 	</select>
+	<select id="getAnonymousReportCount" parameterType="String" resultType="int">
+		select reportCount
+		from tbl_board_anonymous
+		where boardNo = #{boardNo}
+	</select>
 	
 	<!-- 게시글의 상태를 0으로 update한다. -->
+	<update id="updateAnonymousBoardStatus" parameterType="String">
+		update tbl_board_anonymous set status = 0
+		where boardNo = #{boardNo}
+	</update>
 	<update id="updateInformalBoardStatus" parameterType="String">
 		update tbl_board_informal set status = 0
 		where boardNo = #{boardNo}
@@ -859,6 +969,10 @@
 	
 	
 	<!-- 파일 첨부가 없는 글수정 -->
+	<update id="updateAnonymousBoard" parameterType="com.project.skyuniversity.ohyoon.model.BoardVO">
+		update tbl_board_anonymous set subject = #{subject}, content = #{content}, editDate = sysdate
+		where boardNo = #{boardNo}
+	</update>
 	<update id="updateInformalBoard" parameterType="com.project.skyuniversity.ohyoon.model.BoardVO">
 		update tbl_board_informal set subject = #{subject}, content = #{content}, editDate = sysdate
 		where boardNo = #{boardNo}
@@ -998,6 +1112,10 @@
 	<insert id="addLostComment" parameterType="com.project.skyuniversity.ohyoon.model.CommentVO">
 		insert into tbl_comment_lost(commentNo, fk_boardNo, fk_memberNo, cmtContent, writerIp)
 		values(tbl_comment_lost_seq.nextval, ${fk_boardNo}, ${fk_memberNo}, #{cmtContent}, #{writerIp})
+	</insert>
+	<insert id="addAnonymousComment" parameterType="com.project.skyuniversity.ohyoon.model.CommentVO">
+		insert into tbl_comment_anonymous(commentNo, fk_boardNo, nickname, password, cmtContent, writerIp)
+		values(tbl_comment_anonymous_seq.nextval, ${fk_boardNo}, #{fk_nickname}, #{password}, #{cmtContent}, #{writerIp})
 	</insert>
 	<insert id="addInformalComment" parameterType="com.project.skyuniversity.ohyoon.model.CommentVO">
 		insert into tbl_comment_informal(commentNo, fk_boardNo, fk_memberNo, cmtContent, writerIp)
@@ -1274,6 +1392,22 @@
 		where rno between #{startNo} and #{endNo} 
 		order by rno asc
 	</select>
+	<select id="getAnonymousCommentList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.CommentVO">
+		select rno, commentNo, fk_boardNo, fk_nickname, cmtContent, regDate
+		     , (select count(*) from tbl_comment_anonymous where status = 1 and fk_boardNo = #{fk_boardNo}) AS totalCount
+		     , cmtUpCount
+             , cmtDownCount
+		from 
+		(
+		    select row_number() over(order by commentNo desc) AS rno, commentNo, fk_boardNo
+		         , nickname AS fk_nickname, cmtUpCount, cmtDownCount, cmtContent
+		         , to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') AS regDate
+			from tbl_comment_anonymous  
+			where status = 1 and fk_boardNo = #{fk_boardNo}
+		)T
+		where rno between #{startNo} and #{endNo} 
+		order by rno asc
+	</select>
 	<select id="getInformalCommentList" parameterType="HashMap" resultType="com.project.skyuniversity.ohyoon.model.CommentVO">
 		select rno, commentNo, fk_boardNo, fk_memberNo, fk_nickname
 		     , levelImg, cmtContent, regDate
@@ -1540,16 +1674,32 @@
 	<select id="getCommentGoodCount" parameterType="HashMap" resultType="int">
 		select count(*) as cmtUpCount
 		from tbl_comment_good
-		where fk_boardKindNo = ${fk_boardKindNo} and fk_boardNo = ${fk_boardNo} and fk_commentNo = ${fk_commentNo}
+		where fk_boardKindNo = #{fk_boardKindNo} and fk_boardNo = #{fk_boardNo} and fk_commentNo = #{fk_commentNo}
+	</select>
+	<select id="getAnonymousCommentGoodCount" parameterType="HashMap" resultType="int">
+		select cmtUpCount
+		from tbl_comment_anonymous
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{fk_commentNo}
 	</select>
 	
 	<!-- 댓글의 비추천수를 가져온다. -->
 	<select id="getCommentBadCount" parameterType="HashMap" resultType="int">
 		select count(*) as cmtDownCount
 		from tbl_comment_bad
-		where fk_boardKindNo = ${fk_boardKindNo} and fk_boardNo = ${fk_boardNo} and fk_commentNo = ${fk_commentNo}
+		where fk_boardKindNo = #{fk_boardKindNo} and fk_boardNo = #{fk_boardNo} and fk_commentNo = #{fk_commentNo}
 	</select>
-	
+	<select id="getAnonymousCommentBadCount" parameterType="HashMap" resultType="int">
+		select cmtDownCount
+		from tbl_comment_anonymous
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{fk_commentNo}
+	</select>
+
+
+	<!-- 익명게시판 댓글 테이블에서 추천 컬럼의 값을 1 증가시킨다. -->	
+	<update id="addAnonymousCommentUp" parameterType="HashMap">
+		update tbl_comment_anonymous set cmtUpCount = cmtUpCount + 1
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{fk_commentNo} 
+	</update>
 		
 	<!-- 댓글 비추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다. -->
 	<delete id="deleteCommentBad" parameterType="HashMap">
@@ -1563,6 +1713,12 @@
 		values(${fk_boardKindNo}, ${fk_boardNo}, ${fk_commentNo}, ${fk_memberNo})
 	</insert>
 	
+
+	<!-- 익명게시판 댓글 테이블에서 비추천 컬럼의 값을 1 증가시킨다. -->	
+	<update id="addAnonymousCommentDown" parameterType="HashMap">
+		update tbl_comment_anonymous set cmtDownCount = cmtDownCount + 1
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{fk_commentNo} 
+	</update>
 	
 	<!-- 댓글 추천 테이블에서 paraMap으로 넘어온 값을 가진 행을 삭제한다. -->
 	<delete id="deleteCommentGood" parameterType="HashMap">
@@ -1576,6 +1732,12 @@
 		values(${fk_boardKindNo}, ${fk_boardNo}, ${fk_commentNo}, ${fk_memberNo})
 	</insert>
 	
+
+	<!-- 익명게시판 댓글 테이블에서 신고수 컬럼의 값을 1 증가시킨다. -->	
+	<update id="addAnonymousCommentReport" parameterType="HashMap">
+		update tbl_comment_anonymous set reportCount = reportCount + 1
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{fk_commentNo} 
+	</update>
 	
 	<!-- 댓글 신고 테이블에 행을 추가한다. -->
 	<insert id="addCommentReport" parameterType="HashMap">
@@ -1588,6 +1750,11 @@
 		select count(*)
 		from tbl_comment_report
 		where fk_boardKindNo = ${fk_boardKindNo} and fk_boardNo = ${fk_boardNo} and fk_commentNo = ${fk_commentNo}
+	</select>
+	<select id="getAnonymousCommentReportCount" parameterType="HashMap" resultType="int">
+		select reportCount
+		from tbl_comment_anonymous
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{fk_commentNo}
 	</select>
 	
 	<!-- 댓글의 상태를 0으로 update한다. -->
@@ -1633,6 +1800,10 @@
 	</update>
 	<update id="updateLostCommentStatus" parameterType="HashMap">
 		update tbl_comment_lost set status = 0
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{fk_commentNo}
+	</update>
+	<update id="updateAnonymousCommentStatus" parameterType="HashMap">
+		update tbl_comment_anonymous set status = 0
 		where fk_boardNo = #{fk_boardNo} and commentNo = #{fk_commentNo}
 	</update>
 	<update id="updateInformalCommentStatus" parameterType="HashMap">
@@ -1688,6 +1859,13 @@
 		where fk_boardNo = #{fk_boardNo} and commentNo = #{fk_commentNo}
 	</update>
 
+
+	<!-- 익명 게시판 댓글을 가져온다. -->
+	<select id="getCommentOne" parameterType="HashMap" resultType="String">
+		select password
+		from tbl_comment_anonymous
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{commentNo}		
+	</select>
 	
 	<!-- 댓글 내용을 수정(update) 한다.  -->
 	<update id="updateNoticeComment" parameterType="HashMap">
@@ -1732,6 +1910,10 @@
 	</update>
 	<update id="updateLostComment" parameterType="HashMap">
 		update tbl_comment_lost set cmtContent = #{cmtContent}
+		where fk_boardNo = #{fk_boardNo} and commentNo = #{commentNo}
+	</update>
+	<update id="updateAnonymousComment" parameterType="HashMap">
+		update tbl_comment_anonymous set cmtContent = #{cmtContent}
 		where fk_boardNo = #{fk_boardNo} and commentNo = #{commentNo}
 	</update>
 	<update id="updateInformalComment" parameterType="HashMap">
@@ -1788,8 +1970,19 @@
 	</update>
 	
 	
+	<!-- 첫번째 랜덤 닉네임 받아오기  -->
+	<select id="getFirstNickname" parameterType="Integer" resultType="String">
+		select firstNick
+		from tbl_anonymous_firstnick
+		where seqno = #{firstNo}
+	</select>
 	
-	
+	<!-- 두번째 랜덤 닉네임 받아오기  -->
+	<select id="getSecondNickname" parameterType="Integer" resultType="String">
+		select secondNick
+		from tbl_anonymous_secondnick
+		where seqno = #{secondNo}
+	</select>
 	
 	
 </mapper>

@@ -101,9 +101,12 @@ thead.board-body-header th:last-child{
 				frm.action = "<%= ctxPath%>/minsungBoardView.sky";
 			} else if (23 <= boardKindNo){
 				frm.action = "<%= ctxPath%>/marketBoardDetail.sky";
-			} else {
-				frm.action = "<%= ctxPath%>/boardDetail.sky";
-			}
+			} else if (boardKindNo != 7){
+	          frm.action = "<%=request.getContextPath()%>/boardDetail.sky";
+	       } else{
+	          frm.action = "<%=request.getContextPath()%>/boardDetail2.sky";
+	       }
+
 			
 			frm.boardKindNo.value = boardKindNo;
 			frm.boardNo.value = $(this).find(".boardNo").text();
@@ -201,8 +204,8 @@ thead.board-body-header th:last-child{
     								<tr>
     									<td>${recent.boardName}</td>
     									<c:choose>
-										        <c:when test="${fn:length(recent.subject) > 20}">
-								                	<td>${fn:substring(recent.subject, 0, 20)}...</td>
+										        <c:when test="${fn:length(recent.subject) > 16}">
+								                	<td>${fn:substring(recent.subject, 0, 16)}...</td>
 										        </c:when>
 										        <c:otherwise>
 								                	<td>${recent.subject}</td>
@@ -234,8 +237,8 @@ thead.board-body-header th:last-child{
     								<tr>
     									<td>${best.boardName}</td>
     									<c:choose>
-										        <c:when test="${fn:length(best.subject) > 20}">
-								                	<td>${fn:substring(best.subject, 0, 20)}...</td>
+										        <c:when test="${fn:length(best.subject) > 16}">
+								                	<td>${fn:substring(best.subject, 0, 16)}...</td>
 										        </c:when>
 										        <c:otherwise>
 								                	<td>${best.subject}</td>
@@ -267,8 +270,8 @@ thead.board-body-header th:last-child{
     								<tr>
     									<td>${popular.boardName}</td>
     									<c:choose>
-										        <c:when test="${fn:length(popular.subject) > 20}">
-								                	<td>${fn:substring(popular.subject, 0, 20)}...</td>
+										        <c:when test="${fn:length(popular.subject) > 16}">
+								                	<td>${fn:substring(popular.subject, 0, 16)}...</td>
 										        </c:when>
 										        <c:otherwise>
 								                	<td>${popular.subject}</td>
@@ -321,8 +324,8 @@ thead.board-body-header th:last-child{
 	    								<tr>
 	    									<td>${index.categoryName}</td>
 	    									<c:choose>
-										        <c:when test="${fn:length(index.subject) > 20}">
-								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        <c:when test="${fn:length(index.subject) > 16}">
+								                	<td>${fn:substring(index.subject, 0, 16)}...</td>
 										        </c:when>
 										        <c:otherwise>
 								                	<td>${index.subject}</td>
@@ -340,7 +343,7 @@ thead.board-body-header th:last-child{
   				<div class="column">
     				<div class="index-board">
     					<div class="board-header"> 
-    						<span class="board-title" onclick="javascript:location.href='<%= ctxPath%>/minsungBoardList.sky?boardKindNo=1'">공지사항</span>
+    						<span class="board-title" onclick="javascript:location.href='<%= ctxPath%>/boardDetail2.sky?boardKindNo=7'">익명게시판</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -351,12 +354,12 @@ thead.board-body-header th:last-child{
     						</thead>
     						<tbody>
     							<c:forEach items="${indexBoardList}" var="index">
-    								<c:if test="${index.fk_boardKindNo == 1}">
+    								<c:if test="${index.fk_boardKindNo == 7}">
 	    								<tr>
 	    									<td>${index.categoryName}</td>
 	    									<c:choose>
-										        <c:when test="${fn:length(index.subject) > 20}">
-								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        <c:when test="${fn:length(index.subject) > 16}">
+								                	<td>${fn:substring(index.subject, 0, 16)}...</td>
 										        </c:when>
 										        <c:otherwise>
 								                	<td>${index.subject}</td>
@@ -389,8 +392,8 @@ thead.board-body-header th:last-child{
 	    								<tr>
 	    									<td>${index.categoryName}</td>
 	    									<c:choose>
-										        <c:when test="${fn:length(index.subject) > 20}">
-								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        <c:when test="${fn:length(index.subject) > 16}">
+								                	<td>${fn:substring(index.subject, 0, 16)}...</td>
 										        </c:when>
 										        <c:otherwise>
 								                	<td>${index.subject}</td>
@@ -426,8 +429,8 @@ thead.board-body-header th:last-child{
 	    								<tr>
 	    									<td>${index.categoryName}</td>
 	    									<c:choose>
-										        <c:when test="${fn:length(index.subject) > 20}">
-								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        <c:when test="${fn:length(index.subject) > 16}">
+								                	<td>${fn:substring(index.subject, 0, 16)}...</td>
 										        </c:when>
 										        <c:otherwise>
 								                	<td>${index.subject}</td>
@@ -460,8 +463,8 @@ thead.board-body-header th:last-child{
 	    								<tr>
 	    									<td>${index.categoryName}</td>
 	    									<c:choose>
-										        <c:when test="${fn:length(index.subject) > 20}">
-								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        <c:when test="${fn:length(index.subject) > 16}">
+								                	<td>${fn:substring(index.subject, 0, 16)}...</td>
 										        </c:when>
 										        <c:otherwise>
 								                	<td>${index.subject}</td>
@@ -494,8 +497,8 @@ thead.board-body-header th:last-child{
 	    								<tr>
 	    									<td>${index.categoryName}</td>
 	    									<c:choose>
-										        <c:when test="${fn:length(index.subject) > 20}">
-								                	<td>${fn:substring(index.subject, 0, 20)}...</td>
+										        <c:when test="${fn:length(index.subject) > 16}">
+								                	<td>${fn:substring(index.subject, 0, 16)}...</td>
 										        </c:when>
 										        <c:otherwise>
 								                	<td>${index.subject}</td>

@@ -20,7 +20,7 @@ public class SchoolLeaveVO {
 	private String type;
 	private String comeSemester;
 	
-	private int fk_regSeq;
+	private int fk_memberNo;
 
 	public String getType() {
 		return type;
@@ -160,12 +160,12 @@ public class SchoolLeaveVO {
 		this.reason = reason;
 	}
 
-	public int getFk_regSeq() {
-		return fk_regSeq;
+	public int getFk_memberNo() {
+		return fk_memberNo;
 	}
 
-	public void setFk_regSeq(int fk_regSeq) {
-		this.fk_regSeq = fk_regSeq;
+	public void setFk_memberNo(int fk_memberNo) {
+		this.fk_memberNo = fk_memberNo;
 	}
 
 }

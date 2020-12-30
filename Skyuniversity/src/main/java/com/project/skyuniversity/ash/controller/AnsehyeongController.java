@@ -136,7 +136,6 @@ public class AnsehyeongController {
 		
 		HttpSession session = request.getSession();
 		session.setAttribute("readCountPermission", "yes");
-
 		mav.addObject("bannerList", bannerList);
 		mav.setViewName("main/index.tiles1");
 		// /WEB-INF/views/tiles1/main/index.jsp 파일을 생성한다.
@@ -252,7 +251,8 @@ public class AnsehyeongController {
 		List<MarketBoardVO> recentBoardList = service.recentIndexBoardList();
 		List<MarketBoardVO> bestBoardList = service.bestIndexBoardList();
 		List<MarketBoardVO> popularBoardList = service.popularIndexBoardList();
-
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
 		mav.addObject("indexBoardList", indexBoardList);
 		mav.addObject("recentBoardList", recentBoardList);
 		mav.addObject("bestBoardList", bestBoardList);
@@ -668,7 +668,7 @@ public class AnsehyeongController {
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 	// === 글1개를 보여주는 페이지 요청 === //
-	@RequestMapping(value = "/marketBoardDetail.sky")
+	@RequestMapping(value = "/marketBoardDetail.sky", method = {RequestMethod.GET})
 	public ModelAndView anRequiredLogin_marketBoardDetail(HttpServletRequest request, HttpServletResponse response,
 			ModelAndView mav) {
 
@@ -677,6 +677,8 @@ public class AnsehyeongController {
 		String boardKindNo = request.getParameter("boardKindNo");
 		String gobackURL2 = request.getParameter("gobackURL2");
 
+		
+		
 		Map<String, String> paraMap = new HashedMap<String, String>();
 		if (boardKindNo == null || "".equals(boardKindNo)) {
 			String message = "정상적인 경로좀 ㅎㅎ";
@@ -717,6 +719,8 @@ public class AnsehyeongController {
 
 		}
 
+		
+		
 		if (boardNo == null || "".equals(boardNo)) {
 			String message = "정상적인 경로좀 ㅎㅎ11";
 			String loc = request.getContextPath() + "/index.sky";
@@ -772,12 +776,14 @@ public class AnsehyeongController {
 		// 단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은
 		// 실행하지 않도록 해주어야 한다. !!! === //
 
+		
+		
 		MarketBoardVO boardvo = null;
 
 		if (loginuser != null) {
 			// 위의 글목록보기 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
 			if ("yes".equals(session.getAttribute("readCountPermission"))) {
-				// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+				// 게시글 리스트/메인페이지/검색리스트 를 클릭한 다음에 특정글을 조회해온 경우이다.
 
 				boardvo = service.getMarketView(paraMap, loginuser);
 				// 글조회수 증가와 함께 글1개를 조회를 해주는 것
@@ -787,19 +793,19 @@ public class AnsehyeongController {
 
 			} else {
 				// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
-
 				boardvo = service.getMarketViewWithNoAddCount(paraMap);
 				// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
 			}
 
-		  List<MinsungBoardVO> recentBoardList = service.recentBoardList();
-		  List<MinsungBoardVO> bestBoardList = service.bestBoardList();
-		  List<MinsungBoardVO> popularBoardList = service.popularBoardList();
-		  
-		  mav.addObject("recentBoardList", recentBoardList);
-		  mav.addObject("bestBoardList", bestBoardList);
-		  mav.addObject("popularBoardList", popularBoardList);
+			List<MinsungBoardVO> recentBoardList = service.recentBoardList();
+			List<MinsungBoardVO> bestBoardList = service.bestBoardList();
+			List<MinsungBoardVO> popularBoardList = service.popularBoardList();
+
 			
+			mav.addObject("recentBoardList", recentBoardList);
+			mav.addObject("bestBoardList", bestBoardList);
+			mav.addObject("popularBoardList", popularBoardList);
+
 			mav.addObject("boardvo", boardvo);
 			mav.addObject("paraMap", paraMap);
 			mav.addObject("tableInfo", tableInfo);
@@ -900,7 +906,9 @@ public class AnsehyeongController {
 		paraMap.put("boardNo", boardNo);
 		paraMap.put("boardKindNo", boardKindNo);
 		paraMap.put("gobackURL2", gobackURL2);
-
+		
+		
+		
 		// === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === //
 		Map<String, String> tableInfo = service.getMarketTableInfo(paraMap);
 		List<Map<String, String>> categoryList;
@@ -939,15 +947,16 @@ public class AnsehyeongController {
 	// === 게시판 글쓰기 완료 요청 === //
 	@RequestMapping(value = "/marketBoardEditEnd.sky")
 	public ModelAndView anGetCheck_marketBoardEditEnd(HttpServletRequest request, HttpServletResponse response,
-			Map<String, String> paraMap, MarketBoardVO boardvo, MultipartHttpServletRequest mrequest,
-			ModelAndView mav) {
+			Map<String, String> paraMap, MarketBoardVO boardvo, MultipartHttpServletRequest mrequest, ModelAndView mav) {
 
 		String gobackURL2 = request.getParameter("gobackURL2");
-
+		
+		gobackURL2 = gobackURL2.replaceAll("&", "%26");
+		
 		HttpSession session = request.getSession();
 
 		System.out.println("마켓보드에딧엔드 gobackURL2 입니다 => " + gobackURL2);
-
+		
 		MultipartFile attach = boardvo.getAttach();
 
 		if (!attach.isEmpty()) {
@@ -1494,7 +1503,7 @@ public class AnsehyeongController {
 	
 	// === rhdwltkgkd 글1개를 보여주는 페이지 요청 === //
 	@RequestMapping(value = "/notificationDetail.sky")
-	public ModelAndView anRequiredLogin_notificationDetail(HttpServletRequest request, HttpServletResponse response,
+	public ModelAndView notificationDetail(HttpServletRequest request, HttpServletResponse response,
 			ModelAndView mav) {
 
 		// 조회하고자 하는 글번호 받아오기
@@ -1589,53 +1598,81 @@ public class AnsehyeongController {
 
 		// === 장터 게시판 리스트 페이지 요청시 테이블 정보 가져오기 === //
 		Map<String, String> tableInfo = service.getMarketTableInfo(paraMap);
-
-		HttpSession session = request.getSession();
-		CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
-
-		// 글1개를 보여주는 페이지 요청은 select 와 함께
-		// DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
-		// 이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
-		// 매번 글조회수 증가가 발생한다.
-		// 그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
-		// 단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은
-		// 실행하지 않도록 해주어야 한다. !!! === //
-
+		
 		NoticeVO noticevo = null;
+		
+		HttpSession session = request.getSession();
+		
+		// 익명 게시판인지 아닌지 확인해야함		
+		if(!"7".equals(boardKindNo)) {  // 익명게시판이 아닐경우 그냥 원래대로
+			CommuMemberVO loginuser = (CommuMemberVO) session.getAttribute("loginuser");
+			
+			
+			// 글1개를 보여주는 페이지 요청은 select 와 함께
+			// DML문(지금은 글조회수 증가인 update문)이 포함되어져 있다.
+			// 이럴경우 웹브라우저에서 페이지 새로고침(F5)을 했을때 DML문이 실행되어
+			// 매번 글조회수 증가가 발생한다.
+			// 그래서 우리는 웹브라우저에서 페이지 새로고침(F5)을 했을때는
+			// 단순히 select만 해주고 DML문(지금은 글조회수 증가인 update문)은
+			// 실행하지 않도록 해주어야 한다. !!! === //
+			
+			
+			if (loginuser != null) {
+				// 위의 글목록보기 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
+				if ("yes".equals(session.getAttribute("readCountPermission"))) {
+					// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+					
+					noticevo = service.getNoticeView(paraMap, loginuser);
+					// 글조회수 증가와 함께 글1개를 조회를 해주는 것
+					
+					session.removeAttribute("readCountPermission");
+					// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
+					
+				} else {
+					// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
+					
+					noticevo = service.getNoticeViewWithNoAddCount(paraMap);
+					// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
+				}
+				
+				
+				
+			} else {
+				String message = "로그인하고 엄마 모시고 와~~~~";
+				String loc = "javascript:history.back()";
 
-		if (loginuser != null) {
-			// 위의 글목록보기 에서 session.setAttribute("readCountPermission", "yes"); 해두었다.
-			if ("yes".equals(session.getAttribute("readCountPermission"))) {
-				// 글목록보기를 클릭한 다음에 특정글을 조회해온 경우이다.
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
 
-				noticevo = service.getNoticeView(paraMap, loginuser);
-				// 글조회수 증가와 함께 글1개를 조회를 해주는 것
-
+				mav.setViewName("msg");
+				
+				return mav;
+			}
+			
+		} else {  // 익명게시판일 경우 로그인 여부에 상관없이 조회수를 증가시켜 줘야함
+			
+			if ("yes".equals(session.getAttribute("readCountPermission"))) {  // 리스트 통해 접근할 경우
+				
+				noticevo = service.getNoticeView(paraMap);
 				session.removeAttribute("readCountPermission");
 				// 중요함!! session 에 저장된 readCountPermission 을 삭제한다.
-
-			} else {
-				// 웹브라우저에서 새로고침(F5)을 클릭한 경우이다.
-
+			} else {  // 그냥 접근할 경우
 				noticevo = service.getNoticeViewWithNoAddCount(paraMap);
-				// 글조회수 증가는 없고 단순히 글1개 조회만을 해주는 것이다.
 			}
-
-		
-		 List<MinsungBoardVO> recentBoardList = service.recentBoardList();
-		  List<MinsungBoardVO> bestBoardList = service.bestBoardList();
-		  List<MinsungBoardVO> popularBoardList = service.popularBoardList();
-		  mav.addObject("recentBoardList", recentBoardList);
-		  mav.addObject("bestBoardList", bestBoardList);
-		  mav.addObject("popularBoardList", popularBoardList);
-			
-			mav.addObject("noticevo", noticevo);
-			mav.addObject("paraMap", paraMap);
-			mav.addObject("tableInfo", tableInfo);
-
-			mav.setViewName("sehyeong/board/noticeDetail.tiles1");
-
 		}
+
+		List<MinsungBoardVO> recentBoardList = service.recentBoardList();
+		List<MinsungBoardVO> bestBoardList = service.bestBoardList();
+		List<MinsungBoardVO> popularBoardList = service.popularBoardList();
+		mav.addObject("recentBoardList", recentBoardList);
+		mav.addObject("bestBoardList", bestBoardList);
+		mav.addObject("popularBoardList", popularBoardList);
+		
+		mav.addObject("noticevo", noticevo);
+		mav.addObject("paraMap", paraMap);
+		mav.addObject("tableInfo", tableInfo);
+		
+		mav.setViewName("sehyeong/board/noticeDetail.tiles1");
 
 		return mav;
 	}
@@ -1852,7 +1889,8 @@ public class AnsehyeongController {
 		paraMap.put("end", end);
 		
 		List<MarketBoardVO> searchBoardList = service.getSearchBoardList(paraMap);
-		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
 		
 		JSONArray jsonArr = new JSONArray();  // []
 		
@@ -2095,7 +2133,7 @@ public class AnsehyeongController {
 	
 	
 	
-	// === #71. 글수정 페이지 요청 === //
+	
 	@RequestMapping(value = "/checkMyList.sky")
 	public ModelAndView anRequiredLogin_checkMyList(HttpServletRequest request,HttpServletResponse response, ModelAndView mav) {
 
@@ -2104,17 +2142,166 @@ public class AnsehyeongController {
 		CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
 		
 	
-		List<MarketBoardVO> myBoardList = service.getMyBoardList(loginuser);
+		int myPageTotalPage = service.getTotalCountForMyPage(loginuser);
+	
 		
-		
-		
-		
-		mav.addObject("myBoardList", myBoardList);
-		
-		
+		mav.addObject("myPageTotalPage", myPageTotalPage);
 		mav.setViewName("sehyeong/board/myPageComeOn.tiles1");
 		
 		return mav;
 	}
 	
+	@ResponseBody
+	@RequestMapping(value = "/displayMyPageJSON.sky", produces = "text/plain; charset=UTF-8")
+	public String anRequiredLogin_displayMyPageJSON(HttpServletRequest request,HttpServletResponse response) {
+		
+		String start = request.getParameter("start");
+		String len = request.getParameter("len");
+		String end = String.valueOf(Integer.parseInt(start) + Integer.parseInt(len) - 1);
+		
+		String colName = request.getParameter("colName");
+		
+		
+		HttpSession session = request.getSession();
+		
+		CommuMemberVO loginuser = (CommuMemberVO)session.getAttribute("loginuser");
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("fk_memberNo", String.valueOf(loginuser.getFk_memberNo()));
+		paraMap.put("commuMemberNo", String.valueOf(loginuser.getCommuMemberNo()));
+		paraMap.put("start", start);
+		paraMap.put("end", end);
+		paraMap.put("colName", colName);
+		
+		List<MarketBoardVO> myBoardList = service.getMyBoardList(paraMap);
+		
+		
+		JSONArray jsonArr = new JSONArray();
+
+    	for (MarketBoardVO myBoard : myBoardList) {
+    		
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("fk_boardKindNo", myBoard.getFk_boardKindNo());
+			jsonObj.put("subject", myBoard.getSubject());
+			jsonObj.put("readCount", myBoard.getReadCount());
+			jsonObj.put("boardName", myBoard.getBoardName());
+			jsonObj.put("boardNo", myBoard.getBoardNo());
+			jsonObj.put("fk_memberNo", myBoard.getFk_memberNo());
+			jsonObj.put("categoryName", myBoard.getCategoryName());
+			jsonObj.put("cmtCount", myBoard.getCmtCount());
+			jsonObj.put("regDate", myBoard.getRegDate());
+			jsonObj.put("upCount", myBoard.getUpCount());
+			jsonObj.put("content", myBoard.getContent());
+			
+			
+			jsonArr.put(jsonObj);
+		}
+		return jsonArr.toString();
+
+	}
+	
+	@RequestMapping(value = "/checkALlNotice.sky")
+	public ModelAndView anRequiredLogin_checkALlNotice(HttpServletRequest request,HttpServletResponse response, ModelAndView mav) {
+		
+		HttpSession session = request.getSession();
+		session.setAttribute("readCountPermission", "yes");
+		
+		
+		List<NoticeVO> allNoticeList = service.getAllNoticeList();
+		
+		
+		mav.addObject("allNoticeList", allNoticeList);
+		mav.setViewName("sehyeong/board/allNoticeListComeOn.tiles1");
+		
+		return mav;
+	}
+	
+	
+	@ResponseBody
+	@RequestMapping(value = "/displayNoticeListJSON.sky", produces = "text/plain; charset=UTF-8")
+	public String anRequiredLogin_displayNoticeListJSON(HttpServletRequest request,HttpServletResponse response) {
+		
+		
+		String colName = request.getParameter("colName");
+		
+		
+		Map<String, String> paraMap = new HashMap<>();
+		
+		paraMap.put("colName", colName);
+		
+		List<NoticeVO> noticeList = service.getAllNoticeListWithParam(paraMap);
+		
+		
+		JSONArray jsonArr = new JSONArray();
+
+    	for (NoticeVO notice : noticeList) {
+    		
+			JSONObject jsonObj = new JSONObject();
+			jsonObj.put("noticeNo", notice.getNoticeNo());
+			jsonObj.put("fk_boardKindNo", notice.getFk_boardKindNo());
+			jsonObj.put("fk_memberNo", notice.getFk_memberNo());
+			jsonObj.put("fk_categoryNo", notice.getFk_categoryNo());
+			
+			jsonObj.put("subject", notice.getSubject());
+			jsonObj.put("regDate", notice.getRegDate());
+			jsonObj.put("content", notice.getContent());
+			jsonObj.put("readCount", notice.getReadCount());
+			jsonObj.put("boardName", notice.getBoardName());
+			jsonObj.put("categoryName", notice.getCategoryName());
+			jsonObj.put("cmtCount", notice.getCmtCount());
+			jsonObj.put("boardName", notice.getBoardName());
+			
+			
+			jsonArr.put(jsonObj);
+		}
+		return jsonArr.toString();
+
+	}
+	@ResponseBody
+	@RequestMapping(value = "/deleteNoticeJSON.sky", produces = "text/plain; charset=UTF-8")
+	public String anRequiredLogin_deleteNoticeJSON(HttpServletRequest request,HttpServletResponse response) {
+		
+		// 글 삭제해야 할 글번호 가져오기
+		String noticeNo = request.getParameter("noticeNo");
+		String boardKindNo = request.getParameter("boardKindNo");
+
+		Map<String, String> paraMap = new HashMap<String, String>();
+
+		paraMap.put("noticeNo", noticeNo);
+		paraMap.put("boardKindNo", boardKindNo);
+
+		int n = service.noticeDelete(paraMap);
+
+		JSONObject jsonObj = new JSONObject();
+		jsonObj.put("n", n);
+		
+		return jsonObj.toString();
+		
+	}
+	
+	  
+    // 게시판 상세페이지에서 우측 사이드바를 차고 들어오면 조회수를 1올려준 후 다시 get방식으로 보낸다.
+    @RequestMapping(value="/marketBoardDetail.sky", method = {RequestMethod.POST})
+    public String boardDetailPost(HttpServletRequest request) {
+       
+       String boardKindNo = request.getParameter("boardKindNo");
+       String boardNo = request.getParameter("boardNo");
+       
+       CommuMemberVO loginuser = null;
+       HttpSession session = request.getSession();
+       if (session.getAttribute("loginuser") != null) {
+    	   loginuser = (CommuMemberVO) session.getAttribute("loginuser");
+       }
+       
+       // 게시물 1개를 가져오며 로그인 회원번호와 작성자 회원번호가 일치하지 않으면 해당 게시물의 조회수를 1 올린다.
+       Map<String, String> paraMap = new HashMap<>();
+       paraMap.put("boardKindNo", boardKindNo);
+       paraMap.put("boardNo", boardNo);
+       
+       // 게시물의 조회수를 올린다.
+       service.getMarketView(paraMap, loginuser);
+       
+       return "redirect:/marketBoardDetail.sky?boardKindNo="+boardKindNo+"&boardNo="+boardNo;
+    }
 }

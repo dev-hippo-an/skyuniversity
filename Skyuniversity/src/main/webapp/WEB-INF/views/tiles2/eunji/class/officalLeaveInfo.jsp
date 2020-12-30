@@ -19,13 +19,12 @@ table#scroltbl {
 	overflow-y:auto; overflow-x:hidden; float:left; width:100%; height:350px;
 }
 #subli {
-	display: table; width: 1550px;
+	display: table; width: 1380px;
 }
 .sublicl {
 	display:table; width:100%;
 } 
 .sublicl > td {
-	width:500px;
 	font-size: 9pt;
 	text-align: center;	
 }
@@ -63,18 +62,18 @@ table#scroltbl {
 					var html = "";
 					$.each(json, function(index, item){
 						html += "<tr class='sublicl'>";
-						html += "<td>"+item.deptname+"</td>"+
-						        "<td style='padding-left:25px;'>"+item.grade+"</td>"+
-						        "<td style='padding-left:20px;'>"+item.memberno+"</td>"+
-						        "<td style='padding-left:25px;'>"+item.name+"</td>"+
-						        "<td style='padding-right:10px;'>"+item.startDate+"</td>"+
-						        "<td style='padding-right:50px;'>"+item.endDate+"</td>"+
-						        "<td>"+item.reason+"</td>";
+						html += "<td style='width: 200px;'>"+item.deptname+"</td>"+
+						        "<td style='width: 100px;'>"+item.grade+"</td>"+
+						        "<td style='width: 100px;'>"+item.memberno+"</td>"+
+						        "<td style='width: 150px;'>"+item.name+"</td>"+
+						        "<td style='width: 200px;'>"+item.startDate+"</td>"+
+						        "<td style='width: 200px;'>"+item.endDate+"</td>"+
+						        "<td style='width: 230px;'>"+item.reason+"</td>";
 						        if(item.filename == null){
-						        	html += "<td> </td>";
+						        	html += "<td style='width:100px;'> </td>";
 						        }
 						        else{
-						        	html +="<td style='padding-left:10px; width: 460px;'><a href='<%= request.getContextPath()%>/downloadLeaveInfo.sky?seq="+item.leaveNo+"'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>"
+						        	html +="<td style='width:100px;'><a href='<%= request.getContextPath()%>/downloadLeaveInfo.sky?seq="+item.leaveNo+"'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>"
 						        }
 						        html += "<td>"+item.approve+"</td>";
 					    html += "</tr>";
@@ -110,15 +109,15 @@ table#scroltbl {
 	<table class="table table-striped" id="scroltbl">
 		<thead id="scrolth">
 			<tr id="subli">
-				<td>학부(과)</td>
-				<td>학년</td>
-				<td>학번</td>
-				<td>성명</td>
-				<td>공결시작일자</td>
-				<td>공결종료일자</td>
-				<td>공결사유</td>
-				<td>첨부파일</td>
-				<td>승인여부</td>
+				<td style="width: 200px;">학부(과)</td>
+				<td style="width: 100px;">학년</td>
+				<td style="width: 100px;">학번</td>
+				<td style="width: 150px;">성명</td>
+				<td style="width: 200px;">공결시작일자</td>
+				<td style="width: 200px;">공결종료일자</td>
+				<td style="width: 230px;">공결사유</td>
+				<td style="width:100px;">첨부파일</td>
+				<td style="width: 100px;">승인여부</td>
 			</tr>
 		</thead>
 		<tbody id="bodys">

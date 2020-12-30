@@ -19,7 +19,6 @@
 	color: #0066cc;
 	font-weight: bold;
 }
-
 </style>
 
 <script type="text/javascript">
@@ -43,7 +42,15 @@
 	});
 	
 	$(document).ready(function() {
+		var reason = "${slvo.reason}";
 		
+		alert(reason);
+		$("#reason").val(reason);
+		var enddate = "${slvo.endSemester}";
+		
+		var endyear = enddate.substring(0,4);
+		var endsemester = enddate.substring(5,7);
+	
 		// 학년도 날짜 구하기
 		var now = new Date();
 		var year = now.getFullYear();
@@ -59,17 +66,20 @@
 			$("#startsem").html(stsem);
 		}
 		if(month < 9 && month >= 3){
-			sthtml = "<option>"+(year)+"</option>";
+			sthtml = "<option class='end'>"+(year)+"</option>";
 			stsem = "<option>2</option>";
 			$("#startyear").html(sthtml);
 			$("#startsem").html(stsem);
 		}
 		
 		for(var i = parseInt(year); i< parseInt(year)+11; i++){
-			html += "<option>"+i+"</option>";
+			html += "<option value="+i+">"+i+"</option>";
 		}
 		
 		$("#endyear").html(html);
+		
+		$("#endyear").val(endyear).prop("selected", true);
+		$("#endsem").val(endsemester).prop("selected", true);
 		
 		$("#regbtn").click(function() {
 		
@@ -121,11 +131,11 @@
 			
 			if(flag){
 				// 폼(form) 을 전송(submit)
-				var check = confirm("휴학신청을 하시겠습니까?");
+				var check = confirm("수정하시겠습니까?");
 				if(check){
 					var frm = document.regFrm;
 					frm.method = "POST";
-					frm.action = "<%= ctxPath%>/leaveSchoolEnd.sky";
+					frm.action = "<%= ctxPath%>/leaveSchoolUpdate.sky";
 					frm.submit();
 				}
 				else{
@@ -191,11 +201,12 @@
 <br><br>
 <div>
 	<span style="font-size: 12pt; font-weight: bold;float: left;">휴학신청 상세정보</span>
-	<button id="regbtn" style="margin-left: 500px; border: none;">신청</button>
+	<button id="regbtn" style="margin-left: 500px; border: none;">수정</button>
 </div>
 <br>
 <div style="border: solid 2px #cccccc; padding: 15px; border-radius: 6px;">
 	<form name="regFrm">
+	<input type="text" value="${slvo.schoolLvNo}" name="schoolLvNo" hidden="true"/>	
 	<ul>
 		<li>
 			<label>휴학학기:</label>
@@ -206,17 +217,13 @@
 			</select>
 			&nbsp;~&nbsp;
 			<select name="endyear" id="endyear" style="border: solid 1px #cccccc;">
-							<option>학년도</option>
-							<option>1</option>
-							<option>2</option>
-							<option>3</option>
-							<option>4</option>
+						
 			</select>
 			/
 			<select name="endsem" id="endsem" style="border: solid 1px #cccccc;">
 							<option>학기</option>
-							<option>1</option>
-							<option>2</option>
+							<option value="1">1</option>
+							<option value="2">2</option>
 			</select>
 			
 		</li>

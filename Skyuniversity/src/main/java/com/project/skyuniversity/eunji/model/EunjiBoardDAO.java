@@ -28,8 +28,8 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 	
   
 	@Override
-	public List<String> selectAllSubject() {
-		List<String> arraylist = sqlSession.selectList("eunji.selectAllSubject");
+	public List<String> selectAllSubject(int semester) {
+		List<String> arraylist = sqlSession.selectList("eunji.selectAllSubject", semester);
 		return arraylist;
 	}
 
@@ -236,6 +236,85 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		int n = sqlSession.insert("eunji.insertLeave", paraMap);
 		return n;
 	}
+
+	@Override
+	public List<SchoolLeaveVO> selectSchoolLeave(int memberNo) {
+		List<SchoolLeaveVO> list = sqlSession.selectList("eunji.selectSchoolLeave", memberNo);
+		return list;
+	}
+
+	@Override
+	public SchoolLeaveVO getSchoolLeaveVO(String seq) {
+		SchoolLeaveVO slvo = sqlSession.selectOne("eunji.getSchoolLeaveVO", seq);
+		return slvo;
+	}
+
+	@Override
+	public int deleteSchoolInfo(String no) {
+		int n = sqlSession.delete("eunji.deleteSchoolInfo", no);
+		return n;
+	}
+
+	@Override
+	public int updateArmyType(SchoolLeaveVO slvo) {
+		int n = sqlSession.update("eunji.updateArmyType", slvo);
+		return n;
+	}
+
+	@Override
+	public int updateLeaveSchool(SchoolLeaveVO slvo) {
+		int n = sqlSession.update("eunji.updateLeaveSchool", slvo);
+		return n;
+	}
+
+	@Override
+	public int checkLeave(Map<String, String> paraMap) {
+		int n = sqlSession.selectOne("eunji.checkLeave", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<SchoolLeaveVO> comeSchoolInfo(Map<String, String> commap) {
+		List<SchoolLeaveVO> comeList = sqlSession.selectList("eunji.comeSchoolInfo", commap);
+		return comeList;
+	}
+
+	@Override
+	public int insertComeSchool(Map<String, String> paraMap) {
+		int n = sqlSession.insert("eunji.insertComeSchool", paraMap);
+		return n;
+	}
+
+	@Override
+	public int checkComeSchool(Map<String, String> paraMap) {
+		int n = sqlSession.selectOne("eunji.checkComeSchool", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<ComeSchoolVO> selectEndComeSchool(int memberNo) {
+		List<ComeSchoolVO> list = sqlSession.selectList("eunji.selectEndComeSchool", memberNo);
+		return list;
+	}
+
+	@Override
+	public int insertComeSchoolArmy(ComeSchoolVO csvo) {
+		int n = sqlSession.insert("eunji.insertComeSchoolArmy", csvo);
+		return n;
+	}
+
+	@Override
+	public int deleteComeSchool(String seq) {
+		int n = sqlSession.delete("eunji.deleteComeSchool",seq);
+		return n;
+	}
+
+	@Override
+	public ComeSchoolVO getComeSchoolVO(String seq) {
+		ComeSchoolVO csvo = sqlSession.selectOne("eunji.getComeSchoolVO",seq);
+		return csvo;
+	}
+
 
 
 }

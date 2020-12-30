@@ -103,33 +103,6 @@
 	    <%-- === 스마트 에디터 구현 끝  === --%>
 	   
 	    
-	    // 첨부파일 삭제(X)버튼(a태그)을 누르면 해당 첨부파일을 삭제함.(Ajax 사용) 
-	    $("button#btnDelete").click(function() {
-		    $.ajax({
-		    	url: "<%= request.getContextPath()%>/deleteAttach.sky",
-		    	data: {"boardKindNo": '${boardvo.fk_boardKindNo}', "boardNo": '${boardvo.boardNo}',
-		    		   "fileName": '${boardvo.fileName}' },
-		    	type: "POST",
-		    	dataType: "JSON",
-		    	success: function(json){
-					
-		    		if (json.n == 0) {
-						alert("파일삭제에 실패했습니다.");
-					}else{
-						// 파일 삭제에 성공하면 파일첨부 태그로 내용을 바꿔준다.
-						$("li#attach").html("<input class='form-control' type='file' name='attach' />");	
-					}
-		    	},
-				error: function(request, status, error){
-		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-		        }
-		    });
-			
-		    $("#deleteModal").close();
-		    
-	    });// end of $("button#btnDelete").click(function() {});------------------------
-	    
-	    
 	    // 수정 버튼을 누르면 수정완료 요청.
 	    $("button#btnUpdate").click(function() {
 	    	
@@ -180,13 +153,13 @@
 	    	
 	    	var frm = document.updateForm;
 	    	frm.method = "POST";
-	    	frm.action = "<%= request.getContextPath()%>/boardUpdateEnd.sky";
+	    	frm.action = "<%= request.getContextPath()%>/boardUpdateEnd2.sky";
 	    	frm.submit();
 		});
 	    
 	 	// 취소 버튼을 누르면 다시 해당 게시글 상세 페이지로 감.
 		$("button#reset").click(function() {
-			location.href="<%= request.getContextPath()%>/boardDetail.sky?boardKindNo=${boardvo.fk_boardKindNo}&boardNo=${boardvo.boardNo}&gobackURL=${gobackURL}";
+			location.href="<%= request.getContextPath()%>/boardDetail2.sky?boardKindNo=${boardvo.fk_boardKindNo}&boardNo=${boardvo.boardNo}&gobackURL=${gobackURL}";
 		});
 	    
 	    
@@ -198,38 +171,13 @@
 <div class="container"  align="left" class="form-group">
 	<form class="form-inline" name="updateForm" enctype="multipart/form-data">
 		<input type="hidden" name="fk_boardKindNo" value="${boardvo.fk_boardKindNo}" />
-		<input type="hidden" name="boardNo" value="${boardvo.boardNo}" />	
-		<input type="hidden" name="gobackURL" value="${gobackURL}"/>	
+		<input type="hidden" name="boardNo" value="${boardvo.boardNo}" />		
+		<input type="hidden" name="gobackURL" value="${gobackURL}" />		
 		<ul>
 			<li><h2>${boardKindName}</h2></li>
 			<li><h3>작성자&nbsp;:&nbsp;${boardvo.fk_nickname}</h3></li>
-			<li>
-				<c:if test="${not empty boardvo.fk_categoryName}">
-					<select class="form-control" id="category" name="fk_categoryNo" style="width: 10%;" disabled="disabled">
-						<option value="0">${boardvo.fk_categoryName}</option>
-					</select>
-				<input class="form-control" type="text" id="subject" name="subject" value="${boardvo.subject}"/>
-				</c:if>
-				<c:if test="${empty boardvo.fk_categoryName}">
-					<input class="form-control" type="text" id="subject" name="subject" style="width: 95.4%;" value="${boardvo.subject}" />
-				</c:if>
-			</li>
-			<li>
-				<textarea class="form-control" id="content" name="content">${boardvo.content}</textarea>
-			</li>
-			<li id="attach">
-				<c:if test="${boardvo.orgFilename ne null}">
-					<span class="ath">
-						<span>첨부파일 : <c:if test="${fn:length(boardvo.orgFilename) > 25}">${fn:substring(boardvo.orgFilename, 0, 25)}...</c:if>
-									  <c:if test="${fn:length(boardvo.orgFilename) <= 25}">${boardvo.orgFilename}</c:if></span>&nbsp;&nbsp;
-						<a class="x" data-toggle="modal" data-target="#deleteModal">X</a>
-					</span>
-				</c:if> 
-				<c:if test="${boardvo.orgFilename eq null}">
-					<input class="form-control" type="file" name="attach" />
-				</c:if>
-				<br>
-			</li>
+			<li><input class="form-control" type="text" id="subject" name="subject" style="width: 95.4%;" value="${boardvo.subject}" /></li>
+			<li><textarea class="form-control" id="content" name="content">${boardvo.content}</textarea></li>
 		</ul>
 		<div align="center">
 			<button id="btnUpdate">수정</button>
@@ -237,23 +185,4 @@
 		</div>
 	</form>
 </div>    
-
-<!-- 첨부파일 삭제 확인 Modal -->
-	    <div class="modal" id="deleteModal" role="dialog">
-	      <div class="modal-dialog">
-	    
-	        <!-- 첨부파일 삭제 확인 Modal 내용 -->
-	        <div class="modal-content">
-	          <div class="modal-body">
-	            <h4>글 수정을 취소해도 파일은 복구되지 않습니다.</h4>
-	            <h4>정말 삭제하시겠습니까?</h4>
-	          </div>
-	          <div class="modal-footer">
-	            <button type="button" id="btnDelete" class="btn btn-danger" data-dismiss="modal">삭제</button>
-	            <button type="button" class="btn btn-default" data-dismiss="modal">취소</button>
-	          </div>
-	        </div>
-	      
-	      </div>
-	    </div>
 

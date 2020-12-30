@@ -5,6 +5,7 @@ public class CommentVO {
 	private String commentNo;		// 댓글 번호
 	private String fk_boardNo;  	// 게시글 번호
 	private String fk_memberNo;		// 작성회원번호
+	private String password;		// 댓글 비밀번호
 	private String cmtContent;		// 댓글 내용
 	private String regDate;			// 등록일자
 	private String status;			// 게시글 상태
@@ -174,6 +175,16 @@ public class CommentVO {
 
 	public void setTotalCount(String totalCount) {
 		this.totalCount = totalCount;
+	}
+
+
+	public String getPassword() {
+		return password;
+	}
+
+
+	public void setPassword(String password) {
+		this.password = password;
 	}
 	
 	

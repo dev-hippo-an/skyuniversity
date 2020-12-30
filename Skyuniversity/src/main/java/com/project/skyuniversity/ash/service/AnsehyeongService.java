@@ -170,6 +170,7 @@ public class AnsehyeongService implements InterAnsehyeongService {
 
 	
 	// 조회수를 1 올려주면 한개의 글의 디테일을 가지고 오는 것!
+	
 	@Override
 	public MarketBoardVO getMarketView(Map<String, String> paraMap, CommuMemberVO loginuser) {
 		
@@ -417,9 +418,42 @@ public class AnsehyeongService implements InterAnsehyeongService {
 
 
 	@Override
-	public List<MarketBoardVO> getMyBoardList(CommuMemberVO loginuser) {
-		List<MarketBoardVO> myBoardList = dao.getMyBoardList(loginuser);
+	public List<MarketBoardVO> getMyBoardList(Map<String, String> paraMap) {
+		List<MarketBoardVO> myBoardList = dao.getMyBoardList(paraMap);
 		return myBoardList;
+	}
+
+	// 야 총 페이지구함
+	@Override
+	public int getTotalCountForMyPage(CommuMemberVO loginuser) {
+		int myPageTotalPage = dao.getTotalCountForMyPage(loginuser);
+		return myPageTotalPage;
+	}
+
+
+	@Override
+	public List<NoticeVO> getAllNoticeList() {
+		List<NoticeVO> allNoticeList = dao.getAllNoticeList();
+		return allNoticeList;
+	}
+
+
+	@Override
+	public List<NoticeVO> getAllNoticeListWithParam(Map<String, String> paraMap) {
+		List<NoticeVO> noticeList = dao.getAllNoticeListWithParam(paraMap);
+		return noticeList;
+	}
+
+	
+	@Override
+	@Transactional(propagation=Propagation.REQUIRED, isolation=Isolation.READ_COMMITTED, rollbackFor= {Throwable.class})
+	public NoticeVO getNoticeView(Map<String, String> paraMap) {
+		NoticeVO noticevo = dao.getNoticeView(paraMap);	
+		dao.setNoticeReadCount(paraMap);   // 글조회수 1증가 하기 
+			
+		noticevo = dao.getNoticeView(paraMap);
+		
+		return noticevo;
 	}
 	
 

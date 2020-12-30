@@ -292,7 +292,10 @@ tr.notification td {
 			           		
 		                	<td>0원</td>
 		                	<td><img src="<%= ctxPath %>/resources/images/levelimg/${notice.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${notice.nickname}</td>
-		                	<td>${notice.regDate}</td>
+		                	<td>
+                            <c:if test="${fn:contains(notice.regDate, '분 전')}"><span style="color:blue;">${notice.regDate}</span></c:if>
+                            <c:if test="${not fn:contains(notice.regDate, '분 전')}">${notice.regDate}</c:if>
+                         </td>
 		                	<td>/</td>
 		                	<td>${notice.readCount}</td>
 		            	</tr>
@@ -339,7 +342,10 @@ tr.notification td {
 			           		
 		                	<td><fmt:formatNumber value="${marketBoard.price}" pattern="#,###" />원</td>
 		                	<td><img src="<%= ctxPath %>/resources/images/levelimg/${marketBoard.levelImg}" style="width: 15px; height: 15px;" />&nbsp;${marketBoard.nickname}</td>
-		                	<td>${marketBoard.regDate}</td>
+		                	<td>
+                            <c:if test="${fn:contains(marketBoard.regDate, '분 전')}"><span style="color:blue;">${marketBoard.regDate}</span></c:if>
+                            <c:if test="${not fn:contains(marketBoard.regDate, '분 전')}">${marketBoard.regDate}</c:if>
+                         	</td>
 		                	<td>${marketBoard.upCount}</td>
 		                	<td>${marketBoard.readCount}</td>
 		            	</tr>

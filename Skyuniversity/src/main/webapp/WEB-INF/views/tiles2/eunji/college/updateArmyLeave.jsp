@@ -42,6 +42,18 @@
 	});
 	
 	$(document).ready(function() {
+		
+		var arr = $("input:radio[name='armyType']");
+		var type = "${slvo.armyType}";
+		for(var i=0; i<9; i++){
+			if($("#type"+i).val() == type){
+				$("#type"+i).prop('checked', true); // 선택하기
+			}
+		}
+		
+		$("#datepicker1").val("${slvo.armyStartDate}");
+		$("#datepicker2").val("${slvo.armyEndDate}");
+		
 		$("#regbtn").click(function() {
 		
 			var flag = true;
@@ -58,20 +70,16 @@
 				bool = false;
 				return;
 			}
-			if($("#armyfile").val() == ""){
-				alert("군휴학은 파일첨부(입영통지서)가 필수입니다.");
-				bool = false;
-				return;
-			}
 			
 			if(flag){
 				// 폼(form) 을 전송(submit)
-				var check = confirm("휴학신청을 하시겠습니까?");
+				var check = confirm("수정하시겠습니까?");
 				if(check){
 					var frm = document.addFrm;
 					frm.method = "POST";
-					frm.action = "<%= ctxPath%>/armyLeaveSchoolEnd.sky";
+					frm.action = "<%= ctxPath%>/armyLeaveSchoolUpdate.sky";
 					frm.submit();
+					alert("수정되었습니다.");
 				}
 				else{
 					return;
@@ -136,32 +144,33 @@
 <br><br>
 <div>
 	<span style="font-size: 12pt; font-weight: bold;float: left;">군휴학신청 상세정보</span>
-	<button id="regbtn" style="margin-left: 500px; border: none;">신청</button>
+	<button id="regbtn" style="margin-left: 500px; border: none;">수정하기</button>
 </div>
 <br>
 <div style="border: solid 2px #cccccc; padding: 15px; border-radius: 6px;">
 	<form name="addFrm" enctype="multipart/form-data">
+		<input type="text" value="${slvo.schoolLvNo}" name="schoolLvNo" hidden="true"/>
 		<ul>
 			<li>
 				<label>병종</label>
 					<label for="btype1" >육군</label>
-					<input type="radio" name="armyType" value="육군"/>
+					<input type="radio" name="armyType" value="육군" id="type0"/>
 					<label for="btype2">해군</label>
-					<input type="radio" name="armyType" value="해군"/>
+					<input type="radio" name="armyType" value="해군" id="type1"/>
 					<label for="btype3">공군</label>
-					<input type="radio" name="armyType" value="공군"/>
+					<input type="radio" name="armyType" value="공군" id="type2"/>
 					<label for="btype4">해병</label>
-					<input type="radio" name="armyType" value="해병"/>
+					<input type="radio" name="armyType" value="해병" id="type3"/>
 					<label for="btype4">의경</label>
-					<input type="radio" name="armyType" value="의경"/>
+					<input type="radio" name="armyType" value="의경" id="type4"/>
 					<label for="btype4">전경</label>
-					<input type="radio" name="armyType" value="전경"/>
+					<input type="radio" name="armyType" value="전경" id="type5"/>
 					<label for="btype4">공익근무요원</label>
-					<input type="radio" name="armyType" value="공익근무요원"/>
+					<input type="radio" name="armyType" value="공익근무요원" id="type6"/>
 					<label for="btype4">산업체특별요원</label>
-					<input type="radio" name="armyType" value="산업체특별요원"/>
+					<input type="radio" name="armyType" value="산업체특별요원" id="type7"/>
 					<label for="btype4">기타</label>
-					<input type="radio" name="armyType" value="기타"/>
+					<input type="radio" name="armyType" value="기타" id="type8"/>
 			</li>
 			<li>
 				<label>복무예정기간</label>
@@ -171,7 +180,7 @@
 			</li>
 			<li>
 				<label>입영통지서</label>
-				<input type="file" name="attach" id="armyfile"/>
+				<input type="file" name="attach" id="armyfile"/><span style="font-size: 7pt; color: red;">파일 수정시, 수정할 파일을 업로드 해주세요.</span>
 			</li>
 		</ul>
 	</form>

@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.project.skyuniversity.eunji.model.ClassCheckVO;
+import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
@@ -15,7 +16,7 @@ public interface InterEunjiService {
 
 	List<String> selectAllDept();	// 전체 학과를 불러오는 메소드
 	
-	List<String> selectAllSubject();	// 전체 과목을 불러오는 메소드
+	List<String> selectAllSubject(int semester);	// 전체 과목을 불러오는 메소드
 
 	List<String> selectDeptClass(Map<String, String> paraMap);	// 학과를 select 했을 때 과목을 불러오는 메소드
 
@@ -84,6 +85,32 @@ public interface InterEunjiService {
 	int insertArmyLeave(SchoolLeaveVO slvo);
 
 	int insertLeave(Map<String, String> paraMap);
+
+	List<SchoolLeaveVO> selectSchoolLeave(int memberNo);
+
+	SchoolLeaveVO getSchoolLeaveVO(String seq);
+
+	int deleteSchoolInfo(String no);
+
+	int updateArmyType(SchoolLeaveVO slvo);
+
+	int updateLeaveSchool(SchoolLeaveVO slvo);
+
+	int checkLeave(Map<String, String> paraMap);
+
+	List<SchoolLeaveVO> comeSchoolInfo(Map<String, String> commap);
+
+	int insertComeSchool(Map<String, String> paraMap);
+
+	int checkComeSchool(Map<String, String> paraMap);
+
+	List<ComeSchoolVO> selectEndComeSchool(int memberNo);
+
+	int insertComeSchoolArmy(ComeSchoolVO csvo);
+
+	int deleteComeSchool(String seq);
+
+	ComeSchoolVO getComeSchoolVO(String seq);
 
 	
 

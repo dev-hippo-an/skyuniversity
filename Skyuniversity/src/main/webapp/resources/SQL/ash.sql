@@ -1876,3 +1876,412 @@ nocache;
       select * from tbl_board_etcmarket;
       
       select * from tbl_board_humor;
+
+
+select fk_boardKindNo, subject, readCount, boardName, boardNo, fk_memberNo, categoryName, cmtCount, regDate, upCount, content
+from
+(
+select row_number () over (order by fk_boardKindNo, regDate) as rno, fk_boardKindNo, subject, readCount, boardName, boardNo, fk_memberNo, categoryName, cmtCount, regDate, upCount, content
+    from
+    (
+    (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+    	, (select count(*) from tbl_comment_notice where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+    	, (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+    	from tbl_board_notice b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_council where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_council b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_major where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_major b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_club where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_club b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all 
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_graduate where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_graduate b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo =101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_critic where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_critic b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_study where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_study b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_cert where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_cert b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_emp where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_emp b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_joboffer where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_joboffer b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_lost where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from TBL_BOARD_lost b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_informal where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_informal b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_polite where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_polite b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_humor where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_humor b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_issue where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_issue b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_mbti where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_mbti b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_food where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_food b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_love where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_love b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_hobby where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_hobby b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_health where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_health b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_memberNo, nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_diet where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_diet b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.fk_categoryNo where status = 1 and fk_memberNo = 101 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName , to_char(b.content) as content
+      , (select count(*) from tbl_comment_housemarket where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_housemarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.categoryNo where status = 1 and fk_commuMemberNo = 1 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_bookmarket where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_bookmarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno left join tbl_category c on c.categoryNo = b.categoryNo where status = 1 and fk_commuMemberNo = 1 and regDate >= sysdate - 13)
+      union all
+      
+      (select b.fk_boardKindNo, b.subject, b.readCount, k.boardname, b.boardNo, b.fk_commuMemberNo,  nvl(categoryName, '일반') as categoryName, to_char(b.content) as content
+      , (select count(*) from tbl_comment_etcmarket where status = 1 and fk_boardNo = b.boardNo) as cmtCount, to_char(regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate
+      , (select count(*) from tbl_board_good where fk_boardKindNo = b.fk_boardKindNo and fk_boardNo = boardNo) as upCount
+      from tbl_board_etcmarket b
+      join tbl_boardkind k on b.fk_boardkindno = k.boardkindno 
+      left join tbl_category c on c.categoryNo = b.categoryNo
+      where status = 1 and fk_commuMemberNo = 1 and regDate >= sysdate - 13)
+      ) 
+      ) w
+      where rno between 1 and 10;
+      
+      desc tbl_notice;
+      
+      select n.noticeNo, n.fk_boardKindNo, n.fk_memberNo, n.fk_categoryNo
+		, n.subject, to_char(n.regDate, 'yyyy-mm-dd hh24:mi:ss') as regDate, n.content, n.readCount, n.status, n.writerIp
+		
+		, c.categoryName
+		
+		, m.commuMemberNo, m.fk_levelNo, m.nickname, m.point
+		
+		, l.levelName, l.levelPoint, l.levelImg
+		
+		, k.boardTypeNo, k.boardName
+		
+		, (select count(*) from tbl_comment_board_notice where status = 1 and fk_boardNo = n.noticeNo) as cmtCount
+		
+		from tbl_notice n join tbl_category c
+		on n.fk_categoryNo = c.categoryNo
+		join tbl_commu_member m 
+		on n.fk_memberNo = m.fk_memberNo
+		join tbl_commu_member_level l
+		on m.fk_levelNo = l.levelNo
+		join tbl_boardkind k
+		on n.fk_boardKindNo = k.boardKindNo
+		where n.status = 1
+		order by fk_boardKindNo;
+      
+      select *
+      from tbl_comment_board_notice;
+      
+      select * from tab;
+      
+       desc tbl_member;
+       desc TBL_COMMU_MEMBER_LEVEL;
+       select *
+       from TBL_COMMU_MEMBER;
+       
+       select *
+       from tbl_subject
+       order by grade, subssemester;
+       
+       select *
+       from tbl_member;
+       
+       select *
+       from tbl_dept;
+       
+       select * from tbl_course;
+       
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'A', '108', 'NE113');
+
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'B', '108', 'NE106');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'B', '108', 'EB103');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'C+', '108', 'AA101');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'B+', '108', 'AA102');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2017', 'B', '108', 'AA105');
+       
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'A', '108', 'NE101');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'B+', '108', 'NE119');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'D+', '108', 'NE103');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'A', '108', 'NE116');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'B', '108', 'AC305');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2017', 'B+', '108', 'AB203');
+        
+        commit;
+        -----------------------------------------------------------------------------
+        
+        delete from tbl_course
+        where fk_memberNo = 108
+        
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'A', '108', 'NE220');
+
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'B', '108', 'NE203');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'B+', '108', 'NE201');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'C+', '108', 'NE202');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'C', '108', 'AC304');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2018', 'A', '108', 'AB201');
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'C+', '108', 'NE255');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'D+', '108', 'NE309');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'A+', '108', 'NE314');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'F', '108', 'NE210');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'A+', '108', 'NE221');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2018', 'B+', '108', 'AB202');
+        
+        commit;
+        ----------------------------------
+        
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'B+', '108', 'NE302');
+
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'B+', '108', 'NE329');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'B', '108', 'NE334');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'B', '108', 'NE308');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'C+', '108', 'NE335');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2019', 'A', '108', 'AC303');
+        
+        
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'A', '108', 'NE331');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'A+', '108', 'NE332');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'C+', '108', 'NE333');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'F', '108', 'NE336');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'B', '108', 'NE324');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2019', 'B+', '108', 'AB205');
+        
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'B+', '108', 'NE447');
+
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'B+', '108', 'NE448');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'B+', '108', 'NE410');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'A', '108', 'AC302');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '1', '2020', 'C', '108', 'AC301');
+       
+        
+        
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'A', '108', 'NE419');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'A+', '108', 'AD401');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'A', '108', 'AA103');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'B', '108', 'AA104');
+        
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno)
+        values(tbl_course_seq.nextval, '2', '2020', 'B+', '108', 'NE421');
+        
+        commit;
+        
+        select * from tbl_course;
+        
+       select * from tab;
+       
+       select * from TBL_BOARD_ANONYMOUS;
+        
+        
+    select boardNo, fk_boardKindNo, subject, categoryName
+      from (
+      select row_number() over (order by regDate desc) as rno, boardNo, fk_boardKindNo, subject, '일반' as categoryName from TBL_BOARD_ANONYMOUS
+      where status = 1) aa
+      where rno between 1 and 6

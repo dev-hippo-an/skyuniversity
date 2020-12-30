@@ -7,11 +7,8 @@ import org.springframework.stereotype.Service;
 
 import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
-import com.project.skyuniversity.ohyoon.common.OhFileManager;
-import com.project.skyuniversity.ohyoon.model.BoardVO;
-import com.project.skyuniversity.ohyoon.model.CategoryVO;
-import com.project.skyuniversity.ohyoon.model.CommentVO;
-import com.project.skyuniversity.ohyoon.model.InterOhyoonDAO;
+import com.project.skyuniversity.ohyoon.common.*;
+import com.project.skyuniversity.ohyoon.model.*;
 
 @Service
 public class OhyoonService implements InterOhyoonService{
@@ -33,6 +30,7 @@ public class OhyoonService implements InterOhyoonService{
 
 	@Autowired
 	private OhFileManager fileManager;
+	
 	
 	// 게시판 번호를 입력하여 해당 게시판번호에 해당하는 게시판 이름 불러오기
 	@Override
@@ -69,6 +67,9 @@ public class OhyoonService implements InterOhyoonService{
 	// 파일첨부가 없는 글쓰기
 	@Override
 	public int addBoard(BoardVO boardvo) {
+		if (boardvo.getPassword() != null) { // 비밀번호가 null이 아니라면 (익명게시판일 때)
+			boardvo.setPassword(Sha256.encrypt(boardvo.getPassword())); // 비밀번호를 암호화 한다.
+		}
 		return dao.addBoard(boardvo);
 	}
 	
@@ -92,11 +93,25 @@ public class OhyoonService implements InterOhyoonService{
 	public BoardVO getView(Map<String, String> paraMap) {
 		BoardVO boardvo = dao.getView(paraMap);
 		
-		// 로그인한 유저의 회원번호와 게시물의 작성자 회원번호가 다르다면 
-		if ( !boardvo.getFk_memberNo().equals(paraMap.get("loginNo")) ) { 
-			// 해당 게시물의 조회수를 1증가시킨다.
-			dao.addReadCount(paraMap);
-			boardvo = dao.getView(paraMap);
+		// 익명게시판이 아니라면
+		if (!paraMap.get("boardKindNo").equals("7")) {
+			// 로그인한 유저의 회원번호와 게시물의 작성자 회원번호가 다르다면 
+			if ( !boardvo.getFk_memberNo().equals(paraMap.get("loginNo")) ) { 
+				// 해당 게시물의 조회수를 1증가시킨다.
+				dao.addReadCount(paraMap);
+				boardvo = dao.getView(paraMap);
+			}
+		}else { // 익명 게시판이라면
+			/*
+			// 현재 조회하는 회원의 ip와 게시물의 작성자 ip가 다르다면 
+			if ( !boardvo.getWriterIp().equals(paraMap.get("currentIp")) ) {
+				// 해당 게시물의 조회수를 1증가시킨다.
+				dao.addReadCount(paraMap);
+				boardvo = dao.getView(paraMap);
+			}
+			*/
+			dao.addReadCount(paraMap);      // 조회수를 1증가시키고
+			boardvo = dao.getView(paraMap); // 게시물을 다시 불러온다.
 		}
 		return boardvo;
 	}
@@ -153,17 +168,28 @@ public class OhyoonService implements InterOhyoonService{
 	// 게시물을 삭세해주기
 	@Override
 	public int deleteBoard(Map<String, String> paraMap) {
-		int result = dao.deleteBoard(paraMap);
-		
-		// 게시물 삭제가 되었다면 첨부파일을 삭제해준다.
-		if (result == 1) {
-			String fileName = paraMap.get("fileName");
-			String path = paraMap.get("path");
+		int result = 0;
+		if (paraMap.get("boardKindNo").equals("7")) { // 익명게시판 글이라면 
+			String password = Sha256.encrypt(paraMap.get("password")); // 비밀번호를 받아 암호화한다.
+			BoardVO boardvo = dao.getView(paraMap); // 게시물을 조회해와서 
+			String boardPassword = boardvo.getPassword(); // 게시물 비밀번호를 가져온다.
+			if (password.equals(boardPassword)) { // 입력한 비밀번호와 게시물 비밀번호가 일치하면
+				result = dao.deleteBoard(paraMap); // 게시글을 삭제한다.
+			}
+		}else { // 익명게시판 글이 아니라면
+			// 게시물을 삭제한다.
+			result = dao.deleteBoard(paraMap);
 			
-			if (fileName != null && !fileName.equals("")) { // fileName이 비어있지 않다면
-				try {
-					fileManager.doFileDelete(fileName, path);
-				} catch (Exception e) {}
+			// 게시물 삭제가 되었다면 첨부파일을 삭제해준다.
+			if (result == 1) {
+				String fileName = paraMap.get("fileName");
+				String path = paraMap.get("path");
+				
+				if (fileName != null && !fileName.equals("")) { // fileName이 비어있지 않다면
+					try {
+						fileManager.doFileDelete(fileName, path);
+					} catch (Exception e) {}
+				}
 			}
 		}
 		return result;
@@ -205,6 +231,9 @@ public class OhyoonService implements InterOhyoonService{
     // 작성한 댓글 저장하기
 	@Override
 	public int addComment(CommentVO commentvo) {
+		if (commentvo.getPassword() != null) { // 만일 비밀번호 값이 있다면(익명 게시판 댓글일 때) 암호화해서 저장한다.
+			commentvo.setPassword(Sha256.encrypt(commentvo.getPassword()));
+		}
 		int result = dao.addComment(commentvo);
 		return result;
 	}
@@ -258,6 +287,19 @@ public class OhyoonService implements InterOhyoonService{
 	}
 	
 	
+	// 익명 게시판 댓글 비밀번호 검사하기
+	@Override
+	public int comparePassword(Map<String, String> paraMap) {
+		int result = 0;
+		String CommentPassword = dao.getCommentOne(paraMap); // 익명 게시판 댓글 가져오기
+		String password = Sha256.encrypt(paraMap.get("password"));
+		if (password.equals(CommentPassword)) {
+			result = 1;
+		}
+		return result;
+	}
+	
+	
 	// 댓글을 삭제해주는 메서드(ajax로 처리)
 	@Override
 	public int deleteComment(Map<String, String> paraMap) {
@@ -298,7 +340,23 @@ public class OhyoonService implements InterOhyoonService{
        return popularBoardList;
     }
 	
-	
+    
+    // 랜덤 닉네임 받아오기
+    @Override
+    public String getRandomNickname() {
+    	// 1~20 까지의 랜덤한 숫자 두개를 뽑아
+    	int firstNo = (int)(Math.random() * 20) + 1;
+		int secondNo = (int)(Math.random() * 20) + 1;
+		
+		// paraMap으로 보내어 닉네임을 만든다
+		Map<String, Integer> paraMap = new HashMap<>();
+		paraMap.put("firstNo", firstNo);
+		paraMap.put("secondNo", secondNo);
+		String nickname = dao.getRandomNickname(paraMap);
+    	return nickname;
+    }
+    
+    
 	
 	
 }
