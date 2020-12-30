@@ -1669,4 +1669,12 @@ public class EunjiBoardController {
 		
 		return mav;
 	}
+	
+	// 졸업적부심사
+	@RequestMapping(value = "/graduateTest.sky", method = { RequestMethod.GET})
+	public ModelAndView graduateTest(ModelAndView mav, HttpServletRequest request) {
+	
+		mav.setViewName("eunji/graduation/graduateTest.tiles2");
+		return mav;
+	}
 }
