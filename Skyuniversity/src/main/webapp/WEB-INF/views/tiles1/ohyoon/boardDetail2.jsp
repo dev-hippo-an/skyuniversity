@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <% String ctxPath = request.getContextPath();  %>
 
@@ -502,6 +503,11 @@
 		
 		// 수정버튼을 눌러 비밀번호를 입력 후, 모달의 수정 버튼을 누르면 수정 페이지로 넘어감.
 		$("button#btnUpdate").click(function() {
+			
+			var gobackURL = "${gobackURL}";
+			gobackURL = gobackURL.replaceAll("&", " ");
+			$("input[name=gobackURL]").val(gobackURL);
+			
 			var password = $("input#updatePassword").val();
 			$("input[name=boardPassword]").val(password);
 			
@@ -514,6 +520,11 @@
 		// 수정 후 글 비밀번호를 입력한 후, 엔터를 누르면 수정 페이지로 넘어감.
 		$("input#updatePassword").keyup(function(event) {
 			if (event.keyCode == 13) {
+				
+				var gobackURL = "${gobackURL}";
+				gobackURL = gobackURL.replaceAll("&", " ");
+				$("input[name=gobackURL]").val(gobackURL);
+				
 				var password = $("input#updatePassword").val();
 				$("input[name=boardPassword]").val(password);
 				
@@ -1141,7 +1152,7 @@
 			success: function(json){
 
 				if (json.n == 0) {
-					alert("수정에 실패했습니다.");
+					alert("수정에 실패했습니다. 댓글은 200자를 넘을 수 없습니다.");
 				}else{
 					alert("댓글이 수정되었습니다.");
 					
@@ -1315,10 +1326,10 @@
 			<input type="hidden" name="boardKindNo" value="${boardvo.fk_boardKindNo}"/>
 			<input type="hidden" name="boardNo" value="${boardvo.boardNo}"/>
 			<input type="hidden" name="boardPassword" value=""/>
-			<input type="hidden" name="gobackURL" value="${gobackURL}"/>
+			<input type="hidden" name="gobackURL" value=""/>
 		</form>
 		<c:if test="${not empty gobackURL}">
-	    	<button type="button" id="goback" onclick="javascript:location.href='${gobackURL}'" style="clear:both; margin-right: 35px;">목록으로</button>
+	    	<button type="button" id="goback" onclick="javascript:location.href='${fn:replace(gobackURL, ' ', '&')}'" style="clear:both; margin-right: 35px;">목록으로</button>
 	    </c:if>
 	    <c:if test="${empty gobackURL}">
 	        <button type="button" id="goback" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=${boardvo.fk_boardKindNo}'" style="clear:both; margin-right: 35px;">목록으로</button>   

@@ -442,6 +442,8 @@ public class BoardController {
 			}
 	    	
 	    	String gobackURL = request.getParameter("gobackURL");
+	    	System.out.println("상세페이지 요청:gobackURL ->" + gobackURL);
+	    	
 	    	if (boardvo == null) {
 	    		mav.addObject("message", "해당 게시글은 존재하지 않습니다.");
 	    		mav.addObject("loc", request.getContextPath()+"/"+gobackURL);
@@ -842,7 +844,6 @@ public class BoardController {
 	    	String boardKindNo = request.getParameter("boardKindNo");
 	    	String boardNo = request.getParameter("boardNo");
 	    	String gobackURL = request.getParameter("gobackURL");
-	    	gobackURL = gobackURL.replaceAll(" ", "&");
 	    	
 	    	String message = "";
 	    	String loc = "";
@@ -928,8 +929,7 @@ public class BoardController {
 	    public ModelAndView boardUpdateEnd(BoardVO boardvo, MultipartHttpServletRequest mrequest, ModelAndView mav) {
 	    	
 	    	String gobackURL = mrequest.getParameter("gobackURL");
-	    	gobackURL = gobackURL.replaceAll(" ", "&");
-	    	
+
 	    	MultipartFile attach = boardvo.getAttach();
 			
 	    	if (!attach.isEmpty()) {
@@ -997,6 +997,7 @@ public class BoardController {
 	    	String boardNo = request.getParameter("boardNo");
 	    	String password = request.getParameter("boardPassword");
 	    	String gobackURL = request.getParameter("gobackURL");
+	    	System.out.println("게시물 수정요청 : " + gobackURL);
 	    	
 	    	String message = "";
 	    	String loc = "";
@@ -1045,7 +1046,8 @@ public class BoardController {
 	    public ModelAndView boardUpdateEnd2(BoardVO boardvo, HttpServletRequest request, ModelAndView mav) {
 	    	
 	    	String gobackURL = request.getParameter("gobackURL");
-
+	    	System.out.println("게시물 수정완료 : " + gobackURL);
+	    	
 	    	// 작성한 글을 db에 저장.
 	    	int n = service.updateBoard(boardvo);
 	    	

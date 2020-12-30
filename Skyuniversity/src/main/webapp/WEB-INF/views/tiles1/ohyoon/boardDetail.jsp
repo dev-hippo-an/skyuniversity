@@ -1,6 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib uri="http://java.sun.com/jsp/jstl/core" prefix="c" %>
+<%@ taglib uri="http://java.sun.com/jsp/jstl/functions" prefix="fn" %>
 
 <% String ctxPath = request.getContextPath();  %>
 
@@ -885,7 +886,7 @@
 			success: function(json){
 
 				if (json.n == 0) {
-					alert("수정에 실패했습니다.");
+					alert("수정에 실패했습니다. 댓글은 200자를 넘을 수 없습니다.");
 				}else{
 					alert("댓글이 수정되었습니다.");
 					
@@ -966,7 +967,6 @@
 	
 </script>
 
-<!-- <body> -->
 	<div class="content1">
 		<div class="contents" class="form-group">
 			<h1>${boardvo.subject} <c:if test="${not empty boardvo.fk_categoryNo}"><span>[${boardvo.fk_categoryName}]</span></c:if></h1>
@@ -998,7 +998,7 @@
 			<input type="hidden" name="gobackURL" value=""/>
 		</form>
 		<c:if test="${not empty gobackURL}">
-	    	<button type="button" id="goback" onclick="javascript:location.href='${gobackURL}'" style="clear:both; margin-right: 35px;">목록으로</button>
+	    	<button type="button" id="goback" onclick="javascript:location.href='${fn:replace(gobackURL, ' ', '&')}'" style="clear:both; margin-right: 35px;">목록으로</button>
 	    </c:if>
 	    <c:if test="${empty gobackURL}">
 	        <button type="button" id="goback" onclick="javascript:location.href='<%= ctxPath%>/boardList.sky?boardKindNo=${boardvo.fk_boardKindNo}'" style="clear:both; margin-right: 35px;">목록으로</button>   
@@ -1080,13 +1080,8 @@
 		
 	</div>
 	
-<!-- 
-	<div id="include">
-		<jsp:include page="boardList.jsp" />
-	</div>
 
-</body>
-</html> -->
+
 
 <!-- 삭제 확인 Modal -->
 	    <div class="modal" id="deleteModal" role="dialog">
