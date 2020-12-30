@@ -153,7 +153,8 @@ table#scroltbl {
 							   +"<td style='width:200px;' id='td2"+index+"'>"+item.subjectname+"</td>"
 							   +"<td style='width:100px;' id='td3"+index+"'>"+item.credits+"</td>"
 							   +"<td style='width:100px;' id='td4"+index+"'>"+item.name+"</td>"
-							   +"<td style='width:300px;> <span id='span1"+index+"'>"+item.day+"</span> /  <span id='span2"+index+"'>" + item.period+"</span></td>"
+							   +"<td style='width:300px;'> <span id='dayspan"+index+"'>"+item.day+"</span>" 
+							   + " /  <span id='span2"+index+"'>" + item.period+"</span></td>"
 							   +"<td style='width:150px; id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
 							   +"<td style='width:100px;'><button onclick='funcClassReg("+index+");'>신청</button></td>";
 						html += "</tr>";
@@ -174,9 +175,13 @@ table#scroltbl {
 	function funcClassReg(index){
 		var addcredit = $("#td3"+index).text();
 		var sumcredits = ${sumcredits};
-		var day = $("#span1"+index).text();
+		
+		var $target = $(event.target);
+	//	var days = $("#td3"+index).text();
+		
+		var days = $("#dayspan"+index).text();
 		var period = $("#span2"+index).text();
- 
+ 		alert(days);
 		var total = "19";
 		if(parseInt(sumcredits)+parseInt(addcredit) > parseInt(total)){
 			alert("신청가능한 학점이 초과되어 신청이 불가합니다.");
@@ -193,7 +198,7 @@ table#scroltbl {
 				   "year":year,
 				   "cursemester":cursemester,
 				   "memberno":memberno,
-				   "day":day,
+				   "day":days,
 				   "period":period},
 			type: "POST",
 			dataType: "json",
@@ -259,35 +264,6 @@ table#scroltbl {
 					alert("해당 과목이 삭제되었습니다.");
 					location.reload();
 				}
-			},
-			error: function(request, status, error){
-	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	        }
-			
-		});	//------------------end of ajax
-	}
-	
-	function nosearch() {
-		var no = $("#subnos").val();
-		
-		$.ajax({
-			url: "<%= request.getContextPath() %>/subSelectNo.sky",
-			data: {"no":no},
-			type: "GET",
-			dataType: "json",
-			success: function(json) {
-				var html="";
-				$.each(json, function(index, item){						
-					html += "<tr class='sublicl'>";
-					html += "<td style='width:150px;' id='td1"+index+"'>"+item.subjectno+"</td>"
-						   +"<td style='width:200px;' id='td2"+index+"'>"+item.subjectname+"</td>"
-						   +"<td style='width:100px;' id='td3"+index+"'>"+item.credits+"</td>"
-						   +"<td style='width:100px;' id='td4"+index+"'>"+item.name+"</td>"
-						   +"<td style='width:300px;> <span id='span1"+index+"'>"+item.day+"</span> /  <span id='span2"+index+"'>" + item.period+"</span></td>"
-						   +"<td style='width:150px; id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
-					html += "</tr>";
-				});
-				$("#tb").html(html);
 			},
 			error: function(request, status, error){
 	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);

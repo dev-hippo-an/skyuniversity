@@ -75,24 +75,21 @@ public class EunjiBoardController {
 		int month = cal.get(cal.MONTH)+1;
 		int semesters = 0;
 		if(month >=12 || month <= 2) {
+			if(month == 12) {
+				year = year + 1;
+			}
 			semesters = semesters + 1;
 		}
 		if(month >=7 && month <= 8) {
 			semesters = semesters +2;
 		}
-		System.out.println(month + " !" +semesters);
+		System.out.println(year + " !" +semesters);
 		// 전체 학과 리스트를 조회
 		List<String> deptlist = service.selectAllDept();
 		// 전체 과목 리스트 조회
 		List<String> subjectlist = service.selectAllSubject(semesters);
 
 		int cursemester = mvo.getCurrentSemester();
-		if(cursemester % 2 == 0) {
-			cursemester = 2;
-		}
-		else {
-			cursemester = 1;
-		}
 		
 		Map<String, String> paraMap2 = new HashMap<String, String>();
 		paraMap2.put("memberno", Integer.toString(memberNo));
@@ -100,7 +97,7 @@ public class EunjiBoardController {
 		paraMap2.put("cursemester", Integer.toString(cursemester));
 
 		List<Map<String, String>> reglist = service.selectRegList(paraMap2);
-
+		
 		int sumcredits = service.selectSumCredit(paraMap2);
 
 		mav.addObject("sumcredits", sumcredits);
@@ -123,11 +120,14 @@ public class EunjiBoardController {
 		int year = cal.get(cal.YEAR);
 		int month = cal.get(cal.MONTH) + 1;
 		int semesters = 0;
-		if (month >= 12 || month <= 2) {
+		if(month >=12 || month <= 2) {
+			if(month == 12) {
+				year = year + 1;
+			}
 			semesters = semesters + 1;
 		}
-		if (month >= 7 && month <= 8) {
-			semesters = semesters + 2;
+		if(month >=7 && month <= 8) {
+			semesters = semesters +2;
 		}
 		
 		String dept = request.getParameter("dept");
@@ -167,11 +167,14 @@ public class EunjiBoardController {
 		int year = cal.get(cal.YEAR);
 		int month = cal.get(cal.MONTH) + 1;
 		int semesters = 0;
-		if (month >= 12 || month <= 2) {
+		if(month >=12 || month <= 2) {
+			if(month == 12) {
+				year = year + 1;
+			}
 			semesters = semesters + 1;
 		}
-		if (month >= 7 && month <= 8) {
-			semesters = semesters + 2;
+		if(month >=7 && month <= 8) {
+			semesters = semesters +2;
 		}
 
 		String dept = request.getParameter("dept");
@@ -267,12 +270,11 @@ public class EunjiBoardController {
 		}
 		boolean end = false;
 
-		int dayinfo = service.dayInfo(paraMap);
+		List<String> daylist = service.dayInfo(paraMap);
 
 		boolean dayre = true;
-		if (dayinfo >= 1) {
-			dayre = false;
-			unique = true;
+		for(int i=0; i<daylist.size(); i++) {
+			System.out.println(daylist.get(i));
 		}
 
 		int uniqueinfo = service.uniqueInfo(paraMap);
@@ -378,12 +380,14 @@ public class EunjiBoardController {
 		int month = cal.get(cal.MONTH)+1;
 		int semesters = 0;
 		if(month >=12 || month <= 2) {
+			if(month == 12) {
+				year = year + 1;
+			}
 			semesters = semesters + 1;
 		}
 		if(month >=7 && month <= 8) {
 			semesters = semesters +2;
-		}
-		System.out.println(month + " !" +semesters);
+		}		System.out.println(month + " !" +semesters);
 		// 전체 학과 리스트를 조회
 		List<String> deptlist = service.selectAllDept();
 		// 전체 과목 리스트 조회

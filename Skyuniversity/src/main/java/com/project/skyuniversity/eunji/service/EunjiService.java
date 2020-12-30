@@ -112,9 +112,9 @@ public class EunjiService implements InterEunjiService {
 	}
 
 	@Override
-	public int dayInfo(Map<String, String> paraMap) {
-		int dayinfo = dao.dayInfo(paraMap);
-		return dayinfo;
+	public List<String> dayInfo(Map<String, String> paraMap) {
+		List<String> daylist = dao.dayInfo(paraMap);
+		return daylist;
 	}
 
 	@Override

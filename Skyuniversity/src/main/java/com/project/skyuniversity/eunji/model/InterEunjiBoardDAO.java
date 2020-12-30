@@ -35,7 +35,7 @@ public interface InterEunjiBoardDAO {
 
 	int selectSumCredit(Map<String, String> paraMap2);
 
-	int dayInfo(Map<String, String> paraMap);
+	List<String> dayInfo(Map<String, String> paraMap);
 
 	int uniqueInfo(Map<String, String> paraMap);
 

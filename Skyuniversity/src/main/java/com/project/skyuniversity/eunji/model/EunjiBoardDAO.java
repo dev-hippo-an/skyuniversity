@@ -106,9 +106,9 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 	}
 
 	@Override
-	public int dayInfo(Map<String, String> paraMap) {
-		int dayinfo = sqlSession.selectOne("eunji.dayInfo",paraMap);
-		return dayinfo;
+	public List<String> dayInfo(Map<String, String> paraMap) {
+		List<String> daylist = sqlSession.selectList("eunji.dayInfo",paraMap);
+		return daylist;
 	}
 
 	@Override
