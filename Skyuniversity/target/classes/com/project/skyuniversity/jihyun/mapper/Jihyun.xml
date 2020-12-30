@@ -24,13 +24,13 @@
 
 	<update id="updatePwd" parameterType="HashMap">
 		update tbl_member set pwd = #{pwd} 
-   		where memberno = #{memberno}
+   		where memberno = #{memberNo}
 	</update>
 	
 	<select id="checkPwd" parameterType="HashMap" resultType="int">
 		select count(*)
 		from tbl_member
-		where memberno=#{memberno} and pwd=#{nowPwd}
+		where memberno=#{memberNo} and pwd=#{nowPwd}
 	</select>
 	
 	<resultMap type="HashMap" id="certificateKindMap">

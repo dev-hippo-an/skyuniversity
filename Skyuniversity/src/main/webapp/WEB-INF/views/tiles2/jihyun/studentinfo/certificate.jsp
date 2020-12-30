@@ -246,8 +246,8 @@
 	    frm.action = "<%= request.getContextPath()%>/addEnd.action";
 	    frm.submit(); --%>
 		
-	    //var data = $('.appForm').serialize();
-	    //console.log(data);
+	    var data = $('.appForm').serialize();
+	    console.log(data);
 	    
 	    var Frm = document.applicationForm;
 	    

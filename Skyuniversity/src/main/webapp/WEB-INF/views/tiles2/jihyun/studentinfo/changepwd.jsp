@@ -95,7 +95,7 @@
 			// 현재비밀번호를 가져온다.
 			var nowPwd = $(this).val().trim();
 			//console.log(nowPwd);
-			//console.log(${loginuser.memberno});
+			//console.log(${loginuser.memberNo});
 			
 			if (nowPwd == "") {
 				$(this).next().text("현재 비밀번호를 입력해주세요.");
@@ -105,7 +105,7 @@
 			else {
 				$.ajax({
 					url:"<%= request.getContextPath() %>/checkPwd.sky",
-					data:{"memberno":${loginuser.memberno},"nowPwd":nowPwd},
+					data:{"memberNo":${loginuser.memberNo},"nowPwd":nowPwd},
 					type:"POST",
 					dataType:"json",
 					success: function(json){
@@ -144,7 +144,7 @@
             } else {
             	$.ajax({
             		url:"<%= request.getContextPath() %>/checkNewPwd.sky",
-					data:{"memberno":${loginuser.memberno}, "newPwd":newPwd},
+					data:{"memberNo":${loginuser.memberNo}, "newPwd":newPwd},
 					type:"POST",
 					dataType:"JSON",
 					success: function(json){
@@ -260,7 +260,7 @@
 		<label class="pcLabel">비밀번호 확인</label><br>
 		<input id="CheckPwd" class="pcInput" type="password" />
 		<p class="error"></p>
-		<input type="hidden" value="${loginuser.memberno}" name="memberno"/>
+		<input type="hidden" value="${loginuser.memberNo}" name="memberNo"/>
 	</form>  	
 	<button type="button" class="btnChange" onclick="goChangePwd();">비밀번호 변경</button>
 </div>

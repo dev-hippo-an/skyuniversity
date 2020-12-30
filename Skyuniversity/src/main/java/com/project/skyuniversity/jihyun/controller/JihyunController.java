@@ -31,6 +31,8 @@ public class JihyunController {
 	@RequestMapping(value="/hsindex.sky")
 	public ModelAndView requiredLoginhs_index(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 	
+		
+		
 		// 공지사항 불러오기
 		List<Map<String,String>> hsNoticeList = service.getNoticeList(); 
 		List<Map<String,String>> deptNoticeList = service.getDeptNoticeList(); 
@@ -89,18 +91,8 @@ public class JihyunController {
 
 			session.setAttribute("loginuser", loginuser);
 			// session(세션)에 로그인 되어진 사용자 정보인 loginuser 을 키이름을 "loginuser" 으로 저장시켜두는 것이다.
-
 			
-			//String goBackURL = (String) session.getAttribute("goBackURL");
-			// shop/prodView.up?pnum=66
-			// 또는 null
-	
-//			if (goBackURL != null) {
-//				mav.setViewName("redirect:/" + goBackURL);
-//				session.removeAttribute("goBackURL"); // 세션에서 반드시 제거해주어야 한다.
-//			} else {
-				mav.setViewName("redirect:/hsindex.sky");
-//			}
+			mav.setViewName("redirect:/hsindex.sky");
 		}
 
 		return mav;
@@ -146,14 +138,14 @@ public class JihyunController {
 	@RequestMapping(value = "/checkPwd.sky", method = { RequestMethod.POST }, produces = "text/plain;charset=UTF-8")
 	public String checkPwd(HttpServletRequest request, HttpServletResponse response) {
 		
-		String memberno = request.getParameter("memberno");
+		String memberNo = request.getParameter("memberNo");
 		String nowPwd = request.getParameter("nowPwd");
 		
-//		System.out.println("memberno :"+memberno);
+//		System.out.println("memberNo :"+memberNo);
 //		System.out.println("nowPwd :"+nowPwd);
 		
 		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("memberno", memberno);
+		paraMap.put("memberNo", memberNo);
 		paraMap.put("nowPwd", Sha256.encrypt(nowPwd)); //비밀번호 암호화
 		
 		boolean isEqualPwd  = service.checkPwd(paraMap);
@@ -171,13 +163,13 @@ public class JihyunController {
 	@RequestMapping(value = "/checkNewPwd.sky", method = { RequestMethod.POST }, produces = "text/plain;charset=UTF-8")
 	public String checkNewPwd(HttpServletRequest request, HttpServletResponse response) {
 		
-		String memberno = request.getParameter("memberno");
+		String memberNo = request.getParameter("memberNo");
 		String newPwd = request.getParameter("newPwd");
 		
 		//System.out.println("newPwd :"+newPwd);
 		
 		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("memberno", memberno);
+		paraMap.put("memberNo", memberNo);
 		paraMap.put("nowPwd", Sha256.encrypt(newPwd)); //비밀번호 암호화
 		
 		boolean isEqualPwd  = service.checkPwd(paraMap);
@@ -194,14 +186,14 @@ public class JihyunController {
 		
 		//System.out.println("들어와따");
 		
-		String memberno = request.getParameter("memberno");
+		String memberNo = request.getParameter("memberNo");
 		String pwd = request.getParameter("pwd");
 		
-		//System.out.println("memberno :"+memberno);
+		//System.out.println("memberNo :"+memberNo);
 		//System.out.println("pwd :"+pwd);
 		
 		Map<String, String> paraMap = new HashMap<>();
-		paraMap.put("memberno", memberno);
+		paraMap.put("memberNo", memberNo);
 		paraMap.put("pwd", Sha256.encrypt(pwd)); //비밀번호 암호화
 		
 		int n = service.updatePwd(paraMap);
