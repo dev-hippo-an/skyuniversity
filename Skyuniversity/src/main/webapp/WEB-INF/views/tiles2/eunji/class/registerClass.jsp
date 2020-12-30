@@ -131,7 +131,8 @@ table#scroltbl {
 			});	//------------------end of ajax
 		});
 		
-		$("#searchbtn").click(function() {
+		$("#subsearchbtn").click(function() {
+			alert("Ddd");
 			var dept = $("#depts option:selected").val();
 			var grades = $("#grades option:selected").val();
 			var subjects = $("#subjects option:selected").val();
@@ -335,7 +336,7 @@ table#scroltbl {
 						</select>
 					</td>
 					<td>
-						<button id="searchbtn">검색</button>
+						<button id="subsearchbtn">검색</button>
 					</td>
 				</tr>
 			</table>
