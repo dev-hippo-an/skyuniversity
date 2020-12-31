@@ -10,6 +10,7 @@ import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.GraduateDelayVO;
+import com.project.skyuniversity.eunji.model.GraduateEarlyVO;
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
@@ -397,6 +398,42 @@ public class EunjiService implements InterEunjiService {
 	@Override
 	public int deleteGraduateDelay(String seq) {
 		int n = dao.deleteGraduateDelay(seq);
+		return n;
+	}
+
+	@Override
+	public int getFGrade(int memberNo) {
+		int n = dao.getFGrade(memberNo);
+		return n;
+	}
+
+	@Override
+	public List<String> getAllGrade(int memberNo) {
+		List<String> list = dao.getAllGrade(memberNo);
+		return list;
+	}
+
+	@Override
+	public List<String> getAllCredit(int memberNo) {
+		List<String> list = dao.getAllCredit(memberNo);
+		return list;
+	}
+
+	@Override
+	public int insertGraduateEarly(GraduateEarlyVO gevo) {
+		int n = dao.insertGraduateEarly(gevo);
+		return n;
+	}
+
+	@Override
+	public List<GraduateEarlyVO> selectGraduateEarly(int memberNo) {
+		List<GraduateEarlyVO> list = dao.selectGraduateEarly(memberNo);
+		return list;
+	}
+
+	@Override
+	public int deleteGraduateEarly(String seq) {
+		int n = dao.deleteGraduateEarly(seq);
 		return n;
 	}
 

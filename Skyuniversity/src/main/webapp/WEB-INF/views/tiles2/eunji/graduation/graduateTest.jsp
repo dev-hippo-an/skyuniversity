@@ -5,7 +5,7 @@
    String ctxPath = request.getContextPath();
 %>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css" />
 <link rel="stylesheet" href="//code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" />
 <script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
 <script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
@@ -100,6 +100,7 @@ function funcclose(){
 	location.reload();
 }
 </script>
+
 <div style="padding-left: 10px; padding-right: 10px;">
 <div>
 	<span style="font-size: 12pt; font-weight: bold;float: left;">학적정보</span>
@@ -272,7 +273,7 @@ function funcclose(){
 <div style="border: solid 2px #cccccc; padding: 15px; border-radius: 6px;">
 <ul id="info" >
 	<li>졸업적부 심사버튼을 누른 후, '졸업가능'이 떠야 졸업이 가능합니다.</li>
-    <li>졸업적부 심사 후, 졸업연기가 가능합니다.</li>
+    <li>졸업적부 심사 후, 심사결과: 졸업가능이 되어야 졸업연기가 가능합니다.</li>
 	<li>본인의 필수과목들의 이수 현황을 확인해주세요.</li>
 	<li>졸업학점은 교양 최소 35점 이상~ 최대 49점까지 인정  + 전공 (72점 이상)  = 총 130점 이상이여야 합니다.</li>
 </ul>

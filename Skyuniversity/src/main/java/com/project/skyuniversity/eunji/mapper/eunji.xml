@@ -534,4 +534,44 @@
 	<delete id="deleteGraduateDelay" parameterType="String">
 		delete from tbl_graduate_delay where delayNo = #{seq}
 	</delete>
+	
+	<select id="getFGrade" parameterType="int" resultType="int">
+		select count(*)
+        from tbl_course
+        where fk_memberno=#{memberNo} and score ='F'
+	</select>
+	
+	<select id="getAllGrade" parameterType="int" resultType="String">
+		select score
+        from tbl_course
+        where fk_memberno=#{memberNo}
+        order by courseno asc
+	</select>
+	
+	<select id="getAllCredit" parameterType="int" resultType="String">
+		select credits
+        from(
+        select fk_subjectno, courseno
+        from tbl_course
+        where fk_memberno = #{memberNo}
+        )V
+        inner join tbl_subject S
+        on S.subjectno = V.fk_subjectno
+        order by courseno asc
+	</select>
+	
+	<insert id="insertGraduateEarly" parameterType="com.project.skyuniversity.eunji.model.GraduateEarlyVO">
+		insert into tbl_graduate_early(earlyno, sumcredit, sumsem, avggrade, fk_memberno)
+		values(tbl_graduate_early_seq.nextval, #{sumCredit}, #{sumSem}, #{avgGrade}, #{fk_memberno})
+	</insert>
+	
+	<select id="selectGraduateEarly" parameterType="int" resultType="com.project.skyuniversity.eunji.model.GraduateEarlyVO">
+		select earlyNo, regDate, sumCredit, sumSem, avgGrade, approve, approveDate, noreason
+		from tbl_graduate_early
+		where fk_memberno = #{memberNo}
+	</select>
+	
+	<delete id="deleteGraduateEarly" parameterType="String">
+		delete from tbl_graduate_early where earlyNo = #{seq}
+	</delete>
 </mapper>

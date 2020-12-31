@@ -7,6 +7,7 @@ import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.GraduateDelayVO;
+import com.project.skyuniversity.eunji.model.GraduateEarlyVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
@@ -138,6 +139,18 @@ public interface InterEunjiService {
 	int checkDelay(GraduateDelayVO gdvo);
 
 	int deleteGraduateDelay(String seq);
+
+	int getFGrade(int memberNo);
+
+	List<String> getAllGrade(int memberNo);
+
+	List<String> getAllCredit(int memberNo);
+
+	int insertGraduateEarly(GraduateEarlyVO gevo);
+
+	List<GraduateEarlyVO> selectGraduateEarly(int memberNo);
+
+	int deleteGraduateEarly(String seq);
 
 	
 

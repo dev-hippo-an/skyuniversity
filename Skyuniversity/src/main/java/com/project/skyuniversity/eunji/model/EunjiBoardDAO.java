@@ -393,4 +393,40 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int getFGrade(int memberNo) {
+		int n = sqlSession.selectOne("eunji.getFGrade", memberNo);
+		return n;
+	}
+
+	@Override
+	public List<String> getAllGrade(int memberNo) {
+		List<String> list = sqlSession.selectList("eunji.getAllGrade", memberNo);
+		return list;
+	}
+
+	@Override
+	public List<String> getAllCredit(int memberNo) {
+		List<String> list = sqlSession.selectList("eunji.getAllCredit", memberNo);
+		return list;
+	}
+
+	@Override
+	public int insertGraduateEarly(GraduateEarlyVO gevo) {
+		int n = sqlSession.insert("eunji.insertGraduateEarly", gevo);
+		return n;
+	}
+
+	@Override
+	public List<GraduateEarlyVO> selectGraduateEarly(int memberNo) {
+		List<GraduateEarlyVO> list = sqlSession.selectList("eunji.selectGraduateEarly", memberNo);
+		return list;
+	}
+
+	@Override
+	public int deleteGraduateEarly(String seq) {
+		int n = sqlSession.delete("eunji.deleteGraduateEarly",seq);
+		return n;
+	}
+
 }

@@ -31,6 +31,7 @@ import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.GraduateDelayVO;
+import com.project.skyuniversity.eunji.model.GraduateEarlyVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.service.InterEunjiService;
@@ -1875,4 +1876,195 @@ public class EunjiBoardController {
 		return json.toString();
 	}
 	
+	// 조기졸업신청
+	@RequestMapping(value = "/earlyGraduate.sky", method = { RequestMethod.GET })
+	public ModelAndView earlyGraduate(ModelAndView mav, HttpServletRequest request) {
+
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+
+		// 로그인한 유저의 학과의 필수 이수 과목 리스트 가져오기
+		List<String> sublist = service.getMustSubject(paraMap);
+
+		// 과목의 학과 리스트
+		List<String> deptlist = service.getMustSubjectdept(paraMap);
+
+		// 로그인한 유저가 들은 필수 이수 과목 리스트 가져오기
+		List<String> submyslist = service.getMyMustSubject(paraMap);
+
+		List<Map<String, String>> reglist = new ArrayList<Map<String, String>>();
+		List<String> templist = new ArrayList<String>();
+
+		for (int i = 0; i < sublist.size(); i++) {
+			Map<String, String> map = new HashMap<String, String>();
+			boolean flag = false;
+			for (int j = 0; j < submyslist.size(); j++) {
+				if (sublist.get(i).equals(submyslist.get(j))) {
+					flag = true;
+				}
+			}
+
+			if (flag) {
+				templist.add("ok");
+			} else {
+				templist.add("no");
+			}
+
+			map.put("name", sublist.get(i));
+			map.put("must", templist.get(i));
+			map.put("deptseq", deptlist.get(i));
+
+			reglist.add(map);
+
+		}
+		
+		// 필수과목 모두 이수 여부 확인
+		boolean mustsub = true;
+		for(int i=0; i<reglist.size(); i++) {
+			if(reglist.get(i).get("must").equals("no")) {
+				mustsub	= false;
+			}
+		}
+		
+		// 6학기 이상 이수 여부 확인
+		String grade = paraMap.get("grade");
+		String sem = paraMap.get("currentSemester");
+		
+		int sumsem = Integer.parseInt(grade) * Integer.parseInt(sem);
+		
+		boolean sumsemcheck = true;
+		if(sumsem < 6) {
+			sumsemcheck = false;
+		}
+		
+		// F학점 취득 여부 확인
+		int n = service.getFGrade(memberNo);
+		boolean fcheck = true;
+		if(n > 0) {
+			fcheck = false;
+		}
+		
+		// 총학점 100학점 이상 이수 확인
+		// 총 이수학점를 가져옴
+		int sumcredits = service.sumSemester(memberNo);
+		boolean sumcredit = true;
+		if(sumcredits < 100) {
+			sumcredit = false;
+		}
+		
+		List<String> gradelist = service.getAllGrade(memberNo);
+		List<String> creditlist = service.getAllCredit(memberNo);
+		
+		// 평점평균 4.0 이상 취득 확인
+		double sum = 0.0;
+		for(int i=0; i<gradelist.size(); i++) {
+			if(gradelist.get(i).equals("A+")) {
+				sum += 4.5 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("A")) {
+				sum += 4.0 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("B+")) {
+				sum += 3.5 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("B")) {
+				sum += 3.0 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("C+")) {
+				sum += 2.5 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("C")) {
+				sum += 2.0 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("D+")) {
+				sum += 1.5 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else {
+				sum += 1.0 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			
+		}
+		sum = sum / (double)sumcredits;
+		
+		boolean checkgrade = true;
+		if(sum < 4.0) {
+			checkgrade = false;
+		}
+		
+		List<GraduateEarlyVO> earlylist = service.selectGraduateEarly(memberNo);
+		
+		mav.addObject("size", earlylist.size());
+		mav.addObject("earlylist", earlylist);	// 이수학기
+		mav.addObject("sumsem", sumsem);	// 이수학기
+		mav.addObject("sumcredits", sumcredits);	// 이수학점
+		mav.addObject("sum", String.format("%.2f", sum));	// 평점평균
+		mav.addObject("sumcredit", sumcredit);
+		mav.addObject("sumsemcheck", sumsemcheck);
+		mav.addObject("fcheck", fcheck);
+		mav.addObject("checkgrade", checkgrade);
+		mav.addObject("mustsub", mustsub);
+		
+		mav.addObject("paraMap", paraMap);
+		mav.setViewName("eunji/graduation/earlyGraduate.tiles2");
+		return mav;
+	}
+	
+	@RequestMapping(value = "/earlyGraduateEnd.sky", method = { RequestMethod.POST })
+	public ModelAndView earlyGraduateEnd(ModelAndView mav, HttpServletRequest request, GraduateEarlyVO gevo) {
+		int n = service.insertGraduateEarly(gevo);
+		
+		if(n==1) {
+			String message = "신청되었습니다.";
+			String loc = request.getContextPath() + "/earlyGraduate.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		else {
+			String message = "조기졸업신청에 실패하였습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		return mav;
+	}
+
+	@RequestMapping(value = "/delGraduateEarly.sky", method = { RequestMethod.GET })
+	public ModelAndView delGraduateEarly(ModelAndView mav, HttpServletRequest request) {
+		
+		String seq = request.getParameter("seq");
+
+		int n = service.deleteGraduateEarly(seq);
+		if(n ==1) {
+			String message = "조기졸업 신청이 취소되었습니다.";
+			String loc = request.getContextPath() + "/earlyGraduate.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		else {
+			String message = "조기졸업신청 취소에 실패하였습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		return mav;
+	}
+
 }

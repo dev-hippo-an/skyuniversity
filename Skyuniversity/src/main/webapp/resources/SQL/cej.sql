@@ -13,6 +13,10 @@ insert into tbl_school_reg(regSeq, status)
 values(tbl_school_reg_seq.nextval, '재학');
 insert into tbl_school_reg(regSeq, status)
 values(tbl_school_reg_seq.nextval, '휴학');
+insert into tbl_school_reg(regSeq, status)
+values(tbl_school_reg_seq.nextval, '졸업');
+insert into tbl_school_reg(regSeq, status)
+values(tbl_school_reg_seq.nextval, '졸업연기');
 commit
 -- 학적 시퀀스 생성
 create sequence tbl_school_reg_seq
@@ -24,7 +28,7 @@ nocycle
 nocache;
 
 select *
-from tbl_school_reg
+from tbl_member
 ------------------------------------------------------
 
 ------------------------------------------------------
@@ -1141,7 +1145,7 @@ commit
         commit
         
         select *
-        from tbl_course
+        from tbl_member
         delete from tbl_come_school
         select count(*)
         from tbl_come_school
@@ -1152,6 +1156,185 @@ commit
         where fk_memberno = '102'
         
         select *
+        from tbl_member
+        
+        -- 총학점
+        select sum(credits)
+        from(
+        select fk_subjectno
         from tbl_course
+        where fk_memberno = '106' and to_date(courseyear, 'yyyy') < 2020
+        )V
+        inner join tbl_subject S
+        on S.subjectno = V.fk_subjectno
+        select *
+        from tbl_course
+        --전공학점
+        select sum(credits)
+        from(
+        select fk_subjectno
+        from tbl_course
+        where fk_memberno = '108'
+        )V
+        inner join tbl_subject S
+        on S.subjectno = V.fk_subjectno 
+        where fk_deptseq != '23'
+    
+        -- 교양학점
+        select sum(credits)
+        from(
+        select fk_subjectno
+        from tbl_course
+        where fk_memberno = '108'
+        )V
+        inner join tbl_subject S
+        on S.subjectno = V.fk_subjectno 
+        where fk_deptseq = '23'
+        commit
+        update tbl_member set graduateok='1' where memberno='108'
+        
+        select *
+        from tbl_subject
+        
+        
+        select deptname, subjectname, subjectno, name, credits, day, period, peoplecnt, grade, curpeoplecnt, subssemester
+		from
+		(
+		select p.name, subjectno, subjectname, credits, day, period, peoplecnt, fk_deptseq, grade, curpeoplecnt, subssemester
+		from tbl_subject S
+		inner join tbl_professor P
+		on S.fk_professorno = p.professorno
+        where subjectno = 'NE106'
+		) V
+		inner join tbl_dept D
+		on V.fk_deptseq = D.deptseq
+
+
+select name, subjectname, credits, subjectno, day, period, peoplecnt, curpeoplecnt, courseno, courseyear, semester
+		from
+		(
+		select name, subjectno, subjectname, credits, day, period, peoplecnt, curpeoplecnt
+		from tbl_subject S
+		inner join tbl_professor P
+		on S.fk_professorno = P.professorno
+		) V
+		inner join tbl_course C
+		on V.subjectno = C.fk_subjectno
+		where fk_memberno = '102' and courseyear = '2021' and semester = '1'
+        
+        update 
+        select *
+        delete from TBL_CLASS_CHECK
+        delete from tbl_course where fk_memberno = '102'
+        commit
+        select *
+        from tbl_course
+        
+        update tbl_member set currentsemester='1' where memberno = '102'
+        select nvl(sum(credits),0)
+		from tbl_course C
+		inner join tbl_subject S
+		on c.fk_subjectno = S.subjectno
+		where fk_memberno = '102' and courseyear = '2021' and semester = '1'
+        
+        select *
+        from tbl_course
+        where fk_memberno = '102'
+        
+        select *
+		from tbl_course C
+		inner join tbl_subject S
+		on c.fk_subjectno = S.subjectno
+		where fk_memberno = '102'
+        
+        select count(*)
+		from tbl_course C
+		inner join tbl_subject S
+		on c.fk_subjectno = S.subjectno
+		where fk_memberno = '102' and (day LIKE '%화%' or day like '%목%' or day like '%금%') and (period LIKE '%01%' or period like '%02%' or period like '%03%')
+        
+        select fk_deptseq
+        from tbl_subject
+        where muststatus = '0' and (fk_deptseq = '2' or fk_deptseq = '23')
+        
+        select subjectname
+        from tbl_subject S
+        inner join tbl_course C
+        on S.subjectno = C.fk_subjectno
+        where C.fk_memberno = '108' and muststatus = '0'
+        
+        
+        select *
+        from tbl_member
+        commit
+        update tbl_member set graduateok = '0' where memberno='108'
+        
+        -------------- 졸업연기 테이블-----------------
+        create table tbl_graduate_delay(
+            delayNo      number
+            ,regDate     date   default sysdate not null
+            ,reason      varchar2(500)  not null
+            ,startSem    varchar2(100)  not null
+            ,endSem      varchar2(100)  not null
+            ,approve     varchar2(20)   default '승인전'
+            ,approveDate date
+            ,noreason    varchar2(500)
+            ,fk_memberno number not null
+            ,constraint PK_tbl_graduate_delay_delayNo  primary key(delayNo)
+            ,constraint FK_tbl_graduate_delay_memberno  foreign key(fk_memberno) 
+                                   references tbl_member(memberno)
+        );
+        
+        create sequence tbl_graduate_delay_seq
+        start with 1
+        increment by 1
+        nomaxvalue
+        nominvalue
+        nocycle
+        nocache;
+        commit
+       rollback 
+       delete
+        from tbl_graduate_delay
+        
+        select count(*)
+        from tbl_graduate_delay
+        where fk_memberno ='108' and startsem = '2021/1학기'
+        
+        select *
+        from tbl_subject AA102  
+        update tbl_member set grade = '4' where memberno='106'
+        select * 
+        from tbl_course where FK_MEMBERNO = '108' and 
+        commit;
+        ROLLBACK;
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 1, 2018, 'A', '104', 'NE419','1');
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 2, 2020, 'A+', '106', 'AD401','1');
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 2, 2020, 'A', '106', 'AA103','1');
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 2, 2020, 'A', '106', 'AA104','1');
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 2, 2020, 'A+', '106', 'NE421','1');
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 2, 2019, 'A+', '106', 'AB205','1');
+        
+        COMMIT
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 1, 2017, 'A+', '106', 'AA101','1')
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 1, 2017, 'A+', '106', 'AA101','1')
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 1, 2017, 'A+', '106', 'AA101','1')
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 1, 2017, 'A+', '106', 'AA101','1')
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 1, 2017, 'A+', '106', 'AA101','1')
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 1, 2017, 'A+', '106', 'AA101','1')
+        insert into tbl_course(courseno, semester, courseyear, score, fk_memberno, fk_subjectno, classchk)
+        values(tbl_course_seq.nextval, 2017, 1, 'A+', '106', 'AA101','1')
         
         

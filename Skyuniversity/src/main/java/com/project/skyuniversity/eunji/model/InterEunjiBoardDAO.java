@@ -131,5 +131,17 @@ public interface InterEunjiBoardDAO {
 
 	int deleteGraduateDelay(String seq);
 
+	int getFGrade(int memberNo);
+
+	List<String> getAllGrade(int memberNo);
+
+	List<String> getAllCredit(int memberNo);
+
+	int insertGraduateEarly(GraduateEarlyVO gevo);
+
+	List<GraduateEarlyVO> selectGraduateEarly(int memberNo);
+
+	int deleteGraduateEarly(String seq);
+
 
 }
