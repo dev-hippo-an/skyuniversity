@@ -45,6 +45,10 @@ table#scroltbl {
 	font-size: 9pt;
 	text-align: center;
 }
+#tfval {
+	border:none;
+	color:red;
+}
 </style>
 <script type="text/javascript">
 
@@ -52,6 +56,9 @@ $(document).ready(function() {
 	var ok = ${graduok};
 	if(ok == 1){
 		$("#tfval").val("졸업가능");
+	}
+	else{
+		$("#tfval").val("졸업불가능");
 	}
 });
 
@@ -77,6 +84,9 @@ function funcmodal() {
 		success: function(json) {
 			if(json.check){
 				$("#tfval").val("졸업가능");
+			}
+			else{
+				$("#tfval").val("졸업불가능");
 			}
 		},
 		error: function(request, status, error){
@@ -113,7 +123,7 @@ function funcclose(){
 		</li>
 		<li>
 			<label>심사여부:</label>
-			<input type="text" id="tfval"/>
+			<input type="text" id="tfval" style="border:none;"/>
 			&nbsp;&nbsp;&nbsp;&nbsp;
 			<c:if test="${test == 'ok'}">
 			<div id="ex1" class="modal" style="width:500px; text-align: center;">
@@ -158,14 +168,55 @@ function funcclose(){
 			</div>
  			</c:if>
 			<c:if test="${test == 'no'}">
-			<div id="ex1" class="modal" style="width:500px;">
-				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
-				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
-				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
-				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
-				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
-				  <p>안녕하세요. 모달창안의 내용부분입니다.</p>
-				  <a href="#" rel="modal:close">닫기</a>
+			<div id="ex1" class="modal" style="width:500px; text-align: center;">
+				  <div style="margin: 0 auto;">
+					  <h4 style="font-weight: bold;">졸업적부심사</h4>
+					  <br>
+					  <p>귀하께서는<span><span style="color: #0066cc; font-weight: bold;">총 교양이수학점 ${sumculture}학점</span> + <span style="color: #0066cc; font-weight: bold;">총 전공이수학점 ${summajor}학점</span><br><span style="color: #0066cc; font-weight: bold;">총 이수학점 ${sumcredits}학점</span>으로 졸업학점에 		  
+					  <c:if test="${sumcredits < 130}"><span style="color:red;">충족되지 않습니다.</span></c:if>
+					  <c:if test="${sumcredits >= 130}"><span style="color:#0066cc;">충족됩니다.</span></c:if>
+					  </span></p>
+					  <div>
+					  	<p style="font-size: 8pt; font-weight: bold;">미이수과목 조회</p>
+						<table class="table table-bordered">
+							<thead >
+								<tr>
+									<td style="font-weight: bold; font-size: 8pt;">구분</td>
+									<td style="font-weight: bold; font-size: 8pt;">과목명</td>
+									<td style="font-weight: bold; font-size: 8pt;">이수여부</td>
+								</tr>
+							</thead>
+							<tbody>
+								<c:if test="${size != 0}">
+								<c:forEach items="${nonelist}" var="map" varStatus="status">
+								<tr>
+									<c:if test="${map.deptseq == 23}">
+										<td style="width: 200px;">교양필수</td>
+									</c:if>
+									<c:if test="${map.deptseq != 23}">
+										<td style="width: 200px;">전공필수</td>
+									</c:if>
+									<td style="width: 200px;">${map.name}</td>
+									<td style="width: 200px; color:red; font-weight: bold;">미이수</td>
+								</tr>
+								</c:forEach>
+								</c:if>
+							</tbody>
+						</table>
+					  </div>
+					  <div>
+					  	<c:if test="${size == 0}">
+					  	<p style="color:#0066cc;font-weight: bold;">필수과목을 모두 이수하셨습니다.</p>
+					  	<p>심사결과: <span style="color:red;font-weight: bold;" id="gradu">졸업가능</span></p>
+					  	</c:if>
+					  	
+					  	<c:if test="${size != 0}">
+					  	<p style="color:#0066cc;font-weight: bold;">필수과목을 모두 이수하지 못하셨습니다.</p>
+					  	<p>심사결과: <span style="color:red;font-weight: bold;" id="gradu">졸업불가능</span></p>
+					  	</c:if>
+					  </div>
+					  <a href="#" rel="modal:close" onclick="funcclose();">닫기</a>
+				  </div>
 			</div>
  			</c:if>
  			<c:if test="${graduok == 0}">
