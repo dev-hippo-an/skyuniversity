@@ -55,7 +55,6 @@ table#scroltbl {
 <script type="text/javascript">
 
 $(document).ready(function() {
-	 
 	// 학년도 날짜 구하기
 	var now = new Date();
 	var year = now.getFullYear();
@@ -83,11 +82,11 @@ $(document).ready(function() {
 
 function funcreg() {
 	
+	var ok = ${paraMap.graduateok};
 	var bool = true;
-	var graduateok = ${graduateok};
-	
-	if(graduateok == 0){
-		alert("졸업 -> 졸업적부심사에서 졸업적부심사를 먼저 심사 후, 신청부탁드립니다.");
+
+	if(ok == 0){
+		alert("졸업 -> 졸업적부심사에서 졸업적부심사 승인 후, 졸업연기를 신청하실 수 있습니다.");
 		bool = false;
 		return;
 	}
@@ -99,19 +98,19 @@ function funcreg() {
 	}
 
 	if(bool){
-		
-		$.ajax({
-				
-		});
+		var frm = document.delayfrm;
+		frm.method = "POST";
+		frm.action = "<%= ctxPath%>/graduateDelayEnd.sky";
+		frm.submit();		
 	}
 	
 }
 
 function funcdel(index){
 	var no = $("#no"+index).val();
-	var check = confirm("복학신청을 취소하시겠습니까?");
+	var check = confirm("졸업연기신청을 취소하시겠습니까?");
 	if(check){
-		location.href="<%=ctxPath%>/comeSchool.sky?seq="+no;
+		location.href="<%=ctxPath%>/graduateDelayDel.sky?seq="+no;
 	}
 	else{
 		return;
@@ -186,7 +185,8 @@ function funcdel(index){
 			<label>총 이수학점: </label>
 			<span style="color:#0066cc;font-weight: bold;">${sumcredits}</span>학점
 		</li>
-		<br>
+		<br/>
+		<form name="delayfrm">
 		<li>
 			<label>신청년도: </label>
 			<select name="startyear" id="startyear" style="border: solid 1px #cccccc;"> 
@@ -211,10 +211,12 @@ function funcdel(index){
 			&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
 			<span style="font-size: 5pt; color: red;">졸엽연기 신청 시, 최대 1년까지 신청가능합니다.</span>
 		</li>
+		
 		<li>
 			<label>신청사유:</label>
 			<textarea rows="8" cols="80" placeholder="최소 50자 이상 작성해주세요." name="reason" style="border: solid 1px #cccccc;" id="reason"></textarea>
 		</li>
+		</form>
 		<li>
 			<button style="margin-left: 550px;" onclick="funcreg();">신청</button>
 		</li>
@@ -234,7 +236,7 @@ function funcdel(index){
 </div>
 <br><br>
 <div style="clear: both;">
-	<span style="font-size: 12pt; font-weight: bold;float: left;">복학신청내역</span>
+	<span style="font-size: 12pt; font-weight: bold;float: left;">졸업연기 신청내역</span>
 </div>
 <br><br>
 <div style="border: solid 2px #cccccc;border-radius: 6px; height: 350px;">
@@ -242,33 +244,26 @@ function funcdel(index){
 		<thead id="scrolth">
 			<tr id="subli">
 				<td style="width: 200px;">신청일자</td>
-				<td style="width: 100px;">신청년도</td>
+				<td style="width: 100px;">연기일자</td>
 				<td style="width: 100px;">승인여부</td>
 				<td style="width: 200px;">반려이유</td>
 				<td style="width: 200px;">취소</td>
 			</tr>
 		</thead>
 		<tbody id="bodys">
-			<c:forEach items="${list}" var="vo" varStatus="status">
+			<c:forEach items="${volist}" var="vo" varStatus="status">
 			<tr class='sublicl'>
-				<td style="width: 200px;">${vo.comeSemester}</td>
-				<td style="width: 100px;">${vo.regDate}</td>
-				<td style="width: 100px;" id="type${status.index}">${vo.type}</td>
-				<td style="width: 200px;">${vo.approve}</td>
-				<td style="width: 200px;">${vo.noReason}</td>
-				<c:if test="${vo.fileName == null}">
-				<td style="width: 200px;"></td>
-				</c:if>
-				<c:if test="${vo.fileName != null}">
-				<td style="width: 200px;"><a href='<%= request.getContextPath()%>/downloadComeSchoolInfo.sky?seq=+${vo.comeSeq}+'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>
-				</c:if>
+				<td style="width: 200px;">${vo.regDate}</td>
+				<td style="width: 100px;">${vo.startSem}~${vo.endSem}</td>
+				<td style="width: 100px;">${vo.approve}</td>
+				<td style="width: 200px;">${vo.noreason}</td>
 				<c:if test="${vo.approve == '승인전'}">
-					<td style="width: 100px;"><button onclick="funcdel(${status.index})">취소</button>
-					<input type="text" value="${vo.comeSeq}" id="no${status.index}" hidden="true"/>
+					<td style="width: 200px;"><button onclick="funcdel(${status.index})">취소</button>
+					<input type="text" value="${vo.delayNo}" id="no${status.index}" hidden="true"/>
 					</td>
 				</c:if>
 				<c:if test="${vo.approve == '승인완료'}">
-					<td style="width: 100px;"></td>
+					<td style="width: 200px;"></td>
 				</c:if>
 			</tr>
 			</c:forEach>

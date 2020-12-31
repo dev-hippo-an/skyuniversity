@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
+import com.project.skyuniversity.eunji.model.GraduateDelayVO;
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
@@ -372,6 +373,30 @@ public class EunjiService implements InterEunjiService {
 	@Override
 	public int updateGraduateOk(int memberNo) {
 		int n = dao.updateGraduateOk(memberNo);
+		return n;
+	}
+
+	@Override
+	public int insertGraduateDelay(GraduateDelayVO gdvo) {
+		int n = dao.insertGraduateDelay(gdvo);
+		return n;
+	}
+
+	@Override
+	public List<GraduateDelayVO> selectGraduateList(int memberNo) {
+		List<GraduateDelayVO> list = dao.selectGraduateList(memberNo);
+		return list;
+	}
+
+	@Override
+	public int checkDelay(GraduateDelayVO gdvo) {
+		int check = dao.checkDelay(gdvo);
+		return check;
+	}
+
+	@Override
+	public int deleteGraduateDelay(String seq) {
+		int n = dao.deleteGraduateDelay(seq);
 		return n;
 	}
 

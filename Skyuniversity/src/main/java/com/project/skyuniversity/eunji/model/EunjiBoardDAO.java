@@ -369,6 +369,28 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public int insertGraduateDelay(GraduateDelayVO gdvo) {
+		int n = sqlSession.insert("eunji.insertGraduateDelay", gdvo);
+		return n;
+	}
 
+	@Override
+	public List<GraduateDelayVO> selectGraduateList(int memberNo) {
+		List<GraduateDelayVO> list = sqlSession.selectList("eunji.selectGraduateList", memberNo);
+		return list;
+	}
+
+	@Override
+	public int checkDelay(GraduateDelayVO gdvo) {
+		int check = sqlSession.selectOne("eunji.checkDelay", gdvo);
+		return check;
+	}
+
+	@Override
+	public int deleteGraduateDelay(String seq) {
+		int n = sqlSession.delete("eunji.deleteGraduateDelay", seq);
+		return n;
+	}
 
 }

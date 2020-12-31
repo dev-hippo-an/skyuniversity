@@ -513,4 +513,25 @@
 	<select id="updateGraduateOk" parameterType="int">
 		update tbl_member set graduateok = '1' where memberno = #{memberNo}
 	</select>
+	
+	<insert id="insertGraduateDelay" parameterType="com.project.skyuniversity.eunji.model.GraduateDelayVO">
+		insert into tbl_graduate_delay(delayNo, reason, startsem, endsem, fk_memberno)
+		values(tbl_graduate_delay_seq.nextval, #{reason}, #{startSem}, #{endSem}, #{fk_memberno})
+	</insert>
+	
+	<select id="selectGraduateList" parameterType="int" resultType="com.project.skyuniversity.eunji.model.GraduateDelayVO">
+		select to_char(regdate, 'yyyy-mm-dd') as regDate, startSem, endSem, approve, noreason, delayNo
+		from tbl_graduate_delay
+		where fk_memberno = #{memberNo}
+	</select>
+	
+	<select id="checkDelay" parameterType="com.project.skyuniversity.eunji.model.GraduateDelayVO" resultType="int">
+		select count(*)
+        from tbl_graduate_delay
+        where fk_memberno =#{fk_memberno} and startsem = #{startSem}
+	</select>
+	
+	<delete id="deleteGraduateDelay" parameterType="String">
+		delete from tbl_graduate_delay where delayNo = #{seq}
+	</delete>
 </mapper>

@@ -30,6 +30,7 @@ import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
 import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
+import com.project.skyuniversity.eunji.model.GraduateDelayVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.service.InterEunjiService;
@@ -1639,6 +1640,10 @@ public class EunjiBoardController {
 			// 총 교양이수학점을 가져옴
 			int sumculture = service.sumCultureCredits(memberNo);
 			
+			// 졸업 연기 내역을 가져옴
+			List<GraduateDelayVO> volist = service.selectGraduateList(memberNo);
+
+			mav.addObject("volist", volist);
 			mav.addObject("graduateok", paraMap.get("graduateok"));
 			mav.addObject("sumculture", sumculture);
 			mav.addObject("sumcredits", sumcredits);
@@ -1661,6 +1666,98 @@ public class EunjiBoardController {
 		return mav;
 	}
 	
+	@RequestMapping(value = "/graduateDelayEnd.sky", method = { RequestMethod.POST })
+	public ModelAndView graduateDelayEnd(ModelAndView mav, HttpServletRequest request) {
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+		
+		String startyear = request.getParameter("startyear");
+		String startsem = request.getParameter("startsem");
+		String endyear = request.getParameter("endyear");
+		String endsem = request.getParameter("endsem");
+		String reason = request.getParameter("reason");
+
+		String start = startyear + "/" + startsem + "학기";
+		String end = endyear + "/" + endsem + "학기";
+
+		GraduateDelayVO gdvo = new GraduateDelayVO();
+		gdvo.setStartSem(start);
+		gdvo.setEndSem(end);
+		gdvo.setReason(reason);
+		gdvo.setFk_memberno(memberNo);
+		
+		
+		
+		boolean flag = true;
+		int check = service.checkDelay(gdvo);
+		if(check > 0) {
+			flag = false;
+			String message = "해당기간 졸업연기신청 내역이 이미 존재합니다. 승인을 기다려주세요.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+		if(paraMap.get("status").equals("졸업연기")) {
+			flag = false;
+			String message = "현재 학적상태가 이미 졸업연기 상태입니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		
+		if(flag) {
+			int n = service.insertGraduateDelay(gdvo);
+			
+			String message = "신청되었습니다.";
+			String loc = request.getContextPath() + "/graduateDelay.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		return mav;
+	}
+	
+	@RequestMapping(value = "/graduateDelayDel.sky", method = { RequestMethod.GET})
+	public ModelAndView graduateDelayDel(ModelAndView mav, HttpServletRequest request) {
+		
+		String seq = request.getParameter("seq");
+		
+		int n = service.deleteGraduateDelay(seq);
+		
+		if(n == 1) {
+			String message = "졸업연기신청이 취소되었습니다.";
+			String loc = request.getContextPath() + "/graduateDelay.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		else {
+			String message = "졸업연기신청 취소에 실패하였습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		return mav;
+	}
+
 	// 졸업적부심사
 	@RequestMapping(value = "/graduateTest.sky", method = { RequestMethod.GET })
 	public ModelAndView graduateTest(ModelAndView mav, HttpServletRequest request) {
@@ -1738,7 +1835,7 @@ public class EunjiBoardController {
 				nonelist.add(map2);
 			} 
 		}
-		System.out.println(nonelist.size());
+
 		mav.addObject("nonelist", nonelist);
 		mav.addObject("size", nonelist.size());
 		mav.addObject("test", test);

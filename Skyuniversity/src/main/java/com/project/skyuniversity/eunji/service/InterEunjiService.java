@@ -6,6 +6,7 @@ import java.util.Map;
 import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
+import com.project.skyuniversity.eunji.model.GraduateDelayVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
@@ -129,6 +130,14 @@ public interface InterEunjiService {
 	List<String> getMustSubjectdept(Map<String, String> paraMap);
 
 	int updateGraduateOk(int memberNo);
+
+	int insertGraduateDelay(GraduateDelayVO gdvo);
+
+	List<GraduateDelayVO> selectGraduateList(int memberNo);
+
+	int checkDelay(GraduateDelayVO gdvo);
+
+	int deleteGraduateDelay(String seq);
 
 	
 

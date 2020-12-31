@@ -123,5 +123,13 @@ public interface InterEunjiBoardDAO {
 
 	int updateGraduateOk(int memberNo);
 
+	int insertGraduateDelay(GraduateDelayVO gdvo);
+
+	List<GraduateDelayVO> selectGraduateList(int memberNo);
+
+	int checkDelay(GraduateDelayVO gdvo);
+
+	int deleteGraduateDelay(String seq);
+
 
 }
