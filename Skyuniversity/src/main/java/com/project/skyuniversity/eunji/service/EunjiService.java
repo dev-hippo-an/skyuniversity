@@ -11,6 +11,7 @@ import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.GraduateDelayVO;
 import com.project.skyuniversity.eunji.model.GraduateEarlyVO;
+import com.project.skyuniversity.eunji.model.HomeworkVO;
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
@@ -435,6 +436,18 @@ public class EunjiService implements InterEunjiService {
 	public int deleteGraduateEarly(String seq) {
 		int n = dao.deleteGraduateEarly(seq);
 		return n;
+	}
+
+	@Override
+	public List<String> getNowSubject(Map<String, Integer> map) {
+		List<String> mapList = dao.getNowSubject(map);
+		return mapList;
+	}
+
+	@Override
+	public List<HomeworkVO> selectHomework(Map<String, Integer> map) {
+		List<HomeworkVO> worklist = dao.selectHomework(map);
+		return worklist;
 	}
 
 

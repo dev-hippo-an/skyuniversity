@@ -429,4 +429,16 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return n;
 	}
 
+	@Override
+	public List<String> getNowSubject(Map<String, Integer> map) {
+		List<String> list = sqlSession.selectList("eunji.getNowSubject", map);
+		return list;
+	}
+
+	@Override
+	public List<HomeworkVO> selectHomework(Map<String, Integer> map) {
+		List<HomeworkVO> worklist = sqlSession.selectList("eunji.selectHomework", map);
+		return worklist;
+	}
+
 }

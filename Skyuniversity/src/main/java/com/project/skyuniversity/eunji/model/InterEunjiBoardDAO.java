@@ -143,5 +143,9 @@ public interface InterEunjiBoardDAO {
 
 	int deleteGraduateEarly(String seq);
 
+	List<String> getNowSubject(Map<String, Integer> map);
+
+	List<HomeworkVO> selectHomework(Map<String, Integer> map);
+
 
 }

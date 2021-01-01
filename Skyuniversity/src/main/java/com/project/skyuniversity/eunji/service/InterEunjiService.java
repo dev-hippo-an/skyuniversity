@@ -8,6 +8,7 @@ import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.GraduateDelayVO;
 import com.project.skyuniversity.eunji.model.GraduateEarlyVO;
+import com.project.skyuniversity.eunji.model.HomeworkVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
@@ -151,6 +152,10 @@ public interface InterEunjiService {
 	List<GraduateEarlyVO> selectGraduateEarly(int memberNo);
 
 	int deleteGraduateEarly(String seq);
+
+	List<String> getNowSubject(Map<String, Integer> map);
+
+	List<HomeworkVO> selectHomework(Map<String, Integer> map);
 
 	
 

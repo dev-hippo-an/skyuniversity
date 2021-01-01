@@ -574,4 +574,26 @@
 	<delete id="deleteGraduateEarly" parameterType="String">
 		delete from tbl_graduate_early where earlyNo = #{seq}
 	</delete>
+	
+	<select id="getNowSubject" parameterType="HashMap" resultType="String">
+		select subjectname
+        from tbl_subject S
+        inner join tbl_course C
+        on S.subjectno = C.fk_subjectno
+        where C.fk_memberno = #{memberno} and courseyear = #{year} and semester = #{semester} 
+	</select>
+	
+	<select id="selectHomework" parameterType="HashMap" resultType="com.project.skyuniversity.eunji.model.HomeworkVO">
+		select fk_subjectno, subject, contents, to_char(startdate, 'yyyy-mm-dd') as startDate, to_char(enddate, 'yyyy-mm-dd') as endDate, subjectname
+		from 
+		(
+		select subjectno, subjectname
+		from tbl_subject S
+		inner join tbl_course C
+		on S.subjectno = C.fk_subjectno
+		where C.fk_memberno = #{memberno} and courseyear = #{year} and semester = #{semester}
+		)V
+		inner join tbl_homework H
+		on V.subjectno = H.fk_subjectno
+	</select>
 </mapper>

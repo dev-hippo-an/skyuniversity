@@ -32,6 +32,7 @@ import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.GraduateDelayVO;
 import com.project.skyuniversity.eunji.model.GraduateEarlyVO;
+import com.project.skyuniversity.eunji.model.HomeworkVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.service.InterEunjiService;
@@ -43,12 +44,6 @@ public class EunjiBoardController {
 	private EjFileManager fileManager;
 	@Autowired
 	private InterEunjiService service;
-
-	@RequestMapping(value = "registerSubjects.sky")
-	public ModelAndView registerSubjects(ModelAndView mav) {
-		mav.setViewName("eunji/class/registerSubjects.tiles2");
-		return mav;
-	}
 
 	@RequestMapping(value = "a.sky")
 	public ModelAndView a(ModelAndView mav) {
@@ -2093,5 +2088,49 @@ public class EunjiBoardController {
 		}
 		return mav;
 	}
+	
+	@RequestMapping(value = "/registerSubjects.sky", method = { RequestMethod.GET })
+	public ModelAndView registerSubjects(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		
+		Calendar cal = Calendar.getInstance();
+		int curyear = cal.get(cal.YEAR);
+		int curmonth = cal.get(cal.MONTH)+1;
+
+		int semester = 0;
+		if(curmonth >= 9 && curmonth <= 12) {
+			semester = 2;
+		}
+		if(curmonth >=1 && curmonth <3) {
+			curyear = curyear - 1;
+			semester = 2;
+		}
+		if(curmonth >= 3 && curmonth<9 ) {
+			semester = 1;
+		}
+		
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("year", curyear);
+		map.put("semester", semester);
+		map.put("memberno", memberNo);
+		
+		// 수강중인 과목 리스트 select
+		List<String> sublist = service.getNowSubject(map);
+		
+		// 수강중인 과목의 과제 select
+		List<HomeworkVO> worklist = service.selectHomework(map);
+		
+		mav.addObject("worklist",worklist);
+		mav.addObject("sublist",sublist);
+		mav.setViewName("eunji/class/registerSubjects.tiles2");
+		return mav;
+	}
+		
 
 }
