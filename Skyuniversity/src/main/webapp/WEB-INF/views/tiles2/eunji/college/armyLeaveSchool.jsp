@@ -133,10 +133,10 @@
 		</tr>
 	</table>
 </div>
-<br><br>
+<br><br> 
 <div>
 	<span style="font-size: 12pt; font-weight: bold;float: left;">군휴학신청 상세정보</span>
-	<button id="regbtn" style="margin-left: 500px; border: none;">신청</button>
+	<button id="regbtn" style="margin-left: 500px; border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;">신청</button>
 </div>
 <br>
 <div style="border: solid 2px #cccccc; padding: 15px; border-radius: 6px;">
@@ -167,14 +167,14 @@
 				<label>복무예정기간</label>
 				<input type="text" id="datepicker1" name="armyStartDate" style="border:solid 1px #d9d9d9"/> ~
   				<input type="text" id="datepicker2" name="armyEndDate" style="border:solid 1px #d9d9d9"/>
-				<button style="border:none;"><a href="http://soldiercal.lilysoul.pe.kr/">전역일 계산기</a></button>
+				<button style='border:none; color: black; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'><a href="http://soldiercal.lilysoul.pe.kr/" style="font-weight: bold;">전역일 계산기</a></button>
 			</li>
 			<li>
 				<label>입영통지서</label>
 				<input type="file" name="attach" id="armyfile"/>
 			</li>
 		</ul>
-	</form>
+	</form> 
 </div>
 <br>
 <div id="divbtn">

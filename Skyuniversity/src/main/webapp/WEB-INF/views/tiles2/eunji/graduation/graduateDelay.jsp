@@ -66,6 +66,9 @@ $(document).ready(function() {
 	if(month < 3 || month >= 9){
 		sthtml = "<option>"+(year+1)+"</option>";
 		stsem = "<option>1</option>";
+		if(month >= 1){
+			sthtml = "<option>"+year+"</option>";
+		}
 		$("#startyear").html(sthtml);
 		$("#endyear").html(sthtml);
 		$("#startsem").html(stsem);
@@ -73,6 +76,9 @@ $(document).ready(function() {
 	if(month < 9 && month >= 3){
 		sthtml = "<option>"+(year)+"</option>";
 		stsem = "<option>2</option>";
+		if(month >= 1){
+			sthtml = "<option>"+year+"</option>";
+		}
 		$("#startyear").html(sthtml);
 		$("#endyear").html(sthtml);
 		$("#startsem").html(stsem);

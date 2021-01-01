@@ -204,7 +204,7 @@ function funcdel(index){
 			</c:if>
 			<c:if test="${vo.approve == '승인전'}">
 			<td>
-				<button id="delbtn${status.index}" onclick="funcdel(${status.index})">취소</button>
+				<button id="delbtn${status.index}" onclick="funcdel(${status.index})" style='border:none; background-color:#e6e6e6; color: #e62e00; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>취소</button>
 				<input value="${vo.leaveNo}" type="text" id="seq${status.index}" hidden="true"/>
 			</td>
 			</c:if>
@@ -218,7 +218,7 @@ function funcdel(index){
 </div>
 <div id="divbtn">
 <span style="font-size: 12pt; font-weight: bold;">공결신청</span>
-<button id="addbtn" style="float: right;">신청</button>
+<button id="addbtn" style="float: right; border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;" >신청</button>
 </div>
 <div style="padding-top: 20px;">
  <form name="addFrm" enctype="multipart/form-data"> 
@@ -226,23 +226,23 @@ function funcdel(index){
 		<tr>
 			<td style="text-align: center;">일자</td>
 			<td>
-			<input type="text" id="datepicker1" name="startDate"/> ~
-  			<input type="text" id="datepicker2" name="endDate"/>
+			<input type="text" id="datepicker1" name="startDate" style="border: solid 1px #cccccc;"/> ~
+  			<input type="text" id="datepicker2" name="endDate" style="border: solid 1px #cccccc;"/>
   			</td>
 		</tr>
 		<tr>
 			<td style="text-align: center;">전일 &nbsp;
-			<input type="checkbox" id="alldaychk" name="alldaychk"/>
+			<input type="checkbox" id="alldaychk" name="alldaychk" style="border: solid 1px #cccccc;"/>
 			</td>
 			<td>
 			 시간 &nbsp;
-			<input type="time" id="starttime" name="startTime"/> ~ <input type="time" id="endtime" name="endTime"/>
+			<input type="time" id="starttime" name="startTime" style="border: solid 1px #cccccc;"/> ~ <input type="time" id="endtime" name="endTime" style="border: solid 1px #cccccc;"/>
 			</td>
 		</tr>
 		<tr>
 			<td style="text-align: center;" >사유</td>
 			<td>
-				<select name="reason" id="reason">
+				<select name="reason" id="reason" style="border: solid 1px #cccccc;">
 					<option>전체</option>
 					<option>본인 및 형제자매 결혼[허용기간:1일]</option>
 					<option>형제, 부모, 조부모, 외조부모의 사망[허용기간:5일]</option>
@@ -256,9 +256,9 @@ function funcdel(index){
 		</tr>
 		<tr>
 			<td style="text-align: center;" >파일첨부</td>
-			<td><input type="file" name="attach"/></td>
+			<td><input type="file" name="attach" style="border: none;"/></td>
 		</tr>
-	</table>
+	</table> 
 </form>
 </div>
 <br>

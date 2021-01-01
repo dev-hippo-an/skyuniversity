@@ -226,7 +226,7 @@ table#scroltbl {
 					<li>
 						<label style="display: inline-block;">과목코드 검색:</label>
 						<input type="text" style="display: inline-block; width: 120px; border: solid 1px #cccccc;" id="subnos"/>
-						<button onclick="nosearch();">검색</button>
+						<button onclick="nosearch();" style="border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px;  border-radius: 3px;">검색</button>
 					</li>
 				</ul>
 	</div>
@@ -237,7 +237,7 @@ table#scroltbl {
 				<tr id="classtr">
 					<td style="padding-left: 400px;">
 						<label>학과: </label>
-						<select name="depts" id="depts">
+						<select name="depts" id="depts" style="border: solid 1px #cccccc;">
 						  <option>전체</option>
 						  <c:forEach items="${deptlist}" var="dept">
 						  	<option>${dept}</option>
@@ -246,7 +246,7 @@ table#scroltbl {
 					</td>
 					<td>
 						<label>학년: </label>
-						<select name="grades" id="grades">
+						<select name="grades" id="grades" style="border: solid 1px #cccccc;">
 							<option>전체</option>
 							<option>1</option>
 							<option>2</option>
@@ -256,9 +256,9 @@ table#scroltbl {
 					</td>
 					<td>
 						<label>과목명: </label>
-						<select name="subjects" id="subjects">
+						<select name="subjects" id="subjects" style="border: solid 1px #cccccc;">
 						</select>
-						<select name="firstsub" id="firstsub">
+						<select name="firstsub" id="firstsub" style="border: solid 1px #cccccc;">
 						  <option>전체</option>
 						  <c:forEach items="${subjectlist}" var ="sub" >
 						  	<option>${sub}</option>
@@ -266,7 +266,7 @@ table#scroltbl {
 						</select>
 					</td>
 					<td>
-						<button id="subssearchbtn">검색</button>
+						<button id="subssearchbtn" style="border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px;  border-radius: 3px;">검색</button>
 					</td>
 				</tr>
 			</table>

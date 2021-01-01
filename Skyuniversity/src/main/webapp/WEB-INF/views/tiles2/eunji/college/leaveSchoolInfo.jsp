@@ -118,16 +118,16 @@ table#scroltbl {
 				<c:if test="${vo.filename != null}">
 				<td style="width: 200px;"><a href='<%= request.getContextPath()%>/downloadSchoolLeaveInfo.sky?seq=+${vo.schoolLvNo}+'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>
 				</c:if>
-				<c:if test="${vo.approve == '승인전'}">
-					<td style="width: 100px;"><button onclick="funcdel(${status.index})">취소</button>
+				<c:if test="${vo.approve == '승인전'}"> 
+					<td style="width: 100px;"><button onclick="funcdel(${status.index})" style='border:none; background-color:#e6e6e6; color: #e62e00; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>취소</button>
 					<input type="text" value="${vo.schoolLvNo}" id="no${status.index}" hidden="true"/>
 					</td>
 				</c:if>
 				<c:if test="${vo.approve == '승인완료'}">
-					<td style="width: 100px;"></td>
+					<td style="width: 100px;"></td> 
 				</c:if>
 				<c:if test="${vo.approve == '승인전'}">
-					<td style="width: 100px;"><button onclick="funcupdate(${status.index})">수정</button></td>
+					<td style="width: 100px;"><button onclick="funcupdate(${status.index})" style='border:none; background-color:#e6e6e6; color: black; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>수정</button></td>
 				</c:if>
 				<c:if test="${vo.approve == '승인완료'}">
 					<td style="width: 100px;"></td>

@@ -90,15 +90,15 @@ table#scroltbl {
 <div style="padding-left: 10px; padding-right: 10px;">
 <div style="background-color: #b3d9ff; padding: 10px; border-radius: 3px;">
 	<label style="padding-right:10px;">학년도</label>
-	<select name="year" id="year">	
+	<select name="year" id="year" style="border: solid 1px #cccccc;">	
 	</select>
 	<label style="padding-right:10px;">학기</label>
-	<select name="semester" id="semester">
+	<select name="semester" id="semester" style="border: solid 1px #cccccc;">
 		<option>전체</option>
 		<option>1</option>
 		<option>2</option>
 	</select>
-	<button id="searchbtn2" style="margin-left: 70px; border: none;">조회</button>
+	<button id="searchbtn2" style="margin-left: 70px; border:none; color: black; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;">조회</button>
 </div>
 <br>
 <div>

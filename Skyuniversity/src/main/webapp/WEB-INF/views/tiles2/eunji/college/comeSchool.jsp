@@ -243,12 +243,12 @@ function funcdel(index){
 		</thead>
 		<tbody>
 			<c:forEach items="${comelist}" var="vo" varStatus="status">
-				<tr>
+				<tr> 
 					<td>${vo.startSemester}</td>
 					<td>${vo.regdate}</td>
 					<td id="type${status.index}">${vo.type}</td>
 					<td id="comesemester${status.index}">${vo.comeSemester}</td>
-					<td><button onclick="funcCome(${status.index})">복학신청</button></td>
+					<td><button onclick="funcCome(${status.index})" style='border:none; color: black; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>복학신청</button></td>
 				</tr>
 				<input type="text" value="${vo.armyStartDate}" id="armystart${status.index}" hidden="true"/>
 				<input type="text" value="${vo.armyEndDate}" id="armyend${status.index}" hidden="true"/>
@@ -284,12 +284,12 @@ function funcdel(index){
 				<td style="width: 200px;">${vo.noReason}</td>
 				<c:if test="${vo.fileName == null}">
 				<td style="width: 200px;"></td>
-				</c:if>
+				</c:if> 
 				<c:if test="${vo.fileName != null}">
 				<td style="width: 200px;"><a href='<%= request.getContextPath()%>/downloadComeSchoolInfo.sky?seq=+${vo.comeSeq}+'><img src='<%= request.getContextPath() %>/resources/images/disk.gif'/></a></td>
 				</c:if>
-				<c:if test="${vo.approve == '승인전'}">
-					<td style="width: 100px;"><button onclick="funcdel(${status.index})">취소</button>
+				<c:if test="${vo.approve == '승인전'}"> 
+					<td style="width: 100px;"><button onclick="funcdel(${status.index})" style='border:none; background-color:#e6e6e6; color: #e62e00; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>취소</button>
 					<input type="text" value="${vo.comeSeq}" id="no${status.index}" hidden="true"/>
 					</td>
 				</c:if>

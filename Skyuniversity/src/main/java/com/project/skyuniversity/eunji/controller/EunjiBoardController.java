@@ -773,17 +773,32 @@ public class EunjiBoardController {
 		}
 
 		if (flag) {
+			int n =0;
 			if (golvo.getEndTime() == null && golvo.getStartTime() == null) {
-				int n = service.insertGirlLeave(golvo);
+				n = service.insertGirlLeave(golvo);
 			} else {
-				int n = service.insertGirlLeaveTime(golvo);
+				n = service.insertGirlLeaveTime(golvo);
 			}
+			
+			if(n==1) {
+				String message = "여학생 공결신청이 되었습니다.";
+				String loc = request.getContextPath() + "/girlOfficalLeave.sky";
 
-			List<GirlOfficialLeaveVO> girllist = service.selectGirlList(memberNo);
-			// System.out.println(girllist.size());
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
 
-			mav.addObject("girllist", girllist);
-			mav.setViewName("eunji/class/girlOfficalLeave.tiles2");
+				mav.setViewName("msg");
+			}
+			else {
+				String message = "여학생공결신청에 실패하였습니다.";
+				String loc = "javascript:history.back()";
+
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+
+				mav.setViewName("msg");
+			}
+			
 		} else {
 			String message = "생리공결은 월1회만 사용할 수 있습니다. 공결내역조회를 확인해주세요.";
 			String loc = "javascript:history.back()";
@@ -796,22 +811,31 @@ public class EunjiBoardController {
 		return mav;
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/delGirlOfficialLeave.sky", method = {
-			RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
-	public String delGirlOfficialLeave(HttpServletRequest request) {
+	@RequestMapping(value = "/delGirlOfficialLeave.sky", method = { RequestMethod.GET })
+	public ModelAndView delGirlOfficialLeave(ModelAndView mav, HttpServletRequest request) {
 		String seq = request.getParameter("seq");
 
-		boolean result = false;
 		int n = service.delGirlOfficialLeave(seq);
 		if (n == 1) {
-			result = true;
+			String message = "여학생 공결신청이 취소되었습니다.";
+			String loc = request.getContextPath() + "/girlOfficalLeave.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		else {
+			String message = "여학생공결신청 취소에 실패하였습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
 		}
 
-		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("result", result);
-
-		return jsonobj.toString();
+		return mav;
 	}
 
 	// 강의 평가
@@ -833,8 +857,11 @@ public class EunjiBoardController {
 			semester = 1;
 			flag = true;
 		}
-		if (month == 12) {
+		if (month == 12 || month == 1) {
 			semester = 2;
+			if(month == 1) {
+				year = year -1;
+			}
 			flag = true;
 		}
 		

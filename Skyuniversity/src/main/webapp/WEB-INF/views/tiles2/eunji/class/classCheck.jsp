@@ -16,6 +16,7 @@
 #info {
 	color: #737373;
 }
+
 </style>
 <script type="text/javascript">
 
@@ -39,11 +40,11 @@
 <table class="table table-bordered">
 	<thead>
 		<tr class="check">
-			<td>년도/학기</td>
-			<td>과목명</td>
-			<td>과목코드</td>
-			<td>교수명</td>
-			<td>강의평가</td>
+			<td style="font-weight: bold;">년도/학기</td>
+			<td style="font-weight: bold;">과목명</td>
+			<td style="font-weight: bold;">과목코드</td>
+			<td style="font-weight: bold;">교수명</td>
+			<td style="font-weight: bold;">강의평가</td>
 		</tr>
 	</thead>
 	<tbody>
@@ -52,14 +53,14 @@
 				<td>${map.courseyear}/<span id='semes${status.index}'>${map.semester}</span></td>
 				<td><span id="subname${status.index}">${map.subjectname}</span></td>
 				<td><span id="subno${status.index}">${map.fk_subjectno}</span>
-					<input id="no${status.index}" type="text" value="${map.courseno}"/>
+					<input id="no${status.index}" type="text" value="${map.courseno}" hidden="true"/>
 				</td>
 				<td><span id="prname${status.index}">${map.name}</span></td>
 				<c:if test="${map.classchk == 0}">
-				<td><button id="btn${status.index}" onclick="funcCheck(${status.index})">강의평가</button></td>
+				<td><button id="btn${status.index}" onclick="funcCheck(${status.index})" style="color:red; font-weight: bold;">강의평가</button></td>
 				</c:if>
 				<c:if test="${map.classchk == 1}">
-				<td><button disabled="disabled">평가완료</button></td>
+				<td><button disabled="disabled" style="color:#0066cc; font-weight: bold;">평가완료</button></td>
 				</c:if>
 			</tr>
 		</c:forEach>

@@ -115,7 +115,7 @@ function funcearlyok() {
 	}
 	else{
 		$("#chkspan").text("조기졸업 요건에 모두 만족하므로 조기졸업 신청이 가능합니다.");
-		var html = "<button onclick='funcclick();'>조기졸업신청하기</button>";
+		var html = "<button onclick='funcclick();' style='border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>조기졸업신청하기</button>";
 		$("#btndiv").html(html);
 	}
 }
@@ -229,8 +229,8 @@ function funcdel(index){
 			<label>총 학점 100학점 이상 이수 확인: </label>
 			<span id="span5" class="spansty"></span>
 		</li>
-		<br/>
-		<button onclick="funcearlyok();">확인하기</button>
+		<br/> 
+		<button onclick="funcearlyok();" style="border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;">확인하기</button>
 		&nbsp;&nbsp;&nbsp;<span id="chkspan"></span>
 		<div id="btndiv" style="padding-top: 10px;"> 
 			
@@ -271,16 +271,16 @@ function funcdel(index){
 				<td style="width: 100px;">${vo.avgGrade}</td>
 				<td style="width: 200px;">${vo.approve}</td>
 				<td style="width: 200px;">${vo.approveDate}</td>
-				<td style="width: 100px;">${vo.noreason}</td>				
-				<c:if test="${vo.approve == '승인전'}">
-					<td style="width: 100px;"><button onclick="funcdel(${status.index})">취소</button>
+				<td style="width: 100px;">${vo.noreason}</td>				   
+				<c:if test="${vo.approve == '승인전'}"> 
+					<td style="width: 100px;"><button onclick="funcdel(${status.index})" style='border:none; background-color:#e6e6e6; color: #e62e00; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>취소</button>
 					<input type="text" value="${vo.earlyNo}" id="no${status.index}" hidden="true"/>
-					</td>
-				</c:if>
-				<c:if test="${vo.approve == '승인완료'}">
+					</td> 
+				</c:if> 
+				<c:if test="${vo.approve == '승인완료'}"> 
 					<td style="width: 100px;"></td>
 				</c:if>
-			</tr>
+			</tr> 
 			</c:forEach>
 		</tbody>
 	</table>

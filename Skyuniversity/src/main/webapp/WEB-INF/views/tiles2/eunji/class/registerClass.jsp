@@ -132,7 +132,6 @@ table#scroltbl {
 		});
 		
 		$("#subsearchbtn").click(function() {
-			alert("Ddd");
 			var dept = $("#depts option:selected").val();
 			var grades = $("#grades option:selected").val();
 			var subjects = $("#subjects option:selected").val();
@@ -157,7 +156,7 @@ table#scroltbl {
 							   +"<td style='width:300px;'> <span id='dayspan"+index+"'>"+item.day+"</span>" 
 							   + " /  <span id='span2"+index+"'>" + item.period+"</span></td>"
 							   +"<td style='width:150px; id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
-							   +"<td style='width:100px;'><button onclick='funcClassReg("+index+");'>신청</button></td>";
+							   +"<td style='width:100px;'><button onclick='funcClassReg("+index+");' style='border:none; color: black; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>신청</button></td>";
 						html += "</tr>";
 					});
 					$("#tb").html(html);
@@ -182,7 +181,6 @@ table#scroltbl {
 		
 		var days = $("#dayspan"+index).text();
 		var period = $("#span2"+index).text();
- 		alert(days);
 		var total = "19";
 		if(parseInt(sumcredits)+parseInt(addcredit) > parseInt(total)){
 			alert("신청가능한 학점이 초과되어 신청이 불가합니다.");
@@ -297,7 +295,7 @@ table#scroltbl {
 		<div style="margin-left: 10px;">
 			<label style="display: inline-block;">과목코드 검색:</label>
 			<input type="text" style="display: inline-block; width: 120px; border: solid 1px #cccccc;" id="subnos"/>
-			<button onclick="nosearch();">검색</button>
+			<button onclick="nosearch();" style="border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;">검색</button>
 		</div>
 	</div>
 	
@@ -307,7 +305,7 @@ table#scroltbl {
 				<tr id="classtr">
 					<td style="padding-left: 400px;">
 						<label>학과: </label>
-						<select name="depts" id="depts">
+						<select name="depts" id="depts" style="border: solid 1px #cccccc;">
 						  <option>전체</option>
 						  <c:forEach items="${deptlist}" var="dept">
 						  	<option>${dept}</option>
@@ -316,7 +314,7 @@ table#scroltbl {
 					</td>
 					<td>
 						<label>학년: </label>
-						<select name="grades" id="grades">
+						<select name="grades" id="grades" style="border: solid 1px #cccccc;">
 							<option>전체</option>
 							<option>1</option>
 							<option>2</option>
@@ -326,9 +324,9 @@ table#scroltbl {
 					</td>
 					<td>
 						<label>과목명: </label>
-						<select name="subjects" id="subjects">
+						<select name="subjects" id="subjects" style="border: solid 1px #cccccc;">
 						</select>
-						<select name="firstsub" id="firstsub">
+						<select name="firstsub" id="firstsub" style="border: solid 1px #cccccc;">
 						  <option>전체</option>
 						  <c:forEach items="${subjectlist}" var ="sub" >
 						  	<option>${sub}</option>
@@ -336,7 +334,7 @@ table#scroltbl {
 						</select>
 					</td>
 					<td>
-						<button id="subsearchbtn">검색</button>
+						<button id="subsearchbtn" style="border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;">검색</button>
 					</td>
 				</tr>
 			</table>
@@ -387,7 +385,7 @@ table#scroltbl {
 						<td>${reg.name}</td>
 						<td>${reg.day}/${reg.period}</td>
 						<td>${reg.curpeoplecnt}/${reg.peoplecnt}</td>
-						<td><button onclick="funcdelbtn(${status.index});">취소</button></td>
+						<td><button onclick="funcdelbtn(${status.index});" style='border:none; background-color:#e6e6e6; color: #e62e00; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>취소</button></td>
 					</tr>
 					<input id="no${status.index}" value="${reg.courseno}" hidden="true"/>
 				</c:forEach>

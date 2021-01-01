@@ -220,8 +220,8 @@ function funcclose(){
 				  </div>
 			</div>
  			</c:if>
- 			<c:if test="${graduok == 0}">
-			<p><a href="#ex1" rel="modal:open"  onclick="funcmodal();">졸업적부 심사하기</a></p>
+ 			<c:if test="${graduok == 0}"> 
+			<p><a href="#ex1" rel="modal:open"  onclick="funcmodal();" style="font-weight: bold;">졸업적부 심사하기</a></p>
 			</c:if>
 			<c:if test="${graduok == 1}">
 				<p><a>졸업적부 심사완료</a></p>
