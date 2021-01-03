@@ -126,6 +126,7 @@ public class JihyunDAO implements InterJihyunDAO {
 		return noticeDetail;
 	}
 
+	// 이번학기 수강 과목 목록 가져오기
 	@Override
 	public List<Map<String, String>> getLectureList(String memberNo) {
 		//List<Map<String, String>> lectureList = sqlsession.selectList("Jihyun.getLectureList", memberNo);
@@ -212,7 +213,8 @@ public class JihyunDAO implements InterJihyunDAO {
 		List<Map<String, String>> gradeList = null;
 		
 		//전필
-		gradeList = sqlsession.selectList("Jihyun.getTotalJunpilGrade", memberNo); 
+		gradeList = sqlsession.selectList("Jihyun.getTotalJunpilGrade", memberNo);
+		System.out.println("glist1"+gradeList.size());
 		if(gradeList.size()>0) {
 			for(Map<String,String> map : gradeList) {
 				map.put("lectureKind", "전공필수");
@@ -222,6 +224,7 @@ public class JihyunDAO implements InterJihyunDAO {
 		
 		// 전선
 		gradeList = sqlsession.selectList("Jihyun.getTotalJunsunGrade", memberNo);
+		System.out.println("glist2"+gradeList.size());
 		if(gradeList.size()>0) {
 			for(Map<String,String> map : gradeList) {
 				map.put("lectureKind", "전공선택");
@@ -230,7 +233,8 @@ public class JihyunDAO implements InterJihyunDAO {
 		}
 		
 		// 교필
-		gradeList = sqlsession.selectList("Jihyun.getTotalGyopilGrade", memberNo); 
+		gradeList = sqlsession.selectList("Jihyun.getTotalGyopilGrade", memberNo);
+		System.out.println("glist3"+gradeList.size());
 		if(gradeList.size()>0) {
 			for(Map<String,String> map : gradeList) {
 				map.put("lectureKind", "교양필수");
@@ -239,7 +243,8 @@ public class JihyunDAO implements InterJihyunDAO {
 		}
 		
 		//교선
-		gradeList = sqlsession.selectList("Jihyun.getTotalGyosunGrade", memberNo); 
+		gradeList = sqlsession.selectList("Jihyun.getTotalGyosunGrade", memberNo);
+		System.out.println("glist4"+gradeList.size());
 		if(gradeList.size()>0) {
 			for(Map<String,String> map : gradeList) {
 				map.put("lectureKind", "교양선택");
@@ -248,7 +253,8 @@ public class JihyunDAO implements InterJihyunDAO {
 		}
 		
 		//일선
-		gradeList = sqlsession.selectList("Jihyun.getTotalIlsunGrade", memberNo); 
+		gradeList = sqlsession.selectList("Jihyun.getTotalIlsunGrade", memberNo);
+		System.out.println("glist5"+gradeList.size());
 		if(gradeList.size()>0) {
 			for(Map<String,String> map : gradeList) {
 				map.put("lectureKind", "일반선택");

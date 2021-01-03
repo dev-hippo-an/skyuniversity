@@ -903,5 +903,130 @@ on s.fk_deptSeq = d.deptSeq
         )T
         where deptSeq != m_deptSeq and  deptSeq != 23 and muststatus = 0 and semester != thisSemester
         
+        
+ ------------------------------------------------기이수성적 union으로 엮어보기 --------------------------------------------------------------------------------------------------------------------------------------------------
+    
+    select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+    from
+    (
+    select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from
+        (
+            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+                      , courseYear||'-'||semester as courseSemester
+                       ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 108
+        )V
+        where deptSeq = 23 and mustStatus = 1 and courseSemester != thisSemester
+        union
+        -- 교양필수 조회(기이수)
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from
+        (
+            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+                        , courseYear||'-'||semester as courseSemester
+                        ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 108
+        )V
+        where deptSeq = 23 and mustStatus = 0 and courseSemester != thisSemester
+        union
+        --전공선택 조회(기이수)
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+                      , courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 108
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 1 and courseSemester != thisSemester
+        union
+        -- 전공필수 조회(기이수)
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
+                     courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 108
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 0 and courseSemester != thisSemester
+        union
+          -- 일반 선택 조회
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
+                     courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 108
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq != m_deptSeq and  deptSeq != 23  and courseSemester != thisSemester
+        )G
+        order by courseYear desc, semester desc, deptseq asc, muststatus asc
+        
+        select * from tbl_course where fk_memberNo = 108 and fk_subjectno = 'EB103'
+        select * from tbl_subject where subjectno = 'EB103'
+        select * from tbl_dept
+        
+        
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
+                        courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 106
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq != m_deptSeq and muststatus = 0   and courseSemester != thisSemester
+        
 commit;
 
