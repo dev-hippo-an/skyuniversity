@@ -57,32 +57,20 @@
     */
     $(document).ready(function(){
         
-        var url = window.location.host;   // 웹브라우저의 주소창의 포트까지 가져옴
-    //  alert("url : " + url);
-    //  결과값  url: 192.168.1.6:9090
+       var url = window.location.host;   // 웹브라우저의 주소창의 포트까지 가져옴
            
        var pathname = window.location.pathname; // '/'부터 오른쪽에 있는 모든 경로
-    //  alert("pathname : " + pathname);
-    //  결과값  pathname : /board/chatting/multichat.action 
            
        var appCtx = pathname.substring(0, pathname.lastIndexOf("/"));  // "전체 문자열".lastIndexOf("검사할 문자");   
-    // alert("appCtx : " + appCtx);
-    // 결과값  appCtx : /board/chatting 
            
        var root = url+appCtx;
-    // alert("root : " + root);
-    // 결과값   root : 192.168.1.6:9090/board/chatting
       
        var wsUrl = "ws://"+root+"/ohyoon/multichatstart.sky";  
     // 웹소켓통신을 하기위해서는 http:// 을 사용하는 것이 아니라 ws:// 을 사용해야 한다. 
      
        var websocket = new WebSocket(wsUrl);  
     // /WEB-INF/web.xml 에 가서 appServlet 의 contextConfigLocation 을 수정한다. 
-    // var websocket = new WebSocket("ws://192.168.1.6:9090/board/chatting/multichatstart.action");
         
-    // alert(wsUrl);
-    // ws://192.168.1.6:9090/board/chatting/multichatstart.action
-       
     // >> ====== !!중요!! Javascript WebSocket 이벤트 정리 ====== << //
    /*   -------------------------------------
                   이벤트 종류             설명
@@ -97,31 +85,13 @@
        
        // === 웹소켓에 최초로 연결이 되었을 경우에 실행되어지는 콜백함수 정의하기 ===
        websocket.onopen = function() {
-       //   alert("웹소켓 연결됨!!");
-       //   $("div#chatStatus").text("정보: 웹소켓에 연결이 성공됨!!");
-       
-       /*   
-            messageObj = {};  // 초기화
-            messageObj.message = "채팅방에 <span style='color: red;'>입장</span>했습니다";
-            messageObj.type = "all";
-            messageObj.to = "all";
-        */    
-        // 또는
-            messageObj = { message : "채팅방에 <span style='color: red;'>입장</span>했습니다"
+
+    	   messageObj = { message : "채팅방에 <span style='color: red;'>입장</span>했습니다"
                        , type : "all"
                        , to : "all" };  // 자바스크립트에서 객체의 데이터값 초기화
                       
             websocket.send(JSON.stringify(messageObj));
-                        // JSON.stringify() 는 값을 그 값을 나타내는 JSON 표기법의 문자열(String)로 변환한다
-                        /*
-                           JSON.stringify({});                  // '{}'
-	                       JSON.stringify(true);                // 'true'
-	                       JSON.stringify('foo');               // '"foo"'
-	                       JSON.stringify([1, 'false', false]); // '[1,"false",false]'
-	                       JSON.stringify({ x: 5 });            // '{"x":5}'
-	                    */
         };
-       
         
        // === 메시지 수신시 콜백함수 정의하기 === 
         websocket.onmessage = function(event) {
