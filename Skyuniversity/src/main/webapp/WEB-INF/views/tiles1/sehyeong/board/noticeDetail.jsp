@@ -796,13 +796,12 @@ img {
 
 <div id="sideBar">
    <div>
-   
-      최근 게시판
+      <B>최근 게시판</B>
       <table>
          <c:forEach var="recentBoard" items="${recentBoardList}">
             <tr>
-               <td colspan="2">${recentBoard.boardName}</td>
-               <td colspan="2"><a class="subject" style="cursor:pointer" 
+               <td colspan="2" style = "text-align:center; width:400px;"><B>${recentBoard.boardName}</B></td>
+               <td colspan="2" ><a class="subject" style="cursor:pointer" 
                onclick="goView2('${recentBoard.fk_boardKindNo}', '${recentBoard.boardNo}')">
                ${recentBoard.subject}</a></td>
             </tr>
@@ -812,26 +811,25 @@ img {
    
     <div>
    
-      주간 베스트 게시물
+      <B>주간 베스트 게시물</B>
       <table>
          <c:forEach var="bestBoard" items="${bestBoardList}">
             <tr>
-               <td colspan="2">${bestBoard.boardName}</td>
+               <td colspan="2" style = "text-align:center; width:400px;"><B>${bestBoard.boardName}</B></td>
                <td colspan="2"><a class="subject" style="cursor:pointer" 
                onclick="goView2('${bestBoard.fk_boardKindNo}', '${bestBoard.boardNo}')">
-               ${bestBoard.subject}</a></td>
+               ${bestBoard.subject} ${bestBoard.subject.length() }</a></td>
             </tr>
          </c:forEach>
       </table>
    </div>
+<div>
    
-   <div >
-   
-      인기 게시물
+      <B>인기 게시물</B>
       <table>
          <c:forEach var="popularBoard" items="${popularBoardList}">
             <tr>
-               <td colspan="2">${popularBoard.boardName}</td>
+               <td colspan="2" style = "text-align:center; width:400px;"><B>${popularBoard.boardName}</B></td>
                <td colspan="2"><a class="subject" style="cursor:pointer" 
                onclick="goView2('${popularBoard.fk_boardKindNo}', '${popularBoard.boardNo}')">
                ${popularBoard.subject}</a></td>
