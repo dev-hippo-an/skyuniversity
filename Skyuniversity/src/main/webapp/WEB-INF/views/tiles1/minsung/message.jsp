@@ -64,6 +64,9 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 	width: 70px;
 }
 
+div.modal-content {
+	width: 400px;
+}
 
 
 </style>
@@ -161,7 +164,7 @@ tbody>tr>td:nth-child(1), td:nth-child(2), td:nth-child(6), td:nth-child(7)
 				
 			},
 			error: function(request, status, error){
-	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+				alert("해당 사용자가 없습니다!");
 	        }
 			
 		});
