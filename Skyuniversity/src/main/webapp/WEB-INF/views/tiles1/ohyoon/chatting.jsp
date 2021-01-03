@@ -190,14 +190,10 @@
         
         // 아래는 귓속말을 위해서 대화를 나누는 상대방의 이름을 클릭하면 상대방IP주소를 귓속말대상IP주소에 입력하도록 하는 것.
         $(document).on("click",".loginuserName",function(){
-           /* class loginuserName 은 
-              com.spring.chatting.websockethandler.WebsocketEchoHandler 의 
-              protected void handleTextMessage(WebSocketSession wsession, TextMessage message) 메소드내에
-              135번 라인에 기재해두었음.
-           */
+           
            var ip = $(this).prev().text();
-        //   alert(ip);
-            $("input#to").val(ip); 
+
+           $("input#to").val(ip); 
             
             $("span#privateWho").text($(this).text());
             $("button#btnAllDialog").show();

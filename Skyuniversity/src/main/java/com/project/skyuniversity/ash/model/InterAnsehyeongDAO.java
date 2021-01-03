@@ -159,6 +159,8 @@ public interface InterAnsehyeongDAO {
 
 	List<NoticeVO> getAllNoticeListWithParam(Map<String, String> paraMap);
 
+	CommuMemberVO getLoginUser(String fk_memberNo);
+
 
 
 	

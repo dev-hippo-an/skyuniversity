@@ -93,7 +93,6 @@ public class BoardController {
 				}
 			}
 			
-			
 			// 게시판 번호를 입력하여 해당 게시판번호에 해당하는 게시판 이름 불러오기
 			String boardName = service.getBoardName(Integer.parseInt(boardKindNo));
 			
@@ -160,7 +159,6 @@ public class BoardController {
 			
 			paraMap.put("startRno", String.valueOf(startRno));
 			paraMap.put("endRno", String.valueOf(endRno));
-			
 			
 			// 게시판 번호와 시작 게시글 번호, 끝 게시글 번호를 입력하여 해당 게시판번호에 해당하는 게시글들을 불러오기
 			List<BoardVO> boardList = service.getBoardList(paraMap); 
@@ -318,7 +316,6 @@ public class BoardController {
 				} catch (Exception e) {
 					e.printStackTrace();
 				} 
-				
 			}
 			
 			// 작성한 글을 db에 저장.
@@ -497,6 +494,14 @@ public class BoardController {
 	    @RequestMapping(value="/boardDetail2.sky", method = {RequestMethod.GET})
 	    public ModelAndView boardDetail2(HttpServletRequest request, ModelAndView mav) {
 	    	
+	    	// 세션에 랜덤 닉네임이 들어가 있는지 확인 후 들어있지 않으면 닉네임을 넣어준다.(다른 게시글 사이드바로 들어온 경우)
+			HttpSession session = request.getSession();
+			if (session.getAttribute("nickname") == null) {
+				// 익명게시판이므로 랜덤한 숫자 2개를 받아 닉네임을 만든다.
+				String nickname = service.getRandomNickname();
+				session.setAttribute("nickname", nickname);
+			}
+	    	
 	    	String boardKindNo = request.getParameter("boardKindNo");
 	    	String boardNo = request.getParameter("boardNo");
 	    	
@@ -512,20 +517,11 @@ public class BoardController {
 				return mav;
 			}
 	    	
-//	    	String currentIp = "";
-//	    	try {
-//				currentIp = getUserIp();
-//			} catch (Exception e) {
-//				currentIp = "";
-//			}
-//	    	
-	    	
 	    	// 게시물 1개를 가져오며 로그인 회원번호와 작성자 회원번호가 일치하면 해당 게시물의 조회수를 1 올린다.
 	    	Map<String, String> paraMap = new HashMap<>();
 	    	paraMap.put("boardKindNo", boardKindNo);
 	    	paraMap.put("boardNo", boardNo);
 	    	
-	    	HttpSession session = request.getSession();
 	    	String readCountPermission = (String)session.getAttribute("readCountPermission"); // 세션으로부터 readCountPermission에 대한 데이터가 있는지 가져온다.
 
 	    	BoardVO boardvo = null;
@@ -625,7 +621,6 @@ public class BoardController {
 	    	jsonObj.put("n", n);
 	    	jsonObj.put("upCount", upCount);
 	    	jsonObj.put("downCount", downCount);
-
 	    	return jsonObj.toString();
 	    }
 	    
@@ -887,7 +882,6 @@ public class BoardController {
 	    }
 
 	    
-	    
 	    // 게시글 수정중 첨부파일 삭제하기(ajax로 처리)
 	    @ResponseBody
 	    @RequestMapping(value = "/deleteAttach.sky", method = {RequestMethod.POST}, produces = "text/plain; charset=UTF-8")
@@ -919,7 +913,6 @@ public class BoardController {
 			// 파일이 삭제되고 db에도 반영됐다면 n = 1, 아니라면 n = 0
 			JSONObject jsonObj = new JSONObject();
 	    	jsonObj.put("n", n);
-	    	
 	    	return jsonObj.toString();
 	    }
 	    

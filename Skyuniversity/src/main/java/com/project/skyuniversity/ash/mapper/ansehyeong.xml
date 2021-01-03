@@ -1998,4 +1998,15 @@ select row_number() over (order by ${colName} <if test="colName != 'fk_boardKind
 		<if test="colName != 'fk_boardKindNo'">order by ${colName} desc</if>
 		)
 	</select>
+	
+	<select id="getLoginuserFromHs" resultType="com.project.skyuniversity.ash.model.CommuMemberVO" parameterType="String">
+		select commuMemberNo, fk_memberNo, fk_levelNo, nickname, point, m.name, m.email
+		from tbl_commu_member c
+		join
+			(select memberno, name, email
+			from tbl_member
+		) m
+		on c.fk_memberNo = m.memberno
+        where fk_memberNo = #{fk_memberNo}
+	</select>
 </mapper>

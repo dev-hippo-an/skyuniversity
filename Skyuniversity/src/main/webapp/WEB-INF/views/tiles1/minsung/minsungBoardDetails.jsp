@@ -13,7 +13,20 @@
 
 	table
 	 {border: solid gray 1px;
-	 margin-bottom : 5%;}
+	 margin-bottom : 5%;
+	 }
+	 
+	 th, td {
+	text-align: center;
+	padding: 8px;
+	border: 1px solid #ddd;
+	}
+	
+	thead {
+		background-color: #0841ad;
+		font-size: 10pt;
+		color: white;
+	}
 	 
 	 div.form-group{
 	 border: solid gray 1px;
@@ -67,8 +80,8 @@
 	
 	div#sideBar {
 		float : right;
-		width: 15%;
-		border: solid gray 1px;
+		width: 17%;
+		border: solid black 1px;
 		margin-right : 7%;
 		margin-bottom : 1%;
 		
@@ -132,7 +145,7 @@
       width: 18px;
       height: 18px;
    }
-   
+ 	  
    h4.more:hover {
       font-weight: bolder;
       cursor: pointer;
@@ -141,22 +154,22 @@
    span.button {
       margin: 0 10px;
    }
-   
+
    span.button:hover {
       font-weight: bolder;
       cursor: pointer;
    }
-   
+
    span.name {
       color: #9900e6;
       font-weight: bold;
    }
-   
+
    span.name:hover {
       cursor: pointer;
       color: #7700b3;
    }
-   
+
    button.myComment {
       float:right; 
       color : red;
@@ -168,7 +181,42 @@
 
    button:focus {
       outline: none;
-   }   	
+   }
+   
+table {
+	border-collapse: collapse;
+	border-spacing: 0;
+	width: 80%;
+	/*  border: 1px solid #ddd; */
+}
+
+th, td {
+	text-align: center;
+	padding: 8px;
+	border: 1px solid #ddd;
+}
+
+thead {
+	background-color: white;
+	font-size: 10pt;
+}
+
+tbody {
+	font-size: 10pt;
+}
+
+tbody>tr>td:nth-child(3), td:nth-child(4) {
+	text-align: left;
+}
+
+tbody>tr>td:nth-child(3) {
+	width: 400px;
+}
+
+tr:nth-child(even) {
+	background-color: #f2f2f2;
+}
+
 </style>
 
 <script type="text/javascript">
@@ -183,8 +231,92 @@
 		
 		$("h4.more").click(function() {
 		    goViewComment($("input#startNo").val());
-		 });// end of $("h4.more").click(function() {});-----------------
-		 
+		});// end of $("h4.more").click(function() {});-----------------
+		
+		$("button#btnUp").click(function() {
+			
+			var boardInfoFrm = $("form[name=boardInfoFrm]").serialize();
+			
+			$.ajax({
+				url: "<%=request.getContextPath()%>/minsungAddBoardUp.sky",
+				type: "POST",
+				data: boardInfoFrm,
+				dataType:"JSON",
+				success: function(json){
+					
+					if (json.n == 0) {
+						alert("이미 추천하셨습니다.");
+					}else{
+						alert("추천되었습니다.");
+						var upCount = json.upCount;
+						var downCount = json.downCount;
+						if (downCount == null || downCount == "") {
+							downCount = "0";
+						}
+						$("span#upCount").text(upCount);
+						$("span#downCount").text(downCount);
+					}
+				},
+				error: function(request, status, error){
+		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		        }
+			});
+		});// end of $("button#btnUp").click(function() {});-----------------------------------
+		
+		$("button#btnReport").click(function() {
+			
+			var boardInfoFrm = $("form[name=boardInfoFrm]").serialize();
+			
+			$.ajax({
+				url: "<%=request.getContextPath()%>/addBoardReport.sky",
+				type: "POST",
+				data: boardInfoFrm,
+				dataType:"JSON",
+				success: function(json){
+					if (json.n == 0) {
+						alert("이미 신고하셨습니다.");
+					}else{
+						alert("신고되었습니다.");
+					}
+				},
+				error: function(request, status, error){
+		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		        }
+			});
+			
+			
+		});
+
+		$("button#btnDown").click(function() {
+			
+			var boardInfoFrm = $("form[name=boardInfoFrm]").serialize();
+			
+			$.ajax({
+				url: "<%=request.getContextPath()%>/minsungAddBoardDown.sky",
+				type: "POST",
+				data: boardInfoFrm,
+				dataType:"JSON",
+				success: function(json){
+					
+					if (json.n == 0) {
+						alert("이미 비추천하셨습니다.");
+					}else{
+						alert("비추천되었습니다.");
+						var upCount = json.upCount;
+						var downCount = json.downCount;
+						if (upCount == null || upCount == "") {
+							upCount = "0";
+						}
+						$("span#upCount").text(upCount);
+						$("span#downCount").text(downCount);
+					}
+				},
+				error: function(request, status, error){
+		               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+		        }
+			});
+		});
+		
 		 
 		 // 댓글 작성중에 글자수가 나타나도록 한다.
 		 $("textarea#cmtContent").keyup(function() {
@@ -215,8 +347,9 @@
 	            var html = "";
 	            
 	            if (startNo == "1" && json.length == 0) { // 처음부터 댓글 데이터가 존재하지 않는 경우
-	               html += "<span style='color:#0841ad; font-size: 30px;'>첫번째 댓글을 등록해보세요.</span><br>";
+	            	html += "<div style='color:#0841ad; font-size: 30px; text-align: center; margin-top: 25px;'>첫번째 댓글을 등록해보세요.</div><br>";
 	               $("table#contentTable2").html(html);
+	               $("h4.more").hide();
 	            }
 	            
 	            var totalCount;
@@ -630,6 +763,8 @@
 
 	function goView2(fk_boardKindNo, boardNo){
 		
+	    session.setAttribute("readCountPermission", "yes");
+		   
 		console.log(boardNo);
 		console.log(fk_boardKindNo);
 		
@@ -642,9 +777,12 @@
 			frm.action = "<%=request.getContextPath()%>/minsungBoardView.sky";
 		} else if (23 <= fk_boardKindNo){
 			frm.action = "<%=request.getContextPath()%>/marketBoardDetail.sky";
-		} else {
-			frm.action = "<%=request.getContextPath()%>/boardDetail.sky";
-		}
+		} else if (fk_boardKindNo != 7){
+	          frm.action = "<%=request.getContextPath()%>/boardDetail.sky";
+	       } else{
+	          frm.action = "<%=request.getContextPath()%>/boardDetail2.sky";
+	       }
+
 		
 		frm.submit();
 		
@@ -659,12 +797,20 @@
 			<form action="" id="replycontent" >
 				<textarea id="main" readonly> ${boardvo.content }</textarea>
 			</form>
+			<c:if test="${boardvo.orgFilename ne null}"><h6>첨부파일 : <a href="<%= request.getContextPath()%>/minsungDownload.sky?boardKindNo=${boardvo.fk_boardKindNo}&boardNo=${boardvo.boardNo}">${boardvo.orgFilename}</a></h6></c:if>
+			
 		</div>
 		
 		<div id="buttons1">
-			<button>추천<br/>0</button>
-			<button>반대<br/>0</button>
-			<button>신고<br/>0</button>
+			<button id="btnUp">
+				추천<br><span id="upCount">${boardvo.upCount}</span>
+			</button>
+			<button id="btnDown">
+				비추천<br><span id="downCount">${boardvo.downCount}</span>
+			</button>
+			<button id="btnReport">
+				신고<br><img src="<%= request.getContextPath()%>/resources/images/report.png" style="width: 20px; height: 20px;"/>
+			</button>
 		</div>
 
 		<div id="buttons2">
@@ -672,15 +818,16 @@
 			<button type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/minsungDel.sky?boardNo=${boardvo.boardNo}'">삭제</button>
 		</div>
 	</div>
+<div id="sideBar">
+
+	<div>
 	
-	<div id="sideBar">
-	
-		최근 게시판
+		<B>최근 게시판</B>
 		<table>
 			<c:forEach var="recentBoard" items="${recentBoardList}">
 				<tr>
-					<td colspan="2">${recentBoard.boardName}</td>
-					<td colspan="2"><a class="subject" style="cursor:pointer" 
+					<td colspan="2" style = "text-align:center; width:400px;"><B>${recentBoard.boardName}</B></td>
+					<td colspan="2" ><a class="subject" style="cursor:pointer" 
 					onclick="goView2('${recentBoard.fk_boardKindNo}', '${recentBoard.boardNo}')">
 					${recentBoard.subject}</a></td>
 				</tr>
@@ -688,13 +835,13 @@
 		</table>
 	</div>
 	
- 	<div id="sideBar">
+ 	<div>
 	
-		주간 베스트 게시물
+		<B>주간 베스트 게시물</B>
 		<table>
 			<c:forEach var="bestBoard" items="${bestBoardList}">
 				<tr>
-					<td colspan="2">${bestBoard.boardName}</td>
+					<td colspan="2" style = "text-align:center; width:400px;"><B>${bestBoard.boardName}</B></td>
 					<td colspan="2"><a class="subject" style="cursor:pointer" 
 					onclick="goView2('${bestBoard.fk_boardKindNo}', '${bestBoard.boardNo}')">
 					${bestBoard.subject}</a></td>
@@ -703,13 +850,13 @@
 		</table>
 	</div>
 	
-	<div id="sideBar">
+	<div>
 	
-		인기 게시물
+		<B>인기 게시물</B>
 		<table>
 			<c:forEach var="popularBoard" items="${popularBoardList}">
 				<tr>
-					<td colspan="2">${popularBoard.boardName}</td>
+					<td colspan="2" style = "text-align:center; width:400px;"><B>${popularBoard.boardName}</B></td>
 					<td colspan="2"><a class="subject" style="cursor:pointer" 
 					onclick="goView2('${popularBoard.fk_boardKindNo}', '${popularBoard.boardNo}')">
 					${popularBoard.subject}</a></td>
@@ -717,6 +864,7 @@
 			</c:forEach>
 		</table>
 	</div> 
+	</div>
 
 	
 	   <div class="content2">
@@ -743,9 +891,11 @@
       
    </div>
 	
-	<div id="include">
-		<jsp:include page="minsungBoardList.jsp" />
-	</div>
+	
+	<form name="boardInfoFrm">
+		<input type="hidden" name="boardKindNo" value="${boardvo.fk_boardKindNo}"/>
+		<input type="hidden" name="boardNo" value="${boardvo.boardNo}"/>
+	</form>
 	
 	<form name="goViewFrm2">
 		<input type="hidden" id="boardNo" name="boardNo" value="" /> 

@@ -35,5 +35,31 @@ public interface InterMinsungBoardDAO {
 
 	void pointPlus(Map<String, String> paraMap);
 
+	MinsungBoardVO getView(Map<String, String> paraMap);
+
+	void addReadCount(Map<String, String> paraMap);
+
+	int addBoardUp(Map<String, String> paraMap);
+
+	int getBoardGoodCount(Map<String, String> paraMap);
+
+	int addBoardDown(Map<String, String> paraMap);
+
+	int getBoardBadCount(Map<String, String> paraMap);
+
+	int addCommentReport(Map<String, String> paraMap);
+
+	int addBoardWithFile(MinsungBoardVO boardvo);
+
+	List<MinsungMsgVO> getMsgList(int loginNo);
+
+	List<MinsungMsgVO> sendMsgList(int loginNo);
+
+	MinsungMsgVO oneMsg(String msgNo);
+
+	int getToMemberNo(String nickName);
+
+	int insertMsg(Map<String, String> paraMap);
+
 
 }

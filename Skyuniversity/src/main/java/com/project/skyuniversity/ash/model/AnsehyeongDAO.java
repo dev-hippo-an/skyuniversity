@@ -493,4 +493,10 @@ public class AnsehyeongDAO implements InterAnsehyeongDAO {
 		return noticeList;
 	}
 
+	@Override
+	public CommuMemberVO getLoginUser(String fk_memberNo) {
+		CommuMemberVO loginuser	= sqlsession.selectOne("ansehyeong.getLoginuserFromHs", fk_memberNo);
+		return loginuser;
+	}
+
 }

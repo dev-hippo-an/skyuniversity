@@ -127,7 +127,6 @@ tr.notification td {
 			}
 		});
 
-   		
    		// 글쓰기 버튼을 누르면 파라미터 값으로 게시판 번호를 가지고 작성 페이지로 넘어간다.
       	$("button#register").click(function() {
       		if ("${paraMap.boardKindNo}" != "7") {
@@ -136,7 +135,6 @@ tr.notification td {
 	      		location.href="<%= request.getContextPath()%>/boardRegister2.sky";
 			}
       	});
-      
 
    		// 각 게시물을 누르면 해당 게시물의 상세 페이지로 넘어간다.
    		$("tr.board").click(function() {
@@ -151,7 +149,6 @@ tr.notification td {
 	   			frm.action = "<%= request.getContextPath()%>/boardDetail2.sky"; 
 			}
    			frm.submit();
-   			
 		});
        
        

@@ -455,6 +455,19 @@ public class AnsehyeongService implements InterAnsehyeongService {
 		
 		return noticevo;
 	}
+
+
+	@Override
+	public CommuMemberVO getLoginuserFromHs(String fk_memberNo) {
+		CommuMemberVO loginuser = dao.getLoginUser(fk_memberNo);
+		
+		if (loginuser != null) {
+			CommuMemberLevelVO levelvo = dao.getLoginUserLevel(loginuser);
+			loginuser.setLevelvo(levelvo);
+		}
+		
+		return loginuser;
+	}
 	
 
 

@@ -6,6 +6,7 @@ import java.util.Map;
 import com.project.skyuniversity.ash.model.NoticeVO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
 import com.project.skyuniversity.minsung.model.MinsungCategoryVO;
+import com.project.skyuniversity.minsung.model.MinsungMsgVO;
 import com.project.skyuniversity.ohyoon.model.CommentVO;
 
 public interface InterMinsungService {
@@ -37,6 +38,35 @@ public interface InterMinsungService {
 	List<MinsungBoardVO> popularBoardList();
 
 	void pointPlus(Map<String, String> paraMap);
+
+	MinsungBoardVO getView(Map<String, String> paraMap);
+
+	MinsungBoardVO getViewWithNoAddCount(Map<String, String> paraMap);
+
+	int addBoardUp(Map<String, String> paraMap);
+
+	int getBoardGoodCount(Map<String, String> paraMap);
+
+	int addBoardDown(Map<String, String> paraMap);
+
+	int getBoardBadCount(Map<String, String> paraMap);
+
+	int addCommentReport(Map<String, String> paraMap);
+
+	MinsungBoardVO getViewNoAddCount(Map<String, String> paraMap);
+
+	int add_withFile(MinsungBoardVO boardvo);
+
+	List<MinsungMsgVO> getMsgList(int loginNo);
+
+	List<MinsungMsgVO> sendMsgList(int loginNo);
+
+	MinsungMsgVO oneMsg(String msgNo);
+
+	int getToMemberNo(String nickName);
+
+	int insertMsg(Map<String, String> paraMap);
+
 
 
 
