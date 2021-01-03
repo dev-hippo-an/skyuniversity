@@ -30,4 +30,22 @@ public interface InterJihyunService {
 	// 학번으로 멤버 정보 가져오기
 	JihyunMemberVO getLoginuserFromCommu(String memberNo);
 
+	// 증명서 신청 내역 추가
+	int addCertificateApplication(List<Map<String, String>> caList);
+
+	// 공지사항 내용 가져오기
+	Map<String, String> getNoticeDetail(Map<String, String> paraMap);
+
+	// 현재 수강과목 불러오기
+	List<Map<String, String>> getLectureList(String memberNo);
+
+	// 학생 기본정보 업데이트
+	int sInfoUpdate(Map<String, String> paraMap);
+
+	// 학생 주소 업데이트
+	int sAddressUpdate(Map<String, String> paraMap);
+
+	// 학교 전체 일정 불러오기
+	List<Map<String, String>> getsScheduleList();
+
 }

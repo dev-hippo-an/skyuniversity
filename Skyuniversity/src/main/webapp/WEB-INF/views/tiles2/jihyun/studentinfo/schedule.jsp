@@ -1,5 +1,7 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+    
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -30,7 +32,9 @@ div#scWrapper {
 <script type="text/javascript" src="https://unpkg.com/frozor-hybrid@2.0.4/index.js"></script>
 <script type="text/javascript">
 
-var data = [
+var data = ${ssList};
+
+/* var data = [
     {
         text: "Google AdWords Strategy",
         roomId: 1,
@@ -158,39 +162,28 @@ var data = [
         endDate: new Date("2021-05-21T21:15:00.000Z")
     }, {
         text: "데이터베이스 모델링",
-        roomId: 5,
-        startDate: new Date("2020-12-21T21:45:00.000Z"),
-        endDate: new Date("2020-12-22T23:30:00.000Z")
+      	sort: 1,
+        startDate: new Date("2020-12-21T00:45:00.000Z"),
+        endDate: new Date("2020-12-23T24:00:00.000Z")
     }
-];
+]; */
 
 var resourcesData = [
     {
-        text: "Room 401",
-        id: 1,
-        color: "#bbd806"
-    }, {
-        text: "Room 402",
-        id: 2,
-        color: "#f34c8a"
-    }, {
-        text: "Room 403",
-        id: 3,
-        color: "#ae7fcc"
-    }, {
-        text: "Room 407",
-        id: 4,
-        color: "#ff8817"
-    }, {
-        text: "Room 409",
-        id: 5,
+        text: "학교일정",
+        id: 0,
         color: "#03bb92"
+    }, {
+        text: "학과일정",
+        id: 1,
+        color: "#f34c8a"
     }
 ];
 
 $(function(){
     var scheduler = $("#scheduler").dxScheduler({
-        timeZone: "America/Los_Angeles",
+        /* timeZone: "America/Los_Angeles", */
+        timeZone: "Europe/London",
         dataSource: data,
         views: [{
             type: "month",
@@ -206,11 +199,11 @@ $(function(){
             maxAppointmentsPerCell: 2
         }],
         currentView: "Auto Mode",
-        currentDate: new Date(2020, 11, 25),
+        currentDate: new Date(2020, 12, 01),
         resources: [{
-            fieldExpr: "roomId",
+            fieldExpr: "sort",
             dataSource: resourcesData,
-            label: "Room"
+            label: "일정구분"
         }],
         height: 650
     }).dxScheduler("instance");
@@ -234,13 +227,15 @@ $(function(){
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-					<td></td>
-				</tr>
+				<c:forEach var="slist" items="${sScheduleList}" varStatus="status">
+					<tr>
+						<td>${status.count}</td>
+						<td>${slist.startDate}</td>
+						<td>${slist.status}</td>
+						<td>${slist.subject}</td>
+						<td>${slist.contents}</td>
+					</tr>
+				</c:forEach>
 			</tbody>
 		</table>
 	</div>
