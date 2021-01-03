@@ -1997,50 +1997,61 @@ public class EunjiBoardController {
 		
 		List<String> gradelist = service.getAllGrade(memberNo);
 		List<String> creditlist = service.getAllCredit(memberNo);
-		
-		// 평점평균 4.0 이상 취득 확인
-		double sum = 0.0;
-		for(int i=0; i<gradelist.size(); i++) {
-			if(gradelist.get(i).equals("A+")) {
-				sum += 4.5 * (double)Integer.parseInt(creditlist.get(i));
-			}
-			else if(gradelist.get(i).equals("A")) {
-				sum += 4.0 * (double)Integer.parseInt(creditlist.get(i));
-			}
-			else if(gradelist.get(i).equals("B+")) {
-				sum += 3.5 * (double)Integer.parseInt(creditlist.get(i));
-			}
-			else if(gradelist.get(i).equals("B")) {
-				sum += 3.0 * (double)Integer.parseInt(creditlist.get(i));
-			}
-			else if(gradelist.get(i).equals("C+")) {
-				sum += 2.5 * (double)Integer.parseInt(creditlist.get(i));
-			}
-			else if(gradelist.get(i).equals("C")) {
-				sum += 2.0 * (double)Integer.parseInt(creditlist.get(i));
-			}
-			else if(gradelist.get(i).equals("D+")) {
-				sum += 1.5 * (double)Integer.parseInt(creditlist.get(i));
-			}
-			else {
-				sum += 1.0 * (double)Integer.parseInt(creditlist.get(i));
-			}
-			
-		}
-		sum = sum / (double)sumcredits;
-		
 		boolean checkgrade = true;
-		if(sum < 4.0) {
-			checkgrade = false;
+		if(gradelist.get(0) != null) {
+			// 평점평균 4.0 이상 취득 확인
+			double sum = 0.0;
+			for(int i=0; i<gradelist.size(); i++) {
+				if(gradelist.get(i).equals("A+")) {
+					sum += 4.5 * (double)Integer.parseInt(creditlist.get(i));
+				}
+				else if(gradelist.get(i).equals("A")) {
+					sum += 4.0 * (double)Integer.parseInt(creditlist.get(i));
+				}
+				else if(gradelist.get(i).equals("B+")) {
+					sum += 3.5 * (double)Integer.parseInt(creditlist.get(i));
+				}
+				else if(gradelist.get(i).equals("B")) {
+					sum += 3.0 * (double)Integer.parseInt(creditlist.get(i));
+				}
+				else if(gradelist.get(i).equals("C+")) {
+					sum += 2.5 * (double)Integer.parseInt(creditlist.get(i));
+				}
+				else if(gradelist.get(i).equals("C")) {
+					sum += 2.0 * (double)Integer.parseInt(creditlist.get(i));
+				}
+				else if(gradelist.get(i).equals("D+")) {
+					sum += 1.5 * (double)Integer.parseInt(creditlist.get(i));
+				}
+				else {
+					sum += 1.0 * (double)Integer.parseInt(creditlist.get(i));
+				}
+				
+			}
+			sum = sum / (double)sumcredits;
+			
+			
+			if(sum < 4.0) {
+				checkgrade = false;
+			}
+			mav.addObject("sum", String.format("%.2f", sum));	// 평점평균
 		}
-		
+		else {
+			String message = "조기졸업신청에 실패하였습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
 		List<GraduateEarlyVO> earlylist = service.selectGraduateEarly(memberNo);
 		
 		mav.addObject("size", earlylist.size());
 		mav.addObject("earlylist", earlylist);	// 이수학기
 		mav.addObject("sumsem", sumsem);	// 이수학기
 		mav.addObject("sumcredits", sumcredits);	// 이수학점
-		mav.addObject("sum", String.format("%.2f", sum));	// 평점평균
+		
 		mav.addObject("sumcredit", sumcredit);
 		mav.addObject("sumsemcheck", sumsemcheck);
 		mav.addObject("fcheck", fcheck);
@@ -2146,6 +2157,5 @@ public class EunjiBoardController {
 		mav.setViewName("eunji/class/registerSubjects.tiles2");
 		return mav;
 	}
-		
 
 }
