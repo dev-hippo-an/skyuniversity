@@ -894,7 +894,6 @@
 		
 		var $target = $(event.target); // 이벤트가 발생한 선택자를 가져와 $target이라는 변수로 설정한다.
 		var orgComment = $target.val();
-		
 		var fk_boardNo = $("input[name=fk_boardNo]").val(); 
 		var commentPassword = $("input[name=commentPassword]").val();
 		
@@ -906,7 +905,6 @@
 			success: function(json){
 		
 				if (json.n == 1) {
-						
 					var fk_boardKindNo = $("input[name=fk_boardKindNo]").val(); 
 			
 					$.ajax({
@@ -1033,7 +1031,6 @@
 		
 		var $target = $(event.target); // 이벤트가 발생한 선택자를 가져와 $target이라는 변수로 설정한다.
 		var orgComment = $target.val();   
-		
 		var fk_boardNo = $("input[name=fk_boardNo]").val(); 
 		var commentPassword = $("input[name=commentPassword]").val();
 		

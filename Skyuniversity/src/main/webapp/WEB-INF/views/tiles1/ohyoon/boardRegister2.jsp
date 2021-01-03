@@ -107,8 +107,6 @@
 	   			return false;
 			}
 	   		
-	   	//	$("span#warning").hide();
-	   		
 		    
 	   		// 제목을 입력하지 않으면 등록되지 않는다.
 	   		var subject = $("input#subject").val().trim();
