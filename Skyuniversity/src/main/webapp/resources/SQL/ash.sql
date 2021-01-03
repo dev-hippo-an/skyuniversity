@@ -2299,3 +2299,19 @@ select row_number () over (order by fk_boardKindNo, regDate) as rno, fk_boardKin
 		) m
 		on c.fk_memberNo = m.memberno
         where fk_memberNo = 102
+        
+        select * from tbl_member;
+        select * from tbl_commu_member;
+        commit;
+        update tbl_commu_member set nickname = null
+        where commuMemberNo = 10;
+        
+        select * from tab;
+        
+        select * from tbl_message;
+        
+        select * from tbl_commu_member;
+        
+        update tbl_commu_member set fk_levelNo = 4 , point = 3999
+        where commuMemberNo = 10;
+        commit;

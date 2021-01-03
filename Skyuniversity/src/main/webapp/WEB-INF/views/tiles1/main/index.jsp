@@ -190,7 +190,7 @@ thead.board-body-header th:last-child{
   				<div class="column">
     				<div class="index-board hot">
     					<div class="board-header"> 
-    						<span style="fontweight: bold; font-size: 15pt;">최근 게시물</span>
+    						<span style="font-weight: bold; font-size: 15pt;">최근 게시물</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -223,7 +223,7 @@ thead.board-body-header th:last-child{
   				<div class="column">
     				<div class="index-board hot">
     					<div class="board-header"> 
-    						<span style="fontweight: bold; font-size: 15pt;">주간 베스트 게시물</span>
+    						<span style="font-weight: bold; font-size: 15pt;">주간 베스트 게시물</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -256,7 +256,7 @@ thead.board-body-header th:last-child{
   				<div class="column">
     				<div class="index-board hot">
     					<div class="board-header"> 
-    						<span style="fontweight: bold; font-size: 15pt;">인기 게시물</span>
+    						<span style="font-weight: bold; font-size: 15pt;">인기 게시물</span>
     					</div>
     					<table class="board-body">
     						<thead class="board-body-header">
@@ -289,7 +289,7 @@ thead.board-body-header th:last-child{
 			
 			<c:if test="${not empty bannerList}">
 				<div id="index-show-carousel" class="column">
-					<a>
+					<a style="cursor: pointer;">
 					<c:forEach items="${bannerList}" var="banner">
 						<img class="caro" src="/skyuniversity/resources/images/${banner.iname}" onclick="openWin('${banner.ilink}')" />
 					</c:forEach>

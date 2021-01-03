@@ -220,7 +220,7 @@ tr.notification td {
 </head>
 
 
-<div class="container" style="width: 80%;">
+<div class="container" style="width: 80%;" >
 	<h1 align="left">${tableInfo.boardName}</h1>
 	<div id="tags">
 		<ul class="nav nav-tabs">

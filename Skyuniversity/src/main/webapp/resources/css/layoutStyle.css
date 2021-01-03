@@ -153,6 +153,6 @@ body {
 
 /* When the input field gets focus, change its width to 100% */
 #mypage-div input#search:focus {
-  width: 75%;
+  width: 70%;
 }
 

@@ -163,7 +163,7 @@ button:hover {
 		    		// !!! 주의 !!!
 		    		// if(json == null) 이 아님!!!
 		    		// if(json.length == 0) 으로 해야함!!
-		    		html += "<tr><td colspan='6' style='font-size: 15pt;'>글을 쓴것이 없구마잉...</td></tr>";
+		    		html += "<tr><td colspan='6' style='font-size: 15pt;'>2주내 글을 쓴것이 없구마잉...</td></tr>";
 					
 		    		// 더보기 버튼 없애버리기
 		    		$("button#btnMoreMyPage").hide();

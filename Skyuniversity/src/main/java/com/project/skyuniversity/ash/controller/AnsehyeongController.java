@@ -21,7 +21,6 @@ Service(서비스)단 객체가 하는 일은 Model단에서 작성된 데이터
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.PrintWriter;
 import java.util.*;
 
@@ -48,7 +47,6 @@ import com.project.skyuniversity.ash.model.BannerVO;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.ash.model.MarketBoardVO;
 import com.project.skyuniversity.ash.model.NoticeVO;
-import com.project.skyuniversity.ash.model.PhotoVO;
 import com.project.skyuniversity.ash.service.InterAnsehyeongService;
 import com.project.skyuniversity.jihyun.model.JihyunMemberVO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
