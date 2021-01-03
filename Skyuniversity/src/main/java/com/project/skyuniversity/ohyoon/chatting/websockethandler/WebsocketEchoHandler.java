@@ -124,11 +124,7 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
         for (WebSocketSession webSocketSession : connectedUsers) {
             if (messageVO.getType().equals("all")) { 
                // 채팅할 대상이 "전체" 일 경우
-               // 메시지를 자기자신을 뺀 나머지 모든 사용자들에게 메시지를 보냄.
                 if (!wsession.getId().equals(webSocketSession.getId())) {  
-                   // wsession 은 메시지를 보낸 클라이언트임.
-                   // webSocketSession 은 웹소켓서버에 연결된 모든 클라이언트중 하나임.
-                   // wsession.getId() 와  webSocketSession.getId() 는 자동증가되는 고유한 숫자로 나옴 
                     webSocketSession.sendMessage(
                             new TextMessage("<span>"+wsession.getRemoteAddress().getAddress().getHostAddress()+"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getNickname()+ "</span>]" + " ▶ " + messageVO.getMessage()));  
                 }
@@ -138,8 +134,8 @@ public class WebsocketEchoHandler extends TextWebSocketHandler {
                           // webSocketSession 은 웹소켓서버에 연결한 모든 클라이언트중 하나이며, 그 클라이언트의 IP address를 알아오는 것임.  
                 
                if (messageVO.getTo().equals(hostAddress)) { 
-                   // messageVO.getTo() 는 클라이언트가 보내온 귓속말대상 IP address 임.
-                    webSocketSession.sendMessage(
+
+            	   webSocketSession.sendMessage(
                             new TextMessage(
                                     "<span style='color:red; font-weight: bold;'>"
                                     +"<span>"+ wsession.getRemoteAddress().getAddress().getHostAddress() +"</span>&nbsp;[<span style='font-weight:bold; cursor:pointer;' class='loginuserName'>" +loginuser.getNickname()+ "</span>]" + "▶ " + messageVO.getMessage()
