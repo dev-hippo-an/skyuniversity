@@ -1,16 +1,62 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
-
 <%
    String ctxPath = request.getContextPath();
 %>
+<link rel="stylesheet" href="//code.jquery.com/ui/1.8.18/themes/base/jquery-ui.css" />
+<script src="//ajax.googleapis.com/ajax/libs/jquery/1.7.1/jquery.min.js"></script>
+<script src="//code.jquery.com/ui/1.8.18/jquery-ui.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.js"></script>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jquery-modal/0.9.1/jquery.modal.min.css" />
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
 <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/js/bootstrap.min.js"></script>
-
 <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
 
 <style type="text/css">
+#info {
+	color: #737373;
+	font-size: 9.5pt;
+	padding-left: 5px;
+}
+#info > li {
+	padding-bottom: 10px;
+}
+.info > td {
+	width: 550px;
+}
+.info > td > input {
+	border: none;
+	color: #0066cc;
+	font-weight: bold;
+}
+table#scroltbl {
+	border-collapse:collapse; width:100%;
+}
+#scrolth {
+	float:left; width:100%;
+}
+#bodys {
+	overflow-y:auto; overflow-x:hidden; float:left; width:100%; height:350px;
+}
+#subli {
+	display: table; width: 1370px;
+}
+.sublicl {
+	display:table; width:1370px;
+} 
+.sublicl > td {
+	font-size: 9pt;
+	text-align: center;	
+}
+#subli > td {
+	width:280px;
+	font-size: 9pt;
+	text-align: center;
+}
+#workli > li {
+	padding-bottom: 10px;
+}
 * {box-sizing: border-box}
 
 /* Set height of body and the document to 100% */
@@ -124,176 +170,80 @@ body, html {
    text-align: center;
 }
 #includes {
-	width: 1200px;
-	margin-left: 180px;
+	width: 800px;
 	padding-top: 20px;
-	height: 400px;
+	height: 100px;
 }
 #subtitle{
 	display: block;
 }
 </style>
-
 <script type="text/javascript">
-
-   $(document).ready(function() {
-      //$(".tabcontent").hide();
-
-   
-   });
-   function openPage(pageName,elmnt,color) {
-      $(".tabcontent").hide();
-      $("#"+pageName).show();
-   }
-   // Get the element with id="defaultOpen" and click on it
-   //document.getElementById("defaultOpen").click();
-   
-   function subject(){
-	   alert("dd");
-   }
 </script>
-<div id="full">
-<div id="contain">
-<table>
-   <tr>
-      <td>
-         <div id="div1">
-            <div id="title">
-            <div>
-               <table>
-                  <th>
-                     <td></td>
-                     <td></td>
-                     <td></td>
-                  </th>
-               </table>수강강좌 총강좌수: 5개 
-            </div>
-            </div>
-            <div id="classli">
-               <ul id="classul">
-                  <li><a onclick="subject();">데이터베이스</a></li>
-                  <li>객체지향프로그래밍</li>
-                  <li>자료구조</li>
-                  <li>빅데이터프로그래밍</li>
-                  <li>시스템분석설계</li>
-               </ul>
-            </div>
-         </div>
-      </td>
-      <td>
-         <div>
-            <table>
-               <tr>
-                  <td>Today's</td>
-                  <td><span>0</span>건</td>
-               </tr>
-               <tr>
-                  <td>2020.12.20</td>
-                  <td>
-                     <ul id="classul">
-                        <li><a class="ulstyle" data-toggle="modal" data-target="#myModal">데이터베이스 기말고사</a></li>
-                        <li>ER분석 및 설계</li>
-                        <li>Error Detection 기법</li>
-                     </ul>
-                     
-                     <!-- Modal -->
-                     <div id="myModal" class="modal fade" role="dialog">
-                       <div class="modal-dialog">
-                     
-                         <!-- Modal content-->
-                         <div class="modal-content">
-                           <div class="modal-header">
-                             <button type="button" class="close" data-dismiss="modal">&times;</button>
-                             <h4 class="modal-title">   ER 분석 및 EB 설계 자률과제</h4>
-                           </div>
-                           <div class="modal-body">
-                             <table>
-                                <tr>
-                                   <td>과목</td>
-                                   <td>데이터베이스</td>
-                                </tr>
-                                <tr>
-                                   <td>시간</td>
-                                   <td>2020년 12월 6일 오전 0시 0분 ~ 2020년 12월 13일 오후 23시 59분</td>
-                                </tr>
-                                <tr>
-                                   <td>설명</td>
-                                   <td>
-                                      o 첨부된 파일의 과제를 수행하시오.
-                                    <br>   
-                                    o 이 과제는 자율과제이므로 결과를 제출하지 않아도 됩니다.
-                                    <br>
-                                    o 과제 결과를 재출하면&nbsp;채점과 코멘트를 해줄 것입니다.
-                                 </td>
-                                </tr>
-                             </table>    
-                           </div>
-                           <div class="modal-footer">
-                             <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
-                           </div>
-                         </div>
-                     
-                       </div>
-                     </div>
-                  </td>
-               </tr>
-            </table>
-         </div>
-      </td>
-</tr>
-</table>
+<div style="padding-left: 10px; padding-right: 10px;">  
+
+<div>
+	<span style="font-size: 12pt; font-weight: bold;float: left;">수강과목 및 과제</span>
+</div>  
+<br><br>       
+<div style="border: solid 2px #cccccc; padding: 10px; border-radius: 6px; float: left; width: 49%; height: 250px;">
+<div style="background-color:#fff2e6; padding: 5px; font-weight: bold;text-align: center;">
+<span>2020학년 2학기 수강과목</span>
+</div>	
+<br>
+	<ul>    
+		<c:forEach items="${sublist}" var="str" >
+		<li style="padding-bottom: 5px; font-weight: bold;">${str}</li>     
+		</c:forEach>
+	</ul>
+</div>      
+<div style="border: solid 2px #cccccc; padding: 10px; border-radius: 6px;  float: right; width: 49%; height: 250px; margin-bottom: 10px;">
+<div style="background-color:#fff2e6; padding: 5px; font-weight: bold;text-align: center;">
+<span>수강과목 과제</span>
+</div>
+<br>
+<c:forEach items="${worklist}" var="vo">
+<label>[${vo.subjectName}]&nbsp;과제</label>
+<p><a href="#ex1" rel="modal:open"  onclick="funcmodal();" style="font-weight: bold;">${vo.subject}</a></p>
+<br/>
+<div style="text-align: center;">
+<div id="ex1" class="modal" style="width:500px; margin: 0 auto; height: 300px; margin-top: 100px;">
+	<div>
+		<h4 style="font-weight: bold;">[<span style="color:red;">${vo.subjectName}</span>]&nbsp;과제</h4>
+	</div>	
+	<br>
+		<ul id="workli">
+			<li style="padding-left: 0px;">
+				<label>기간:</label>
+				<span>${vo.startDate}~${vo.endDate}</span>
+			</li>
+			<li style="padding-left: 0px; ">
+				<label>과제제목:</label>
+				<span>${vo.subject}</span>
+			</li>
+			<li style="padding-left: 0px; ">
+				<label>과제내용:</label>
+				<span>${vo.contents}</span>
+			</li>
+		</ul>								 
+		<a href="#" rel="modal:close" onclick="funcclose();" style="float: right;">닫기</a>
+	
+</div>
+</div>           
+</c:forEach>		
+</div>
+<br/>
+<div style="padding-top: 10px; clear: both;">
+	<span style="font-size: 12pt; font-weight: bold; ">과제 스케줄러</span>
+</div>   
+<br>
+<div style="border: solid 2px #cccccc; padding: 20px; border-radius: 6px; clear: both; height: 750px; text-align: center;">
+	<div style="background-color:#d9f2e5; padding: 5px; font-weight: bold;text-align: center;">
+<span>과제 스케줄을 등록하고 관리하세요.</span>
+</div>	
+	<div id="includes" style="margin: 0 auto;">
+		<jsp:include page="a.jsp"/>
+	</div>
 </div>
 
-<div id="includes">
-<jsp:include page="a.jsp"/>
-</div>
-</div>
-
-<div id="container">
-<button class="tablink" onclick="openPage('subnotice', this, 'red');">과목공지</button>
-<button class="tablink" onclick="openPage('worknotice', this, 'green')" id="defaultOpen">과제공지</button>
-<button class="tablink" onclick="openPage('plan', this, 'blue')">강의계획서</button>
-
-<div id="subnotice" class="tabcontent">
-  dd
-</div>
-
-<div id="worknotice" class="tabcontent">
-
-   
-</div>
-
-<div id="plan" class="tabcontent">
-<div id="tbldiv">
- <table id="plantbl">
-    <tr id="trth">
-       <th class="title">과목명</th>
-       <th class="content" style="text-align: left; height: 100px;" >데이터베이스 프로그래밍</th>
-    </tr>
-    <tr class="trtd">
-       <td class="title">수업목표</td>
-       <td class="content" style="text-align: left;">
-       o 본 강좌는 컴퓨터공학부의 핵심 과목으로 선수과목인 1학기 고급프로그래밍 강좌에서 학습한 기본적인 Java 프로그래밍과 객체지향 개념에 기초하여 학생들에게 중/소규모 프로젝트에 대한 체계적인 개발 경험을 갖도록 한다.<br>
-        o 본 강좌를 성공적으로 완수하기 위해 학생들은 선수과목인 1학기 고급프로그래밍 수업을 성공적으로 이수했거나 객체지향 프로그래밍에 대한 경험이 반드시 필요하다. (선수과목: 고급프로그래밍)
-         </td>
-    </tr>
-    <tr class="trtd">
-       <td class="title">수업진행방식</td>
-       <td class="content" style="text-align: left;">
-          o 본 강좌는 강의와 실습을 병행하여 진행<br>
-         <br>
-         o 코로나19로 인해 원격화상 수업 및 온라인 블랜디드 수업으로 진행<br>
-         - 9/1 ~ 10/5 : 원격 화사수업(Google Meet)<br>
-         - 10/6 이후: 온라인 블랜디드 수업(Google Meet 50% + LMS 50%)<br>
-         <br>
-         o 프로젝트를 학기말에 수행하고 프로젝트 개발 과정에서 생성되는 다양한 결과물(제안서,설계서,결과보고서)을 제출한다.<br>
-         o 프로젝트는 자유주제로 선정되며 약간의 제한조건이 주어진다. 또한 학생들은 제출한 결과물에 대한여 발표한다.<br>
-         o 학기 초에 학생들의 Java 프로그래밍 기초능력을 테스트하는 수준테스트가 시행되며 이는 평가에 포함된다.<br>
-         o 평가지침: 중간고사 35, 기말고사 35%, 프로젝트: 10%, 퀴즈 및 과제물 10%, 출석 10%<br>
-          <br>
-       </td>
-    </tr>
- </table>
- </div>
-</div>
 </div>

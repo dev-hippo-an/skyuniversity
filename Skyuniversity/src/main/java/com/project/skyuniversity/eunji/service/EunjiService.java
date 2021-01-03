@@ -9,6 +9,9 @@ import org.springframework.stereotype.Service;
 import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
+import com.project.skyuniversity.eunji.model.GraduateDelayVO;
+import com.project.skyuniversity.eunji.model.GraduateEarlyVO;
+import com.project.skyuniversity.eunji.model.HomeworkVO;
 import com.project.skyuniversity.eunji.model.InterEunjiBoardDAO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
@@ -349,6 +352,102 @@ public class EunjiService implements InterEunjiService {
 	public List<String> periodInfo(Map<String, String> paraMap) {
 		List<String> periodlist = dao.periodInfo(paraMap);
 		return periodlist;
+	}
+
+	@Override
+	public List<String> getMustSubject(Map<String, String> paraMap) {
+		List<String> sublist = dao.getMustSubject(paraMap);
+		return sublist;
+	}
+
+	@Override
+	public List<String> getMyMustSubject(Map<String, String> paraMap) {
+		List<String> list = dao.getMyMustSubejct(paraMap);
+		return list;
+	}
+
+	@Override
+	public List<String> getMustSubjectdept(Map<String, String> paraMap) {
+		List<String> list = dao.getMustSubjectdept(paraMap);
+		return list;
+	}
+
+	@Override
+	public int updateGraduateOk(int memberNo) {
+		int n = dao.updateGraduateOk(memberNo);
+		return n;
+	}
+
+	@Override
+	public int insertGraduateDelay(GraduateDelayVO gdvo) {
+		int n = dao.insertGraduateDelay(gdvo);
+		return n;
+	}
+
+	@Override
+	public List<GraduateDelayVO> selectGraduateList(int memberNo) {
+		List<GraduateDelayVO> list = dao.selectGraduateList(memberNo);
+		return list;
+	}
+
+	@Override
+	public int checkDelay(GraduateDelayVO gdvo) {
+		int check = dao.checkDelay(gdvo);
+		return check;
+	}
+
+	@Override
+	public int deleteGraduateDelay(String seq) {
+		int n = dao.deleteGraduateDelay(seq);
+		return n;
+	}
+
+	@Override
+	public int getFGrade(int memberNo) {
+		int n = dao.getFGrade(memberNo);
+		return n;
+	}
+
+	@Override
+	public List<String> getAllGrade(int memberNo) {
+		List<String> list = dao.getAllGrade(memberNo);
+		return list;
+	}
+
+	@Override
+	public List<String> getAllCredit(int memberNo) {
+		List<String> list = dao.getAllCredit(memberNo);
+		return list;
+	}
+
+	@Override
+	public int insertGraduateEarly(GraduateEarlyVO gevo) {
+		int n = dao.insertGraduateEarly(gevo);
+		return n;
+	}
+
+	@Override
+	public List<GraduateEarlyVO> selectGraduateEarly(int memberNo) {
+		List<GraduateEarlyVO> list = dao.selectGraduateEarly(memberNo);
+		return list;
+	}
+
+	@Override
+	public int deleteGraduateEarly(String seq) {
+		int n = dao.deleteGraduateEarly(seq);
+		return n;
+	}
+
+	@Override
+	public List<String> getNowSubject(Map<String, Integer> map) {
+		List<String> mapList = dao.getNowSubject(map);
+		return mapList;
+	}
+
+	@Override
+	public List<HomeworkVO> selectHomework(Map<String, Integer> map) {
+		List<HomeworkVO> worklist = dao.selectHomework(map);
+		return worklist;
 	}
 
 

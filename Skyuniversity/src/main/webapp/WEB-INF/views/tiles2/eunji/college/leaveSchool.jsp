@@ -51,10 +51,12 @@
 
 		var sthtml = "";
 		var html = "<option>년도</option>";
-		
 		if(month < 3 || month >= 9){
 			sthtml = "<option>"+(year+1)+"</option>";
 			stsem = "<option>1</option>";
+			if(month >= 1){
+				sthtml = "<option>"+year+"</option>";
+			}
 			$("#startyear").html(sthtml);
 			$("#startsem").html(stsem);
 		}
@@ -191,7 +193,7 @@
 <br><br>
 <div>
 	<span style="font-size: 12pt; font-weight: bold;float: left;">휴학신청 상세정보</span>
-	<button id="regbtn" style="margin-left: 500px; border: none;">신청</button>
+	<button id="regbtn" style="margin-left: 500px; border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;">신청</button>
 </div>
 <br>
 <div style="border: solid 2px #cccccc; padding: 15px; border-radius: 6px;">

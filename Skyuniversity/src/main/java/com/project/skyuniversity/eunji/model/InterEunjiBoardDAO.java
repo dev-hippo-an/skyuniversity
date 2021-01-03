@@ -115,5 +115,37 @@ public interface InterEunjiBoardDAO {
 
 	List<String> periodInfo(Map<String, String> paraMap);
 
+	List<String> getMustSubject(Map<String, String> paraMap);
+
+	List<String> getMyMustSubejct(Map<String, String> paraMap);
+
+	List<String> getMustSubjectdept(Map<String, String> paraMap);
+
+	int updateGraduateOk(int memberNo);
+
+	int insertGraduateDelay(GraduateDelayVO gdvo);
+
+	List<GraduateDelayVO> selectGraduateList(int memberNo);
+
+	int checkDelay(GraduateDelayVO gdvo);
+
+	int deleteGraduateDelay(String seq);
+
+	int getFGrade(int memberNo);
+
+	List<String> getAllGrade(int memberNo);
+
+	List<String> getAllCredit(int memberNo);
+
+	int insertGraduateEarly(GraduateEarlyVO gevo);
+
+	List<GraduateEarlyVO> selectGraduateEarly(int memberNo);
+
+	int deleteGraduateEarly(String seq);
+
+	List<String> getNowSubject(Map<String, Integer> map);
+
+	List<HomeworkVO> selectHomework(Map<String, Integer> map);
+
 
 }

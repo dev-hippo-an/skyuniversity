@@ -345,6 +345,100 @@ public class EunjiBoardDAO implements InterEunjiBoardDAO {
 		return periodlist;
 	}
 
+	@Override
+	public List<String> getMustSubject(Map<String, String> paraMap) {
+		List<String> sublist = sqlSession.selectList("eunji.getMustSubject", paraMap);
+		return sublist;
+	}
 
+	@Override
+	public List<String> getMyMustSubejct(Map<String, String> paraMap) {
+		List<String> sublist = sqlSession.selectList("eunji.getMyMustSubejct", paraMap);
+		return sublist;
+	}
+
+	@Override
+	public List<String> getMustSubjectdept(Map<String, String> paraMap) {
+		List<String> list = sqlSession.selectList("eunji.getMustSubjectdept", paraMap);
+		return list;
+	}
+
+	@Override
+	public int updateGraduateOk(int memberNo) {
+		int n = sqlSession.update("eunji.updateGraduateOk", memberNo);
+		return n;
+	}
+
+	@Override
+	public int insertGraduateDelay(GraduateDelayVO gdvo) {
+		int n = sqlSession.insert("eunji.insertGraduateDelay", gdvo);
+		return n;
+	}
+
+	@Override
+	public List<GraduateDelayVO> selectGraduateList(int memberNo) {
+		List<GraduateDelayVO> list = sqlSession.selectList("eunji.selectGraduateList", memberNo);
+		return list;
+	}
+
+	@Override
+	public int checkDelay(GraduateDelayVO gdvo) {
+		int check = sqlSession.selectOne("eunji.checkDelay", gdvo);
+		return check;
+	}
+
+	@Override
+	public int deleteGraduateDelay(String seq) {
+		int n = sqlSession.delete("eunji.deleteGraduateDelay", seq);
+		return n;
+	}
+
+	@Override
+	public int getFGrade(int memberNo) {
+		int n = sqlSession.selectOne("eunji.getFGrade", memberNo);
+		return n;
+	}
+
+	@Override
+	public List<String> getAllGrade(int memberNo) {
+		List<String> list = sqlSession.selectList("eunji.getAllGrade", memberNo);
+		return list;
+	}
+
+	@Override
+	public List<String> getAllCredit(int memberNo) {
+		List<String> list = sqlSession.selectList("eunji.getAllCredit", memberNo);
+		return list;
+	}
+
+	@Override
+	public int insertGraduateEarly(GraduateEarlyVO gevo) {
+		int n = sqlSession.insert("eunji.insertGraduateEarly", gevo);
+		return n;
+	}
+
+	@Override
+	public List<GraduateEarlyVO> selectGraduateEarly(int memberNo) {
+		List<GraduateEarlyVO> list = sqlSession.selectList("eunji.selectGraduateEarly", memberNo);
+		return list;
+	}
+
+	@Override
+	public int deleteGraduateEarly(String seq) {
+		int n = sqlSession.delete("eunji.deleteGraduateEarly",seq);
+		return n;
+	}
+
+	@Override
+	public List<String> getNowSubject(Map<String, Integer> map) {
+		List<String> list = sqlSession.selectList("eunji.getNowSubject", map);
+		return list;
+	}
+
+	@Override
+	public List<HomeworkVO> selectHomework(Map<String, Integer> map) {
+		List<HomeworkVO> worklist = sqlSession.selectList("eunji.selectHomework", map);
+		return worklist;
+	}
 
 }

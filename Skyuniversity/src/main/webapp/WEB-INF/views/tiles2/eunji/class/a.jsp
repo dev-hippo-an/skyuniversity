@@ -14,6 +14,11 @@
 <script type="text/javascript" src="https://unpkg.com/frozor-hybrid@2.0.4/index.js"></script>
 <link rel="stylesheet" type="text/css" href="styles.css" />
 <script type="text/javascript">
+$(document).ready(function() {
+	$(".dx-button-text").click(function() {
+	});
+});
+
 
 var data = [
     {
@@ -141,33 +146,28 @@ var data = [
         roomId: 5,
         startDate: new Date("2021-05-21T19:00:00.000Z"),
         endDate: new Date("2021-05-21T21:15:00.000Z")
-    }, {
-        text: "데이터베이스 모델링",
-        roomId: 5,
-        startDate: new Date("2020-12-21T21:45:00.000Z"),
-        endDate: new Date("2020-12-22T23:30:00.000Z")
     }
 ];
 
 var resourcesData = [
     {
-        text: "Room 401",
+        text: "yellow",
         id: 1,
         color: "#bbd806"
     }, {
-        text: "Room 402",
+        text: "pink",
         id: 2,
         color: "#f34c8a"
     }, {
-        text: "Room 403",
+        text: "purple",
         id: 3,
         color: "#ae7fcc"
     }, {
-        text: "Room 407",
+        text: "orange",
         id: 4,
         color: "#ff8817"
     }, {
-        text: "Room 409",
+        text: "green",
         id: 5,
         color: "#03bb92"
     }
@@ -195,7 +195,7 @@ $(function(){
         resources: [{
             fieldExpr: "roomId",
             dataSource: resourcesData,
-            label: "Room"
+            label: "Label Color"
         }],
         height: 650
     }).dxScheduler("instance");

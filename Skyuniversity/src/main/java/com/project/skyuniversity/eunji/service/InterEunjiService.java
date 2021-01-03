@@ -6,6 +6,9 @@ import java.util.Map;
 import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
+import com.project.skyuniversity.eunji.model.GraduateDelayVO;
+import com.project.skyuniversity.eunji.model.GraduateEarlyVO;
+import com.project.skyuniversity.eunji.model.HomeworkVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
@@ -121,6 +124,38 @@ public interface InterEunjiService {
 	List<Map<String, String>> getSubjectListNo(String no);
 
 	List<String> periodInfo(Map<String, String> paraMap);
+
+	List<String> getMustSubject(Map<String, String> paraMap);
+
+	List<String> getMyMustSubject(Map<String, String> paraMap);
+
+	List<String> getMustSubjectdept(Map<String, String> paraMap);
+
+	int updateGraduateOk(int memberNo);
+
+	int insertGraduateDelay(GraduateDelayVO gdvo);
+
+	List<GraduateDelayVO> selectGraduateList(int memberNo);
+
+	int checkDelay(GraduateDelayVO gdvo);
+
+	int deleteGraduateDelay(String seq);
+
+	int getFGrade(int memberNo);
+
+	List<String> getAllGrade(int memberNo);
+
+	List<String> getAllCredit(int memberNo);
+
+	int insertGraduateEarly(GraduateEarlyVO gevo);
+
+	List<GraduateEarlyVO> selectGraduateEarly(int memberNo);
+
+	int deleteGraduateEarly(String seq);
+
+	List<String> getNowSubject(Map<String, Integer> map);
+
+	List<HomeworkVO> selectHomework(Map<String, Integer> map);
 
 	
 

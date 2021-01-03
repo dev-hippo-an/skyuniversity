@@ -133,20 +133,10 @@ function funcdel(index){
 	var result = confirm("공결 신청을 취소하시겠습니까?");
 	var seq = $("#seq"+index).val();
 	if(result){
-		$.ajax({
-			url: "<%= request.getContextPath() %>/delGirlOfficialLeave.sky",
-			data: {"seq":seq},
-			type: "GET",
-			dataType: "json",
-			success: function(json) {
-				if(json.result){
-					alert("삭제가 완료되었습니다.");
-					location.reload();
-				}
-			},error: function(request, status, error){
-	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	        }
-		}); 
+		location.href="<%=ctxPath%>/delGirlOfficialLeave.sky?seq="+seq;
+	}
+	else{
+		return;
 	}
 }
 </script>
@@ -159,17 +149,17 @@ function funcdel(index){
 	<ul style="padding-top: 20px;">
 		<li style="display: inline-block;">
 			<label>● 공결일자</label>
-			<input type="text" id="datepicker1" name="startDate"/> ~
-  			<input type="text" id="datepicker2" name="endDate"/>
+			<input type="text" id="datepicker1" name="startDate" style="border: solid 1px #cccccc;"/> ~
+  			<input type="text" id="datepicker2" name="endDate" style="border: solid 1px #cccccc;"/>
 		</li>
 		
 		<li style="display: inline-block;">
 			<label>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;● 전일여부</label>
 			<input type="checkbox" id="alldaychk" name="alldaychk"/>
 			<label>&nbsp;&nbsp;시간</label>
-			<input type="time" id="starttime" name="startTime"/> ~ <input type="time" id="endtime" name="endTime"/>
+			<input type="time" id="starttime" name="startTime" style="border: solid 1px #cccccc;"/> ~ <input type="time" id="endtime" name="endTime" style="border: solid 1px #cccccc;"/>
 		</li>
-		<li style="display: inline-block; margin-left: 80px;"><button id="addbtn" >신청</button></li>
+		<li style="display: inline-block; margin-left: 80px;"><button id="addbtn" style="border:none; background-color: #4d4d4d; color: white; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;" >신청</button></li>
 	</ul>
 	</form>
 	</div>
@@ -177,8 +167,10 @@ function funcdel(index){
 <br/>
 <br/>
 <div>
+<div>
 <span style="font-size: 12pt; font-weight: bold;">여학생 공결신청 목록</span>
-
+</div>
+<br>
 <div style="width: 1300px; text-align: center;">
 	<table class="table table-striped"  id="scroltbl">
 		<thead id="scrolth">
@@ -205,7 +197,10 @@ function funcdel(index){
 				<td>${glvo.approve}</td>
 				<td>${glvo.noreason}</td>
 				<c:if test="${glvo.approve=='승인전'}">
-					<td><button id="delbtn${status.index}" onclick="funcdel(${status.index})">취소</button><input id="seq${status.index}" type="text" value="${glvo.girlLeaveNo}" hidden="true"></td>
+					<td>
+						<button id="delbtn${status.index}" onclick="funcdel(${status.index})" style='border:none; background-color:#e6e6e6; color: #e62e00; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>취소</button>
+						<input id="seq${status.index}" type="text" value="${glvo.girlLeaveNo}" hidden="true">
+					</td>
 				</c:if>
 				<c:if test="${glvo.approve=='승인완료'}">
 					<td></td>
@@ -215,7 +210,7 @@ function funcdel(index){
 		</tbody>
 	</table>
 </div>
-</div>
+</div> 
 <br>
 <div id="divbtn">
 <span style="font-size: 12pt; font-weight: bold; color: #ff4000">여학생 공결신청 유의사항</span>

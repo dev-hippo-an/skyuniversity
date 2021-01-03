@@ -3,6 +3,7 @@ package com.project.skyuniversity.eunji.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -30,6 +31,9 @@ import com.project.skyuniversity.eunji.model.SchoolLeaveVO;
 import com.project.skyuniversity.eunji.model.ClassCheckVO;
 import com.project.skyuniversity.eunji.model.ComeSchoolVO;
 import com.project.skyuniversity.eunji.model.GirlOfficialLeaveVO;
+import com.project.skyuniversity.eunji.model.GraduateDelayVO;
+import com.project.skyuniversity.eunji.model.GraduateEarlyVO;
+import com.project.skyuniversity.eunji.model.HomeworkVO;
 import com.project.skyuniversity.eunji.model.MemberVO;
 import com.project.skyuniversity.eunji.model.OfficialLeaveVO;
 import com.project.skyuniversity.eunji.service.InterEunjiService;
@@ -41,12 +45,6 @@ public class EunjiBoardController {
 	private EjFileManager fileManager;
 	@Autowired
 	private InterEunjiService service;
-
-	@RequestMapping(value = "registerSubjects.sky")
-	public ModelAndView registerSubjects(ModelAndView mav) {
-		mav.setViewName("eunji/class/registerSubjects.tiles2");
-		return mav;
-	}
 
 	@RequestMapping(value = "a.sky")
 	public ModelAndView a(ModelAndView mav) {
@@ -256,7 +254,7 @@ public class EunjiBoardController {
 		paraMap.put("subjectno", subjectno);
 		paraMap.put("year", year);
 		paraMap.put("currentsemester", cursemester);
-
+ 
 		int info = service.recourseInfo(paraMap);
 		int info2 = service.recourseInfo2(paraMap);
 		boolean recourse = false;
@@ -265,6 +263,7 @@ public class EunjiBoardController {
 		}
 		boolean bool = true;
 
+		// 다른학과 수강신청 불가 확인
 		if (!dept.equals("교양") && !dept.equals(memdept)) {
 			bool = false;
 			unique = true;
@@ -283,48 +282,40 @@ public class EunjiBoardController {
 			arr2 = period.split(",");
 		}
 		
+		// 요일 및 교시가 겹치는지 여부 확인 로직
 		List<String> daylist = service.dayInfo(paraMap);
 		List<String> periodlist = service.periodInfo(paraMap);
 
 		boolean dayre = true;
 		for(int i=0; i<daylist.size(); i++) {
 			if(arr == null) {
-				if(daylist.get(i).contains(day)) {
+				if(daylist.get(i).contains(day) && periodlist.get(i).contains(period)) {
 					dayre = false;
 				}
 			}
 			else {
 				for(int j=0; j<arr.length;j++) {
+					boolean ch = true;
 					if(daylist.get(i).contains(arr[j])) {
-						dayre = false;
+						ch = false;
 					}
-				}
-			}
-		}
-		boolean periodre = true;
-
-		if(!dayre) {
-			for(int i=0; i<periodlist.size(); i++) {
-				if(arr2 == null) {
-					if(periodlist.get(i).contains(period)) {
-						periodre = false;
-					}
-				}
-				else {
-					for(int j=0; j<arr2.length;j++) {
-						if(periodlist.get(i).contains(arr2[j])) {
-							periodre = false;
+					if(!ch) {
+						for(int k=0; k<arr2.length;k++) {
+							if(periodlist.get(i).contains(arr2[k])) {
+								dayre = false;
+							}
 						}
 					}
 				}
 			}
 		}
 		
+		// 이미 수강신청한 과목인지 여부 확인
 		int uniqueinfo = service.uniqueInfo(paraMap);
 		if (uniqueinfo >= 1) {
 			unique = false;
 		}
-		if (!recourse && bool && periodre) {
+		if (!recourse && bool && dayre) {
 			try {
 				int n = service.insertCourse(paraMap);
 				if (n == 1) {
@@ -339,7 +330,7 @@ public class EunjiBoardController {
 		}
 
 		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("dayre", periodre);
+		jsonobj.put("dayre", dayre);
 		jsonobj.put("bool", bool);
 		jsonobj.put("unique", unique);
 		jsonobj.put("recourse", recourse);
@@ -738,11 +729,10 @@ public class EunjiBoardController {
 		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		Map<String, String> paraMap = new HashMap<String, String>();
 		paraMap.put("memberNo", Integer.toString(memberNo));
+		List<GirlOfficialLeaveVO> girllist = service.selectGirlList(memberNo);
 		
 		MemberVO mvo = service.selectMemberInfo(paraMap);
 		String  gender = mvo.getJubun().substring(6, 7);
-		
-		List<GirlOfficialLeaveVO> girllist = service.selectGirlList(memberNo);
 
 		if(gender.equals("1") || gender.equals("3")) {
 			String message = "여학생만 신청가능합니다.";
@@ -759,7 +749,7 @@ public class EunjiBoardController {
 		}
 		
 		return mav;
-	}
+	} 
 
 	@RequestMapping(value = "/girlOfficalLeaveEnd.sky", method = { RequestMethod.POST })
 	public ModelAndView girlOfficalLeaveEnd(ModelAndView mav, HttpServletRequest request, GirlOfficialLeaveVO golvo) {
@@ -775,23 +765,39 @@ public class EunjiBoardController {
 		checkmap.put("memberno", Integer.toString(memberNo));
 		checkmap.put("month", golvo.getStartDate().substring(5, 7));
 		checkmap.put("year", golvo.getStartDate().substring(0, 4));
+		System.out.println(golvo.getStartDate().substring(5, 7) + golvo.getStartDate().substring(0, 4));
 		int cnt = service.checkGirlDate(checkmap);
-		if (cnt > 1) {
+		if (cnt > 0) {
 			flag = false;
 		}
 
 		if (flag) {
+			int n =0;
 			if (golvo.getEndTime() == null && golvo.getStartTime() == null) {
-				int n = service.insertGirlLeave(golvo);
+				n = service.insertGirlLeave(golvo);
 			} else {
-				int n = service.insertGirlLeaveTime(golvo);
+				n = service.insertGirlLeaveTime(golvo);
 			}
+			
+			if(n==1) {
+				String message = "여학생 공결신청이 되었습니다.";
+				String loc = request.getContextPath() + "/girlOfficalLeave.sky";
 
-			List<GirlOfficialLeaveVO> girllist = service.selectGirlList(memberNo);
-			// System.out.println(girllist.size());
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
 
-			mav.addObject("girllist", girllist);
-			mav.setViewName("eunji/class/girlOfficalLeave.tiles2");
+				mav.setViewName("msg");
+			}
+			else {
+				String message = "여학생공결신청에 실패하였습니다.";
+				String loc = "javascript:history.back()";
+
+				mav.addObject("message", message);
+				mav.addObject("loc", loc);
+
+				mav.setViewName("msg");
+			}
+			
 		} else {
 			String message = "생리공결은 월1회만 사용할 수 있습니다. 공결내역조회를 확인해주세요.";
 			String loc = "javascript:history.back()";
@@ -804,22 +810,31 @@ public class EunjiBoardController {
 		return mav;
 	}
 
-	@ResponseBody
-	@RequestMapping(value = "/delGirlOfficialLeave.sky", method = {
-			RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
-	public String delGirlOfficialLeave(HttpServletRequest request) {
+	@RequestMapping(value = "/delGirlOfficialLeave.sky", method = { RequestMethod.GET })
+	public ModelAndView delGirlOfficialLeave(ModelAndView mav, HttpServletRequest request) {
 		String seq = request.getParameter("seq");
 
-		boolean result = false;
 		int n = service.delGirlOfficialLeave(seq);
 		if (n == 1) {
-			result = true;
+			String message = "여학생 공결신청이 취소되었습니다.";
+			String loc = request.getContextPath() + "/girlOfficalLeave.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		else {
+			String message = "여학생공결신청 취소에 실패하였습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
 		}
 
-		JSONObject jsonobj = new JSONObject();
-		jsonobj.put("result", result);
-
-		return jsonobj.toString();
+		return mav;
 	}
 
 	// 강의 평가
@@ -841,8 +856,11 @@ public class EunjiBoardController {
 			semester = 1;
 			flag = true;
 		}
-		if (month == 12) {
+		if (month == 12 || month == 1) {
 			semester = 2;
+			if(month == 1) {
+				year = year -1;
+			}
 			flag = true;
 		}
 		
@@ -972,7 +990,7 @@ public class EunjiBoardController {
 
 			Calendar cal = Calendar.getInstance();
 			int curyear = cal.get(cal.YEAR);
-			int curmonth = cal.get(cal.MONTH);
+			int curmonth = cal.get(cal.MONTH)+1;
 			String cur = "";
 
 			if (curmonth < 9 && curmonth > 3) {
@@ -980,7 +998,12 @@ public class EunjiBoardController {
 			}
 
 			if (curmonth > 9 || curmonth < 3) {
-				cur = (curyear + 1) + "-1";
+				if(curmonth >= 1 && curmonth <3) {
+					cur = curyear + "-1";
+				}
+				else {
+					cur = (curyear + 1) + "-1";
+				}
 			}
 			slvo.setStartSemester(cur);
 
@@ -1291,16 +1314,22 @@ public class EunjiBoardController {
 		
 		Calendar cal = Calendar.getInstance();
 		int curyear = cal.get(cal.YEAR);
-		int curmonth = cal.get(cal.MONTH);
+		int curmonth = cal.get(cal.MONTH)+1;
 		String cur = "";
 		
 		if(curmonth < 9 && curmonth > 3) {
 			cur = curyear + "-2"; 
 		}
 		
-		if(curmonth > 9 || curmonth < 3) {
-			cur = (curyear+1) + "-1";
+		if (curmonth > 9 || curmonth < 3) {
+			if(curmonth >= 1 && curmonth <3) {
+				cur = curyear + "-1";
+			}
+			else {
+				cur = (curyear + 1) + "-1";
+			}
 		}
+
 		slvo.setStartSemester(cur);
 		
 		MultipartFile attach = slvo.getAttach();
@@ -1504,7 +1533,7 @@ public class EunjiBoardController {
 
 		return jsonobj.toString();
 	}
-	
+	 
 	@RequestMapping(value = "/armyComeSchool.sky", method = { RequestMethod.POST })
 	public String armyComeSchool(HttpServletRequest request,
 		MultipartHttpServletRequest mrequest, ComeSchoolVO csvo) {
@@ -1561,8 +1590,8 @@ public class EunjiBoardController {
 				e.printStackTrace();
 			}
 		}
+		
 		String msg = "";
-		System.out.println("===>" + checkbol);
 		if(!checkbol) {
 			int n = service.insertComeSchoolArmy(csvo);
 			if(n == 1) {
@@ -1649,6 +1678,10 @@ public class EunjiBoardController {
 			// 총 교양이수학점을 가져옴
 			int sumculture = service.sumCultureCredits(memberNo);
 			
+			// 졸업 연기 내역을 가져옴
+			List<GraduateDelayVO> volist = service.selectGraduateList(memberNo);
+
+			mav.addObject("volist", volist);
 			mav.addObject("graduateok", paraMap.get("graduateok"));
 			mav.addObject("sumculture", sumculture);
 			mav.addObject("sumcredits", sumcredits);
@@ -1671,11 +1704,448 @@ public class EunjiBoardController {
 		return mav;
 	}
 	
-	// 졸업적부심사
-	@RequestMapping(value = "/graduateTest.sky", method = { RequestMethod.GET})
-	public ModelAndView graduateTest(ModelAndView mav, HttpServletRequest request) {
+	@RequestMapping(value = "/graduateDelayEnd.sky", method = { RequestMethod.POST })
+	public ModelAndView graduateDelayEnd(ModelAndView mav, HttpServletRequest request) {
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+		
+		String startyear = request.getParameter("startyear");
+		String startsem = request.getParameter("startsem");
+		String endyear = request.getParameter("endyear");
+		String endsem = request.getParameter("endsem");
+		String reason = request.getParameter("reason");
+
+		String start = startyear + "/" + startsem + "학기";
+		String end = endyear + "/" + endsem + "학기";
+
+		GraduateDelayVO gdvo = new GraduateDelayVO();
+		gdvo.setStartSem(start);
+		gdvo.setEndSem(end);
+		gdvo.setReason(reason);
+		gdvo.setFk_memberno(memberNo);
+		
+		
+		
+		boolean flag = true;
+		int check = service.checkDelay(gdvo);
+		if(check > 0) {
+			flag = false;
+			String message = "해당기간 졸업연기신청 내역이 이미 존재합니다. 승인을 기다려주세요.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+		if(paraMap.get("status").equals("졸업연기")) {
+			flag = false;
+			String message = "현재 학적상태가 이미 졸업연기 상태입니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		
+		if(flag) {
+			int n = service.insertGraduateDelay(gdvo);
+			
+			String message = "신청되었습니다.";
+			String loc = request.getContextPath() + "/graduateDelay.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		return mav;
+	}
 	
+	@RequestMapping(value = "/graduateDelayDel.sky", method = { RequestMethod.GET})
+	public ModelAndView graduateDelayDel(ModelAndView mav, HttpServletRequest request) {
+		
+		String seq = request.getParameter("seq");
+		
+		int n = service.deleteGraduateDelay(seq);
+		
+		if(n == 1) {
+			String message = "졸업연기신청이 취소되었습니다.";
+			String loc = request.getContextPath() + "/graduateDelay.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		else {
+			String message = "졸업연기신청 취소에 실패하였습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		return mav;
+	}
+
+	// 졸업적부심사
+	@RequestMapping(value = "/graduateTest.sky", method = { RequestMethod.GET })
+	public ModelAndView graduateTest(ModelAndView mav, HttpServletRequest request) {
+
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+		int sumsemes = Integer.parseInt(paraMap.get("currentSemester")) * Integer.parseInt(paraMap.get("grade"));
+		
+		// 총 이수학점를 가져옴
+		int sumcredits = service.sumSemester(memberNo);
+
+		// 총 전공이수학점을 가져옴
+		int summajor = service.sumMajorCredits(memberNo);
+
+		// 총 교양이수학점을 가져옴
+		int sumculture = service.sumCultureCredits(memberNo);
+
+		// 로그인한 유저의 학과의 필수 이수 과목 리스트 가져오기
+		List<String> sublist = service.getMustSubject(paraMap);
+		
+		// 과목의 학과 리스트 
+		List<String> deptlist = service.getMustSubjectdept(paraMap);
+		
+		// 로그인한 유저가 들은 필수 이수 과목 리스트 가져오기
+		List<String> submyslist = service.getMyMustSubject(paraMap);
+		
+		
+		List<Map<String, String>> reglist = new ArrayList<Map<String, String>>();
+		List<String> templist = new ArrayList<String>();
+		
+		
+		for(int i=0; i<sublist.size(); i++) {
+			Map<String, String> map = new HashMap<String, String>();
+			boolean flag = false;
+			for(int j=0; j<submyslist.size(); j++) {
+				if(sublist.get(i).equals(submyslist.get(j))) {
+					flag = true;
+				}
+			}
+			
+			if(flag) {
+				templist.add("ok");
+			}
+			else {
+				templist.add("no");
+			}
+			
+			map.put("name", sublist.get(i));
+			map.put("must", templist.get(i));
+			map.put("deptseq", deptlist.get(i));
+			
+			reglist.add(map);
+			
+		}
+		
+		String test = "no";
+		if(sublist.size() == submyslist.size()) {
+			if(sumcredits >= 130) {
+				test = "ok";
+			}
+		}
+		
+		List<Map<String, String>> nonelist = new ArrayList<Map<String, String>>();
+		for(int i=0; i<reglist.size(); i++) {
+			Map<String, String> map2 = new HashMap<String, String>();
+			if(reglist.get(i).get("must").equals("no")) {
+				map2.put("name", reglist.get(i).get("name"));
+				map2.put("deptseq", reglist.get(i).get("deptseq"));
+				nonelist.add(map2);
+			} 
+		}
+
+		mav.addObject("nonelist", nonelist);
+		mav.addObject("size", nonelist.size());
+		mav.addObject("test", test);
+		mav.addObject("reglist", reglist);
+		mav.addObject("sumculture", sumculture);
+		mav.addObject("sumcredits", sumcredits);
+		mav.addObject("summajor", summajor);
+		mav.addObject("sumsems",sumsemes);
+		mav.addObject("graduok", paraMap.get("graduateok"));
 		mav.setViewName("eunji/graduation/graduateTest.tiles2");
 		return mav;
 	}
+	
+	@ResponseBody
+	@RequestMapping(value = "/graduateTestAjax.sky", method = {
+			RequestMethod.GET }, produces = "text/plain;charset=UTF-8")
+	public String graduateTestAjax(HttpServletRequest request) {
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+		String gradu = request.getParameter("gradu");
+		
+		boolean check = false;
+		if (gradu.equals("졸업가능")) {
+			int n = service.updateGraduateOk(memberNo);
+			if(n==1) {
+				check = true;
+			}
+		}
+		
+		JSONObject json = new JSONObject();
+		json.put("check", check);
+		
+		return json.toString();
+	}
+	
+	// 조기졸업신청
+	@RequestMapping(value = "/earlyGraduate.sky", method = { RequestMethod.GET })
+	public ModelAndView earlyGraduate(ModelAndView mav, HttpServletRequest request) {
+
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+
+		Map<String, String> paraMap = service.allMembeInfo(memberNo);
+
+		// 로그인한 유저의 학과의 필수 이수 과목 리스트 가져오기
+		List<String> sublist = service.getMustSubject(paraMap);
+
+		// 과목의 학과 리스트
+		List<String> deptlist = service.getMustSubjectdept(paraMap);
+
+		// 로그인한 유저가 들은 필수 이수 과목 리스트 가져오기
+		List<String> submyslist = service.getMyMustSubject(paraMap);
+
+		List<Map<String, String>> reglist = new ArrayList<Map<String, String>>();
+		List<String> templist = new ArrayList<String>();
+
+		for (int i = 0; i < sublist.size(); i++) {
+			Map<String, String> map = new HashMap<String, String>();
+			boolean flag = false;
+			for (int j = 0; j < submyslist.size(); j++) {
+				if (sublist.get(i).equals(submyslist.get(j))) {
+					flag = true;
+				}
+			}
+
+			if (flag) {
+				templist.add("ok");
+			} else {
+				templist.add("no");
+			}
+
+			map.put("name", sublist.get(i));
+			map.put("must", templist.get(i));
+			map.put("deptseq", deptlist.get(i));
+
+			reglist.add(map);
+
+		}
+		
+		// 필수과목 모두 이수 여부 확인
+		boolean mustsub = true;
+		for(int i=0; i<reglist.size(); i++) {
+			if(reglist.get(i).get("must").equals("no")) {
+				mustsub	= false;
+			}
+		}
+		
+		// 6학기 이상 이수 여부 확인
+		String grade = paraMap.get("grade");
+		String sem = paraMap.get("currentSemester");
+		
+		int sumsem = Integer.parseInt(grade) * Integer.parseInt(sem);
+		
+		boolean sumsemcheck = true;
+		if(sumsem < 6) {
+			sumsemcheck = false;
+		}
+		
+		// F학점 취득 여부 확인
+		int n = service.getFGrade(memberNo);
+		boolean fcheck = true;
+		if(n > 0) {
+			fcheck = false;
+		}
+		
+		// 총학점 100학점 이상 이수 확인
+		// 총 이수학점를 가져옴
+		int sumcredits = service.sumSemester(memberNo);
+		boolean sumcredit = true;
+		if(sumcredits < 100) {
+			sumcredit = false;
+		}
+		
+		List<String> gradelist = service.getAllGrade(memberNo);
+		List<String> creditlist = service.getAllCredit(memberNo);
+		
+		// 평점평균 4.0 이상 취득 확인
+		double sum = 0.0;
+		for(int i=0; i<gradelist.size(); i++) {
+			if(gradelist.get(i).equals("A+")) {
+				sum += 4.5 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("A")) {
+				sum += 4.0 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("B+")) {
+				sum += 3.5 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("B")) {
+				sum += 3.0 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("C+")) {
+				sum += 2.5 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("C")) {
+				sum += 2.0 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else if(gradelist.get(i).equals("D+")) {
+				sum += 1.5 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			else {
+				sum += 1.0 * (double)Integer.parseInt(creditlist.get(i));
+			}
+			
+		}
+		sum = sum / (double)sumcredits;
+		
+		boolean checkgrade = true;
+		if(sum < 4.0) {
+			checkgrade = false;
+		}
+		
+		List<GraduateEarlyVO> earlylist = service.selectGraduateEarly(memberNo);
+		
+		mav.addObject("size", earlylist.size());
+		mav.addObject("earlylist", earlylist);	// 이수학기
+		mav.addObject("sumsem", sumsem);	// 이수학기
+		mav.addObject("sumcredits", sumcredits);	// 이수학점
+		mav.addObject("sum", String.format("%.2f", sum));	// 평점평균
+		mav.addObject("sumcredit", sumcredit);
+		mav.addObject("sumsemcheck", sumsemcheck);
+		mav.addObject("fcheck", fcheck);
+		mav.addObject("checkgrade", checkgrade);
+		mav.addObject("mustsub", mustsub);
+		
+		mav.addObject("paraMap", paraMap);
+		mav.setViewName("eunji/graduation/earlyGraduate.tiles2");
+		return mav;
+	}
+	
+	@RequestMapping(value = "/earlyGraduateEnd.sky", method = { RequestMethod.POST })
+	public ModelAndView earlyGraduateEnd(ModelAndView mav, HttpServletRequest request, GraduateEarlyVO gevo) {
+		int n = service.insertGraduateEarly(gevo);
+		
+		if(n==1) {
+			String message = "신청되었습니다.";
+			String loc = request.getContextPath() + "/earlyGraduate.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		else {
+			String message = "조기졸업신청에 실패하였습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		return mav;
+	}
+
+	@RequestMapping(value = "/delGraduateEarly.sky", method = { RequestMethod.GET })
+	public ModelAndView delGraduateEarly(ModelAndView mav, HttpServletRequest request) {
+		
+		String seq = request.getParameter("seq");
+
+		int n = service.deleteGraduateEarly(seq);
+		if(n ==1) {
+			String message = "조기졸업 신청이 취소되었습니다.";
+			String loc = request.getContextPath() + "/earlyGraduate.sky";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		else {
+			String message = "조기졸업신청 취소에 실패하였습니다.";
+			String loc = "javascript:history.back()";
+
+			mav.addObject("message", message);
+			mav.addObject("loc", loc);
+
+			mav.setViewName("msg");
+		}
+		return mav;
+	}
+	
+	@RequestMapping(value = "/registerSubjects.sky", method = { RequestMethod.GET })
+	public ModelAndView registerSubjects(ModelAndView mav, HttpServletRequest request, HttpServletResponse response) {
+		
+		Calendar cal = Calendar.getInstance();
+		int curyear = cal.get(cal.YEAR);
+		int curmonth = cal.get(cal.MONTH)+1;
+
+		int semester = 0;
+		if(curmonth >= 9 && curmonth <= 12) {
+			semester = 2;
+		}
+		if(curmonth >=1 && curmonth <3) {
+			curyear = curyear - 1;
+			semester = 2;
+		}
+		if(curmonth >= 3 && curmonth<9 ) {
+			semester = 1;
+		}
+		
+		// 로그인한 유저의 학적 정보 불러오기
+		JihyunMemberVO jmvo = new JihyunMemberVO();
+		HttpSession session2 = request.getSession();
+
+		jmvo = (JihyunMemberVO) session2.getAttribute("loginuser");
+		int memberNo = Integer.parseInt(jmvo.getMemberNo());
+
+		Map<String, Integer> map = new HashMap<String, Integer>();
+		map.put("year", curyear);
+		map.put("semester", semester);
+		map.put("memberno", memberNo);
+		
+		// 수강중인 과목 리스트 select
+		List<String> sublist = service.getNowSubject(map);
+		
+		// 수강중인 과목의 과제 select
+		List<HomeworkVO> worklist = service.selectHomework(map);
+		
+		mav.addObject("worklist",worklist);
+		mav.addObject("sublist",sublist);
+		mav.setViewName("eunji/class/registerSubjects.tiles2");
+		return mav;
+	}
+		
+
 }
