@@ -83,8 +83,6 @@
 
 	$(document).ready(function(){
 		
-		//console.log("${loginuser.pwd}");
-		
 		$("p.error").hide();
 		
 		$("input#nowPwd").blur(function(){
@@ -92,10 +90,8 @@
 			$(this).next().hide();
 			$(this).next().removeClass("errorMessage");
 			
-			// 현재비밀번호를 가져온다.
+			// 입력된 비밀번호를 가져온다.
 			var nowPwd = $(this).val().trim();
-			//console.log(nowPwd);
-			//console.log(${loginuser.memberNo});
 			
 			if (nowPwd == "") {
 				$(this).next().text("현재 비밀번호를 입력해주세요.");
@@ -123,11 +119,8 @@
 					error: function(request, status, error){
 			               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
 			           }
-					
 				});
-			
 			}
-			
 		});
 		
 		$("input#newPwd").blur(function(){
@@ -206,11 +199,6 @@
 	});
 	
 	function goChangePwd() {
-		/* 
-		console.log(boolNowPwd);
-		console.log(boolNewPwd);
-		console.log(boolCheckPwd);
-		 */
 		if(boolNowPwd && boolNewPwd && boolCheckPwd ){
 			console.log("비밀번호변경");
 			var frm = document.pwdChangeFrm;

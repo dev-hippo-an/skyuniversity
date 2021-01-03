@@ -2,6 +2,7 @@
     pageEncoding="UTF-8"%>
     
 <%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>    
+<%@ taglib prefix="fn" uri="http://java.sun.com/jsp/jstl/functions" %>
 <!DOCTYPE html>
 <html xmlns="http://www.w3.org/1999/xhtml">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
@@ -33,140 +34,6 @@ div#scWrapper {
 <script type="text/javascript">
 
 var data = ${ssList};
-
-/* var data = [
-    {
-        text: "Google AdWords Strategy",
-        roomId: 1,
-        startDate: new Date("2021-04-30T16:00:00.000Z"),
-        endDate: new Date("2021-04-30T17:30:00.000Z")
-    }, {
-        text: "New Brochures",
-        roomId: 5,
-        startDate: new Date("2021-04-30T18:30:00.000Z"),
-        endDate: new Date("2021-04-30T21:15:00.000Z")
-    }, {
-        text: "Brochure Design Review",
-        roomId: 5,
-        startDate: new Date("2021-04-30T20:15:00.000Z"),
-        endDate: new Date("2021-04-30T23:15:00.000Z")
-    }, {
-        text: "Website Re-Design Plan",
-        roomId: 5,
-        startDate: new Date("2021-04-30T23:45:00.000Z"),
-        endDate: new Date("2021-04-30T18:15:00.000Z")
-    }, {
-        text: "Rollout of New Website and Marketing Brochures",
-        roomId: 2,
-        startDate: new Date("2021-05-04T15:15:00.000Z"),
-        endDate: new Date("2021-05-04T17:45:00.000Z")
-    }, {
-        text: "Update Sales Strategy Documents",
-        roomId: 3,
-        startDate: new Date("2021-05-04T19:00:00.000Z"),
-        endDate: new Date("2021-05-04T20:45:00.000Z")
-    }, {
-        text: "Non-Compete Agreements",
-        roomId: 3,
-        startDate: new Date("2021-05-04T15:15:00.000Z"),
-        endDate: new Date("2021-05-04T16:00:00.000Z")
-    }, {
-        text: "Update NDA Agreement",
-        roomId: 1,
-        startDate: new Date("2021-05-05T18:45:00.000Z"),
-        endDate: new Date("2021-05-05T20:45:00.000Z")
-    }, {
-        text: "Update Employee Files with New NDA",
-        roomId: 4,
-        startDate: new Date("2021-05-13T21:00:00.000Z"),
-        endDate: new Date("2021-05-13T23:45:00.000Z")
-    }, {
-        text: "Submit Questions Regarding New NDA",
-        roomId: 4,
-        startDate: new Date("2021-05-13T15:00:00.000Z"),
-        endDate: new Date("2021-05-13T16:30:00.000Z")
-    }, {
-        text: "Submit Signed NDA",
-        roomId: 4,
-        startDate: new Date("2021-05-13T19:45:00.000Z"),
-        endDate: new Date("2021-05-13T21:00:00.000Z")
-    }, {
-        text: "Review Revenue Projections",
-        roomId: 4,
-        startDate: new Date("2021-05-21T00:15:00.000Z"),
-        endDate: new Date("2021-05-21T01:00:00.000Z")
-    }, {
-        text: "Comment on Revenue Projections",
-        roomId: 1,
-        startDate: new Date("2021-05-17T16:15:00.000Z"),
-        endDate: new Date("2021-05-17T18:15:00.000Z")
-    }, {
-        text: "Provide New Health Insurance Docs",
-        roomId: 4,
-        startDate: new Date("2021-05-17T19:45:00.000Z"),
-        endDate: new Date("2021-05-17T21:15:00.000Z")
-    }, {
-        text: "Review Changes to Health Insurance Coverage",
-        roomId: 4,
-        startDate: new Date("2021-05-20T21:15:00.000Z"),
-        endDate: new Date("2021-05-20T22:30:00.000Z")
-    }, {
-        text: "Review Training Course for any Ommissions",
-        roomId: 4,
-        startDate: new Date("2021-05-17T21:00:00.000Z"),
-        endDate: new Date("2021-05-17T19:00:00.000Z")
-    }, {
-        text: "Recall Rebate Form",
-        roomId: 2,
-        startDate: new Date("2021-05-18T19:45:00.000Z"),
-        endDate: new Date("2021-05-18T20:15:00.000Z")
-    }, {
-        text: "Create Report on Customer Feedback",
-        roomId: 3,
-        startDate: new Date("2021-05-18T22:15:00.000Z"),
-        endDate: new Date("2021-05-19T00:30:00.000Z")
-    }, {
-        text: "Review Customer Feedback Report",
-        roomId: 3,
-        startDate: new Date("2021-05-12T23:15:00.000Z"),
-        endDate: new Date("2021-05-13T01:30:00.000Z")
-    }, {
-        text: "Customer Feedback Report Analysis",
-        roomId: 3,
-        startDate: new Date("2021-05-12T16:30:00.000Z"),
-        endDate: new Date("2021-05-12T17:30:00.000Z")
-    }, {
-        text: "Prepare Shipping Cost Analysis Report",
-        roomId: 3,
-        startDate: new Date("2021-05-18T19:30:00.000Z"),
-        endDate: new Date("2021-05-18T20:30:00.000Z")
-    }, {
-        text: "Provide Feedback on Shippers",
-        roomId: 3,
-        startDate: new Date("2021-05-18T21:15:00.000Z"),
-        endDate: new Date("2021-05-18T23:00:00.000Z")
-    }, {
-        text: "Select Preferred Shipper",
-        roomId: 1,
-        startDate: new Date("2021-05-22T00:30:00.000Z"),
-        endDate: new Date("2021-05-22T03:00:00.000Z")
-    }, {
-        text: "Complete Shipper Selection Form",
-        roomId: 5,
-        startDate: new Date("2021-05-20T15:30:00.000Z"),
-        endDate: new Date("2021-05-20T17:00:00.000Z")
-    }, {
-        text: "Upgrade Server Hardware",
-        roomId: 5,
-        startDate: new Date("2021-05-21T19:00:00.000Z"),
-        endDate: new Date("2021-05-21T21:15:00.000Z")
-    }, {
-        text: "데이터베이스 모델링",
-      	sort: 1,
-        startDate: new Date("2020-12-21T00:45:00.000Z"),
-        endDate: new Date("2020-12-23T24:00:00.000Z")
-    }
-]; */
 
 var resourcesData = [
     {
@@ -208,6 +75,7 @@ $(function(){
         height: 650
     }).dxScheduler("instance");
 });
+
 </script>
 
 <div id="scWrapper">
@@ -230,8 +98,17 @@ $(function(){
 				<c:forEach var="slist" items="${sScheduleList}" varStatus="status">
 					<tr>
 						<td>${status.count}</td>
-						<td>${slist.startDate}</td>
-						<td>${slist.status}</td>
+						<td>
+							<c:set var="startDate" value="${slist.startDate}"/> 
+							<c:set var="endDate" value="${slist.endDate}"/> 
+							${fn:substring(startDate,0,10)}~${fn:substring(endDate,0,10)}
+						</td>
+						<c:if test="${slist.status == '0'}">
+								<td>전체일정</td>
+							</c:if>
+							<c:if test="${status == '1'}">
+								<td>학과일정</td>
+							</c:if>
 						<td>${slist.subject}</td>
 						<td>${slist.contents}</td>
 					</tr>

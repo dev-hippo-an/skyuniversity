@@ -202,6 +202,10 @@ values(scheduleSeq.nextval, '수강신청기간(재학/복학)', '수강신청�
 
 commit;
 
+select scheduleNo, subject, contents, startDate, endDate, status
+from tbl_schedule
+where status = 0
+
 insert into tbl_schedule(scheduleNo, subject, contents, startDate, endDate, status) 
 values(scheduleSeq.nextval, '신정', '신정', '2021-01-01T00:00:00.000Z', '2021-01-01T24:00:00.000Z', 0);
 insert into tbl_schedule(scheduleNo, subject, contents, startDate, endDate, status) 
@@ -310,13 +314,15 @@ order by 1;
 desc tbl_certificate;
 select * from tbl_certificate;
 
+delete from tbl_certificate where fk_memberno = 102
+
 0,1,2,3 0 신청, 1 승인, 2 반려, 3보류
 
 delete tbl_certificate;
-insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate) values(certificateSeq.nextval,4,108,2,3,0,0, sysdate-7);
-insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate) values(certificateSeq.nextval,3,108,2,2,1,0, sysdate-5);
-insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate) values(certificateSeq.nextval,2,108,2,1,1,1, sysdate-3);
-insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate) values(certificateSeq.nextval,1,108,2,0,0,1, sysdate);
+insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate, grantdate) values(certificateSeq.nextval,4,102,2,3,0,0, sysdate-7, sysdate-6);
+insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate, grantdate) values(certificateSeq.nextval,3,102,2,2,1,0, sysdate-5, sysdate-4);
+insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate, grantdate) values(certificateSeq.nextval,2,102,2,1,1,1, sysdate-3, sysdate-2);
+insert into tbl_certificate(certificateSeq, fk_certificateKindSeq, fk_memberNo, count, grantstatus, lang, recieveWay, applicationdate) values(certificateSeq.nextval,1,102,2,0,0,1, sysdate);
 
 update tbl_certificate set grantdate = sysdate-6 where certificateSeq = 9;
 update tbl_certificate set grantdate = sysdate-4 where certificateSeq = 10;
@@ -353,12 +359,98 @@ update tbl_certificate set grantdate = sysdate-2 where certificateSeq =11;
  desc tbl_hsnotice;
  select * from tbl_hsnotice;
 
+select * from tbl_hsnotice;
+commit;
 insert into tbl_hsnotice (noticeno, subject, contents, status) values(hsNoticeSeq.nextval, '이것은 전체공지입니다.', '전체공지테스트입니다.', 0);
 insert into tbl_hsnotice (noticeno, fk_deptSeq, subject, contents, status) values(hsNoticeSeq.nextval, 2,'이것은 학과공지입니다.', '학과공지테스트입니다.', 1);
 insert into tbl_hsnotice (noticeno, fk_subjectNo, subject, contents, status) values(hsNoticeSeq.nextval, 'NE118', '이것은 전체공지입니다.', '전체공지테스트입니다.', 2);
 
+insert into tbl_hsnotice (noticeno, subject, contents, status) values(hsNoticeSeq.nextval, '새해인사.', '학우여러분 새해 복 많이 받으십시오..', 0);
+insert into tbl_hsnotice (noticeno, subject, contents, status) values(hsNoticeSeq.nextval, '[중앙도서관] 2020학년도 42차 신착도서 안내',
+'2020학년도 42차 신착도서 (HL0479585-HL0479656)<br><br>
+- 게시일: 2020년 12월 30일<br>
+- 장소: 중앙도서관 2층 자료실 신착도서코너<br>
+           (신착도서는 2주 동안 게시합니다. )<br>
+- 문의: 031-379-0152 (국내서 수서), 0154 (국외서수서/정리), 0155 (국내서 정리), 0161(대출실)<br><br>
+*희망신청자료의 경우는 신청자에게 게시일로부터 3일간 우선권이 부여됩니다.*<br><br>
+서명	청구기호<br>
+심청전 전집. 8	811.105 심813 v.8 <br>
+심청전 전집. 9	811.105 심813 v.9 <br>
+심청전 전집. 10	811.105 심813 v.10 <br>
+심청전 전집. 11	811.105 심813 v.11 <br>
+심청전 전집. 12	811.105 심813 v.12 <br>
+타인의 인력	780.951 최64ㅌ<br>
+애국가 논쟁의 기록과 진실 :문화운동가 임진택의 애국가 바로잡기 	782.421599 임79ㅇ<br>
+정통 정신분석의 기법과 실제. 2	616.8917 G798t이 v.2 <br>
+(지금-여기에서의) 전이 분석 	616.8914 B344a정<br>
+기업재무 	658.15 B512c14고<br>
+기본 재무관리 	658.15 B512f4선<br>
+기본 재무관리 	658.15 B512f4선 c.2 <br>
+기본 재무관리 	658.15 B512f4선 c.3 <br>
+객관식 재무관리 =Financial management. 1	658.15076 이64ㄱ14 v.1 <br>
+객관식 재무관리 =Financial management. 2	658.15076 이64ㄱ14 v.2 <br>
+', 0);
+insert into tbl_hsnotice (noticeno, subject, contents, status) values(hsNoticeSeq.nextval, '[중앙도서관] 2020학년도 43차 신착도서 안내',
+'2020학년도 42차 신착도서 (HL0479585-HL0479656)<br><br>
+- 게시일: 2020년 12월 30일<br>
+- 장소: 중앙도서관 2층 자료실 신착도서코너<br>
+           (신착도서는 2주 동안 게시합니다. )<br>
+- 문의: 031-379-0152 (국내서 수서), 0154 (국외서수서/정리), 0155 (국내서 정리), 0161(대출실)<br><br>
+*희망신청자료의 경우는 신청자에게 게시일로부터 3일간 우선권이 부여됩니다.*<br><br>
+서명	청구기호<br>
+심청전 전집. 8	811.105 심813 v.8 <br>
+심청전 전집. 9	811.105 심813 v.9 <br>
+심청전 전집. 10	811.105 심813 v.10 <br>
+심청전 전집. 11	811.105 심813 v.11 <br>
+심청전 전집. 12	811.105 심813 v.12 <br>
+타인의 인력	780.951 최64ㅌ<br>
+애국가 논쟁의 기록과 진실 :문화운동가 임진택의 애국가 바로잡기 	782.421599 임79ㅇ<br>
+정통 정신분석의 기법과 실제. 2	616.8917 G798t이 v.2 <br>
+(지금-여기에서의) 전이 분석 	616.8914 B344a정<br>
+기업재무 	658.15 B512c14고<br>
+기본 재무관리 	658.15 B512f4선<br>
+기본 재무관리 	658.15 B512f4선 c.2 <br>
+기본 재무관리 	658.15 B512f4선 c.3 <br>
+객관식 재무관리 =Financial management. 1	658.15076 이64ㄱ14 v.1 <br>
+객관식 재무관리 =Financial management. 2	658.15076 이64ㄱ14 v.2 <br>
+', 0);
+commit;
+insert into tbl_hsnotice (noticeno, subject, contents, status) values(hsNoticeSeq.nextval, '[학생지원팀] 동계방학 단축근무로 인한 증명서 발급 업무시간 안내', '전체공지테스트입니다.', 0);
+update tbl_hsnotice set subject = '[공모] 대백제전 포스터 디자인 공모전' where noticeno = 8;
+insert into tbl_hsnotice (noticeno, subject, contents, status) values(hsNoticeSeq.nextval, '이것은 전체공지입니다.', '전체공지테스트입니다.', 0);
+insert into tbl_hsnotice (noticeno, subject, contents, status) values(hsNoticeSeq.nextval, '이것은 전체공지입니다.', '전체공지테스트입니다.', 0);
+
+delete from tbl_hsnotice where noticeno = 9
+
 update tbl_hsnotice set subject='이것은 과목공지입니다.', contents='과목공지테스트입니다.' where noticeno = 3
 
+select * from tbl_dept;
+
+insert into tbl_hsnotice (noticeno, fk_deptSeq, subject, contents, status) values(hsNoticeSeq.nextval, 1,'대면 기말고사 시행 관련 학생 준수사항 안내', '
+대면 기말고사 시행 관련 학생 준수사항 안내<br><br>
+코로나-19 감염증 예방 및 확산방지를 위하여, 기말시험 기간 중 아래 내용을 반드시 준수할 것을 공지합니다.<br><br>
+   1. 캠퍼스 건물 내 음식물 반입금지 (건물 내 음식 섭취 금지)<br>
+   2. 금일부터 고위험 시설 출입금지 (예시 : 유흥시설, 실내 공연장, 노래연습장 등)<br>
+   3. 학생들 간의 모임 및 행사 금지<br>
+   4. 마스크 상시 착용 (입과 코가 완전히 가려지도록 착용)<br>
+   5. 시험시간 전·후에도 개인간 간격 2m이상 유지<br><br>
+SKY대학교 모든 구성원들의 안전을 위하여, 위의 사항을 반드시 준수하여 주시기 바랍니다.<br>
+ ', 1);
+insert into tbl_hsnotice (noticeno, fk_deptSeq, subject, contents, status) values(hsNoticeSeq.nextval, 14,'기말고사 시행 관련 안내', '학과공지테스트입니다.', 1);
+insert into tbl_hsnotice (noticeno, fk_deptSeq, subject, contents, status) values(hsNoticeSeq.nextval, 15,'학생 준수사항 안내', '학과공지테스트입니다.', 1);
+
+commit;
+
+select * from tbl_subject;
+
+AA101
+AB204
+NE317
+NE119
+insert into tbl_hsnotice (noticeno, fk_subjectNo, subject, contents, status) values(hsNoticeSeq.nextval, 'AA101', '대면 수업 관련 안내', '전체공지테스트입니다.', 2);
+insert into tbl_hsnotice (noticeno, fk_subjectNo, subject, contents, status) values(hsNoticeSeq.nextval, 'AB204', '2021년 첫째주 휴강 관련 안내', '휴강할거에여', 2);
+insert into tbl_hsnotice (noticeno, fk_subjectNo, subject, contents, status) values(hsNoticeSeq.nextval, 'NE317', '과제 공지', '전체공지테스트입니다.', 2);
+insert into tbl_hsnotice (noticeno, fk_subjectNo, subject, contents, status) values(hsNoticeSeq.nextval, 'NE119', '강의실 공사 안내', '전체공지테스트입니다.', 2);
 
 select row_number() over(order by noticeNo desc) as rno, noticeNo, subject, contents, to_char(writeday, 'yyyy-dd-mm') as writeday, readcount, filename, orgfilename, filesize, status
 from tbl_hsnotice where status = 0 ;
@@ -376,6 +468,8 @@ where status = 2;
 select row_number() over(order by noticeNo desc) as rno, noticeNo, fk_subjectNo, subjectName, subject, contents,  to_char(writeday, 'yyyy-dd-mm') as writeday, readcount, filename, orgfilename, filesize, status
 
 select * from tbl_course where fk_memberno = 108 and courseyear =  to_char(sysdate, 'yyyy')-1;
+
+select * from tbl_course where fk_memberno = 108;
 
 select * from tbl_course;
 select * from tbl_subject;
@@ -637,6 +731,11 @@ on s.fk_deptSeq = d.deptSeq
         on s.fk_deptSeq = d.deptSeq
         where fk_memberNo = 108
         
+        select * from tbl_course
+        select * from tbl_subject
+        
+        
+        
         -- 교양선택 조회
         select courseNo, semester, courseYear, fk_memberNo, fk_subjectNo, subjectName, deptName, mustStatus, subjectNo, deptSeq
         from
@@ -720,8 +819,89 @@ on s.fk_deptSeq = d.deptSeq
         )T
         where s_deptSeq != m_deptSeq and s_deptSeq != 23
         
+------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------        
+         -- 교양선택 조회(기이수)
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from
+        (
+            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 108
+        )V
+        where deptSeq = 23 and mustStatus = 1 and semester != thisSemester
         
-        select * from tbl_member;
+        -- 교양필수 조회(기이수)
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from
+        (
+            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 108
+        )V
+        where deptSeq = 23 and mustStatus = 0 and semester != thisSemester
+        
+        --전공선택 조회(기이수)
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 108
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 1 and semester != thisSemester
+        
+        -- 전공필수 조회(기이수)
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 108
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 0 and semester != thisSemester
+        
+          -- 일반 선택 조회
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 106
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq != m_deptSeq and  deptSeq != 23 and muststatus = 0 and semester != thisSemester
         
 commit;
 

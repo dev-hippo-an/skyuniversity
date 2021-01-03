@@ -70,7 +70,8 @@ public class JihyunController {
 		}catch (NullPointerException e){
 			
 		}
-		System.out.println("memberNo:"+memberNo);
+		
+		//System.out.println("memberNo:"+memberNo);
 		
 		List<Map<String, String>> lectureList = service.getLectureList(memberNo);
 
@@ -103,7 +104,7 @@ public class JihyunController {
 			
 			String ssList = jarr.toString();
 			
-			System.out.println(ssList);
+			//System.out.println(ssList);
 			
 			mav.addObject("ssList", ssList);
 		}
@@ -131,11 +132,9 @@ public class JihyunController {
 		String userid = request.getParameter("userid");
 		String pwd = request.getParameter("pwd");
 
-		//System.out.println(userid +"pwd:"+pwd);
-		
 		Map<String, String> paraMap = new HashMap<>();
 		paraMap.put("userid", userid);
-		paraMap.put("pwd", Sha256.encrypt(pwd)); //Sha256.encrypt(pwd)
+		paraMap.put("pwd", Sha256.encrypt(pwd));
 
 		JihyunMemberVO loginuser = service.getLoginMember(paraMap);
 
@@ -147,16 +146,14 @@ public class JihyunController {
 			mav.addObject("loc", loc);
 
 			mav.setViewName("msg");
-			// /WEB-INF/views/msg.jsp 파일을 생성한다.
 		}
 
 		else { // 아이디와 암호가 존재하는 경우
 
+			// 세션에 loginuser정보 넣어주기
 			HttpSession session = request.getSession();
-			// 메모리에 생성되어져 있는 session을 불러오는 것이다.
 
 			session.setAttribute("loginuser", loginuser);
-			// session(세션)에 로그인 되어진 사용자 정보인 loginuser 을 키이름을 "loginuser" 으로 저장시켜두는 것이다.
 			
 			mav.setViewName("redirect:/hsindex.sky");
 		}
@@ -422,7 +419,7 @@ public class JihyunController {
 			
 			String ssList = jarr.toString();
 			
-			System.out.println(ssList);
+			//System.out.println(ssList);
 			
 			mav.addObject("ssList", ssList);
 		}
@@ -489,10 +486,7 @@ public class JihyunController {
 		Map<String, String> ca = null;
 		
 		String cList = request.getParameter("cList");
-		//System.out.println("cList:"+cList);
-	    
 		JsonParser jparser = new JsonParser();
-
 		JsonArray jArray = (JsonArray)jparser.parse(cList);
 		
 		int cnt = jArray.size();
@@ -516,16 +510,7 @@ public class JihyunController {
 				ca.put("recieveWay", recieveWay);
 				
 				caList.add(ca);
-				//System.out.println(memberNo+certificateKindSeq+lang+count+recieveWay);
 			}
-			
-	//		for(Map<String, String> list: caList) {
-	//			System.out.println(list.get("memberNo"));
-	//			System.out.println(list.get("certificateKindSeq"));
-	//			System.out.println(list.get("lang"));
-	//			System.out.println(list.get("count"));
-	//			System.out.println(list.get("recieveWay"));
-	//		}
 			
 			int n  = service.addCertificateApplication(caList);
 		
@@ -535,7 +520,6 @@ public class JihyunController {
 			else {
 				message = "2";
 			}
-		
 		}// end of if(cnt > 0) {}--------------------------------------
 		
 		return message;
@@ -544,6 +528,28 @@ public class JihyunController {
 	// 기이수성적조회
 	@RequestMapping(value = "/totalGrade.sky")
 	public ModelAndView requiredLoginhs_totalGrade(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		HttpSession session = request.getSession();
+		
+		// 기이수 성적 가져오기
+		String memberNo = null;
+		try {
+			JihyunMemberVO member = (JihyunMemberVO)session.getAttribute("loginuser");
+			memberNo = member.getMemberNo();
+		}catch (NullPointerException e){
+			
+		}
+		
+		System.out.println("memberNo:"+memberNo);
+		
+		List<Map<String, String>> totalGradeList = service.getTotalGradeList(memberNo);
+
+		if(totalGradeList.size()>0) {
+			mav.addObject("totalGradeList", totalGradeList);
+		}
+		else {
+			mav.addObject("totalGradeList", "0");
+		}
 		
 		mav.setViewName("jihyun/grade/totalGrade.tiles2");
 		return mav;

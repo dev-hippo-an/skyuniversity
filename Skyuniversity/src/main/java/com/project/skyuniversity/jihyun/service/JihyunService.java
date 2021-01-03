@@ -117,4 +117,11 @@ public class JihyunService implements InterJihyunService {
 		return sScheduleList;
 	}
 
+	// 기이수 성적 가져오기
+	@Override
+	public List<Map<String, String>> getTotalGradeList(String memberNo) {
+		List<Map<String, String>> totalGradeList = dao.getLectureList(memberNo);
+		return totalGradeList;
+	}
+
 }

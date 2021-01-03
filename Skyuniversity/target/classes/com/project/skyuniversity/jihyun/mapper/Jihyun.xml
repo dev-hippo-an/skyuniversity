@@ -313,6 +313,105 @@
 	</select>
 	
 	
+	<resultMap type="HashMap" id="getTotalGradeMap">
+		<result property="semester" column="semester" javaType="String"/>
+		<result property="courseYear" column="courseYear" javaType="String"/>
+		<result property="subjectName" column="subjectName" javaType="String"/>
+		<result property="mustStatus" column="mustStatus" javaType="String"/>
+		<result property="subjectNo" column="subjectNo" javaType="String"/>
+		<result property="deptSeq" column="deptSeq" javaType="String"/>
+		<result property="score" column="score" javaType="String"/>
+		<result property="credits" column="credits" javaType="String"/>
+	</resultMap>
+	<select id="getTotalJunpilGrade" resultMap="getTotalGradeMap" parameterType="String">
+		select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+	        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+	        from
+	        (
+	            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+	            from tbl_course c join tbl_subject s
+	            on c.fk_subjectNo = s.subjectNo
+	            join tbl_dept d
+	            on s.fk_deptSeq = d.deptSeq
+	            where fk_memberNo = #{memberNo}
+	        )V
+	        join tbl_member m
+	        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 0 and semester != thisSemester
+	</select>
+	
+	<select id="getTotalJunsunGrade" resultMap="getTotalGradeMap" parameterType="String">
+		select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+	        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+	        from
+	        (
+	            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+	            from tbl_course c join tbl_subject s
+	            on c.fk_subjectNo = s.subjectNo
+	            join tbl_dept d
+	            on s.fk_deptSeq = d.deptSeq
+	            where fk_memberNo = #{memberNo}
+	        )V
+	        join tbl_member m
+	        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 1 and semester != thisSemester
+	</select>
+	
+	<select id="getTotalGyopilGrade" resultMap="getTotalGradeMap" parameterType="String">
+		select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from
+        (
+            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = #{memberNo}
+        )V
+        where deptSeq = 23 and mustStatus = 0 and semester != thisSemester
+	</select>
+	
+	<select id="getTotalGyosunGrade" resultMap="getTotalGradeMap" parameterType="String">
+	    select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from
+        (
+            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = #{memberNo}
+        )V
+        where deptSeq = 23 and mustStatus = 1 and semester != thisSemester
+	</select>
+	
+	<select id="getTotalIlsunGrade" resultMap="getTotalGradeMap" parameterType="String">
+		select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        from 
+        (
+	        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+	        from
+	        (
+	            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+	            from tbl_course c join tbl_subject s
+	            on c.fk_subjectNo = s.subjectNo
+	            join tbl_dept d
+	            on s.fk_deptSeq = d.deptSeq
+	            where fk_memberNo = #{memberNo}
+	        )V
+	        join tbl_member m
+	        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq != m_deptSeq and  deptSeq != 23 and muststatus = 0 and semester != thisSemester
+	</select>
+	
+	
 	<resultMap type="HashMap" id="getsScheduleListMap">
 		<result property="scheduleNo" column="scheduleNo" javaType="String"/>
 		<result property="subject" column="subject" javaType="String"/>

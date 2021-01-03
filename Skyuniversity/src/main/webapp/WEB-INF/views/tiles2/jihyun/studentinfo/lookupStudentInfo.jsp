@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core" %>
+
 <%
    String ctxPath = request.getContextPath();
 %>
@@ -361,17 +363,20 @@
 					<th scope="row">현재 재학학년</th>
 					<td>${loginuser.grade}학년</td>
 				</tr>
-				<%-- <tr>
-					<th scope="row">현재 수료학년</th>
-					<td>${loginuser.grade}학년</td>
-				</tr> --%>
 				<tr>
 					<th scope="row">현재 학적상태</th>
 					<td>${loginuser.status}</td>
 				</tr>
 				<tr>
 					<th scope="row">졸업일자</th>
-					<td>${lginuser.graduateDay}</td>
+					<td>
+						<c:if test="${empty loginuser.graduateDay}">
+							졸업전
+						</c:if>
+						<c:if test="${not empty loginuser.graduateDay}">
+							${lginuser.graduateDay}
+						</c:if>
+					</td>
 				</tr>
 				<tr>
 					<th scope="row">휴학가능학기수</th>

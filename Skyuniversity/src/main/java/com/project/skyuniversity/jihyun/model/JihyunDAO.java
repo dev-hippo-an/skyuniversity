@@ -197,10 +197,68 @@ public class JihyunDAO implements InterJihyunDAO {
 		return n;
 	}
 
+	// 학교 전체 일정 가져오기
 	@Override
 	public List<Map<String, String>> getsScheduleList() {
 		List<Map<String, String>> sScheduleList = sqlsession.selectList("Jihyun.getsScheduleList");
 		return sScheduleList;
+	}
+
+	// 기이수 성적 가져오기
+	@Override
+	public List<Map<String, String>> getTotalGradeList(String memberNo) {
+		
+		List<Map<String, String>> totalGradeList = new ArrayList<Map<String,String>>();
+		List<Map<String, String>> gradeList = null;
+		
+		//전필
+		gradeList = sqlsession.selectList("Jihyun.getTotalJunpilGrade", memberNo); 
+		if(gradeList.size()>0) {
+			for(Map<String,String> map : gradeList) {
+				map.put("lectureKind", "전공필수");
+				totalGradeList.add(map);
+			}
+		}
+		
+		// 전선
+		gradeList = sqlsession.selectList("Jihyun.getTotalJunsunGrade", memberNo);
+		if(gradeList.size()>0) {
+			for(Map<String,String> map : gradeList) {
+				map.put("lectureKind", "전공선택");
+				totalGradeList.add(map);
+			}
+		}
+		
+		// 교필
+		gradeList = sqlsession.selectList("Jihyun.getTotalGyopilGrade", memberNo); 
+		if(gradeList.size()>0) {
+			for(Map<String,String> map : gradeList) {
+				map.put("lectureKind", "교양필수");
+				totalGradeList.add(map);
+			}
+		}
+		
+		//교선
+		gradeList = sqlsession.selectList("Jihyun.getTotalGyosunGrade", memberNo); 
+		if(gradeList.size()>0) {
+			for(Map<String,String> map : gradeList) {
+				map.put("lectureKind", "교양선택");
+				totalGradeList.add(map);
+			}
+		}
+		
+		//일선
+		gradeList = sqlsession.selectList("Jihyun.getTotalIlsunGrade", memberNo); 
+		if(gradeList.size()>0) {
+			for(Map<String,String> map : gradeList) {
+				map.put("lectureKind", "일반선택");
+				totalGradeList.add(map);
+			}
+		}
+		
+		gradeList = null;
+		
+		return totalGradeList;
 	}
 
 }

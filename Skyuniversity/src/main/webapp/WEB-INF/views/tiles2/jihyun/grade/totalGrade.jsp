@@ -1,6 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
 
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>
+
 <style>
 
  div#totalGradeContainer {
@@ -128,6 +130,10 @@
 
 <script type="text/javascript">
 
+ $(document).ready(function(){
+	console.log("${totalGradeList}");
+ });
+
 </script>
 
 <div id="totalGradeContainer">
@@ -200,27 +206,34 @@
 	                    <th>교과목코드</th>
 	                    <th>교과목명</th>
 	                    <th>학점</th>
-	                    <th>평점</th>
 	                    <th>성적</th>
 	                    <th>이수여부</th>
-	                    <th>재수강여부</th>
-	                    <th>재수강과목명</th>
+	                    <!-- <th>재수강여부</th>
+	                    <th>재수강과목명</th> -->
 	               </tr>
 	           </thead>
 	           <tbody>
-	                <tr>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                </tr>
+	           <c:if test="${totalGradeList == '0'}">
+	           		<tr>
+						<td colspan="10" style="text-align: center;">수강한 과목이 없습니다.</td>
+					</tr>
+	           </c:if>
+	           <c:if test="${totalGradeList != '0'}">
+		           <c:forEach var="glist" items="${totalGradeList}" varStatus="status">
+		                <tr>
+		                    <td>${status.count}</td>
+		                    <td>${glist.courseYear}년&nbsp;${glist.semester}학기</td>
+		                    <td>${glist.lectureKind}</td>
+		                    <td>${glist.subjectNo}</td>
+		                    <td>${glist.subjectName}</td>
+		                    <td>${glist.credits}</td>
+		                    <td>${glist.score}</td>
+		                    <td></td>
+		                    <%-- <td>${glist.}</td>
+		                    <td>${glist.}</td> --%>
+		                </tr>
+		           </c:forEach>
+	           </c:if>
 	           </tbody>
 	        </table>
 	     </div>

@@ -32,7 +32,7 @@
 	div#block1 {
 		/* border: solid 1px blue; */
 		display: flex;
-		padding: 20px;
+		padding: 0 20px;
 		justify-content: space-between;
 	}
 	
@@ -70,6 +70,10 @@
 		border: 1px solid #c5c5c5;
 		border-radius: 3px;
 		padding: 1em 1.4em;
+	}
+	
+	#mycontent {
+		padding-top:20px;
 	}
 
 </style>
