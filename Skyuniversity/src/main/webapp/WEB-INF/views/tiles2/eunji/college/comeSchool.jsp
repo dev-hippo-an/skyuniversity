@@ -96,13 +96,11 @@ function funcCome(index){
 			bool = false;
 			return;
 		}
-
 			if($("#armyfile").val() == ""){
 				alert("군복학은 파일첨부(전역증)를 해주시기 바랍니다.");
 				bool = false;
 				return;
 			}
-
 		if(bool){
 		    var check = confirm("복학신청을 하시겠습니까?");
 		    if(check){
@@ -115,7 +113,6 @@ function funcCome(index){
 		    	return;
 		    }
 		}
-		
 	}
 	if(type=="일반휴학"){
 		$.ajax({

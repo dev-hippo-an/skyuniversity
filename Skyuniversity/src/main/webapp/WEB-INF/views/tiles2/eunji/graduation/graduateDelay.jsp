@@ -264,7 +264,7 @@ function funcdel(index){
 				<td style="width: 100px;">${vo.approve}</td>
 				<td style="width: 200px;">${vo.noreason}</td>
 				<c:if test="${vo.approve == '승인전'}">
-					<td style="width: 200px;"><button onclick="funcdel(${status.index})">취소</button>
+					<td style="width: 200px;"><button onclick="funcdel(${status.index})"  style='border:none; background-color:#e6e6e6; color: #e62e00; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>취소</button>
 					<input type="text" value="${vo.delayNo}" id="no${status.index}" hidden="true"/>
 					</td>
 				</c:if>

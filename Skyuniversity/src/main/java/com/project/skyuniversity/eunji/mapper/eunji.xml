@@ -279,7 +279,7 @@
 	<select id="checkGirlDate" parameterType="HashMap" resultType="int">
 		select count(*)
         from tbl_girl_leave
-        where fk_memberno = ${memberno} and to_char(startDate,'yyyy')=${year} and to_char(startDate,'mm') = ${month}
+        where fk_memberno = #{memberno} and to_char(startDate,'yyyy')=#{year} and to_char(startDate,'mm') = #{month}
 	</select>
 	
 	<delete id="delGirlOfficialLeave" parameterType="String">
@@ -310,8 +310,10 @@
 	</select>
 	
 	<insert id="insertClassCheck" parameterType="com.project.skyuniversity.eunji.model.ClassCheckVO">
-		 insert into tbl_class_check(fk_courseno, firstqs, secondqs, thirdqs, fourqs, fiveqs, sixqs, sevenqs, eightqs,checkKind<if test="#{etc} != null">, etc</if>)
-         values(#{fk_courseno}, #{firstQs},#{secondQs}, #{thirdQs}, #{fourQs}, #{fiveQs}, #{sixQs}, #{sevenQs}, #{eightQs}, #{checkKind}<if test="#{etc} != null">, #{etc}</if>)
+		 insert into tbl_class_check(fk_courseno, firstqs, secondqs, thirdqs, fourqs, fiveqs, sixqs, sevenqs, eightqs,checkKind
+		 <if test="#{etc} != null">, etc</if>)
+         values(#{fk_courseno}, #{firstQs},#{secondQs}, #{thirdQs}, #{fourQs}, #{fiveQs}, #{sixQs}, #{sevenQs}, #{eightQs}, #{checkKind}
+         <if test="#{etc} != null">, #{etc}</if>)
 	</insert>
 	
 	<update id="updateCourseCk" parameterType="int">

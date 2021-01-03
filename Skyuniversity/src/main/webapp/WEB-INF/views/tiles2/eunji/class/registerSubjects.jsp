@@ -179,75 +179,6 @@ body, html {
 }
 </style>
 <script type="text/javascript">
-
-$(document).ready(function() {
-	// 학년도 날짜 구하기
-	var now = new Date();
-	var year = now.getFullYear();
-	var month = now.getMonth()+1;
-
-	var sthtml = "";
-	var html = "<option>년도</option>";
-	
-	if(month < 3 || month >= 9){
-		sthtml = "<option>"+(year+1)+"</option>";
-		stsem = "<option>1</option>";
-		if(month >= 1){
-			sthtml = "<option>"+year+"</option>";
-		}
-		$("#startyear").html(sthtml);
-		$("#endyear").html(sthtml);
-		$("#startsem").html(stsem);
-	}
-	if(month < 9 && month >= 3){
-		sthtml = "<option>"+(year)+"</option>";
-		stsem = "<option>2</option>";
-		if(month >= 1){
-			sthtml = "<option>"+year+"</option>";
-		}
-		$("#startyear").html(sthtml);
-		$("#endyear").html(sthtml);
-		$("#startsem").html(stsem);
-	}
-	 
-});
-
-function funcreg() {
-	
-	var ok = ${paraMap.graduateok};
-	var bool = true;
-
-	if(ok == 0){
-		alert("졸업 -> 졸업적부심사에서 졸업적부심사 승인 후, 졸업연기를 신청하실 수 있습니다.");
-		bool = false;
-		return;
-	}
-	
-	if($("#reason").val().trim().length<50){
-		alert("휴학 사유는 50자 이상 작성해주셔야 합니다.")
-		bool = false;
-		return;
-	}
-
-	if(bool){
-		var frm = document.delayfrm;
-		frm.method = "POST";
-		frm.action = "<%= ctxPath%>/graduateDelayEnd.sky";
-		frm.submit();		
-	}
-	
-}
-
-function funcdel(index){
-	var no = $("#no"+index).val();
-	var check = confirm("졸업연기신청을 취소하시겠습니까?");
-	if(check){
-		location.href="<%=ctxPath%>/graduateDelayDel.sky?seq="+no;
-	}
-	else{
-		return;
-	}
-}
 </script>
 <div style="padding-left: 10px; padding-right: 10px;">  
 
@@ -275,8 +206,8 @@ function funcdel(index){
 <label>[${vo.subjectName}]&nbsp;과제</label>
 <p><a href="#ex1" rel="modal:open"  onclick="funcmodal();" style="font-weight: bold;">${vo.subject}</a></p>
 <br/>
-
-<div id="ex1" class="modal" style="width:500px;">
+<div style="text-align: center;">
+<div id="ex1" class="modal" style="width:500px; margin: 0 auto; height: 300px; margin-top: 100px;">
 	<div>
 		<h4 style="font-weight: bold;">[<span style="color:red;">${vo.subjectName}</span>]&nbsp;과제</h4>
 	</div>	
@@ -298,7 +229,7 @@ function funcdel(index){
 		<a href="#" rel="modal:close" onclick="funcclose();" style="float: right;">닫기</a>
 	
 </div>
-              
+</div>           
 </c:forEach>		
 </div>
 <br/>

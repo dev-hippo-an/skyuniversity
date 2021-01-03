@@ -57,7 +57,7 @@
 				</td>
 				<td><span id="prname${status.index}">${map.name}</span></td>
 				<c:if test="${map.classchk == 0}">
-				<td><button id="btn${status.index}" onclick="funcCheck(${status.index})" style="color:red; font-weight: bold;">강의평가</button></td>
+				<td><button id="btn${status.index}" onclick="funcCheck(${status.index})" style="color:red; font-weight: bold; border: solid 1px #cccccc;">강의평가</button></td>
 				</c:if>
 				<c:if test="${map.classchk == 1}">
 				<td><button disabled="disabled" style="color:#0066cc; font-weight: bold;">평가완료</button></td>

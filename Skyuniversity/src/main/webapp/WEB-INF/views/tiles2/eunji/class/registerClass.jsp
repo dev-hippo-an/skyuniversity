@@ -175,9 +175,7 @@ table#scroltbl {
 	function funcClassReg(index){
 		var addcredit = $("#td3"+index).text();
 		var sumcredits = ${sumcredits};
-		
 		var $target = $(event.target);
-	//	var days = $("#td3"+index).text();
 		
 		var days = $("#dayspan"+index).text();
 		var period = $("#span2"+index).text();
@@ -204,17 +202,19 @@ table#scroltbl {
 			success: function(json) {
 				if(!json.dayre && json.unique && json.bool){
 					alert("해당 요일,교시에 해당하는 과목이 존재합니다");
+					return;
 				}
 				if(!json.bool){
 					alert("자신의 학과의 과목을 수강신청해주세요.");
+					return;
 				}
 				if(!json.unique){
 					alert("이미 수강신청한 과목입니다.");
+					return;
 				}
 				if(json.recourse){
 					var result = confirm("재수강 하시겠습니까?");
 					if(result){
-						<%-- location.href="<%=ctxPath%>/insertSub.sky?bool="+result+"&subjectno="+subjectno+"&cursemester="+cursemester; --%>
 						$.ajax({
 							url: "<%= request.getContextPath() %>/insertReSub.sky",
 							data: {"bool":result,
@@ -270,6 +270,36 @@ table#scroltbl {
 			
 		});	//------------------end of ajax
 	}
+	
+	function nosearch() {
+		var no = $("#subnos").val();
+		
+		$.ajax({
+			url: "<%= request.getContextPath() %>/subSelectNo.sky",
+			data: {"no":no},
+			type: "GET",
+			dataType: "json",
+			success: function(json) {
+				var html="";
+				$.each(json, function(index, item){						
+					html += "<tr class='sublicl'>";
+					html += "<td style='width:150px;' id='td1"+index+"'>"+item.subjectno+"</td>"
+						   +"<td style='width:200px;' id='td2"+index+"'>"+item.subjectname+"</td>"
+						   +"<td style='width:100px;' id='td3"+index+"'>"+item.credits+"</td>"
+						   +"<td style='width:100px;' id='td4"+index+"'>"+item.name+"</td>"
+						   +"<td style='width:300px;> <span id='span1"+index+"'>"+item.day+"</span> /  <span id='span2"+index+"'>" + item.period+"</span></td>"
+						   +"<td style='width:150px; id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
+					html += "</tr>";
+				});
+				$("#tb").html(html);
+			},
+			error: function(request, status, error){
+	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
+	        }
+			
+		});	//------------------end of ajax
+	}
+	
 </script>
 
 <div id="container">

@@ -54,7 +54,7 @@ table#scroltbl {
 
 $(document).ready(function() {
 	var ok = ${graduok};
-	if(ok == 1){
+	if(ok == 1){   
 		$("#tfval").val("졸업가능");
 	}
 	else{

@@ -3,6 +3,7 @@ package com.project.skyuniversity.eunji.controller;
 import java.io.File;
 import java.io.IOException;
 import java.io.PrintWriter;
+import java.lang.reflect.Member;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.HashMap;
@@ -253,7 +254,7 @@ public class EunjiBoardController {
 		paraMap.put("subjectno", subjectno);
 		paraMap.put("year", year);
 		paraMap.put("currentsemester", cursemester);
-
+ 
 		int info = service.recourseInfo(paraMap);
 		int info2 = service.recourseInfo2(paraMap);
 		boolean recourse = false;
@@ -262,6 +263,7 @@ public class EunjiBoardController {
 		}
 		boolean bool = true;
 
+		// 다른학과 수강신청 불가 확인
 		if (!dept.equals("교양") && !dept.equals(memdept)) {
 			bool = false;
 			unique = true;
@@ -280,6 +282,7 @@ public class EunjiBoardController {
 			arr2 = period.split(",");
 		}
 		
+		// 요일 및 교시가 겹치는지 여부 확인 로직
 		List<String> daylist = service.dayInfo(paraMap);
 		List<String> periodlist = service.periodInfo(paraMap);
 
@@ -307,6 +310,7 @@ public class EunjiBoardController {
 			}
 		}
 		
+		// 이미 수강신청한 과목인지 여부 확인
 		int uniqueinfo = service.uniqueInfo(paraMap);
 		if (uniqueinfo >= 1) {
 			unique = false;
@@ -725,11 +729,10 @@ public class EunjiBoardController {
 		int memberNo = Integer.parseInt(jmvo.getMemberNo());
 		Map<String, String> paraMap = new HashMap<String, String>();
 		paraMap.put("memberNo", Integer.toString(memberNo));
+		List<GirlOfficialLeaveVO> girllist = service.selectGirlList(memberNo);
 		
 		MemberVO mvo = service.selectMemberInfo(paraMap);
 		String  gender = mvo.getJubun().substring(6, 7);
-		
-		List<GirlOfficialLeaveVO> girllist = service.selectGirlList(memberNo);
 
 		if(gender.equals("1") || gender.equals("3")) {
 			String message = "여학생만 신청가능합니다.";
@@ -746,7 +749,7 @@ public class EunjiBoardController {
 		}
 		
 		return mav;
-	}
+	} 
 
 	@RequestMapping(value = "/girlOfficalLeaveEnd.sky", method = { RequestMethod.POST })
 	public ModelAndView girlOfficalLeaveEnd(ModelAndView mav, HttpServletRequest request, GirlOfficialLeaveVO golvo) {
@@ -762,8 +765,9 @@ public class EunjiBoardController {
 		checkmap.put("memberno", Integer.toString(memberNo));
 		checkmap.put("month", golvo.getStartDate().substring(5, 7));
 		checkmap.put("year", golvo.getStartDate().substring(0, 4));
+		System.out.println(golvo.getStartDate().substring(5, 7) + golvo.getStartDate().substring(0, 4));
 		int cnt = service.checkGirlDate(checkmap);
-		if (cnt > 1) {
+		if (cnt > 0) {
 			flag = false;
 		}
 
@@ -986,7 +990,7 @@ public class EunjiBoardController {
 
 			Calendar cal = Calendar.getInstance();
 			int curyear = cal.get(cal.YEAR);
-			int curmonth = cal.get(cal.MONTH);
+			int curmonth = cal.get(cal.MONTH)+1;
 			String cur = "";
 
 			if (curmonth < 9 && curmonth > 3) {
@@ -994,7 +998,12 @@ public class EunjiBoardController {
 			}
 
 			if (curmonth > 9 || curmonth < 3) {
-				cur = (curyear + 1) + "-1";
+				if(curmonth >= 1 && curmonth <3) {
+					cur = curyear + "-1";
+				}
+				else {
+					cur = (curyear + 1) + "-1";
+				}
 			}
 			slvo.setStartSemester(cur);
 
@@ -1305,16 +1314,22 @@ public class EunjiBoardController {
 		
 		Calendar cal = Calendar.getInstance();
 		int curyear = cal.get(cal.YEAR);
-		int curmonth = cal.get(cal.MONTH);
+		int curmonth = cal.get(cal.MONTH)+1;
 		String cur = "";
 		
 		if(curmonth < 9 && curmonth > 3) {
 			cur = curyear + "-2"; 
 		}
 		
-		if(curmonth > 9 || curmonth < 3) {
-			cur = (curyear+1) + "-1";
+		if (curmonth > 9 || curmonth < 3) {
+			if(curmonth >= 1 && curmonth <3) {
+				cur = curyear + "-1";
+			}
+			else {
+				cur = (curyear + 1) + "-1";
+			}
 		}
+
 		slvo.setStartSemester(cur);
 		
 		MultipartFile attach = slvo.getAttach();
@@ -1518,7 +1533,7 @@ public class EunjiBoardController {
 
 		return jsonobj.toString();
 	}
-	
+	 
 	@RequestMapping(value = "/armyComeSchool.sky", method = { RequestMethod.POST })
 	public String armyComeSchool(HttpServletRequest request,
 		MultipartHttpServletRequest mrequest, ComeSchoolVO csvo) {
@@ -1575,8 +1590,8 @@ public class EunjiBoardController {
 				e.printStackTrace();
 			}
 		}
+		
 		String msg = "";
-		System.out.println("===>" + checkbol);
 		if(!checkbol) {
 			int n = service.insertComeSchoolArmy(csvo);
 			if(n == 1) {

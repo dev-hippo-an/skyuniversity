@@ -42,8 +42,8 @@ table#scroltbl {
 		var year = date.getFullYear();
 		
 		var html2 = "<option>전체</option>";
-		for(var i=parseInt(year)+1;i>=1990; i--){
-			html2 += "<option>"+i+"</option>";
+		for(var i=parseInt(year);i>=1990; i--){
+			html2 += "<option>"+i+"</option>";  
 		}
 		$("#year").html(html2);
 		

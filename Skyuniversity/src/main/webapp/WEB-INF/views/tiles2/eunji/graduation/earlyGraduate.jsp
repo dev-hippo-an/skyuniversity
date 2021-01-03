@@ -124,7 +124,7 @@ function funcearlyok() {
 function funcclick(){
 	var size = ${size};
 	if(size > 0){
-		alert("이미 조기졸업을 신청하셨습니다.");
+		alert("이미 조기졸업을 신청하셨습니다. 승인여부를 기다려주세요.");
 	}
 	else {
 	var check = confirm("조기졸업신청을 하시겠습니까?");
