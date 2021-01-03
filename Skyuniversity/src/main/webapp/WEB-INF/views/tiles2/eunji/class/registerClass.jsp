@@ -289,6 +289,7 @@ table#scroltbl {
 						   +"<td style='width:100px;' id='td4"+index+"'>"+item.name+"</td>"
 						   +"<td style='width:300px;> <span id='span1"+index+"'>"+item.day+"</span> /  <span id='span2"+index+"'>" + item.period+"</span></td>"
 						   +"<td style='width:150px; id='td6"+index+"'>"+item.curpeoplecnt + " / " + item.peoplecnt+"</td>"
+						   +"<td style='width:100px;'><button onclick='funcClassReg("+index+");' style='border:none; color: black; font-size: 8pt; padding-left: 10px; padding-right: 10px; padding-top: 5px; padding-bottom: 5px; border-radius: 3px;'>신청</button></td>";
 					html += "</tr>";
 				});
 				$("#tb").html(html);
