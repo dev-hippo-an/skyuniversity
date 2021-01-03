@@ -762,12 +762,7 @@ tr:nth-child(even) {
 	   }// end of function addTag(nickname) {}----------------------------
 
 	function goView2(fk_boardKindNo, boardNo){
-		
-	    session.setAttribute("readCountPermission", "yes");
-		   
-		console.log(boardNo);
-		console.log(fk_boardKindNo);
-		
+				   		
 		var frm = document.goViewFrm2;
 		frm.boardNo.value = boardNo;
 		frm.boardKindNo.value = fk_boardKindNo;
@@ -844,7 +839,7 @@ tr:nth-child(even) {
 					<td colspan="2" style = "text-align:center; width:400px;"><B>${bestBoard.boardName}</B></td>
 					<td colspan="2"><a class="subject" style="cursor:pointer" 
 					onclick="goView2('${bestBoard.fk_boardKindNo}', '${bestBoard.boardNo}')">
-					${bestBoard.subject}</a></td>
+					${bestBoard.subject} ${bestBoard.subject.length() }</a></td>
 				</tr>
 			</c:forEach>
 		</table>

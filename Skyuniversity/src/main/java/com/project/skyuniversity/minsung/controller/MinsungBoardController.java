@@ -81,8 +81,6 @@ public class MinsungBoardController {
 		paraMap.put("searchWord", searchWord);
 		paraMap.put("boardKindNo", boardKindNo);
 
-		// 먼저 총 게시물 건수(totalCount)를 구해와야 한다.
-		// 총 게시물 건수(totalCount)는 검색조건이 있을때와 없을때로 나뉘어진다.
 		int totalCount = 0; // 총 게시물 건수
 		int sizePerPage = 10; // 한 페이지당 보여줄 게시물 건수
 		int currentShowPageNo = 0; // 현재 보여주는 페이지 번호로서, 초기치로는 1페이지로 설정함.
