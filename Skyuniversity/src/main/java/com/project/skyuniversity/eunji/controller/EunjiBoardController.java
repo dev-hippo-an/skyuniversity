@@ -636,7 +636,7 @@ public class EunjiBoardController {
 		String semester = request.getParameter("semester");
 
 		String month = "";
-
+		System.out.println(year + semester);
 		if (semester.equals("1")) {
 			month = "03,04,05,06";
 		} else if (semester.equals("2")) {
@@ -987,10 +987,11 @@ public class EunjiBoardController {
 				}
 				
 			}
-
+			System.out.println("~~"+slvo.getArmyStartDate());
 			Calendar cal = Calendar.getInstance();
-			int curyear = cal.get(cal.YEAR);
-			int curmonth = cal.get(cal.MONTH)+1;
+
+			int curyear = Integer.parseInt(slvo.getArmyStartDate().substring(0, 4));
+			int curmonth = Integer.parseInt(slvo.getArmyStartDate().substring(5, 7));
 			String cur = "";
 
 			if (curmonth < 9 && curmonth > 3) {

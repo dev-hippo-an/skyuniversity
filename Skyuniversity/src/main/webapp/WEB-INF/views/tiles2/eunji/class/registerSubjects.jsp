@@ -202,12 +202,12 @@ body, html {
 <span>수강과목 과제</span>
 </div>
 <br>
-<c:forEach items="${worklist}" var="vo">
+<c:forEach items="${worklist}" var="vo" varStatus="status">
 <label>[${vo.subjectName}]&nbsp;과제</label>
-<p><a href="#ex1" rel="modal:open"  onclick="funcmodal();" style="font-weight: bold;">${vo.subject}</a></p>
+<p><a href="#ex${status.index}" rel="modal:open"  onclick="funcmodal();" style="font-weight: bold;">${vo.subject}</a></p>
 <br/>
 <div style="text-align: center;">
-<div id="ex1" class="modal" style="width:500px; margin: 0 auto; height: 300px; margin-top: 100px;">
+<div id="ex${status.index}" class="modal" style="width:500px; margin: 0 auto; height: 300px; margin-top: 100px;">
 	<div>
 		<h4 style="font-weight: bold;">[<span style="color:red;">${vo.subjectName}</span>]&nbsp;과제</h4>
 	</div>	
