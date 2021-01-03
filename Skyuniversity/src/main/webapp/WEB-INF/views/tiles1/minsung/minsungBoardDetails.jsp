@@ -814,14 +814,14 @@ tr:nth-child(even) {
 		</div>
 
 		<div id="buttons2">
-			<button type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/minsungEdit.sky?boardNo=${boardvo.boardNo}'">수정</button>
-			<button type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/minsungDel.sky?boardNo=${boardvo.boardNo}'">삭제</button>
+			<button type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/minsungEdit.sky?boardNo=${boardvo.boardNo}&boardKindNo=${boardvo.fk_boardKindNo}'">수정</button>
+			<button type="button" onclick="javascript:location.href='<%= request.getContextPath()%>/minsungDel.sky?boardNo=${boardvo.boardNo}&boardKindNo=${boardvo.fk_boardKindNo}'">삭제</button>
 		</div>
 	</div>
 <div id="sideBar">
 
 	<div>
-	
+
 		<B>최근 게시판</B>
 		<table>
 			<c:forEach var="recentBoard" items="${recentBoardList}">

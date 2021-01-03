@@ -89,8 +89,49 @@ public class MinsungBoardDAO implements InterMinsungBoardDAO {
 	}
 
 	@Override
-	public MinsungBoardVO getOneBoard(String boardNo) {
-		MinsungBoardVO boardvo = sqlsession.selectOne("minsung.getOneBoard", boardNo);
+	public MinsungBoardVO getOneBoard(Map<String, String> paraMap) {
+		
+		MinsungBoardVO boardvo = null;
+		
+		String boardKindNo = paraMap.get("boardKindNo");
+		String boardNo = paraMap.get("boardNo");
+		
+		switch (boardKindNo) {
+		case "1":
+			boardvo = sqlsession.selectOne("minsung.oneBoardNotice", boardNo);
+		break;
+		case "2":
+			boardvo = sqlsession.selectOne("minsung.oneBoardCouncil", boardNo);
+		break;
+		case "3":
+			boardvo = sqlsession.selectOne("minsung.oneBoardMajor", boardNo);
+		break;
+		case "4":
+			boardvo = sqlsession.selectOne("minsung.oneBoardClub", boardNo);
+		break;
+		case "5":
+			boardvo = sqlsession.selectOne("minsung.oneBoardGraduate", boardNo);
+		break;
+		case "6":
+			boardvo = sqlsession.selectOne("minsung.oneBoardCritic", boardNo);
+		break;
+		case "18":
+			boardvo = sqlsession.selectOne("minsung.oneBoardStudy", boardNo);
+		break;
+		case "19":
+			boardvo = sqlsession.selectOne("minsung.oneBoardCert", boardNo);
+		break;
+		case "20":
+			boardvo = sqlsession.selectOne("minsung.oneBoardEmp", boardNo);
+		break;
+		case "21":
+			boardvo = sqlsession.selectOne("minsung.oneBoardJoboffer", boardNo);
+		break;
+		case "22":
+			boardvo = sqlsession.selectOne("minsung.oneBoardLost", boardNo);
+		break;
+		}
+				
 		return boardvo;
 	}
 
@@ -109,7 +150,7 @@ public class MinsungBoardDAO implements InterMinsungBoardDAO {
 	@Override
 	public int add(MinsungBoardVO boardvo) {
 		int result = 0;
-				
+						
 		switch (boardvo.getFk_boardKindNo()) {
 		case "1":
 			sqlsession.insert("minsung.addNotice", boardvo);

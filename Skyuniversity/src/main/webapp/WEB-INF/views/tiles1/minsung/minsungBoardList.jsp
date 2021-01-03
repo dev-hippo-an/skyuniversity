@@ -249,7 +249,8 @@ img.photo {
                   
                   </c:forEach>               
                </c:if>
-			
+				
+				<c:if test="${not empty boardList}">
 				<c:forEach var="boardvo" items="${boardList}">
 					<tr class="board">
 						<td class="boardNo">${boardvo.boardNo}</td>
@@ -272,6 +273,13 @@ img.photo {
 						
 					</tr>
 				</c:forEach>
+				</c:if>
+				
+				<c:if test="${empty boardList}">
+					<tr>
+            			<td colspan="7" style="color: red; font-size: 30pt; font-weight: bold; height: 500px;">게시물이 없습니다.</td>
+            		</tr>
+				</c:if>
 			</tbody>
 		</table>
 	</div>
@@ -282,10 +290,11 @@ img.photo {
 		    <button style="text-align : right;" id="marketBoardWrite" onclick="allBoardAdminAdd();">공지쓰기</button>
 		</div>
 	</c:if>
-	
-	<div align="center"
-		style="width: 70%; border: solid 0px gray; margin: 20px auto;">
-		${pageBar}</div>
+	<c:if test="${not empty boardList}">
+		<div align="center"
+			style="width: 70%; border: solid 0px gray; margin: 20px auto;">
+			${pageBar}</div>
+	</c:if>
 
 	<form name="goViewFrm">
 	    <input type="hidden" name="boardKindNo" value="${paraMap.boardKindNo}" />

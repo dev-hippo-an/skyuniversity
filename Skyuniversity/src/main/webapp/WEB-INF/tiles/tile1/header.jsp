@@ -28,8 +28,10 @@
    // portnumber : 9090
    
    String serverName = "http://"+serverIP+":"+portnumber; 
-   //System.out.println("serverName : " + serverName);
-   //serverName : http://192.168.50.65:9090 
+   
+   String getMsgListSize = (String) session.getAttribute("getMsgListSize");
+   
+   
 %>
 
 <style type="text/css">
@@ -501,7 +503,7 @@ label#update-nickname:hover {
 			</c:if>
 			<c:if test="${sessionScope.loginuser != null}">
 				<li onclick="javascript:location.href='<%=ctxPath%>/logout.sky'">로그아웃</li>
-				<li onclick="javascript:location.href='<%= ctxPath%>/messageLetsGetIt.sky'">쪽지</li>
+				<li onclick="javascript:location.href='<%= ctxPath%>/messageLetsGetIt.sky'">쪽지[<%=getMsgListSize%>]</li>
 			</c:if>
 			<li onclick="javascript:location.href='<%= ctxPath%>/hsindex.sky'">학사행정</li>
 		</ul>

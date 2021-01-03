@@ -55,8 +55,8 @@ public class MinsungService implements InterMinsungService{
 	}
 
 	@Override
-	public MinsungBoardVO getOneBoard(String boardNo) {
-		MinsungBoardVO boardvo = dao.getOneBoard(boardNo);
+	public MinsungBoardVO getOneBoard(Map<String, String> paraMap) {
+		MinsungBoardVO boardvo = dao.getOneBoard(paraMap);
 		return boardvo;
 	}
 

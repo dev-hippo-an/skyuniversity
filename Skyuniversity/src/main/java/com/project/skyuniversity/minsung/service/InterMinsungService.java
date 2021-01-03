@@ -21,7 +21,7 @@ public interface InterMinsungService {
 
 	String kindBoard(String boardKindNo); // 해당 게시판 리스트 종류
 
-	MinsungBoardVO getOneBoard(String boardNo); // detail board 가져오기
+	MinsungBoardVO getOneBoard(Map<String, String> paraMap); // detail board 가져오기
 
 	int edit(MinsungBoardVO boardvo); // 글 수정
 

@@ -121,6 +121,8 @@
 	        $("textarea#content").val(contentval);
 	        // alert(contentval);
 	       <%-- === 스마트에디터 구현 끝 === --%>
+	       var fk_categoryNo = $("#category option:selected").val();
+	       $("#fk_categoryNo").val(fk_categoryNo);
 	       
 	   		var frm = document.registerForm;
 			frm.method = "POST";
@@ -139,6 +141,7 @@
 		<input type="hidden" name="fk_boardKindNo" value="${infoMap.boardKindNo}" />
 		<input type="hidden" name="fk_memberNo" value="${sessionScope.loginuser.fk_memberNo}" />
 		<input type="hidden" name="boardName" value="${infoMap.boardName}" />
+		<input type="hidden" id="fk_categoryNo" name="fk_categoryNo" value="" />
 		<ul>
 			<li><h2>${infoMap.boardName}</h2></li>
 			<li><h3>작성자&nbsp;:&nbsp;${sessionScope.loginuser.nickname}</h3></li>
@@ -146,6 +149,7 @@
 				<c:if test="${not empty categoryList}">
 					<select class="form-control" id="category" name="category" style="width: 10%;">
 						<option value="0" selected>분류</option>
+						<c:if test="${sessionScope.loginuser.fk_memberNo eq 3}"><option value="1">공지</option></c:if>
 						<c:forEach var="category" items="${categoryList}">
 							<option value="${category.categoryNo}">${category.categoryName}</option>
 						</c:forEach>

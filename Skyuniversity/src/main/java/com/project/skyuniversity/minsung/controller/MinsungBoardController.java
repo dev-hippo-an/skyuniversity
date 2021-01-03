@@ -201,7 +201,11 @@ public class MinsungBoardController {
 
 		String boardNo = request.getParameter("boardNo");
 		String boardKindNo = request.getParameter("boardKindNo");
-		MinsungBoardVO boardvo = service.getOneBoard(boardNo);
+		Map<String, String> paraMap2 = new HashMap<>();
+		paraMap2.put("boardNo", boardNo);
+		paraMap2.put("boardKindNo", boardKindNo);
+		MinsungBoardVO boardvo = service.getOneBoard(paraMap2);
+				
 		boardvo.setFk_boardKindNo(boardKindNo);
 		boardvo.setBoardNo(boardNo);
 		
@@ -273,9 +277,14 @@ public class MinsungBoardController {
 
 		// 글 수정해야 할 글번호 가져오기
 		String boardNo = request.getParameter("boardNo");
+		String boardKindNo = request.getParameter("boardKindNo");
+		
+		Map<String, String> paraMap2 = new HashMap<>();
+		paraMap2.put("boardNo", boardNo);
+		paraMap2.put("boardKindNo", boardKindNo);
 
 		// 글 수정해야할 글1개 내용 가져오기
-		MinsungBoardVO boardvo = service.getOneBoard(boardNo);
+		MinsungBoardVO boardvo = service.getOneBoard(paraMap2);
 		// 글조회수(readCount) 증가 없이 단순히 글1개만 조회 해주는 것이다.
 
 		mav.addObject("boardvo", boardvo);
@@ -311,8 +320,12 @@ public class MinsungBoardController {
 		 * 글 삭제를 하려면 원본글의 글암호와 삭제시 입력해준 암호가 일치할때만 글 삭제가 가능하도록 해야한다.
 		 */
 		String boardNo = request.getParameter("boardNo");
+		String boardKindNo = request.getParameter("boardKindNo");
 
-		MinsungBoardVO boardvo = service.getOneBoard(boardNo);
+		Map<String, String> paraMap2 = new HashMap<>();
+		paraMap2.put("boardNo", boardNo);
+		paraMap2.put("boardKindNo", boardKindNo);
+		MinsungBoardVO boardvo = service.getOneBoard(paraMap2);
 
 		/*
 		 * if (boardvo.getFileName() != null) { FileManager filemanager = new
@@ -345,7 +358,7 @@ public class MinsungBoardController {
 
 	@RequestMapping(value = "/minsungAdd.sky")
 	public ModelAndView requiredLoginMS_add(HttpServletRequest request, HttpServletResponse response, ModelAndView mav,  String boardKindNo) {
-
+				
 		List<MinsungCategoryVO> categoryList = service.categoryList(String.valueOf(boardKindNo));
 		String boardName = service.kindBoard( boardKindNo );
 		
@@ -385,8 +398,7 @@ public class MinsungBoardController {
 		
 		MultipartFile attach = boardvo.getAttach();
 		if (!attach.isEmpty()) {
-			// 첨부파일이 비어있지 않다면
-			System.out.println("첨부파일 성공");
+
 			// 1. 올리는 파일을 WAS(톰캣) 폴더에 저장해야 한다.
 			HttpSession session = mrequest.getSession();
 			String root = session.getServletContext().getRealPath("/");
@@ -416,6 +428,10 @@ public class MinsungBoardController {
 			} 
 			
 		}
+		paraMap.put("fk_boardKindNo", mrequest.getParameter("fk_boardKindNo"));
+		paraMap.put("boardName", mrequest.getParameter("boardName"));
+		paraMap.put("fk_memberNo", boardvo.getFk_memberNo());
+		paraMap.put("point", "3");
 		
 		// 작성한 글을 db에 저장.
 		int n = 0;
@@ -424,10 +440,7 @@ public class MinsungBoardController {
 		}else {
 			n = service.add_withFile(boardvo);
 		}
-		paraMap.put("fk_boardKindNo", mrequest.getParameter("fk_boardKindNo"));
-		paraMap.put("boardName", mrequest.getParameter("boardName"));
-		paraMap.put("fk_memberNo", boardvo.getFk_memberNo());
-		paraMap.put("point", "3");
+
 
 
 		
@@ -689,10 +702,8 @@ public class MinsungBoardController {
     	int n = service.insertMsg(paraMap);
     	    	
     	JSONObject jsonObj = new JSONObject();
-    	
 
     	jsonObj.put("n", n);
-
     	
     	return jsonObj.toString();
     }

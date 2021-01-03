@@ -52,6 +52,8 @@ import com.project.skyuniversity.ash.model.PhotoVO;
 import com.project.skyuniversity.ash.service.InterAnsehyeongService;
 import com.project.skyuniversity.jihyun.model.JihyunMemberVO;
 import com.project.skyuniversity.minsung.model.MinsungBoardVO;
+import com.project.skyuniversity.minsung.model.MinsungMsgVO;
+import com.project.skyuniversity.minsung.service.InterMinsungService;
 import com.project.skyuniversity.ohyoon.model.CommentVO;
 import com.project.skyuniversity.ash.common.AnFileManager;
 import com.project.skyuniversity.ash.common.MyUtil;
@@ -104,6 +106,9 @@ public class AnsehyeongController {
 
 	@Autowired // Type에 따라 알아서 Bean 을 주입해준다.
 	private InterAnsehyeongService service;
+	
+	@Autowired
+	private InterMinsungService service2;
 
 	@Autowired
 	private AnFileManager fileManager;
@@ -131,9 +136,6 @@ public class AnsehyeongController {
 			
 		}
 		
-		
-		
-		
 		//  각각의 보드에서 글 리스트를 꺼내온다.
 		
 		List<MarketBoardVO> indexBoardList = service.getIndexBoardList();
@@ -142,7 +144,7 @@ public class AnsehyeongController {
 		List<MarketBoardVO> recentBoardList = service.recentIndexBoardList();
 		List<MarketBoardVO> bestBoardList = service.bestIndexBoardList();
 		List<MarketBoardVO> popularBoardList = service.popularIndexBoardList();
-
+		
 		mav.addObject("indexBoardList", indexBoardList);
 		mav.addObject("recentBoardList", recentBoardList);
 		mav.addObject("bestBoardList", bestBoardList);
@@ -202,9 +204,20 @@ public class AnsehyeongController {
 
 			HttpSession session = request.getSession();
 			// 메모리에 생성되어져 있는 session을 불러오는 것이다.
-
+			
 			session.setAttribute("loginuser", loginuser);
 			// session(세션)에 로그인 되어진 사용자 정보인 loginuser 을 키이름을 "loginuser" 으로 저장시켜두는 것이다.
+			
+	    	int loginNo = 0;
+	    	List<MinsungMsgVO> getMsgList = null;
+	    	String getMsgListSize = "0";
+	    	
+	    	loginNo = ( (CommuMemberVO)session.getAttribute("loginuser") ).getFk_memberNo();
+	    	getMsgList = service2.getMsgList(loginNo);
+	    	getMsgListSize = String.valueOf(getMsgList.size());
+	    	
+	    	session.setAttribute("getMsgListSize", getMsgListSize);
+			
 			
 			if ("".equals(loginuser.getNickname()) || loginuser.getNickname() == null) {
 				String message = "닉네임을 설정해주세요 🌽🌽🌽🌽";
