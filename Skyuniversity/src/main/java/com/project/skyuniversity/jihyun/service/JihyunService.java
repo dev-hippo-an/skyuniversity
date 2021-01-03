@@ -75,4 +75,46 @@ public class JihyunService implements InterJihyunService {
 		return loginuser;
 	}
 
+	// 증명서 신청 내역 추가
+	@Override
+	public int addCertificateApplication(List<Map<String, String>> caList) {
+		int n = dao.addCertificateApplication(caList);
+		return n;
+	}
+
+	// 공지사항 내용 가져오기
+	@Override
+	public Map<String, String> getNoticeDetail(Map<String, String> paraMap) {
+		Map<String, String> noticeDetail = dao.getNoticeDetail(paraMap);
+		return noticeDetail;
+	}
+
+	// 현재 수강과목 불러오기
+	@Override
+	public List<Map<String, String>> getLectureList(String memberNo) {
+		List<Map<String, String>> lectureList = dao.getLectureList(memberNo);
+		return lectureList;
+	}
+
+	// 학생 기본정보 업데이트
+	@Override
+	public int sInfoUpdate(Map<String, String> paraMap) {
+		int n = dao.sInfoUpdate(paraMap);
+		return n;
+	}
+
+	// 학생 주소 업데이트
+	@Override
+	public int sAddressUpdate(Map<String, String> paraMap) {
+		int n = dao.sAddressUpdate(paraMap);
+		return n;
+	}
+
+	// 학교 전체 일정 불러오기
+	@Override
+	public List<Map<String, String>> getsScheduleList() {
+		List<Map<String, String>> sScheduleList = dao.getsScheduleList();
+		return sScheduleList;
+	}
+
 }

@@ -1,8 +1,10 @@
 package com.project.skyuniversity.jihyun.controller;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -17,6 +19,9 @@ import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.ModelAndView;
 
+import com.google.gson.JsonArray;
+import com.google.gson.JsonObject;
+import com.google.gson.JsonParser;
 import com.project.skyuniversity.ash.model.CommuMemberVO;
 import com.project.skyuniversity.common.Sha256;
 import com.project.skyuniversity.jihyun.model.JihyunMemberVO;
@@ -55,6 +60,53 @@ public class JihyunController {
 		mav.addObject("hsNoticeList", hsNoticeList);
 		mav.addObject("deptNoticeList", deptNoticeList);
 		mav.addObject("subjectNoticeList", subjectNoticeList);
+		
+		
+		// 현재 수강과목 불러오기
+		String memberNo = null;
+		try {
+			JihyunMemberVO member = (JihyunMemberVO)session.getAttribute("loginuser");
+			memberNo = member.getMemberNo();
+		}catch (NullPointerException e){
+			
+		}
+		System.out.println("memberNo:"+memberNo);
+		
+		List<Map<String, String>> lectureList = service.getLectureList(memberNo);
+
+		if(lectureList.size()>0) {
+			mav.addObject("lectureList", lectureList);
+		}
+		else {
+			mav.addObject("lectureList", "0");
+		}
+		
+		// 학교 전체 일정 불러오기
+		List<Map<String, String>> sScheduleList = service.getsScheduleList();
+		
+		JsonArray jarr = new JsonArray(); // []
+		JsonObject jobj = null;
+		
+		if(sScheduleList.size() > 0) {
+			for(Map<String,String> m : sScheduleList) {
+				jobj = new JsonObject(); // {}
+				
+				jobj.addProperty("scheduleNo", m.get("scheduleNo"));
+				jobj.addProperty("text", m.get("subject"));
+				jobj.addProperty("contents", m.get("contents"));
+				jobj.addProperty("startDate", m.get("startDate"));
+				jobj.addProperty("endDate", m.get("endDate"));
+				jobj.addProperty("sort", m.get("status"));
+				
+				jarr.add(jobj);
+			}
+			
+			String ssList = jarr.toString();
+			
+			System.out.println(ssList);
+			
+			mav.addObject("ssList", ssList);
+		}
 		
 		mav.setViewName("jihyun/index.tiles2");
 		//   /WEB-INF/views/tiles1/jihyun/index.jsp 파일을 생성한다.
@@ -129,6 +181,32 @@ public class JihyunController {
 		return mav;
 	}
 	
+	// 공지사항 띄우기
+	@RequestMapping(value = "/hsnotice.sky")
+	public ModelAndView hsnotice(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		String noticeNo = request.getParameter("noticeNo");
+		String status = request.getParameter("nStatus");
+//		System.out.println(noticeNo);
+//		System.out.println(status);
+		
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("noticeNo", noticeNo);
+		paraMap.put("status", status);
+		
+		Map<String, String> noticeInfo = service.getNoticeDetail(paraMap);
+
+//		for(String key : noticeInfo.keySet()){
+//            String value = noticeInfo.get(key);
+//            System.out.println(key+" : "+value);
+//		}
+		 
+		mav.addObject("noticeInfo", noticeInfo);
+		
+		mav.setViewName("tiles2/jihyun/notice");
+		return mav;
+	}
+	
 	// 학생정보조회
 	@RequestMapping(value = "/lookupStudentInfo.sky")
 	public ModelAndView requiredLoginhs_lookupStudentInfo(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -137,6 +215,90 @@ public class JihyunController {
 		return mav;
 	}
 	
+	// 학생 기본정보 업데이트
+	@ResponseBody
+	@RequestMapping(value = "/sInfoUpdate.sky", produces = "text/plain;charset=UTF-8")
+	public String sInfoUpdate(HttpServletRequest request, HttpServletResponse response) {
+		
+		String memberNo = request.getParameter("memberNo");
+		String mobile = request.getParameter("mobile");
+		String email = request.getParameter("email");
+		String chinaName = request.getParameter("chinaName");
+		String engName = request.getParameter("engName");
+		
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("memberNo", memberNo);
+		paraMap.put("mobile", mobile);
+		paraMap.put("email", email);
+		paraMap.put("chinaName", chinaName);
+		paraMap.put("engName", engName);
+		
+		System.out.println(memberNo+ mobile+ email+ chinaName+ engName);
+		
+		String result = "";
+		
+		int n = service.sInfoUpdate(paraMap);
+		
+		if(n == 1) {
+			result = "저장완료";
+			
+			HttpSession session = request.getSession();
+			JihyunMemberVO member = (JihyunMemberVO)session.getAttribute("loginuser");
+			member.setMobile(mobile);
+			member.setEmail(email);
+			member.setChinaName(chinaName);
+			member.setEngName(engName);
+			
+			session.setAttribute("loginuser", member);
+			
+		}
+		else {
+			result = "저장실패";
+		}
+		
+		return result;
+	}
+	
+	// 학생 주소 업데이트
+	@ResponseBody
+	@RequestMapping(value = "/sAddressUpdate.sky", produces = "text/plain;charset=UTF-8")
+	public String sAddressUpdate(HttpServletRequest request, HttpServletResponse response) {
+		
+		String memberNo = request.getParameter("memberNo");
+		String postcode = request.getParameter("postcode");
+		String address = request.getParameter("address");
+		String detailAddress = request.getParameter("detailAddress");
+		String extraAddress = request.getParameter("extraAddress");
+		
+		Map<String, String> paraMap = new HashMap<String, String>();
+		paraMap.put("memberNo", memberNo);
+		paraMap.put("postcode", postcode);
+		paraMap.put("address", address);
+		paraMap.put("detailAddress", detailAddress);
+		paraMap.put("extraAddress", extraAddress);
+		
+		int n = service.sAddressUpdate(paraMap);
+		
+		String result = "";
+		
+		if(n == 1) {
+			result = "저장완료"; 
+			
+			HttpSession session = request.getSession();
+			JihyunMemberVO member = (JihyunMemberVO)session.getAttribute("loginuser");
+			member.setPostcode(postcode);
+			member.setAddress(address);
+			member.setDetailAddress(detailAddress);
+			member.setExtraAddress(extraAddress);
+			
+			session.setAttribute("loginuser", member);
+		}
+		else {
+			result = "저장실패";
+		}
+		
+		return result;
+	}
 
 	
 	// 비밀번호 변경 페이지 요청
@@ -236,7 +398,36 @@ public class JihyunController {
 	@RequestMapping(value = "/schedule.sky")
 	public ModelAndView requiredLoginhs_schedule(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
 		
+		// 학교 전체 일정 불러오기
+		List<Map<String, String>> sScheduleList = service.getsScheduleList();
+		
+		mav.addObject("sScheduleList", sScheduleList);
+		
+		JsonArray jarr = new JsonArray(); // []
+		JsonObject jobj = null;
+		
+		if(sScheduleList.size() > 0) {
+			for(Map<String,String> m : sScheduleList) {
+				jobj = new JsonObject(); // {}
+				
+				jobj.addProperty("scheduleNo", m.get("scheduleNo"));
+				jobj.addProperty("text", m.get("subject"));
+				jobj.addProperty("contents", m.get("contents"));
+				jobj.addProperty("startDate", m.get("startDate"));
+				jobj.addProperty("endDate", m.get("endDate"));
+				jobj.addProperty("sort", m.get("status"));
+				
+				jarr.add(jobj);
+			}
+			
+			String ssList = jarr.toString();
+			
+			System.out.println(ssList);
+			
+			mav.addObject("ssList", ssList);
+		}
 		mav.setViewName("jihyun/studentinfo/schedule.tiles2");
+		
 		return mav;
 	}
 	
@@ -261,7 +452,7 @@ public class JihyunController {
 		
 		String memberNo = request.getParameter("memberNo");
 		
-		System.out.println(memberNo);
+		//System.out.println(memberNo);
 		
 		// 해당 학생의 증명서 신청리스트 조회
 		List<Map<String,String>> lookupApplicationList = service.getApplicationList(memberNo);
@@ -289,6 +480,67 @@ public class JihyunController {
 		return jsonArr.toString();
 	}
 	
+	// 증명서 신청 -> DB에 넣어주기
+	@ResponseBody
+	@RequestMapping(value = "/certificateApplicate.sky", produces = "text/plain;charset=UTF-8")
+	public String certificateApplicate (HttpServletRequest request, HttpServletResponse response) {
+	
+		List<Map<String, String>> caList = new ArrayList<Map<String,String>>();
+		Map<String, String> ca = null;
+		
+		String cList = request.getParameter("cList");
+		//System.out.println("cList:"+cList);
+	    
+		JsonParser jparser = new JsonParser();
+
+		JsonArray jArray = (JsonArray)jparser.parse(cList);
+		
+		int cnt = jArray.size();
+		
+		String message = "3";
+		
+		if(cnt > 0) {
+			for(int i = 0; i<cnt; i++) {
+				JsonObject jobj = (JsonObject)jArray.get(i);
+				String memberNo = jobj.get("memberNo").getAsString();
+				String certificateKindSeq = jobj.get("certificateKindSeq").getAsString();
+				String lang = jobj.get("lang").getAsString();
+				String count = jobj.get("count").getAsString();
+				String recieveWay = jobj.get("recieveWay").getAsString();
+				
+				ca = new HashMap<String, String>();
+				ca.put("memberNo", memberNo);
+				ca.put("certificateKindSeq", certificateKindSeq);
+				ca.put("lang", lang);
+				ca.put("count", count);
+				ca.put("recieveWay", recieveWay);
+				
+				caList.add(ca);
+				//System.out.println(memberNo+certificateKindSeq+lang+count+recieveWay);
+			}
+			
+	//		for(Map<String, String> list: caList) {
+	//			System.out.println(list.get("memberNo"));
+	//			System.out.println(list.get("certificateKindSeq"));
+	//			System.out.println(list.get("lang"));
+	//			System.out.println(list.get("count"));
+	//			System.out.println(list.get("recieveWay"));
+	//		}
+			
+			int n  = service.addCertificateApplication(caList);
+		
+			if(n == cnt) {
+				message = "1";
+			}
+			else {
+				message = "2";
+			}
+		
+		}// end of if(cnt > 0) {}--------------------------------------
+		
+		return message;
+	}
+	
 	// 기이수성적조회
 	@RequestMapping(value = "/totalGrade.sky")
 	public ModelAndView requiredLoginhs_totalGrade(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
@@ -304,12 +556,12 @@ public class JihyunController {
 		return mav;
 	}
 	// 성적표출력
-	@RequestMapping(value = "/printReportCard.sky")
-	public ModelAndView requiredLoginhs_printReportCard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
-		
-		mav.setViewName("jihyun/grade/printReportCard.tiles2");
-		return mav;
-	}
+//	@RequestMapping(value = "/printReportCard.sky")
+//	public ModelAndView requiredLoginhs_printReportCard(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+//		
+//		mav.setViewName("jihyun/grade/printReportCard.tiles2");
+//		return mav;
+//	}
 	// 교양 및 전공필수 이수현황
 	@RequestMapping(value = "/statusOfComplete.sky")
 	public ModelAndView requiredLoginhs_statusOfComplete(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {

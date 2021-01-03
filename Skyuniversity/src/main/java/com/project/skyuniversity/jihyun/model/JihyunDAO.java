@@ -1,5 +1,7 @@
 package com.project.skyuniversity.jihyun.model;
 
+import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -70,9 +72,135 @@ public class JihyunDAO implements InterJihyunDAO {
 		return subjectNoticeList;
 	}
 
+	// 학번으로 로그인유저 불러오기
+	@Override
 	public JihyunMemberVO getLoginuserFromCommu(String memberNo) {
 		JihyunMemberVO loginuser = sqlsession.selectOne("Jihyun.getLoginuserFromCommu", memberNo);
 		return loginuser;
+	}
+
+	// 증명서 신청 내역 추가
+	@Override
+	public int addCertificateApplication(List<Map<String, String>> caList) {
+		
+		int length = caList.size();
+
+		int result = 0;
+		
+		if(length<=1) {
+			HashMap<String, String> paramap = (HashMap<String, String>) caList.get(0);
+			result = sqlsession.insert("Jihyun.addCertificateApplicationOne", paramap);
+		}
+		else {
+			result = sqlsession.insert("Jihyun.addCertificateApplicationAll", caList);
+		}
+		
+		
+		return result;
+	}
+
+	// 공지사항 내용 가져오기
+	@Override
+	public Map<String, String> getNoticeDetail(Map<String, String> paraMap) {
+		
+		Map<String, String> noticeDetail = null;
+		
+		String status = paraMap.get("status");
+		System.out.println(status);
+		
+		switch (status) {
+		case "0":
+			noticeDetail =  sqlsession.selectOne("Jihyun.getNoticeDetail0", paraMap); 
+			break;
+
+		case "1":
+			noticeDetail =  sqlsession.selectOne("Jihyun.getNoticeDetail1", paraMap); 
+			break;
+		
+		case "2":
+			noticeDetail =  sqlsession.selectOne("Jihyun.getNoticeDetail2", paraMap); 
+			break;
+		}
+		
+		 
+		return noticeDetail;
+	}
+
+	@Override
+	public List<Map<String, String>> getLectureList(String memberNo) {
+		//List<Map<String, String>> lectureList = sqlsession.selectList("Jihyun.getLectureList", memberNo);
+		
+		List<Map<String, String>> totalLecture = new ArrayList<Map<String,String>>();
+		List<Map<String, String>> lectureList = null;
+		
+		//전필
+		lectureList = sqlsession.selectList("Jihyun.getThisJunpil", memberNo); 
+		if(lectureList.size()>0) {
+			for(Map<String,String> map : lectureList) {
+				map.put("lectureKind", "전공필수");
+				totalLecture.add(map);
+			}
+		}
+		
+		// 전선
+		lectureList = sqlsession.selectList("Jihyun.getThisJunsun", memberNo);
+		if(lectureList.size()>0) {
+			for(Map<String,String> map : lectureList) {
+				map.put("lectureKind", "전공선택");
+				totalLecture.add(map);
+			}
+		}
+		
+		// 교필
+		lectureList = sqlsession.selectList("Jihyun.getThisGyopil", memberNo); 
+		if(lectureList.size()>0) {
+			for(Map<String,String> map : lectureList) {
+				map.put("lectureKind", "교양필수");
+				totalLecture.add(map);
+			}
+		}
+		
+		//교선
+		lectureList = sqlsession.selectList("Jihyun.getThisGyosun", memberNo); 
+		if(lectureList.size()>0) {
+			for(Map<String,String> map : lectureList) {
+				map.put("lectureKind", "교양선택");
+				totalLecture.add(map);
+			}
+		}
+		
+		//일선
+		lectureList = sqlsession.selectList("Jihyun.getThisIlsun", memberNo); 
+		if(lectureList.size()>0) {
+			for(Map<String,String> map : lectureList) {
+				map.put("lectureKind", "일반선택");
+				totalLecture.add(map);
+			}
+		}
+		
+		lectureList = null;
+		
+		return totalLecture;
+	}
+
+	// 학생 기본정보 업데이트
+	@Override
+	public int sInfoUpdate(Map<String, String> paraMap) {
+		int n = sqlsession.update("Jihyun.sInfoUpdate", paraMap);
+		return n;
+	}
+
+	// 학생 주소 업데이트
+	@Override
+	public int sAddressUpdate(Map<String, String> paraMap) {
+		int n = sqlsession.update("Jihyun.sAddressUpdate", paraMap);
+		return n;
+	}
+
+	@Override
+	public List<Map<String, String>> getsScheduleList() {
+		List<Map<String, String>> sScheduleList = sqlsession.selectList("Jihyun.getsScheduleList");
+		return sScheduleList;
 	}
 
 }

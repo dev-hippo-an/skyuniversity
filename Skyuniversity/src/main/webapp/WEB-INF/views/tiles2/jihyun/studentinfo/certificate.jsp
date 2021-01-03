@@ -23,7 +23,7 @@
 	}
 	
 	#block1 {
-		width: 55%;
+		width: 54%;
 	}
 	
 	#block2 {
@@ -130,11 +130,11 @@
 	    border-radius: 0 0 6px 0;
 	}
 	
-	#applicationRecord, #application {
-		border: solid 1px gray;
-		border-radius: 20px;
-		padding: 30px;
-	}
+	/* #applicationRecord, #application {
+		border: 1px solid #c5c5c5;
+		border-radius: 5px;
+		padding: 10px;
+	} */
 	
 	.mybtn {
 		width: 100%;
@@ -234,58 +234,77 @@
 		
 		// certificateKindList의 길이를 추출
 		var kindNum = "${certificateKindList}".split("}").length-1;
-		//var str1 = str.substring(0,str.length-1);
-		//var str2 = str.split("}");
-		//console.log(str1);
-		//console.log(str2);
-		//console.log(str2.length-1);
-		//console.log(kindNum);
 		
-		<%-- var frm = document.addFrm;
-	    frm.method = "POST";
-	    frm.action = "<%= request.getContextPath()%>/addEnd.action";
-	    frm.submit(); --%>
+		// 증명서 발급신청란의 한 줄 한 줄을 배열로 가져옴
+		var line = $(".line").get();
+		//console.log(line);
 		
-	    var data = $('.appForm').serialize();
-	    console.log(data);
-	    
-	    //var Frm = document.applicationForm;
-	    
+		// 사용할 변수 만들어놓기
+		var lang, count, recieveWay, certificateKindSeq, memberNo;
+		var jobj, jArray;
+		var totalInfo = new Object(); // jArray를 담을 곳
+		jArray = new Array(); //jobj를 담을 배열생성
 
-		/* for(var i=0; i<kindNum; i++){
+		// 증명서 발급신청란의 한 줄을 반복문으로 돌림
+		$.each(line, function(index,item){
+			//console.log(item);
+			// 한 줄에서 넘겨줘야할 정보를 가져옴
+			certificateKindSeq = $(item).find(".certificateKindSeq").val();
+			memberNo = $(item).find(".memberNo").val();
+			lang = $(item).find(".lang").val();
+			count = $(item).find(".sipnnerVal").val();
+			recieveWay = $(item).find(".recieveWay").val();
 			
-		} */
-		<%-- 
+			
+			if(lang==""||count==0||recieveWay==""){
+				//사용자가 국/영문, 발급부수, 수령방법중 하나라도 선택하지 않았다면	
+			}
+			else {
+				//사용자가 국/영문, 발급부수, 수령방법을 모두 선택한 경우
+				// 그 줄의 정보를 json형식으로 만들어 배열에 담아줌
+				//console.log(lang, count, recieveWay, certificateKindSeq, memberNo);
+				
+	            jobj = new Object(); //정보를 담을 object를 만들어줌
+	            
+	            // 정보를 넣음
+	            jobj.memberNo = memberNo;
+		        jobj.certificateKindSeq = certificateKindSeq;
+		        jobj.lang = lang;
+		        jobj.count = count;
+		        jobj.recieveWay = recieveWay;
+		        
+		        jArray.push(jobj); // jArray 배열에 담아줌
+			}
+		});
+		
+		sjArray = JSON.stringify(jArray); // jArray를 string형식으로 변환해줌
+	    console.log(sjArray);
+		
 		$.ajax({
-			url:"<%=request.getContextPath%>/certificateApplicate.sky",
-			data: data,
-			
-			
-		}); --%>
-		
-		<%-- $.ajax({
-			url:"<%= request.getContextPath() %>/requestCertificate.sky",
-			data:{"memberNo":${loginuser.memberNo},"nowPwd":nowPwd},
-			type:"POST",
-			dataType:"json",
-			success: function(json){
-				//console.log(json.isEqualPwd);
-				if(!json.isEqualPwd){
-					
-					$("input#nowPwd").next().text("비밀번호를 확인해주세요.");
-					$("input#nowPwd").next().addClass("errorMessage");
-					$("input#nowPwd").next().show();
+			url:"<%=request.getContextPath()%>/certificateApplicate.sky",
+			data: {"cList":sjArray},
+			type:"post",
+			dataType:"text",
+			success: function(text){
+				switch (text){
+			      case "1" :
+			    	  alert("증명서 신청 완료");
+					  location.reload();
+			          break;
+			      case "2" :
+			    	  alert("증명서 신청 실패");
+			          break;
+			      case "3" :
+			    	  alert("신청할 내용을 확인해주세요.");
+			          break;
 				}
-				else { // 비밀번호가 맞을때 => json.isEqualPwd == true일때
-					boolNowPwd = true;
-				} 
-			},
-			error: function(request, status, error){
+				
+			},error: function(request, status, error){
 	               alert("code: "+request.status+"\n"+"message: "+request.responseText+"\n"+"error: "+error);
-	           }
-			
-		}); --%>
+				}
+		});
 		
+	
 	}
 	
 	function lookupApplicationList(){
@@ -384,36 +403,36 @@
 					<c:if test="${not empty certificateKindList}">
 						<form name="applicationForm" class="appForm">
 							<c:forEach var="ck" items="${certificateKindList}" varStatus="status">
-									<tr>
+									<tr class="line">
 										<td>${status.count}</td>
 										<td>
 											${ck.certificateName}
-											<input type="hidden" name="certificateKindSeq${status.count}" value="${ck.certificateKindSeq}"/>
-											<input type="hidden" value="${loginuser.memberNo}" name="memberNo${status.count}"/>
+											<input type="hidden" class="certificateKindSeq" name="certificateKindSeq" value="${ck.certificateKindSeq}"/>
+											<input type="hidden" class="memberNo" value="${loginuser.memberNo}" name="memberNo"/>
 										</td>
 										<td class="charge">${ck.charge}</td>
 										<td>
-											<select class="lang" name="lang${status.count}">
+											<select class="lang" name="lang">
 												<c:if test="${ck.lang eq '1'}">
 						                               <option value="" selected>선택</option>
-						                               <option value="1">국문</option>
-						                               <option value="2">영문</option>
+						                               <option value="0">국문</option>
+						                               <option value="1">영문</option>
 												</c:if>
 												<c:if test="${ck.lang ne '1' }">
 													   <option value="" selected>선택</option>
-						                               <option value="1">국문</option>
+						                               <option value="0">국문</option>
 												</c:if>
 				                            </select>
 										</td>
 										<td class="spinner">
 											<input class="spinnerInput" readonly/>
-											<input type="hidden" class="sipnnerVal" name="count${status.count}"/>	
+											<input type="hidden" class="sipnnerVal" name="count"/>	
 										</td>
 										<td>
-											<select class="recieveWay" name="recieveWay${status.count}">
+											<select class="recieveWay" name="recieveWay">
 												<option value="" selected>선택</option>
-												<option value="1">직접수령</option>
-												<option value="2">등기수령</option>
+												<option value="0">직접수령</option>
+												<option value="1">등기수령</option>
 											</select>
 										</td>
 										<td class="sum">
