@@ -25,27 +25,30 @@
  }
  
  div.totalGradeInfo {
-	border: solid 1px lightgray;
+	/* border: solid 1px lightgray;
  	border-radius: 10px;
-	padding: 20px;
+	padding: 20px; */
 	width: 100%; 
 	margin-bottom: 50px;
  }
  
   
  div#sumBlock {
- 	border: solid 1px lightgray;
- 	border-radius: 10px;
- 	padding: 20px;
+ 	/* border: solid 1px lightgray; */
+ 	/* border-radius: 10px;
+ 	padding: 20px; */
  	width: 37%;
  	margin-right: 1%;
+ 	height: 400px;
  }
  
  div#detailBlock {
- 	border: solid 1px lightgray;
+ 	/* border: solid 1px lightgray;
  	border-radius: 10px;
- 	padding: 20px;
+ 	padding:20px; */
  	width: 62%;
+ 	
+ 	height: 400px;
  }
  
  .bordered {
@@ -90,6 +93,9 @@
     box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
     border-top: none;
     text-shadow: 0 1px 0 rgba(255,255,255,.5);
+    position: sticky;
+    top: -1px;
+    border-top: none;
 }
  
 .bordered td:first-child, .bordered th:first-child {
@@ -153,89 +159,110 @@
                 </tr>
             </thead>
             <tbody>
-                <tr>
-                    <td>n</td>
-                    <td>n</td>
-                    <td>n</td>
-                    <td>n</td>
-                </tr>
+             	 <c:if test="${totalGradeList == '0'}">
+           	  		<tr>
+	                    <td>0</td>
+	                    <td>0</td>
+	                    <td>0</td>
+	                    <td>0</td>
+	                </tr>
+	             </c:if>
+	             <c:if test="${totalGradeList != '0'}">
+		            <c:forEach var="tlist" items="${totalGradeInfoList}">
+		                <tr>
+		                    <td>${tlist.applicateCredits}</td>
+		                    <td>${tlist.completeCredits}</td>
+		                    <td>${tlist.totalScore}</td>
+		                    <td>${tlist.averageScore}</td>
+		                </tr>
+	                </c:forEach>
+                </c:if>
             </tbody>
         </table>
     </div>
     <div id="block2">
-	    <div id="sumBlock">
-	        <h4 style="font-weight: bold;">학기별 평점내역</h4>
-	        <table class="bordered">
-	            <thead>
-	                <tr>
-	                    <th>No</th>
-	                    <th>학기</th>
-	                    <th>이수학점</th>
-	                    <th>평점평균</th>
-	                    <th>최초평점평균</th>
-	                    <th>학사경고</th>
-	                </tr>
-	            </thead>
-	            <tbody>
-	                <tr>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                    <td>n</td>
-	                </tr>
-	            </tbody>
-	        </table>
-	        <p style="margin-top: 30px;">
-	        * 평점평균의미  - 재수강 제외한 성적<br>
-	        * 최초평점평균은 F, 학점포기, 재수강을 포함한 성적입니다. 학사경고, 성적장학금에 적용됩니다.<br>
-	        * 총최초평점평균은 조기졸업이나 전과시 사용됩니다.<br>
-	        * P, NP, 괄호학점은 평점에 포함되지 않습니다.<br>
-	        * ( )괄호학점은 졸업학점에 포함되지 않습니다.
-	        </p>
+    	<div id="sumBlock">
+		    <h4 style="font-weight: bold;">학기별 평점내역</h4>
+	    	<div style="border: solid 1px lightgray; height: 400px; overflow: auto">
+		        <table class="bordered">
+		            <thead>
+		                <tr>
+		                    <th>No</th>
+		                    <th>학기</th>
+		                    <th>이수학점</th>
+		                    <th>평점평균</th>
+		                    <th>최초평점평균</th>
+		                    <th>학사경고</th>
+		                </tr>
+		            </thead>
+		            <tbody>
+		            <c:if test="${totalGradeList == '0'}">
+		             	<tr>
+		             		<td colspan="6" style="text-align: center;">학기별 평점내역이 없습니다.</td>
+		             	</tr>
+		             </c:if>
+		             <c:if test="${totalGradeList != '0'}">
+			             <c:forEach var="slist" items="${semesterGradeList}" varStatus="status">
+			                <tr>
+			                    <td>${status.count}</td>
+			                    <td>${slist.courseSemester}학기</td>
+			                    <td>${slist.cCradits}</td>
+			                    <td>${slist.averageScore}</td>
+			                    <td>${slist.firstAverageScore}</td>
+			                    <td>${slist.warning}</td>
+			                </tr>
+		                </c:forEach>
+		            </c:if>
+		            </tbody>
+		        </table>
+		        <p style="margin-top: 30px;">
+		        * 평점평균의미  - 재수강 제외한 성적<br>
+		        * 최초평점평균은 F, 학점포기, 재수강을 포함한 성적입니다. 학사경고, 성적장학금에 적용됩니다.<br>
+		        * 총최초평점평균은 조기졸업이나 전과시 사용됩니다.<br>
+		        * P, NP, 괄호학점은 평점에 포함되지 않습니다.<br>
+		        * ( )괄호학점은 졸업학점에 포함되지 않습니다.
+		        </p>
+		    </div>
 	    </div>
 	    <div id="detailBlock">
 	        <h4 style="font-weight: bold;">전체 과목별 성적내역</h4>
-	        <table class="bordered">
-	            <thead>
-	                <tr>
-	                    <th>No</th>
-	                    <th>학기</th>
-	                    <th>이수구분</th>
-	                    <th>교과목코드</th>
-	                    <th>교과목명</th>
-	                    <th>학점</th>
-	                    <th>성적</th>
-	                    <th>이수여부</th>
-	                    <!-- <th>재수강여부</th>
-	                    <th>재수강과목명</th> -->
-	               </tr>
-	           </thead>
-	           <tbody>
-	           <c:if test="${totalGradeList == '0'}">
-	           		<tr>
-						<td colspan="10" style="text-align: center;">수강한 과목이 없습니다.</td>
-					</tr>
-	           </c:if>
-	           <c:if test="${totalGradeList != '0'}">
-		           <c:forEach var="glist" items="${totalGradeList}" varStatus="status">
+		    <div style="overflow: auto; height: 400px; border: solid 1px lightgray;">
+		        <table class="bordered">
+		            <thead>
 		                <tr>
-		                    <td>${status.count}</td>
-		                    <td>${glist.courseYear}년&nbsp;${glist.semester}학기</td>
-		                    <td>${glist.lectureKind}</td>
-		                    <td>${glist.subjectNo}</td>
-		                    <td>${glist.subjectName}</td>
-		                    <td>${glist.credits}</td>
-		                    <td>${glist.score}</td>
-		                    <td></td>
-		                    <%-- <td>${glist.}</td>
-		                    <td>${glist.}</td> --%>
-		                </tr>
-		           </c:forEach>
-	           </c:if>
-	           </tbody>
-	        </table>
+		                    <th>No</th>
+		                    <th>학기</th>
+		                    <th>이수구분</th>
+		                    <th>교과목코드</th>
+		                    <th>교과목명</th>
+		                    <th>학점</th>
+		                    <th>성적</th>
+		                    <th>이수여부</th>
+		               </tr>
+		           </thead>
+		           <tbody>
+		           <c:if test="${totalGradeList == '0'}">
+		           		<tr>
+							<td colspan="8" style="text-align: center;">수강한 과목이 없습니다.</td>
+						</tr>
+		           </c:if>
+		           <c:if test="${totalGradeList != '0'}">
+			           <c:forEach var="glist" items="${eachGradeList}" varStatus="status">
+			                <tr>
+			                    <td>${status.count}</td>
+			                    <td>${glist.courseYear}년&nbsp;${glist.semester}학기</td>
+			                    <td>${glist.division}</td>
+			                    <td>${glist.subjectNo}</td>
+			                    <td>${glist.subjectName}</td>
+			                    <td>${glist.credits}</td>
+			                    <td>${glist.score}</td>
+			                    <td>${glist.complete}</td>
+			                </tr>
+			           </c:forEach>
+		           </c:if>
+		           </tbody>
+		        </table>
+		     </div>
 	     </div>
 	 </div>
 

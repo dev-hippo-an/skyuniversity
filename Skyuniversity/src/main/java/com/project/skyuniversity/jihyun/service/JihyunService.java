@@ -15,6 +15,7 @@ public class JihyunService implements InterJihyunService {
 	@Autowired
 	private JihyunDAO dao;
 	
+	// 로그인
 	@Override
 	public JihyunMemberVO getLoginMember(Map<String, String> paraMap) {
 		JihyunMemberVO getLoginMember = dao.getLoginMember(paraMap);
@@ -119,9 +120,16 @@ public class JihyunService implements InterJihyunService {
 
 	// 기이수 성적 가져오기
 	@Override
-	public List<Map<String, String>> getTotalGradeList(String memberNo) {
-		List<Map<String, String>> totalGradeList = dao.getTotalGradeList(memberNo);
+	public Map<String, List<Map<String, String>>> getTotalGradeMap(String memberNo) {
+		Map<String, List<Map<String, String>>> totalGradeList = dao.getTotalGradeMap(memberNo);
 		return totalGradeList;
 	}
 
+	// 당학기 성적 가져오기
+	@Override
+	public List<Map<String, String>> getThisSemesterGrade(String memberNo) {
+		List<Map<String, String>> thisSemesterGrade = dao.getThisSemesterGrade(memberNo);
+		return thisSemesterGrade;
+	}
+	
 }

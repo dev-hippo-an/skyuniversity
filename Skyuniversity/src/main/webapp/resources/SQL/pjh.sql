@@ -906,15 +906,17 @@ on s.fk_deptSeq = d.deptSeq
         
  ------------------------------------------------기이수성적 union으로 엮어보기 --------------------------------------------------------------------------------------------------------------------------------------------------
     
-    select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+    select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
     from
     (
-    select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+    -- 교양선택 조회(기이수)
+    select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
         from
         (
-            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+            select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
                       , courseYear||'-'||semester as courseSemester
                        ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+                       , func_gyoyang(deptSeq, mustStatus) as division
             from tbl_course c join tbl_subject s
             on c.fk_subjectNo = s.subjectNo
             join tbl_dept d
@@ -924,12 +926,13 @@ on s.fk_deptSeq = d.deptSeq
         where deptSeq = 23 and mustStatus = 1 and courseSemester != thisSemester
         union
         -- 교양필수 조회(기이수)
-        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
         from
         (
             select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
                         , courseYear||'-'||semester as courseSemester
                         ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+                        ,   func_gyoyang(deptSeq, mustStatus) as division
             from tbl_course c join tbl_subject s
             on c.fk_subjectNo = s.subjectNo
             join tbl_dept d
@@ -939,11 +942,12 @@ on s.fk_deptSeq = d.deptSeq
         where deptSeq = 23 and mustStatus = 0 and courseSemester != thisSemester
         union
         --전공선택 조회(기이수)
-       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
         from 
         (
         select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
                     to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+                    ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
         from
         (
             select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
@@ -960,11 +964,12 @@ on s.fk_deptSeq = d.deptSeq
         where deptSeq = m_deptSeq and muststatus = 1 and courseSemester != thisSemester
         union
         -- 전공필수 조회(기이수)
-       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
         from 
         (
         select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
                     to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+                     ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
         from
         (
             select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
@@ -981,11 +986,12 @@ on s.fk_deptSeq = d.deptSeq
         where deptSeq = m_deptSeq and muststatus = 0 and courseSemester != thisSemester
         union
           -- 일반 선택 조회
-       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
         from 
         (
         select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
                     to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+                     ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
         from
         (
             select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
@@ -1001,7 +1007,114 @@ on s.fk_deptSeq = d.deptSeq
         )T
         where deptSeq != m_deptSeq and  deptSeq != 23  and courseSemester != thisSemester
         )G
+        where score is not null
         order by courseYear desc, semester desc, deptseq asc, muststatus asc
+        
+ -------------------------------------------------------------------------------------------- 당학기 성적조회------------------------------------------------------------------------------------------------------------------------------------
+    select  courseYear, semester, division, subjectNo ,subjectName, credits, score, func_score(score) as grade,
+                case when score = 'F' then '미이수' else '이수' end as complete, deptSeq, mustStatus
+    from  
+    (
+    -- 교양선택 조회(기이수)
+    select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from
+        (
+            select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+                      , courseYear||'-'||semester as courseSemester
+                       ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+                       , func_gyoyang(deptSeq, mustStatus) as division
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 102
+        )V
+        where deptSeq = 23 and mustStatus = 1 and courseSemester = thisSemester
+        union
+        -- 교양필수 조회(기이수)
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from
+        (
+            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+                        , courseYear||'-'||semester as courseSemester
+                        ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+                        ,   func_gyoyang(deptSeq, mustStatus) as division
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 102
+        )V
+        where deptSeq = 23 and mustStatus = 0 and courseSemester = thisSemester
+        union
+        --전공선택 조회(기이수)
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+                    ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+                      , courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 102
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 1 and courseSemester = thisSemester
+        union
+        -- 전공필수 조회(기이수)
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+                     ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
+                     courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 102
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 0 and courseSemester = thisSemester
+        union
+          -- 일반 선택 조회
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+                     ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
+                     courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = 102
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq != m_deptSeq and  deptSeq != 23  and courseSemester = thisSemester
+        )G
+        order by courseYear desc, semester desc, deptseq asc, muststatus asc
+        
         
         select * from tbl_course where fk_memberNo = 108 and fk_subjectno = 'EB103'
         select * from tbl_subject where subjectno = 'EB103'
@@ -1028,5 +1141,161 @@ on s.fk_deptSeq = d.deptSeq
         )T
         where deptSeq != m_deptSeq and muststatus = 0   and courseSemester != thisSemester
         
+    -- func_gyoyang(deptSeq, mustStatus)만들기
+    create or replace function func_gyoyang
+        (
+        p_deptSeq in number,
+        p_mustStatus in number
+        )
+        return varchar2
+    is 
+        v_gyoyang varchar2(20);
+    begin
+        select case when p_deptSeq = 23  and p_mustStatus = 0 then '교양필수' else '교양선택' end  -- select된 결과물을 변수에 담아줘야함
+        into v_gyoyang -- select된 결과물을 변수에 담는 키워드 : into
+        from dual; 
+        
+        return v_gyoyang;
+    end func_gyoyang;
+    --Function FUNC_GYOYANG이(가) 컴파일되었습니다.
+    
+    select func_gyoyang(23, 0) as gyoyang
+    from dual
+     
+      -- func_major(s_deptSeq, d_deptSeq, mustStatus)만들기
+    create or replace function func_major
+        (
+        s_deptSeq in number,
+        d_deptSeq in number,
+        p_mustStatus in number
+        )
+        return varchar2
+    is 
+        v_major varchar2(20);
+    begin
+        select case when s_deptSeq = d_deptSeq  and p_mustStatus = 0 then '전공필수' when s_deptSeq = d_deptSeq  and p_mustStatus = 1 then '전공선택' else '일반선택' end  -- select된 결과물을 변수에 담아줘야함
+        into v_major -- select된 결과물을 변수에 담는 키워드 : into
+        from dual; 
+        
+        return v_major;
+    end func_major;
+    --Function FUNC_MAJOR이(가) 컴파일되었습니다.
+    
+    select func_major(3,2,0) as major
+    from dual
+    
+        
+         -- 사용자 정의 함수
+    /*
+        [문법]
+        create or replace function 함수명
+        (파라미터변수명 in 파라미터변수의타입)
+        return 리턴시킬타입
+        is 
+           변수선언
+        begin
+           명령어
+           return 값
+        end 함수명;    
+    */
+    
+    
+           /* ---- **** if문 **** ----
+           
+                if      조건1  then  실행문장1;
+                elsif   조건2  then  실행문장2;
+                else                 실행문장3;
+                end if;
+           */
+    
+    -- func_gender(jubun)만들기
+    create or replace function func_gender
+        (p_jubun in varchar2) -- (p_jubun in varchar2(13)) 자리수를 쓰면 오류!!
+        return varchar2       -- varchar2(4) 자리수를 쓰면 오류!!
+        is 
+           v_genderNum varchar2(1);  -- is와 begin 사이는 변수를 선언하는 부분이다.
+           v_gender    varchar2(10);    -- 크기는 크게 잡는게 좋다.
+        begin
+           -- p_jubun이 '9510201234567'이라고 하면 
+           v_genderNum := substr(p_jubun,7,1); --'1' '2' '3' '4' 변수에 값을 담을때는 := 을 사용
+           
+           if v_genderNum in('1','3') then v_gender := '남';
+           else v_gender := '여';
+           end if;
+           
+           return v_gender;
+        end func_gender;
+    -- Function FUNC_GENDER이(가) 컴파일되었습니다.
+        
+        -- func_socre(p_score) 함수 만들기
+       create or replace function func_score
+        (p_score in varchar2) 
+        return varchar2      
+        is 
+           v_score varchar2(20); 
+        begin
+           select case when p_score = 'A+' then '4.3' 
+           when p_score ='A' then '4.0'
+           when p_score ='A-' then '3.7' 
+           when p_score ='B+' then '3.3'
+           when p_score ='B' then '3.0'
+           when p_score ='B-' then '2.7'
+           when p_score ='C+' then '2.3'
+           when p_score ='C' then '2.0'
+           when p_score ='C-' then '1.7'
+           when p_score ='D+' then '1.3'
+           when p_score ='D' then '1.0'
+           when p_score ='D-' then '0.7'
+           else '0' end
+           into v_score
+           from dual; 
+           
+           return v_score;
+        end func_score; 
+        --Function FUNC_SCORE이(가) 컴파일되었습니다.
 commit;
+       -- func_creditsNoF(p_score, p_credits) 함수 만들기
+       create or replace function func_creditsNoF
+        (
+        p_score in varchar2,
+        p_credits in number
+        ) 
+        return number      
+        is 
+           v_credits number; 
+        begin
+           select case when p_score = 'F' then 0
+           else p_credits end
+           into v_credits
+           from dual; 
+           
+           return v_credits;
+        end func_creditsNoF; 
+        --Function FUNC_CREDITSNOF이(가) 컴파일되었습니다.
 
+select * from tab;
+
+select * from tbl_course where score = 'D-';
+
+-- 학기, 이수학점, 평점평균, 최초평점평균, 학사경고
+select courseSemester, cCradits, round(totalScore/credits, 2) as averageScore , round(totalScore/cCradits, 2) as firstAverageScore,
+            case when round(totalScore/credits, 2) <= 1.5 then '경고' else '- ' end as warning
+from
+(
+select  courseSemester, sum(credits) as credits, sum(cCradits) as cCradits, sum(grade*credits) as totalScore
+from
+(
+select  courseYear||'-'||semester as courseSemester, func_score(score) as grade, credits, func_creditsNoF(score,credits) as cCradits
+from tbl_course c join tbl_subject  s
+on c.fk_subjectNo = s.subjectNo
+where fk_memberNo = 108 and score is not null
+)V
+where courseSemester != to_char(sysdate, 'yyyy-q')
+group by courseSemester
+order by courseSemester desc
+)T
+
+select * from tbl_subject
+select * from tbl_course where courseYear = '2021'
+
+select * from tbl_schedule

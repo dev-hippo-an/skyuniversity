@@ -16,6 +16,7 @@ public class JihyunDAO implements InterJihyunDAO {
 	@Resource
 	private SqlSessionTemplate sqlsession;
 	
+	// 로그인
 	public JihyunMemberVO getLoginMember(Map<String, String> paraMap) {
 		JihyunMemberVO getLoginMember = sqlsession.selectOne("Jihyun.getLoginMember", paraMap);
 		return getLoginMember;
@@ -207,64 +208,79 @@ public class JihyunDAO implements InterJihyunDAO {
 
 	// 기이수 성적 가져오기
 	@Override
-	public List<Map<String, String>> getTotalGradeList(String memberNo) {
+	public Map<String, List<Map<String, String>>> getTotalGradeMap(String memberNo) {
 		
-		List<Map<String, String>> totalGradeList = new ArrayList<Map<String,String>>();
-		List<Map<String, String>> gradeList = null;
+		Map<String, List<Map<String,String>>> totalGradeMap = new HashMap<String, List<Map<String,String>>>();
+		List<Map<String, String>> eachGradeList = new ArrayList<Map<String,String>>();
+		List<Map<String, String>> totalGradeInfoList = new ArrayList<Map<String,String>>();
+		Map<String, String> gradeInfo = null;
 		
-		//전필
-		gradeList = sqlsession.selectList("Jihyun.getTotalJunpilGrade", memberNo);
-		System.out.println("glist1"+gradeList.size());
-		if(gradeList.size()>0) {
-			for(Map<String,String> map : gradeList) {
-				map.put("lectureKind", "전공필수");
-				totalGradeList.add(map);
+		eachGradeList = sqlsession.selectList("Jihyun.getEachGradeList", memberNo);
+		
+		if(eachGradeList.size() > 0) {
+//			총성적(신청학점, 취득학점, 총점수, 평균학점) 얻기
+			gradeInfo = new HashMap<String, String>();
+			
+			Map<String, Double> scoreMap = new HashMap<>();
+			scoreMap.put("A+", 4.3);
+			scoreMap.put("A", 4.0);
+			scoreMap.put("A-", 3.7);
+			scoreMap.put("B+", 3.3);
+			scoreMap.put("B", 3.0);
+			scoreMap.put("B-", 2.7);
+			scoreMap.put("C+", 2.3);
+			scoreMap.put("C", 2.0);
+			scoreMap.put("C-", 1.7);
+			scoreMap.put("D+", 1.3);
+			scoreMap.put("D", 1.0);
+			scoreMap.put("D-", 0.7);
+			scoreMap.put("F", 0.0);
+			
+			int applicateCredits = 0;
+			int completeCredits = 0;
+			double totalScore = 0;
+			double averageScore = 0;
+			
+			for(Map<String,String> map : eachGradeList) {
+				applicateCredits += Integer.parseInt(map.get("credits"));
+				if(!"F".equalsIgnoreCase(map.get("score"))&&map.get("score") != null){
+					completeCredits += Integer.parseInt(map.get("credits"));
+				}
+				for(String key : scoreMap.keySet()) {
+					if(key.equalsIgnoreCase(map.get("score"))) {
+						totalScore += (scoreMap.get(key)*Integer.parseInt(map.get("credits")));
+					}
+				}
 			}
+			
+			totalScore = Math.round(totalScore*100)/100.0;
+			averageScore = Math.round(totalScore/completeCredits*100)/100.0;
+			
+			gradeInfo.put("applicateCredits", Integer.toString(applicateCredits));
+			gradeInfo.put("completeCredits", Integer.toString(completeCredits));
+			gradeInfo.put("totalScore", String.valueOf(totalScore));
+			gradeInfo.put("averageScore", String.valueOf(averageScore));
+
+			totalGradeInfoList.add(gradeInfo);
+			
+//			학기별 평점내역(학기,이수학점, 평점평균, 최초평점평균, 학사경고) 얻기
+			List<Map<String, String>> semesterGradeList = new ArrayList<Map<String,String>>();
+			semesterGradeList = sqlsession.selectList("Jihyun.semesterGradeList", memberNo);
+			
+			totalGradeMap.put("totalGradeInfoList", totalGradeInfoList);
+			totalGradeMap.put("semesterGradeList", semesterGradeList);
 		}
 		
-		// 전선
-		gradeList = sqlsession.selectList("Jihyun.getTotalJunsunGrade", memberNo);
-		System.out.println("glist2"+gradeList.size());
-		if(gradeList.size()>0) {
-			for(Map<String,String> map : gradeList) {
-				map.put("lectureKind", "전공선택");
-				totalGradeList.add(map);
-			}
-		}
+		totalGradeMap.put("eachGradeList", eachGradeList);
 		
-		// 교필
-		gradeList = sqlsession.selectList("Jihyun.getTotalGyopilGrade", memberNo);
-		System.out.println("glist3"+gradeList.size());
-		if(gradeList.size()>0) {
-			for(Map<String,String> map : gradeList) {
-				map.put("lectureKind", "교양필수");
-				totalGradeList.add(map);
-			}
-		}
-		
-		//교선
-		gradeList = sqlsession.selectList("Jihyun.getTotalGyosunGrade", memberNo);
-		System.out.println("glist4"+gradeList.size());
-		if(gradeList.size()>0) {
-			for(Map<String,String> map : gradeList) {
-				map.put("lectureKind", "교양선택");
-				totalGradeList.add(map);
-			}
-		}
-		
-		//일선
-		gradeList = sqlsession.selectList("Jihyun.getTotalIlsunGrade", memberNo);
-		System.out.println("glist5"+gradeList.size());
-		if(gradeList.size()>0) {
-			for(Map<String,String> map : gradeList) {
-				map.put("lectureKind", "일반선택");
-				totalGradeList.add(map);
-			}
-		}
-		
-		gradeList = null;
-		
-		return totalGradeList;
+		return totalGradeMap;
+	}
+
+// 	당학기 성적조회
+	@Override
+	public List<Map<String, String>> getThisSemesterGrade(String memberNo) {
+		List<Map<String, String>> thisSemesterGrade = sqlsession.selectList("Jihyun.getThisSemesterGrade", memberNo);
+		return thisSemesterGrade;
 	}
 
 }

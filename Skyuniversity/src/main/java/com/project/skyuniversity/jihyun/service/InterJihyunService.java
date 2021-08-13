@@ -49,6 +49,9 @@ public interface InterJihyunService {
 	List<Map<String, String>> getsScheduleList();
 
 	// 기이수 성적 가져오기
-	List<Map<String, String>> getTotalGradeList(String memberNo);
+	Map<String, List<Map<String, String>>> getTotalGradeMap(String memberNo);
+
+	// 당학기 성적 가져오기
+	List<Map<String, String>> getThisSemesterGrade(String memberNo);
 
 }

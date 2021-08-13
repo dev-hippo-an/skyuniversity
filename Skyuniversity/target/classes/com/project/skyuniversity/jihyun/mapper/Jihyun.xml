@@ -313,7 +313,7 @@
 	</select>
 	
 	
-	<resultMap type="HashMap" id="getTotalGradeMap">
+	<!-- <resultMap type="HashMap" id="getTotalGradeMap">
 		<result property="semester" column="semester" javaType="String"/>
 		<result property="courseYear" column="courseYear" javaType="String"/>
 		<result property="subjectName" column="subjectName" javaType="String"/>
@@ -409,8 +409,126 @@
 	        on v.fk_memberNo = m.memberNo
         )T
         where deptSeq != m_deptSeq and  deptSeq != 23 and muststatus = 0 and semester != thisSemester
-	</select>
+	</select> -->
 	
+	<resultMap type="HashMap" id="getEachGradeMap">
+		<result property="semester" column="semester" javaType="String"/>
+		<result property="courseYear" column="courseYear" javaType="String"/>
+		<result property="subjectName" column="subjectName" javaType="String"/>
+		<result property="mustStatus" column="mustStatus" javaType="String"/>
+		<result property="subjectNo" column="subjectNo" javaType="String"/>
+		<result property="deptSeq" column="deptSeq" javaType="String"/>
+		<result property="score" column="score" javaType="String"/>
+		<result property="credits" column="credits" javaType="String"/>
+		<result property="division" column="division" javaType="String"/>
+		<result property="complete" column="complete" javaType="String"/>
+	</resultMap>
+	<select id="getEachGradeList" resultMap="getEachGradeMap" parameterType="String">
+	  select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division,
+	   		case when score = 'F' then '미이수' else '이수' end as complete
+    	from
+    	(
+    	<!-- 교양선택 조회(기이수) -->
+    	select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from
+        (
+            select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+                      , courseYear||'-'||semester as courseSemester
+                       ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+                       , func_gyoyang(deptSeq, mustStatus) as division
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = #{memberNo}
+        )V
+        where deptSeq = 23 and mustStatus = 1 and courseSemester != thisSemester
+        union
+        <!-- 교양필수 조회(기이수) -->
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from
+        (
+            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+                        , courseYear||'-'||semester as courseSemester
+                        ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+                        ,   func_gyoyang(deptSeq, mustStatus) as division
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = #{memberNo}
+        )V
+        where deptSeq = 23 and mustStatus = 0 and courseSemester != thisSemester
+        union
+        <!-- 전공선택 조회(기이수) -->
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+                    ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+                      , courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = #{memberNo}
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 1 and courseSemester != thisSemester
+        union
+        <!-- 전공필수 조회(기이수) -->
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+                     ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
+                     courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = #{memberNo}
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq = m_deptSeq and muststatus = 0 and courseSemester != thisSemester
+        union
+          <!-- 일반 선택 조회 -->
+       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+        from 
+        (
+        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+                     ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
+        from
+        (
+            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
+                     courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+            from tbl_course c join tbl_subject s
+            on c.fk_subjectNo = s.subjectNo
+            join tbl_dept d
+            on s.fk_deptSeq = d.deptSeq
+            where fk_memberNo = #{memberNo}
+        )V
+        join tbl_member m
+        on v.fk_memberNo = m.memberNo
+        )T
+        where deptSeq != m_deptSeq and  deptSeq != 23  and courseSemester != thisSemester
+        )G
+        where score is not null
+        order by courseYear desc, semester desc, deptseq asc, muststatus asc
+	</select>
 	
 	<resultMap type="HashMap" id="getsScheduleListMap">
 		<result property="scheduleNo" column="scheduleNo" javaType="String"/>
@@ -426,4 +544,150 @@
 		where status = 0
 		order by scheduleNo asc
 	</select>
+	
+	
+	<resultMap type="HashMap" id="semesterGradeListMap">
+		<result property="courseSemester" column="courseSemester" javaType="String"/>
+		<result property="cCradits" column="cCradits" javaType="String"/>
+		<result property="averageScore" column="averageScore" javaType="String"/>
+		<result property="firstAverageScore" column="firstAverageScore" javaType="String"/>
+		<result property="warning" column="warning" javaType="String"/>
+	</resultMap>
+	<select id="semesterGradeList" parameterType="String" resultMap="semesterGradeListMap">
+		select courseSemester, cCradits, round(totalScore/credits, 2) as averageScore , round(totalScore/cCradits, 2) as firstAverageScore,
+            <![CDATA[case when round(totalScore/credits, 2) <= 1.5 then '경고' else '-' end as warning]]>
+		from
+		(
+		select  courseSemester, sum(credits) as credits, sum(cCradits) as cCradits, sum(grade*credits) as totalScore
+		from
+		(
+		select  courseYear||'-'||semester as courseSemester, func_score(score) as grade, credits, func_creditsNoF(score,credits) as cCradits
+		from tbl_course c join tbl_subject  s
+		on c.fk_subjectNo = s.subjectNo
+		where fk_memberNo = #{memberNo} and score is not null
+		)V
+		where courseSemester != to_char(sysdate, 'yyyy-q')
+		group by courseSemester
+		order by courseSemester desc
+		)T
+	</select>
+	
+	<resultMap type="HashMap" id="getThisSemesterGradeMap">
+		<result property="courseYear" column="courseYear" javaType="String"/>
+		<result property="semester" column="semester" javaType="String"/>
+		<result property="division" column="division" javaType="String"/>
+		<result property="subjectNo" column="subjectNo" javaType="String"/>
+		<result property="subjectName" column="subjectName" javaType="String"/>
+		<result property="credits" column="credits" javaType="String"/>
+		<result property="score" column="score" javaType="String"/>
+		<result property="grade" column="grade" javaType="String"/>
+		<result property="complete" column="complete" javaType="String"/>
+	</resultMap>
+	<select id="getThisSemesterGrade" resultMap="getThisSemesterGradeMap" parameterType="String">
+	 select  courseYear, semester, division, subjectNo ,subjectName, credits, score, func_score(score) as grade,
+                case when score = 'F' then '미이수' else '이수' end as complete
+	    from
+	    (
+	    <!-- 교양선택 조회(당학기) -->
+	    select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+	        from
+	        (
+	            select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+	                      , courseYear||'-'||semester as courseSemester
+	                       ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+	                       , func_gyoyang(deptSeq, mustStatus) as division
+	            from tbl_course c join tbl_subject s
+	            on c.fk_subjectNo = s.subjectNo
+	            join tbl_dept d
+	            on s.fk_deptSeq = d.deptSeq
+	            where fk_memberNo = #{memberNo}
+	        )V
+	        where deptSeq = 23 and mustStatus = 1 and courseSemester = thisSemester
+	        union
+	       <!-- 교양필수 조회(당학기) -->
+	        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+	        from
+	        (
+	            select semester, courseYear, fk_subjectNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+	                        , courseYear||'-'||semester as courseSemester
+	                        ,   to_char(sysdate, 'yyyy')||'-'||case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+	                        ,   func_gyoyang(deptSeq, mustStatus) as division
+	            from tbl_course c join tbl_subject s
+	            on c.fk_subjectNo = s.subjectNo
+	            join tbl_dept d
+	            on s.fk_deptSeq = d.deptSeq
+	            where fk_memberNo = #{memberNo}
+	        )V
+	        where deptSeq = 23 and mustStatus = 0 and courseSemester = thisSemester
+	        union
+	       <!-- 전공선택 조회(당학기) -->
+	       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+	        from 
+	        (
+	        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+	                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+	                    ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
+	        from
+	        (
+	            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits
+	                      , courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+	            from tbl_course c join tbl_subject s
+	            on c.fk_subjectNo = s.subjectNo
+	            join tbl_dept d
+	            on s.fk_deptSeq = d.deptSeq
+	            where fk_memberNo = #{memberNo}
+	        )V
+	        join tbl_member m
+	        on v.fk_memberNo = m.memberNo
+	        )T
+	        where deptSeq = m_deptSeq and muststatus = 1 and courseSemester = thisSemester
+	        union
+	       <!-- 전공필수 조회(당학기) -->
+	       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+	        from 
+	        (
+	        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+	                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+	                     ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
+	        from
+	        (
+	            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
+	                     courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+	            from tbl_course c join tbl_subject s
+	            on c.fk_subjectNo = s.subjectNo
+	            join tbl_dept d
+	            on s.fk_deptSeq = d.deptSeq
+	            where fk_memberNo = #{memberNo}
+	        )V
+	        join tbl_member m
+	        on v.fk_memberNo = m.memberNo
+	        )T
+	        where deptSeq = m_deptSeq and muststatus = 0 and courseSemester = thisSemester
+	        union
+	      <!--  일반 선택 조회 -->
+	       select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, score, credits, division
+	        from 
+	        (
+	        select semester, courseYear, subjectName, mustStatus, subjectNo, deptSeq, fk_deptSeq as m_deptSeq, score, credits, courseSemester,
+	                    to_char(sysdate, 'yyyy')||'-'||thisSemester as thisSemester
+	                     ,func_major(deptSeq, fk_deptSeq, mustStatus) as division
+	        from
+	        (
+	            select semester, courseYear, fk_memberNo, subjectName, mustStatus, subjectNo, deptSeq, score, credits,
+	                     courseYear||'-'||semester as courseSemester,  case when to_char(sysdate, 'q') in(1,2) then 1 else 2 end as thisSemester
+	            from tbl_course c join tbl_subject s
+	            on c.fk_subjectNo = s.subjectNo
+	            join tbl_dept d
+	            on s.fk_deptSeq = d.deptSeq
+	            where fk_memberNo = #{memberNo}
+	        )V
+	        join tbl_member m
+	        on v.fk_memberNo = m.memberNo
+	        )T
+	        where deptSeq != m_deptSeq and  deptSeq != 23  and courseSemester = thisSemester
+	        )G
+	        order by courseYear desc, semester desc, deptseq asc, muststatus asc
+	</select>
+	
+	
 </mapper>

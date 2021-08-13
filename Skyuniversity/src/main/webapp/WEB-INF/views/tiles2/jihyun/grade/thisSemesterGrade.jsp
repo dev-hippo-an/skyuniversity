@@ -1,5 +1,8 @@
 <%@ page language="java" contentType="text/html; charset=UTF-8"
     pageEncoding="UTF-8"%>
+
+<%@ taglib prefix="c" uri="http://java.sun.com/jsp/jstl/core"%>    
+    
 <style>
 	div#thisGradeContainer {
 	 	font-size: 11pt;
@@ -17,25 +20,25 @@
 	 }
 	 
 	 div.totalGradeInfo {
-		border: solid 1px lightgray;
-	 	border-radius: 10px;
-		padding: 20px;
+		/* border: solid 1px lightgray;
+	 	border-radius: 10px; */
+		/* padding: 20px; */
 		width: 100%; 
 		margin-bottom: 30px;
 	 }
 	 
 	  
 	 div#sumBlock {
-	 	border: solid 1px lightgray;
-	 	border-radius: 10px;
-	 	padding: 20px;
+	 	/* border: solid 1px lightgray; */
+	 	/* border-radius: 10px; */
+	 	/* padding: 20px; */
 	 	width: 100%;
 	 }
 	 
 	 div#detailBlock {
-	 	border: solid 1px lightgray;
-	 	border-radius: 10px;
-	 	padding: 20px;
+	 	/* border: solid 1px lightgray;
+	 	border-radius: 10px; */
+	 	/* padding: 20px; */
 	 	width: 100%;
 	 	margin-top: 30px;
 	 }
@@ -141,12 +144,22 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-				</tr>
+				<c:if test="${thisSemesterGrade == '0'}">
+           	  		<tr>
+	                    <td>-</td>
+	                    <td>-</td>
+	                    <td>-</td>
+	                    <td>-</td>
+	                </tr>
+	             </c:if>
+	             <c:if test="${thisSemesterGrade != '0'}">
+	                <tr>
+	                    <td>${totalGrade.applicateCredits}</td>
+	                    <td>${totalGrade.completeCredits}</td>
+	                    <td>${totalGrade.totalScore}</td>
+	                    <td>${totalGrade.averageScore}</td>
+	                </tr>
+                </c:if>
 			</tbody>
 		</table>
 	</div>
@@ -155,7 +168,6 @@
 		<table class="bordered">
 			<thead>
 				<tr>
-					<th>No</th>
 					<th>학기</th>
 					<th>이수학점</th>
 					<th>평점평균</th>
@@ -164,14 +176,24 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-				</tr>
+				<c:if test="${thisSemesterGrade == '0'}">
+           	  		<tr>
+	                    <td>-</td>
+	                    <td>-</td>
+	                    <td>-</td>
+	                    <td>-</td>
+	                    <td>-</td>
+	                </tr>
+	             </c:if>
+	             <c:if test="${thisSemesterGrade != '0'}">
+	                <tr>
+	                    <td>${gradeDetail.semester}</td>
+	                    <td>${gradeDetail.completeCredits}</td>
+	                    <td>${gradeDetail.averageScore}</td>
+	                    <td>${gradeDetail.firstAverageScore}</td>
+	                    <td>${gradeDetail.warning}</td>
+	                </tr>
+                </c:if>
 			</tbody>
 		</table>
 	</div>
@@ -192,17 +214,26 @@
 				</tr>
 			</thead>
 			<tbody>
-				<tr>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-					<td>n</td>
-				</tr>
+				<c:if test="${thisSemesterGrade == '0'}">
+           	  		<tr>
+	                    <td colspan="9">과목별 성적 내역이 없습니다.</td>
+	                </tr>
+	             </c:if>
+	             <c:if test="${thisSemesterGrade != '0'}">
+	             	<c:forEach var="tg" items="${thisSemesterGrade}" varStatus="status">
+		                <tr>
+		                	<td>${status.count}</td>
+		                    <td>${gradeDetail.semester}</td>
+		                    <td>${tg.division}</td>
+		                    <td>${tg.subjectNo}</td>
+		                    <td>${tg.subjectName}</td>
+		                    <td>${tg.credits}</td>
+		                    <td>${tg.score}</td>
+		                    <td>${tg.grade}</td>
+		                    <td>${tg.complete}</td>
+		                </tr>
+	                </c:forEach>
+                </c:if>
 			</tbody>
 		</table>
 	</div>

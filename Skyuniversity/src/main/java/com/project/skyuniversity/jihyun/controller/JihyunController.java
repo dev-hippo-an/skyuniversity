@@ -540,23 +540,97 @@ public class JihyunController {
 			
 		}
 		
-		System.out.println("memberNo:"+memberNo);
 		
-		List<Map<String, String>> totalGradeList = service.getTotalGradeList(memberNo);
+		Map<String, List<Map<String, String>>> totalGradeMap = service.getTotalGradeMap(memberNo);
 
-		if(totalGradeList.size()>0) {
-			mav.addObject("totalGradeList", totalGradeList);
+		List<Map<String, String>> eachGradeList = totalGradeMap.get("eachGradeList");
+		List<Map<String, String>> totalGradeInfoList = null;
+		List<Map<String, String>> semesterGradeList = null;
+		
+		if(totalGradeMap.size()>0) {
+			totalGradeInfoList = totalGradeMap.get("totalGradeInfoList");
+			semesterGradeList = totalGradeMap.get("semesterGradeList");
+			
+			mav.addObject("eachGradeList", eachGradeList);
+			mav.addObject("totalGradeInfoList", totalGradeInfoList);
+			mav.addObject("semesterGradeList", semesterGradeList);
+			
 		}
 		else {
-			mav.addObject("totalGradeList", "0");
+			mav.addObject("eachGradeList", "0");
 		}
 		
 		mav.setViewName("jihyun/grade/totalGrade.tiles2");
 		return mav;
 	}
+	
 	// 당학기성적조회
 	@RequestMapping(value = "/thisSemesterGrade.sky")
 	public ModelAndView requiredLoginhs_thisSemesterGrade(HttpServletRequest request, HttpServletResponse response, ModelAndView mav) {
+		
+		HttpSession session = request.getSession();
+		
+		String memberNo = null;
+		
+		// 당학기 성적 가져오기
+		try {
+			JihyunMemberVO member = (JihyunMemberVO)session.getAttribute("loginuser");
+			memberNo = member.getMemberNo();
+		}catch (NullPointerException e){
+			
+		}
+		
+		List<Map<String,String>> thisSemesterGrade = service.getThisSemesterGrade(memberNo);
+		
+		if(thisSemesterGrade.size() > 0) {
+			Map<String,String> totalGrade = new HashMap<String, String>();
+			Map<String,String> gradeDetail = new HashMap<String, String>();
+			
+			int applicateCredits = 0;
+			int completeCredits = 0;
+			double totalScore = 0;
+			
+			for(Map<String,String> map : thisSemesterGrade) {
+				applicateCredits += Integer.parseInt(map.get("credits"));
+				
+				if(!"F".equalsIgnoreCase(map.get("score"))&&map.get("score") != null){
+					completeCredits += Integer.parseInt(map.get("credits"));
+				}
+				totalScore += Double.parseDouble(map.get("grade"))*Integer.parseInt(map.get("credits"));
+			}
+			
+			totalScore = Math.round(totalScore*100)/100.0;
+			double averageScore = Math.round(totalScore/completeCredits*100)/100.0;
+			double firstAverageScore = Math.round(totalScore/applicateCredits*100)/100.0;
+			
+			String warning = "-";
+			
+			if(averageScore <= 1.5) {
+				warning = "경고";
+			}
+			
+			String semester = thisSemesterGrade.get(0).get("courseYear")+"-"+thisSemesterGrade.get(0).get("semester")+"학기";
+			
+			totalGrade.put("applicateCredits", Integer.toString(applicateCredits));
+			totalGrade.put("completeCredits", Integer.toString(completeCredits));
+			totalGrade.put("totalScore", String.valueOf(totalScore));
+			totalGrade.put("averageScore", String.valueOf(averageScore));
+			
+			gradeDetail.put("semester", semester);
+			gradeDetail.put("completeCredits", Integer.toString(completeCredits));
+			gradeDetail.put("averageScore", String.valueOf(averageScore));
+			gradeDetail.put("firstAverageScore", String.valueOf(firstAverageScore));
+			gradeDetail.put("warning", warning);
+			
+			mav.addObject("totalGrade", totalGrade);
+			mav.addObject("gradeDetail", gradeDetail);
+			mav.addObject("thisSemesterGrade", thisSemesterGrade);
+			
+		}
+		else {
+			mav.addObject("thisSemesterGrade", "0");
+		}
+		
 		
 		mav.setViewName("jihyun/grade/thisSemesterGrade.tiles2");
 		return mav;
